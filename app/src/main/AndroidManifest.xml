@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Verification"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Registration"
             android:screenOrientation="portrait"
