@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Registration"
+    android:background="@drawable/registration_background">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/icon"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop = "40dp"
+        android:padding="10dp"
+        android:background="@drawable/image_background"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ChatApp will send a SMS message to verify your phone number.Please enter your phone number"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:textSize="20sp"
+        android:textColor="#ffffff"
+        android:gravity="center_horizontal"
+        android:fontFamily="sans-serif-condensed"/>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:textColorHint="#ffffff"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp">
+
+        <EditText
+            android:id="@+id/etPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Mobile no."
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
+            android:inputType="number"
+            android:textSize="20sp"
+            android:backgroundTint="#ffffff"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:text="Submit"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:background="@drawable/button_background"/>
+
+</LinearLayout>

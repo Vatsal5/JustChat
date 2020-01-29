@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/registration_background"
+    tools:context=".Verification">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enter the 6 digit OTP code that has been sent your entered mobile no."
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:textColor="#ffffff"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center_horizontal"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/etOTP"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:hint="OTP"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="#ffffff"
+        android:textColorHint="#ffffff"
+        android:inputType="number"
+        android:textSize="20sp"
+        android:backgroundTint="#ffffff"/>
+
+    <Button
+        android:id="@+id/btnVerify"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:text="Verify"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:background="@drawable/button_background"/>
+
+    <TextView
+        android:id="@+id/tvResend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:clickable="true"
+        android:textSize="18sp"
+        android:textColor="#ffffff"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        android:text="Didn't Recieve OTP?Resend OTP from here"/>
+
+</LinearLayout>
