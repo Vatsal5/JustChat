@@ -25,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        lv=findViewById(R.id.lv);
+        contacts = new ArrayList<>();
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED)
         {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},1);
@@ -59,12 +62,9 @@ public class MainActivity extends AppCompatActivity {
             String name= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             String number= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             contacts.add(new UserDetail(number,name));
-            contacts=new ArrayList<>();
-            lv=findViewById(R.id.lv);
-
-            userAdapter=new UserAdapter(MainActivity.this,contacts);
-            lv.setAdapter(userAdapter);
 
         }
+        userAdapter=new UserAdapter(MainActivity.this,contacts);
+        lv.setAdapter(userAdapter);
     }
 }
