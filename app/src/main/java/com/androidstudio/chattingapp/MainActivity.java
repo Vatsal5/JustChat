@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<UserDetail> contacts1;
 
     ListView lv;
+    int c=0;int c1=0;
     FirebaseDatabase database;
     DatabaseReference reference;
     String name1,number1;
@@ -92,16 +93,32 @@ public class MainActivity extends AppCompatActivity {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int c=0;
+
                 for(int i=0;i<contacts.size();i++) {
                     if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).exists()) {
-                        c++;
-                        contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
-                        //  Toast.makeText(getApplicationContext(),contacts.get(0).getuID(),Toast.LENGTH_LONG).show();
-                        //          Toast.makeText(getApplicationContext(),name,Toast.LENGTH_LONG).show();
+                        if(i==0)
+                        { contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
+                        c1=1;
+                        }
+                        else {
+                            for (int j = 0; j < c1;j++) {
+                                if(contacts.get(i).getuID().equals(contacts1.get(j).getuID()))
+                                {
+                                    c=1;
+                                    break;
+                                }
+                        }
+                            if(c==0)
 
+                            {
+                                contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
+                                //  Toast.makeText(getApplicationContext(),contacts.get(0).getuID(),Toast.LENGTH_LONG).show();
+                                //          Toast.makeText(getApplicationContext(),name,Toast.LENGTH_LONG).show();
+                                c=0;
+                                c1++;
+                            }
 
-                    }
+                        } }
                 }
                 userAdapter=new UserAdapter(MainActivity.this,contacts1);
                 lv.setAdapter(userAdapter);
