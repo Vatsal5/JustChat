@@ -23,7 +23,10 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class Verification extends AppCompatActivity {
@@ -33,6 +36,10 @@ public class Verification extends AppCompatActivity {
     TextView tvResend;
     ProgressDialog dialog;
     String VerificationId;
+    FirebaseDatabase database;
+    DatabaseReference reference;
+
+
     PhoneAuthProvider.ForceResendingToken token;
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     String phone;
@@ -41,6 +48,9 @@ public class Verification extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
+
+        database=FirebaseDatabase.getInstance();
+        reference=database.getReference();
 
         etOTP = findViewById(R.id.etOTP);
         btnVerify = findViewById(R.id.btnVerify);
@@ -124,6 +134,9 @@ public class Verification extends AppCompatActivity {
 
                             dialog.dismiss();
                             FirebaseUser user = task.getResult().getUser();
+                            (reference.child("users").child(phone).child("contact")).setValue(phone);
+
+
                             startActivity(new Intent(Verification.this,MainActivity.class));
                             Verification.this.finish();
                             // ...

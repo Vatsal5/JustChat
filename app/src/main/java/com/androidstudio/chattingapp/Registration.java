@@ -79,6 +79,7 @@ public class Registration extends AppCompatActivity {
                 intent.putExtra("VerificationId",VerificationId);
                 intent.putExtra("token",token);
                 intent.putExtra("phone",phone);
+
                 startActivity(intent);
                 dialog.dismiss();
             }
