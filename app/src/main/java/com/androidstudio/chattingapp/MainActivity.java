@@ -32,13 +32,15 @@ public class MainActivity extends AppCompatActivity {
     String name1,number1;
 
     UserAdapter userAdapter;
+    int c=0;
+    int k=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        contacts=new ArrayList<>();
-        contacts1=new ArrayList<>();
+        contacts = new ArrayList<>();
+        contacts1 = new ArrayList<>();
 
         database=FirebaseDatabase.getInstance();
         reference=database.getReference();
@@ -86,28 +88,40 @@ public class MainActivity extends AppCompatActivity {
            final String number= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             contacts.add(new UserDetail(number, name));
 
-
-
-
         }
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int c=0;
+
                 for(int i=0;i<contacts.size();i++) {
                     if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).exists()) {
-                        c++;
-                        contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
-                        //  Toast.makeText(getApplicationContext(),contacts.get(0).getuID(),Toast.LENGTH_LONG).show();
-                        //          Toast.makeText(getApplicationContext(),name,Toast.LENGTH_LONG).show();
-
-
+                        if(i==0)
+                        {
+                            contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
+                            c=1;
+                        }
+                        else
+                            {
+                                for(int j=0;j<c;j++)
+                                {
+                                    if(contacts.get(i).getuID().equals(contacts1.get(j).uID))
+                                    {
+                                        k=1;
+                                        break;
+                                    }
+                                }
+                                if(c==0)
+                                {
+                                    contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
+                                    c++;
+                                    k=0;
+                                }
+                            }
                     }
                 }
                 userAdapter=new UserAdapter(MainActivity.this,contacts1);
                 lv.setAdapter(userAdapter);
               //  Toast.makeText(getApplicationContext(),contacts1.get().getuID(),Toast.LENGTH_LONG).show();
-
             }
 
             @Override
@@ -115,10 +129,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
         // Toast.makeText(getApplicationContext(),contacts.get(0).getuID(),Toast.LENGTH_LONG).show();
-
-
     }
 }
