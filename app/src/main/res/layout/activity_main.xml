@@ -12,11 +12,12 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="110dp"
         android:layout_weight="1"
         android:background="#1fb9d3"
         android:fontFamily="sans-serif-smallcaps"
         android:paddingLeft="30dp"
+        android:paddingTop="10dp"
         android:text="Chats"
         android:textColor="#ffffff"
         android:textSize="28sp"
