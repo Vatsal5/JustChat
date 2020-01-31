@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     ListView lv;
     FirebaseDatabase database;
     DatabaseReference reference;
-    String name1,number1;
 
     UserAdapter userAdapter;
 
@@ -36,12 +36,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         contacts=new ArrayList<>();
         contacts1=new ArrayList<>();
 
         database=FirebaseDatabase.getInstance();
         reference=database.getReference();
-
 
         lv=findViewById(R.id.lv);
 
@@ -53,10 +53,7 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             getcontact();
-
-
         }
-
     }
 
     @Override
@@ -68,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
             if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
             {
                 getcontact();
-
-
             }
         }
     }
@@ -78,35 +73,30 @@ public class MainActivity extends AppCompatActivity {
     {
         Cursor cursor=getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                 null,null,null,null);
+
         while (cursor.moveToNext())
         {
-
-           final String name= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-          final   String number= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            final String name= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            final String number= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             contacts.add(new UserDetail(number, name));
 
-
-
-
         }
+
+        for(int i=0;i<contacts.size();i++)
+        {
+            Log.d("myapp",contacts.get(i).getuID()+" "+contacts.get(i).getPh_number());
+        }
+
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int c=0;
                 for(int i=0;i<contacts.size();i++) {
                     if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).exists()) {
-                        c++;
                         contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
-                        //  Toast.makeText(getApplicationContext(),contacts.get(0).getuID(),Toast.LENGTH_LONG).show();
-                        //          Toast.makeText(getApplicationContext(),name,Toast.LENGTH_LONG).show();
-
-
                     }
                 }
                 userAdapter=new UserAdapter(MainActivity.this,contacts1);
                 lv.setAdapter(userAdapter);
-              //  Toast.makeText(getApplicationContext(),contacts1.get().getuID(),Toast.LENGTH_LONG).show();
-
             }
 
             @Override
@@ -114,10 +104,5 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-        // Toast.makeText(getApplicationContext(),contacts.get(0).getuID(),Toast.LENGTH_LONG).show();
-
-
     }
 }

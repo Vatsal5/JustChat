@@ -53,6 +53,7 @@ public class Registration extends AppCompatActivity {
 
         if(FirebaseAuth.getInstance().getCurrentUser() != null)
         {
+            Registration.this.finish();
             startActivity(new Intent(Registration.this,MainActivity.class));
         }
 
