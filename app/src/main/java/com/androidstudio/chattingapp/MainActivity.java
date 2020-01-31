@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     public  void getcontact()
     {
         Cursor cursor=getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                null,null,null,null);
+                null,null,null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
         while (cursor.moveToNext())
         {
 
@@ -104,24 +104,23 @@ public class MainActivity extends AppCompatActivity {
                             {
                                 for(int j=0;j<c;j++)
                                 {
-                                    if(contacts.get(i).getuID().equals(contacts1.get(j).uID))
+                                    if(contacts.get(i).getPh_number().equals(contacts1.get(j).getPh_number()))
                                     {
                                         k=1;
                                         break;
                                     }
                                 }
-                                if(c==0)
+                                if(k==0)
                                 {
                                     contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
                                     c++;
-                                    k=0;
                                 }
                             }
+                        k=0;
                     }
                 }
                 userAdapter=new UserAdapter(MainActivity.this,contacts1);
                 lv.setAdapter(userAdapter);
-              //  Toast.makeText(getApplicationContext(),contacts1.get().getuID(),Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -129,6 +128,5 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        // Toast.makeText(getApplicationContext(),contacts.get(0).getuID(),Toast.LENGTH_LONG).show();
     }
 }
