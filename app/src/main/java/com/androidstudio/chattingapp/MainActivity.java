@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -33,11 +32,6 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             getcontact();
-            lv=findViewById(R.id.lv);
-           // Toast.makeText(getApplicationContext(),contacts.get(0).getuID(),Toast.LENGTH_LONG).show();
-
-            userAdapter=new UserAdapter(MainActivity.this,contacts);
-            lv.setAdapter(userAdapter);
         }
 
     }
@@ -51,11 +45,6 @@ public class MainActivity extends AppCompatActivity {
             if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
             {
                 getcontact();
-                lv=findViewById(R.id.lv);
-                Toast.makeText(getApplicationContext(),contacts.get(0).getuID(),Toast.LENGTH_LONG).show();
-
-                userAdapter=new UserAdapter(MainActivity.this,contacts);
-                lv.setAdapter(userAdapter);
             }
         }
     }
@@ -69,10 +58,12 @@ public class MainActivity extends AppCompatActivity {
 
             String name= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             String number= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            contacts=new ArrayList<>();
-
             contacts.add(new UserDetail(number,name));
+            contacts=new ArrayList<>();
+            lv=findViewById(R.id.lv);
 
+            userAdapter=new UserAdapter(MainActivity.this,contacts);
+            lv.setAdapter(userAdapter);
 
         }
     }
