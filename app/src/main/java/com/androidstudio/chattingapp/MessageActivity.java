@@ -37,6 +37,7 @@ public class MessageActivity extends AppCompatActivity {
     MessageAdapter adapter;
 
     ArrayList<MessageModel> chats;
+    int m=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,8 @@ public class MessageActivity extends AppCompatActivity {
         ivSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reference.child("users").child(sender).child(RecieverPhone).child("message").setValue(etMessage.getText().toString());
+                reference.child("users").child(sender).child(RecieverPhone).child("message"+m).setValue(etMessage.getText().toString());
+                m++;
 
             }
         });
