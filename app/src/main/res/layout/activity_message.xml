@@ -49,7 +49,7 @@
             android:layout_marginRight="2dp"
             android:layout_marginTop="1dp"
             android:src="@drawable/send"
-            android:padding="9dp"
+            android:padding="11dp"
             android:clickable="true"
             android:background="@drawable/image_background"
             android:backgroundTint="#000000"/>
