@@ -12,6 +12,7 @@ import android.provider.ContactsContract;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     ListView lv;
     FirebaseDatabase database;
+    String currentUserNumber;
     DatabaseReference reference;
     String name1,number1;
 
@@ -43,7 +45,9 @@ public class MainActivity extends AppCompatActivity {
         contacts1 = new ArrayList<>();
 
         database=FirebaseDatabase.getInstance();
+        database.setPersistenceEnabled(true);
         reference=database.getReference();
+        currentUserNumber= FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
 
         lv=findViewById(R.id.lv);
@@ -98,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                         if(i==0)
                         {
                             contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
+                            (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("Hi");
                             c=1;
                         }
                         else
@@ -110,13 +115,17 @@ public class MainActivity extends AppCompatActivity {
                                         break;
                                     }
                                 }
-                                if(c==0)
+                                if(k==0)
                                 {
                                     contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
+                                    (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("Hi");
+
                                     c++;
-                                    k=0;
+
                                 }
+
                             }
+                        k=0;
                     }
                 }
                 userAdapter=new UserAdapter(MainActivity.this,contacts1);
