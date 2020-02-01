@@ -129,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 }
                 userAdapter=new UserAdapter(MainActivity.this,contacts1);
                 lv.setAdapter(userAdapter);
-              //  Toast.makeText(getApplicationContext(),contacts1.get().getuID(),Toast.LENGTH_LONG).show();
             }
 
             @Override
