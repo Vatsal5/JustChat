@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         if(i==0)
                         {
                             contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
-                            (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("Hi");
+                            (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue(null);
                             c=1;
                         }
                         else
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 if(k==0)
                                 {
                                     contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
-                                    (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("Hi");
+                                    (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue(null);
 
                                     c++;
 
