@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
@@ -22,7 +23,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UserAdapter.itemSelected
+{
 
     ArrayList<UserDetail> contacts;
     ArrayList<UserDetail> contacts1;
@@ -31,21 +33,21 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase database;
     String currentUserNumber;
     DatabaseReference reference;
-    String name1,number1;
 
     UserAdapter userAdapter;
     int c=0;
     int k=0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         contacts = new ArrayList<>();
         contacts1 = new ArrayList<>();
 
         database=FirebaseDatabase.getInstance();
-        database.setPersistenceEnabled(true);
+
         reference=database.getReference();
         currentUserNumber= FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
@@ -60,14 +62,13 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             getcontact();
-
-
         }
 
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if(requestCode==1)
@@ -75,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
             if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
             {
                 getcontact();
-
-
             }
         }
     }
@@ -84,13 +83,13 @@ public class MainActivity extends AppCompatActivity {
     public  void getcontact()
     {
         Cursor cursor=getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                null,null,null,null);
+                null,null,null,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME );
         while (cursor.moveToNext())
         {
 
            final String name= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
            final String number= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            contacts.add(new UserDetail(number, name));
+           contacts.add(new UserDetail(number, name));
 
         }
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -109,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                             {
                                 for(int j=0;j<c;j++)
                                 {
-                                    if(contacts.get(i).getuID().equals(contacts1.get(j).uID))
+                                    if(contacts.get(i).getPh_number().equals(contacts1.get(j).getPh_number()))
                                     {
                                         k=1;
                                         break;
@@ -138,5 +137,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // Toast.makeText(getApplicationContext(),contacts.get(0).getuID(),Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onItemSelected(int index) {
+
+        Intent intent = new Intent(MainActivity.this,MessageActivity.class);
+        intent.putExtra("title",contacts1.get(index).getuID());
+        intent.putExtra("phone",contacts1.get(index).getPh_number());
+        startActivity(intent);
     }
 }
