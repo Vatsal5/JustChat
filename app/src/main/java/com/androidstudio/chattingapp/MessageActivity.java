@@ -62,12 +62,7 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 reference.child("users").child(sender).child(RecieverPhone).child("message").setValue(etMessage.getText().toString());
-                chats.add(new MessageModel(sender,RecieverPhone,etMessage.getText().toString()));
-                adapter = new MessageAdapter(MessageActivity.this,chats);
-                Messages.setAdapter(adapter);
 
-                adapter.notifyDataSetChanged();
-                etMessage.setText(null);
             }
         });
 
@@ -79,28 +74,28 @@ public class MessageActivity extends AppCompatActivity {
         Messages.setLayoutManager(manager);
 
 
-        reference.child("users").child(sender).child(RecieverPhone).addChildEventListener(new ChildEventListener() {
+        reference.child("users").child(sender).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                if(!dataSnapshot.getValue(String.class).equals("null"))
+           /*     if(!dataSnapshot.getValue(String.class).equals("/null"))
                 {
-                    Toast.makeText(getApplicationContext(), "hi", Toast.LENGTH_SHORT).show();
                     chats.add(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue(String.class)));
                     adapter = new MessageAdapter(MessageActivity.this, chats);
                     Messages.setAdapter(adapter);
 
-                    adapter.notifyDataSetChanged();
-                }
+                   // adapter.notifyDataSetChanged();
+                }*/
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                chats.add(new MessageModel(sender,RecieverPhone,dataSnapshot.getValue().toString()));
-                adapter = new MessageAdapter(MessageActivity.this,chats);
-                Messages.setAdapter(adapter);
+                for(DataSnapshot child: dataSnapshot.getChildren()) {
+                    chats.add(new MessageModel(sender, RecieverPhone, child.getValue().toString()));
 
-                adapter.notifyDataSetChanged();
+
+                    adapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -119,28 +114,28 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-        reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(new ChildEventListener() {
+        reference.child("users").child(RecieverPhone).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                if(!dataSnapshot.getValue(String.class).equals("null"))
+              /*  if(!dataSnapshot.getValue(String.class).equals("/null"))
                 {
-                    Toast.makeText(getApplicationContext(), "hi", Toast.LENGTH_SHORT).show();
                     chats.add(new MessageModel(RecieverPhone,sender, dataSnapshot.getValue(String.class)));
                     adapter = new MessageAdapter(MessageActivity.this, chats);
                     Messages.setAdapter(adapter);
 
-                    adapter.notifyDataSetChanged();
-                }
+                  //  adapter.notifyDataSetChanged();
+                }*/
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                chats.add(new MessageModel(RecieverPhone,sender,dataSnapshot.getValue().toString()));
-                adapter = new MessageAdapter(MessageActivity.this,chats);
-                Messages.setAdapter(adapter);
+                for(DataSnapshot child: dataSnapshot.getChildren())
+                {
+                chats.add(new MessageModel(RecieverPhone,sender,child.getValue().toString()));
 
-                adapter.notifyDataSetChanged();
+
+                adapter.notifyDataSetChanged();}
             }
 
             @Override
@@ -158,6 +153,8 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
+        adapter = new MessageAdapter(MessageActivity.this,chats);
+        Messages.setAdapter(adapter);
 
 
 

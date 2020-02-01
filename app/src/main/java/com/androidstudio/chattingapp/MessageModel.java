@@ -6,9 +6,6 @@ public class MessageModel
     String reciever;
     String message;
 
-    public MessageModel()
-    {}
-
     public MessageModel(String sender, String reciever, String message) {
         this.sender = sender;
         this.reciever = reciever;
