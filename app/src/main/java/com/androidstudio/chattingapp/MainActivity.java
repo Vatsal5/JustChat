@@ -21,7 +21,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+{
 
     ArrayList<UserDetail> contacts;
     ArrayList<UserDetail> contacts1;
@@ -29,14 +30,14 @@ public class MainActivity extends AppCompatActivity {
     ListView lv;
     FirebaseDatabase database;
     DatabaseReference reference;
-    String name1,number1;
 
     UserAdapter userAdapter;
     int c=0;
     int k=0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         contacts = new ArrayList<>();
@@ -56,14 +57,13 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             getcontact();
-
-
         }
 
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if(requestCode==1)
@@ -71,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
             if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
             {
                 getcontact();
-
-
             }
         }
     }
@@ -86,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
            final String name= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
            final String number= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            contacts.add(new UserDetail(number, name));
+           contacts.add(new UserDetail(number, name));
 
         }
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
