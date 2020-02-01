@@ -18,19 +18,10 @@ public class UserAdapter extends ArrayAdapter<UserDetail> {
 
     private final Context context;
     private ArrayList<UserDetail> list;
-    onItemSelected activity;
-
-    public interface onItemSelected
-    {
-        void ItemClicked(int index);
-    }
-
     public UserAdapter(@NonNull Context context, ArrayList<UserDetail> list) {
         super(context, R.layout.chats_list_layout,list);
         this.context = context;
         this.list = list;
-        activity=(onItemSelected)context;
-
     }
 
     @NonNull
@@ -43,13 +34,6 @@ public class UserAdapter extends ArrayAdapter<UserDetail> {
 
         TextView tvUserName= v.findViewById(R.id.tv_username);
         tvUserName.setText(list.get(position).getuID());
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.ItemClicked(position);
-            }
-        });
-
 
 
         return v;

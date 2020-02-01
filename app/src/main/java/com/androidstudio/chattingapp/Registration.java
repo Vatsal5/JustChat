@@ -49,8 +49,7 @@ public class Registration extends AppCompatActivity {
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
-
-
+        
         if(FirebaseAuth.getInstance().getCurrentUser() != null)
         {
             Registration.this.finish();

@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         contacts1 = new ArrayList<>();
 
         database=FirebaseDatabase.getInstance();
-        //database.setPersistenceEnabled(true);
+        database.setPersistenceEnabled(true);
         reference=database.getReference();
         currentUserNumber= FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                             {
                                 for(int j=0;j<c;j++)
                                 {
-                                    if(contacts.get(i).getPh_number().equals(contacts1.get(j).getPh_number()))
+                                    if(contacts.get(i).getuID().equals(contacts1.get(j).uID))
                                     {
                                         k=1;
                                         break;
@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                                 if(k==0)
                                 {
                                     contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
-                                    if(!(currentUserNumber.equals(contacts.get(i).getPh_number())))
                                     (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("Hi");
 
                                     c++;
