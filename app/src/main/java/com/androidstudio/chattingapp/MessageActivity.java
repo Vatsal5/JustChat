@@ -59,12 +59,9 @@ public class MessageActivity extends AppCompatActivity {
 
         chats = new ArrayList<>();
 
-        chats.add(new MessageModel("+919855706367","+917888486819","Hello How are you?"));
-
         adapter = new MessageAdapter(MessageActivity.this,chats);
         Messages.setAdapter(adapter);
 
-        //Log.d("Reciever",FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
     }
 
 }
