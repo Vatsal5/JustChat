@@ -13,8 +13,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MessageActivity"
-            android:parentActivityName=".MainActivity"></activity>
         <activity
             android:name=".Verification"
             android:screenOrientation="portrait"
