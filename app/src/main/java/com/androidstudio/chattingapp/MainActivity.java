@@ -120,9 +120,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                     (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("null");
 
                                     c++;
-
                                 }
-
                             }
                         k=0;
                     }
