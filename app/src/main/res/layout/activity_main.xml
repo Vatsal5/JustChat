@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00ffffff"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -16,9 +15,9 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="#99000000"
-        android:fontFamily="sans-serif-smallcaps"
+        android:fontFamily="@font/aclonica"
         android:gravity="center"
-        android:text="Chats"
+        android:text="gossips"
         android:textColor="#ffffff"
         android:textSize="28sp"
         android:textStyle="bold" />

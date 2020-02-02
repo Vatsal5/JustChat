@@ -35,6 +35,7 @@ public class MessageActivity extends AppCompatActivity {
     String sender;
     LinearLayoutManager manager;
     MessageAdapter adapter;
+    int m=0;
 
     ArrayList<MessageModel> chats;
 
@@ -61,8 +62,13 @@ public class MessageActivity extends AppCompatActivity {
         ivSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reference.child("users").child(sender).child(RecieverPhone).child("message").setValue(etMessage.getText().toString());
+                reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString());
+             //   String pushKey= reference.child("users").child(sender).child(RecieverPhone).push().getKey();
+                chats.add(new MessageModel(sender, RecieverPhone,etMessage.getText().toString()));
 
+
+                adapter.notifyDataSetChanged();
+                etMessage.setText(null);
             }
         });
 
@@ -74,28 +80,39 @@ public class MessageActivity extends AppCompatActivity {
         Messages.setLayoutManager(manager);
 
 
-        reference.child("users").child(sender).addChildEventListener(new ChildEventListener() {
+      /*  reference.child("users").child(sender).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.getKey().equals(RecieverPhone))
+                {chats.clear();
+                for(DataSnapshot child: dataSnapshot.getChildren()) {
 
-           /*     if(!dataSnapshot.getValue(String.class).equals("/null"))
-                {
-                    chats.add(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue(String.class)));
-                    adapter = new MessageAdapter(MessageActivity.this, chats);
-                    Messages.setAdapter(adapter);
+                        chats.add(new MessageModel(sender, RecieverPhone, child.getValue().toString()));
 
-                   // adapter.notifyDataSetChanged();
-                }*/
+
+                        adapter.notifyDataSetChanged();
+
+                }}
+
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                for(DataSnapshot child: dataSnapshot.getChildren()) {
-                    chats.add(new MessageModel(sender, RecieverPhone, child.getValue().toString()));
+                if(dataSnapshot.getKey().equals(RecieverPhone))
+                {                chats.clear();
+
+                    for(DataSnapshot child: dataSnapshot.getChildren()) {
+
+                        chats.add(new MessageModel(sender, RecieverPhone, child.getValue().toString()));
+
+
 
 
                     adapter.notifyDataSetChanged();
+                    }
                 }
+
+
             }
 
             @Override
@@ -113,29 +130,36 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
-
+*/
         reference.child("users").child(RecieverPhone).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.getKey().equals(sender))
+                { //chats.clear();
 
-              /*  if(!dataSnapshot.getValue(String.class).equals("/null"))
+                for(DataSnapshot child: dataSnapshot.getChildren())
                 {
-                    chats.add(new MessageModel(RecieverPhone,sender, dataSnapshot.getValue(String.class)));
-                    adapter = new MessageAdapter(MessageActivity.this, chats);
-                    Messages.setAdapter(adapter);
+                    chats.add(new MessageModel(RecieverPhone,sender,child.getValue().toString()));
+                    child.getRef().removeValue();
 
-                  //  adapter.notifyDataSetChanged();
-                }*/
-            }
+
+                    adapter.notifyDataSetChanged();}
+
+
+            }}
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.getKey().equals(sender))
+                { //chats.clear();
                 for(DataSnapshot child: dataSnapshot.getChildren())
                 {
                 chats.add(new MessageModel(RecieverPhone,sender,child.getValue().toString()));
+                    child.getRef().removeValue();
 
 
-                adapter.notifyDataSetChanged();}
+
+                    adapter.notifyDataSetChanged();}}
             }
 
             @Override
