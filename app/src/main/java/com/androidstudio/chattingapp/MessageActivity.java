@@ -71,6 +71,7 @@ public class MessageActivity extends AppCompatActivity {
                 //m++;
 
                 adapter.notifyDataSetChanged();
+                Messages.scrollToPosition(chats.size()-1);
                 etMessage.setText(null);
             }
         });
@@ -95,7 +96,7 @@ public class MessageActivity extends AppCompatActivity {
 
 
                         adapter.notifyDataSetChanged();
-                        Messages.scrollToPosition(chats.size());
+                        Messages.scrollToPosition(chats.size()-1);
                     }
 
                 }}
@@ -148,7 +149,7 @@ public class MessageActivity extends AppCompatActivity {
 
 
                         adapter.notifyDataSetChanged();
-                        Messages.scrollToPosition(chats.size());
+                        Messages.scrollToPosition(chats.size()-1);
                     }
                 }
 
