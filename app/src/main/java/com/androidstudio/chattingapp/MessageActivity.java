@@ -87,22 +87,22 @@ public class MessageActivity extends AppCompatActivity {
         Messages.setLayoutManager(manager);
 
 
-        chsender=reference.child("users").child(sender).addChildEventListener(new ChildEventListener() {
+        chsender = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(dataSnapshot.getKey().equals(RecieverPhone))
-                {//chats.clear();
-                for(DataSnapshot child: dataSnapshot.getChildren()) {
-                    if(!(child.getKey().equals("message"))) {
+                if (dataSnapshot.getKey().equals(RecieverPhone)) {//chats.clear();
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        if (!(child.getKey().equals("message"))) {
 
-                        chats.add(new MessageModel(sender, RecieverPhone, child.getValue().toString()));
+                            chats.add(new MessageModel(sender, RecieverPhone, child.getValue().toString()));
 
 
-                        adapter.notifyDataSetChanged();
-                        Messages.scrollToPosition(chats.size()-1);
+                            adapter.notifyDataSetChanged();
+                            Messages.scrollToPosition(chats.size() - 1);
+                        }
+
                     }
-
-                }}
+                }
 
             }
 
@@ -139,22 +139,26 @@ public class MessageActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
 
-       chsender= reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(new ChildEventListener() {
+
+
+        reference.child("users").child(sender).child(RecieverPhone).addChildEventListener(chsender);
+
+        chreceiver = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-              //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+                //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
-                    if (!(dataSnapshot.getKey().equals("message"))) {
-                        chats.add(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
-                        dataSnapshot.getRef().removeValue();
+                if (!(dataSnapshot.getKey().equals("message"))) {
+                    chats.add(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
+                    dataSnapshot.getRef().removeValue();
 
 
-                        adapter.notifyDataSetChanged();
-                        Messages.scrollToPosition(chats.size()-1);
-                    }
+                    adapter.notifyDataSetChanged();
+                    Messages.scrollToPosition(chats.size()-1);
                 }
+            }
 
 
 
@@ -176,8 +180,9 @@ public class MessageActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
 
+       reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
 
         adapter = new MessageAdapter(MessageActivity.this,chats);
         Messages.setAdapter(adapter);
