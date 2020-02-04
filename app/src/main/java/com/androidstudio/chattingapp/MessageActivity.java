@@ -172,7 +172,7 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-       
+
         adapter = new MessageAdapter(MessageActivity.this,chats);
         Messages.setAdapter(adapter);
 
