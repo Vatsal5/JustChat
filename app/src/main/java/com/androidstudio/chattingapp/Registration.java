@@ -81,6 +81,7 @@ public class Registration extends AppCompatActivity {
                 intent.putExtra("phone",phone);
 
                 startActivity(intent);
+                Registration.this.finish();
                 dialog.dismiss();
             }
         };
