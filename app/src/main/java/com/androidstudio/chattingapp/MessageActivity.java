@@ -203,7 +203,7 @@ public class MessageActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         reference.child("users").child(RecieverPhone).child(sender).removeEventListener(chreceiver);
-        reference.child("users").child(sender).removeEventListener(chsender);
+        reference.child("users").child(sender).child(RecieverPhone).removeEventListener(chsender);
     }
 
 }
