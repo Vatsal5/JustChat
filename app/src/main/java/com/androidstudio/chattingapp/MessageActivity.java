@@ -62,14 +62,9 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if( RecieverPhone.substring(0,3).equals("+91") ) {
-                    reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString());
-                }
-                else
-                {
-                    reference.child("users").child(sender).child("+91"+RecieverPhone).push().setValue(etMessage.getText().toString());
 
-                }
+                    reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString());
+
             //   String pushKey= reference.child("users").child(sender).child(RecieverPhone).push().getKey();
                 chats.add(new MessageModel(sender, RecieverPhone,etMessage.getText().toString()));
                // reference.child("users").child(sender).child(RecieverPhone).child("message"+m).setValue(etMessage.getText().toString());
@@ -177,98 +172,7 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-        //for numbers without +91
-
-
-        reference.child("users").child(sender).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(dataSnapshot.getKey().equals("+91"+RecieverPhone))
-                {//chats.clear();
-                    for(DataSnapshot child: dataSnapshot.getChildren()) {
-                        if(!(child.getKey().equals("message"))) {
-
-                            chats.add(new MessageModel(sender, RecieverPhone, child.getValue().toString()));
-
-
-                            adapter.notifyDataSetChanged();
-                        }
-
-                    }}
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-             /*   if(dataSnapshot.getKey().equals(RecieverPhone))
-                {                chats.clear();
-
-                    for(DataSnapshot child: dataSnapshot.getChildren()) {
-
-                        chats.add(new MessageModel(sender, RecieverPhone, child.getValue().toString()));
-
-
-
-
-                    adapter.notifyDataSetChanged();
-                    }
-                }*/
-
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        reference.child("users").child("+91"+RecieverPhone).child(sender).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
-
-                if (!(dataSnapshot.getKey().equals("message"))) {
-                    chats.add(new MessageModel("+91"+RecieverPhone, sender, dataSnapshot.getValue().toString()));
-                    dataSnapshot.getRef().removeValue();
-
-
-                    adapter.notifyDataSetChanged();
-                }
-            }
-
-
-
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            }
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-            });
+       
         adapter = new MessageAdapter(MessageActivity.this,chats);
         Messages.setAdapter(adapter);
 

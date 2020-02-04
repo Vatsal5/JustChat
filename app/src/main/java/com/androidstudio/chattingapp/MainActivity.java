@@ -167,7 +167,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         Intent intent = new Intent(MainActivity.this,MessageActivity.class);
         intent.putExtra("title",contacts1.get(index).getuID());
-        intent.putExtra("phone","+91"+contacts1.get(index).getPh_number());
-        startActivity(intent);
+        if( contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
+            intent.putExtra("phone", contacts1.get(index).getPh_number());
+        }
+        else{
+            intent.putExtra("phone", "+91" + contacts1.get(index).getPh_number());
+
+        }
+            startActivity(intent);
     }
 }
