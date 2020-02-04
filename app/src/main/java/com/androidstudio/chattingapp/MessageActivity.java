@@ -65,7 +65,9 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
+                if(etMessage.getText().toString().trim().isEmpty())
+                    Toast.makeText(MessageActivity.this, "Please enter a message", Toast.LENGTH_LONG).show();
+                else
                     reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString());
 
             //   String pushKey= reference.child("users").child(sender).child(RecieverPhone).push().getKey();
