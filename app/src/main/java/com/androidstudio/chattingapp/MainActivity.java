@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
     ArrayList<UserDetail> contacts;
     ArrayList<UserDetail> contacts1;
+    ArrayList<String> number1;
 
     ListView lv;
     FirebaseDatabase database;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        number1= new ArrayList<String>();
         contacts = new ArrayList<>();
         contacts1 = new ArrayList<>();
 
@@ -90,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
            final String name= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
            final String number= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
            contacts.add(new UserDetail(number, name));
+           number1.add(number);
 
         }
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -97,32 +100,54 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for(int i=0;i<contacts.size();i++) {
-                    if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).exists()) {
-                        if(i==0)
-                        {
-                            contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
-                           // (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
-                            c=1;
+
+                        if ((number1.get(i)).substring(0, 3).equals("+91")) {
+                            if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).exists()) {
+                                if (i == 0) {
+                                    contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
+                                     (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
+                                    c = 1;
+                                } else {
+                                    for (int j = 0; j < c; j++) {
+                                        if (contacts.get(i).getPh_number().equals(contacts1.get(j).getPh_number())) {
+                                            k = 1;
+                                            break;
+                                        }
+                                    }
+                                    if (k == 0) {
+                                        contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
+                                           (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
+
+                                        c++;
+                                    }
+                                }
+                                k = 0;
+                            }
                         }
-                        else
-                            {
-                                for(int j=0;j<c;j++)
-                                {
-                                    if(contacts.get(i).getPh_number().equals(contacts1.get(j).getPh_number()))
-                                    {
-                                        k=1;
+
+                    else
+                    {
+                        if (dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).exists()) {
+                            if (i == 0) {
+                                contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
+                                 (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("message")).setValue("/null");
+                                c = 1;
+                            } else {
+                                for (int j = 0; j < c; j++) {
+                                    if (contacts.get(i).getPh_number().equals(contacts1.get(j).getPh_number())) {
+                                        k = 1;
                                         break;
                                     }
                                 }
-                                if(k==0)
-                                {
+                                if (k == 0) {
                                     contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
-                                 //   (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
+                                       (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("message")).setValue("/null");
 
                                     c++;
                                 }
                             }
-                        k=0;
+                            k = 0;
+                        }
                     }
                 }
                 userAdapter=new UserAdapter(MainActivity.this,contacts1);
