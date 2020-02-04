@@ -68,16 +68,17 @@ public class MessageActivity extends AppCompatActivity {
                 if(etMessage.getText().toString().trim().isEmpty())
                     Toast.makeText(MessageActivity.this, "Please enter a message", Toast.LENGTH_LONG).show();
                 else
+                    {
                     reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString());
+                    //   String pushKey= reference.child("users").child(sender).child(RecieverPhone).push().getKey();
+                    chats.add(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
+                    // reference.child("users").child(sender).child(RecieverPhone).child("message"+m).setValue(etMessage.getText().toString());
+                    //m++;
 
-            //   String pushKey= reference.child("users").child(sender).child(RecieverPhone).push().getKey();
-                chats.add(new MessageModel(sender, RecieverPhone,etMessage.getText().toString()));
-               // reference.child("users").child(sender).child(RecieverPhone).child("message"+m).setValue(etMessage.getText().toString());
-                //m++;
-
-                adapter.notifyDataSetChanged();
-                Messages.scrollToPosition(chats.size()-1);
-                etMessage.setText(null);
+                    adapter.notifyDataSetChanged();
+                    Messages.scrollToPosition(chats.size() - 1);
+                    etMessage.setText(null);
+                }
             }
         });
 
