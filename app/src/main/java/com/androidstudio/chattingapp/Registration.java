@@ -80,8 +80,8 @@ public class Registration extends AppCompatActivity {
                 intent.putExtra("token",token);
                 intent.putExtra("phone",phone);
 
-                startActivity(intent);
                 Registration.this.finish();
+                startActivity(intent);
                 dialog.dismiss();
             }
         };
