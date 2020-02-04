@@ -36,6 +36,9 @@ public class MessageActivity extends AppCompatActivity {
     LinearLayoutManager manager;
     MessageAdapter adapter;
     ArrayList<MessageModel> chats;
+    ChildEventListener chreceiver, chsender;
+
+
 
 
     @Override
@@ -84,7 +87,7 @@ public class MessageActivity extends AppCompatActivity {
         Messages.setLayoutManager(manager);
 
 
-        reference.child("users").child(sender).addChildEventListener(new ChildEventListener() {
+        chsender=reference.child("users").child(sender).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if(dataSnapshot.getKey().equals(RecieverPhone))
@@ -138,7 +141,7 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-        reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(new ChildEventListener() {
+       chsender= reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
               //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
@@ -182,7 +185,17 @@ public class MessageActivity extends AppCompatActivity {
 
 
 
+
+
+
+
         //Log.d("Reciever",FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        reference.child("users").child(RecieverPhone).child(sender).removeEventListener(chreceiver);
+        reference.child("users").child(sender).removeEventListener(chsender);
     }
 
 }
