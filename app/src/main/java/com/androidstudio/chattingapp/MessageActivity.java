@@ -95,6 +95,7 @@ public class MessageActivity extends AppCompatActivity {
 
 
                         adapter.notifyDataSetChanged();
+                        Messages.scrollToPosition(chats.size());
                     }
 
                 }}
@@ -147,6 +148,7 @@ public class MessageActivity extends AppCompatActivity {
 
 
                         adapter.notifyDataSetChanged();
+                        Messages.scrollToPosition(chats.size());
                     }
                 }
 
