@@ -62,7 +62,14 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString());
+                if( RecieverPhone.substring(0,3).equals("+91") ) {
+                    reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString());
+                }
+                else
+                {
+                    reference.child("users").child(sender).child("+91"+RecieverPhone).push().setValue(etMessage.getText().toString());
+
+                }
             //   String pushKey= reference.child("users").child(sender).child(RecieverPhone).push().getKey();
                 chats.add(new MessageModel(sender, RecieverPhone,etMessage.getText().toString()));
                // reference.child("users").child(sender).child(RecieverPhone).child("message"+m).setValue(etMessage.getText().toString());

@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 }
                                 if (k == 0) {
                                     contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
-                                       (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("message")).setValue("/null");
+                                       (reference.child("users").child(currentUserNumber).child(("+91"+contacts.get(i).getPh_number())).child("message")).setValue("/null");
 
                                     c++;
                                 }
