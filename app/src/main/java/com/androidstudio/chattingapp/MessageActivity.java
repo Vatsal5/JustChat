@@ -148,6 +148,7 @@ public class MessageActivity extends AppCompatActivity {
 
         reference.child("users").child(sender).addChildEventListener(chsender);
 
+
         chreceiver = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
