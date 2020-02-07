@@ -10,6 +10,8 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -175,5 +177,25 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         }
             startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.options,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id)
+        {
+            case R.id.Profile:
+                startActivity(new Intent(MainActivity.this,Profile.class));
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
