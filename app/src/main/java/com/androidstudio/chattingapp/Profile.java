@@ -1,9 +1,18 @@
 package com.androidstudio.chattingapp;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -37,6 +46,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
     PopupWindow window;
 
     View view;
+    private static  final int REQUEST_CODE=100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +78,19 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
         window = new PopupWindow(view, ActionBar.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         window.setFocusable(true);
+        ivClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ContextCompat.checkSelfPermission(Profile.this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+                {
+                    ActivityCompat.requestPermissions(Profile.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_CODE);
+
+                }
+                else{
+                    pick_image();
+                }
+            }
+        });
     }
 
     @Override
@@ -102,5 +125,56 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
         etData.setText(data.get(index));
         etData.setSelection(data.get(index).length());
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if(requestCode==REQUEST_CODE)
+        {
+            if(grantResults[0]==PackageManager.PERMISSION_DENIED)
+            {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+                dialog.setMessage("This Permission is important to access image files from the gallery!").setTitle("Permission Required!");
+
+                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        ActivityCompat.requestPermissions(Profile.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_CODE);
+
+                    }
+                });
+
+                dialog.setNegativeButton("NO THANKS", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Profile.this.finish();
+
+                    }
+                });
+            }
+            if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
+            {
+                pick_image();
+            }
+        }
+    }
+    private  void pick_image()
+    {
+        Intent intent= new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent,50);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode==50)
+        {
+            ivProfile.setImageURI(data.getData());
+        }
     }
 }
