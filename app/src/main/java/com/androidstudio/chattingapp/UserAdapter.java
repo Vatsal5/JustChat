@@ -12,11 +12,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 public class UserAdapter extends ArrayAdapter<UserDetail> {
 
     private final Context context;
+    ImageView iv;
+    FirebaseDatabase database;
+    DatabaseReference reference;
     private ArrayList<UserDetail> list;
 
     public interface itemSelected
@@ -39,6 +50,43 @@ public class UserAdapter extends ArrayAdapter<UserDetail> {
 
         LayoutInflater inflater= (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View v= inflater.inflate(R.layout.chats_list_layout,parent,false);
+        iv=v.findViewById(R.id.imageView);
+        database=FirebaseDatabase.getInstance();
+        reference=database.getReference();
+
+        reference.child("users").child(list.get(position).getPh_number()).
+                addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        if(dataSnapshot.getKey().equals("profile"))
+                        {
+                            Glide.with(context)
+                                    .load(dataSnapshot.getValue())
+                                    .into(iv);
+                        }
+
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
 
         TextView tvUserName= v.findViewById(R.id.tv_username);

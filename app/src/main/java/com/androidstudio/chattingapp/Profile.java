@@ -3,6 +3,7 @@ package com.androidstudio.chattingapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -14,7 +15,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.FileObserver;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,11 +29,25 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Profile extends AppCompatActivity implements profile_listitem_adapter.itemSelected {
 
@@ -37,13 +55,18 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
     ListView list;
     profile_listitem_adapter adapter;
     ArrayList<String> data;
+    CardView cv;
 
+    Uri uri;
     LayoutInflater inflater;
     LinearLayout llProfile;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
 
     TextView tvHeading,tvSave,tvCancel;
     EditText etData;
     PopupWindow window;
+    StorageReference reference;
 
     View view;
     private static  final int REQUEST_CODE=100;
@@ -52,6 +75,9 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        reference= FirebaseStorage.getInstance().getReference("docs/");
+        firebaseDatabase=FirebaseDatabase.getInstance();
+        databaseReference=firebaseDatabase.getReference();
 
         data = new ArrayList<>();
 
@@ -60,7 +86,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
         data.add(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
 
         ivProfile = findViewById(R.id.ivProfile);
-        ivClick = findViewById(R.id.ivClick);
+      //  ivClick = findViewById(R.id.ivClick);
 
         llProfile = findViewById(R.id.llProfile);
         inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -78,7 +104,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
         window = new PopupWindow(view, ActionBar.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         window.setFocusable(true);
-        ivClick.setOnClickListener(new View.OnClickListener() {
+        ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(ContextCompat.checkSelfPermission(Profile.this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
@@ -91,7 +117,45 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                 }
             }
         });
+        databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        if(dataSnapshot.getKey().equals("profile"))
+                        {
+                            Glide.with(Profile.this)
+                                    .load(dataSnapshot.getValue())
+                                    .into(ivProfile);
+                        }
+
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
     }
+
+
+
+
 
     @Override
     public void onItemSelected(final int index) {
@@ -174,7 +238,40 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode==50)
         {
-            ivProfile.setImageURI(data.getData());
+            uri=data.getData();
+            File from= new File(uri.getLastPathSegment(),"old");
+            File to= new File("dp");
+            from.renameTo(to);
+            UploadTask uploadTask=reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").
+                    putFile(uri);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(getApplicationContext(),"file uploaded", Toast.LENGTH_LONG).show();
+
+                    reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").getDownloadUrl().
+                            addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    Toast.makeText(getApplicationContext(),"hi", Toast.LENGTH_LONG).show();
+                                    Glide.with(Profile.this)
+                                            .load(uri.toString())
+                                            .into(ivProfile);
+                                    databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                            child("profile").setValue(uri.toString());
+                                    // ivProfile.setImageURI(uri);
+                                    // Log.d("tag",uri.toString());
+
+
+                                }
+                            });
+                }
+            });
+
+
+          //  ivProfile.setImageURI(data.getData());
+           // ivProfile.setScaleType(CircleImageView.ScaleType.FIT_XY);
+           // ivProfile.setRotation(90);
         }
     }
 }
