@@ -21,16 +21,18 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
-            android:paddingLeft="5dp"
+            android:padding="10dp"
+            android:background="#ffffff"
             app:cardCornerRadius="30dp">
 
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:adjustViewBounds="true"
-                android:scaleType="fitXY"
+                android:background="#ffffff"
+                android:scaleType="fitCenter"
                 app:srcCompat="@drawable/business" />
+
         </androidx.cardview.widget.CardView>
 
         <TextView
@@ -41,7 +43,10 @@
             android:layout_marginTop="20dp"
             android:fontFamily="@font/alegreya_sans_thin"
             android:text="User Name"
+            android:textStyle="bold"
             android:textColor="#90000000"
             android:textSize="24sp" />
+
     </LinearLayout>
+
 </LinearLayout>
