@@ -2,6 +2,8 @@ package com.androidstudio.chattingapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Intent;
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 {
 
     ArrayList<UserDetail> contacts;
-    ArrayList<UserDetail> contacts1;
+    ArrayList<UserDetailwithUrl> contacts1;
     ArrayList<String> number1;
 
     ListView lv;
@@ -59,9 +61,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         lv=findViewById(R.id.lv);
 
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED)
+        if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED)
         {
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},1);
+            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_CONTACTS},1);
         }
         else
         {
@@ -105,9 +107,17 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                         if ((number1.get(i)).substring(0, 3).equals("+91")) {
                             if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).exists()) {
+
+
                                 if (i == 0) {
-                                    contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
-                                     (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
+                                    if(dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
+                                        contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class)));
+                                    }
+                                    else{
+
+                                        contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null"));
+                                    }
+                                    (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
                                     c = 1;
                                 } else {
                                     for (int j = 0; j < c; j++) {
@@ -117,8 +127,14 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                         }
                                     }
                                     if (k == 0) {
-                                        contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
-                                           (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
+                                        if(dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
+
+                                            contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class)));
+                                        }
+                                        else{
+
+                                            contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null"));
+                                        }                                           (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
 
                                         c++;
                                     }
@@ -131,8 +147,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     {
                         if (dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).exists()) {
                             if (i == 0) {
-                                contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
-                                 (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("message")).setValue("/null");
+                                if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
+                                    contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").getValue(String.class)));
+                                }
+                                else{
+                                    contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null"));
+                                }                                 (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("message")).setValue("/null");
                                 c = 1;
                             } else {
                                 for (int j = 0; j < c; j++) {
@@ -142,8 +162,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                     }
                                 }
                                 if (k == 0) {
-                                    contacts1.add(new UserDetail(contacts.get(i).getPh_number(), contacts.get(i).getuID()));
-                                       (reference.child("users").child(currentUserNumber).child(("+91"+contacts.get(i).getPh_number())).child("message")).setValue("/null");
+                                    if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
+                                        contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").getValue(String.class)));
+                                    }
+                                    else{
+                                        contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null"));
+                                    }
+                                    (reference.child("users").child(currentUserNumber).child(("+91"+contacts.get(i).getPh_number())).child("message")).setValue("/null");
 
                                     c++;
                                 }

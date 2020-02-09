@@ -1,12 +1,15 @@
 package com.androidstudio.chattingapp;
 
-public class UserDetail {
+public class UserDetailwithUrl {
+
     String ph_number;
     String uID;
+    String url;
 
-    public UserDetail(String ph_number, String uID) {
+    public UserDetailwithUrl(String ph_number, String uID,String url) {
         this.ph_number = ph_number;
         this.uID = uID;
+        this.url=url;
 
     }
 
@@ -26,5 +29,11 @@ public class UserDetail {
         this.uID = uID;
     }
 
+    public String getUrl() {
+        return url;
+    }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
 }

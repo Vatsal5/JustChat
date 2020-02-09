@@ -1,6 +1,7 @@
 package com.androidstudio.chattingapp;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,13 +24,13 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-public class UserAdapter extends ArrayAdapter<UserDetail> {
+public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
 
     private final Context context;
     ImageView iv;
     FirebaseDatabase database;
     DatabaseReference reference;
-    private ArrayList<UserDetail> list;
+    private ArrayList<UserDetailwithUrl> list;
 
     public interface itemSelected
     {
@@ -37,8 +39,9 @@ public class UserAdapter extends ArrayAdapter<UserDetail> {
 
     itemSelected Activity;
 
-    public UserAdapter(@NonNull Context context, ArrayList<UserDetail> list) {
+    public UserAdapter(@NonNull Context context, ArrayList<UserDetailwithUrl>list) {
         super(context, R.layout.chats_list_layout,list);
+
         this.context = context;
         this.list = list;
         Activity = (itemSelected) context;
@@ -53,40 +56,88 @@ public class UserAdapter extends ArrayAdapter<UserDetail> {
         iv=v.findViewById(R.id.imageView);
         database=FirebaseDatabase.getInstance();
         reference=database.getReference();
+        Log.d("tag",list.get(position).getUrl());
+        if(list.get(position).getUrl().equals("null"))
+        {
+            iv.setImageResource(R.drawable.person);
+        }
+        else
+        {
+        Glide.with(context).load(list.get(position).getUrl()).into(iv);}
+       // Log.d("tag",list.get(position).getUrl());
 
-        reference.child("users").child(list.get(position).getPh_number()).
-                addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        if(dataSnapshot.getKey().equals("profile"))
-                        {
-                            Glide.with(context)
-                                    .load(dataSnapshot.getValue())
-                                    .into(iv);
-                        }
 
-                    }
 
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+//        if(list.get(position).getPh_number().substring(0,3).equals("+91")) {
+//            reference.child("users").child(list.get(position).getPh_number()).
+//                    addChildEventListener(new ChildEventListener() {
+//                        @Override
+//                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                            if (dataSnapshot.getKey().equals("profile")) {
+//                                Glide.with(context)
+//                                        .load(dataSnapshot.getValue())
+//                                        .into(iv);
+//                            }
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                        }
+//                    });
+//        }
+//        else{
+//            reference.child("users").child("+91"+list.get(position).getPh_number()).
+//                    addChildEventListener(new ChildEventListener() {
+//                        @Override
+//                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                            if (dataSnapshot.getKey().equals("profile")) {
+//                                Glide.with(context)
+//                                        .load(dataSnapshot.getValue())
+//                                        .into(iv);
+//                            }
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                        }
+//                    });
+//        }
 
 
         TextView tvUserName= v.findViewById(R.id.tv_username);
