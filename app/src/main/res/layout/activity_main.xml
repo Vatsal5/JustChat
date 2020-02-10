@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#99000000"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -12,12 +13,11 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="#99000000"
+        android:background="#00ffffff"
         android:fontFamily="@font/aclonica"
-        android:gravity="center"
-        android:text="gossips"
+        android:gravity="center|start|left"
+        android:paddingLeft="20dp"
+        android:text="Gossips"
         android:textColor="#ffffff"
         android:textSize="28sp"
         android:textStyle="bold" />

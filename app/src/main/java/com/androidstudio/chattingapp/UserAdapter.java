@@ -40,7 +40,7 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
     itemSelected Activity;
 
     public UserAdapter(@NonNull Context context, ArrayList<UserDetailwithUrl>list) {
-        super(context, R.layout.chats_list_layout,list);
+        super(context, R.layout.chats_listlayout,list);
 
         this.context = context;
         this.list = list;
@@ -52,7 +52,7 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         LayoutInflater inflater= (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View v= inflater.inflate(R.layout.chats_list_layout,parent,false);
+        final View v= inflater.inflate(R.layout.chats_listlayout,parent,false);
         iv=v.findViewById(R.id.imageView);
         database=FirebaseDatabase.getInstance();
         reference=database.getReference();

@@ -3,16 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#90000000"
     android:orientation="vertical">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="10dp"
-        android:background="#ffffff"
+        android:background="#bdbdbd"
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
@@ -21,8 +18,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
-            android:padding="10dp"
             android:background="#ffffff"
+            android:padding="10dp"
             app:cardCornerRadius="30dp">
 
             <ImageView
@@ -43,9 +40,8 @@
             android:layout_marginTop="20dp"
             android:fontFamily="@font/alegreya_sans_thin"
             android:text="User Name"
-            android:textStyle="bold"
-            android:textColor="#90000000"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
