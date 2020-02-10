@@ -103,45 +103,45 @@ public class MessageActivity extends AppCompatActivity {
         adapter = new MessageAdapter(MessageActivity.this,chats);
         Messages.setAdapter(adapter);
 
-        chsender = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if (dataSnapshot.getKey().equals(RecieverPhone)) {//chats.clear();
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        if (!(child.getKey().equals("message"))) {
-
-                            chats.add(new MessageModel(sender, RecieverPhone, child.getValue().toString()));
-
-                            adapter.notifyDataSetChanged();
-                            Messages.scrollToPosition(chats.size() - 1);
-                        }
-
-                    }
-                }
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-
-        reference.child("users").child(sender).addChildEventListener(chsender);
+//        chsender = new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                if (dataSnapshot.getKey().equals(RecieverPhone)) {//chats.clear();
+//                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+//                        if (!(child.getKey().equals("message"))) {
+//
+//                            chats.add(new MessageModel(sender, RecieverPhone, child.getValue().toString()));
+//
+//                            adapter.notifyDataSetChanged();
+//                            Messages.scrollToPosition(chats.size() - 1);
+//                        }
+//
+//                    }
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        };
+//
+//        reference.child("users").child(sender).addChildEventListener(chsender);
 
         chreceiver = new ChildEventListener() {
             @Override
@@ -185,7 +185,7 @@ public class MessageActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         reference.child("users").child(RecieverPhone).child(sender).removeEventListener(chreceiver);
-        reference.child("users").child(sender).removeEventListener(chsender);
+        //reference.child("users").child(sender).removeEventListener(chsender);
         chats.clear();
         Handler.close();
     }
