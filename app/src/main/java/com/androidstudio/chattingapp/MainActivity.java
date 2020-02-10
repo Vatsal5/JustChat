@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                     }
                                     if (k == 0) {
                                         if(dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
-
+                                            Log.d("myapp",dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class));
                                             contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class)));
                                         }
                                         else{
