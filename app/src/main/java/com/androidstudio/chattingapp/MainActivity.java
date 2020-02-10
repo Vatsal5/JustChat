@@ -57,9 +57,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         reference=database.getReference();
         currentUserNumber= FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
-
         lv=findViewById(R.id.lv);
-
 
         if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED)
         {
@@ -186,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
             }
         });
-        // Toast.makeText(getApplicationContext(),contacts.get(0).getuID(),Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -220,7 +217,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             case R.id.Profile:
                 startActivity(new Intent(MainActivity.this,Profile.class));
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

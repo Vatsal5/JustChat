@@ -42,8 +42,7 @@ public class MessageActivity extends AppCompatActivity {
     ArrayList<MessageModel> chats;
     ChildEventListener chreceiver, chsender;
 
-
-
+    DBHandler Handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +51,13 @@ public class MessageActivity extends AppCompatActivity {
         database=FirebaseDatabase.getInstance();
         reference=database.getReference();
 
+        Handler = new DBHandler(MessageActivity.this);
+        Handler.Open();
+
         //getSupportActionBar().setTitle(getIntent().getStringExtra("title"));
         setTitle(String.valueOf(getIntent().getStringExtra("title")));
+        //getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         RecieverPhone = getIntent().getStringExtra("phone");
         sender=FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
@@ -76,6 +80,7 @@ public class MessageActivity extends AppCompatActivity {
                     reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString());
                     //   String pushKey= reference.child("users").child(sender).child(RecieverPhone).push().getKey();
                     chats.add(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
+                    Handler.addMessage(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
                     // reference.child("users").child(sender).child(RecieverPhone).child("message"+m).setValue(etMessage.getText().toString());
                     //m++;
 
@@ -93,6 +98,10 @@ public class MessageActivity extends AppCompatActivity {
         manager.setStackFromEnd(true);
         Messages.setLayoutManager(manager);
 
+        chats = Handler.getMessages(RecieverPhone);
+
+        adapter = new MessageAdapter(MessageActivity.this,chats);
+        Messages.setAdapter(adapter);
 
         chsender = new ChildEventListener() {
             @Override
@@ -102,7 +111,6 @@ public class MessageActivity extends AppCompatActivity {
                         if (!(child.getKey().equals("message"))) {
 
                             chats.add(new MessageModel(sender, RecieverPhone, child.getValue().toString()));
-
 
                             adapter.notifyDataSetChanged();
                             Messages.scrollToPosition(chats.size() - 1);
@@ -115,21 +123,6 @@ public class MessageActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-             /*   if(dataSnapshot.getKey().equals(RecieverPhone))
-                {                chats.clear();
-
-                    for(DataSnapshot child: dataSnapshot.getChildren()) {
-
-                        chats.add(new MessageModel(sender, RecieverPhone, child.getValue().toString()));
-
-
-
-
-                    adapter.notifyDataSetChanged();
-                    }
-                }*/
-
-
             }
 
             @Override
@@ -148,10 +141,7 @@ public class MessageActivity extends AppCompatActivity {
             }
         };
 
-
-
         reference.child("users").child(sender).addChildEventListener(chsender);
-
 
         chreceiver = new ChildEventListener() {
             @Override
@@ -160,6 +150,7 @@ public class MessageActivity extends AppCompatActivity {
 
                 if (!(dataSnapshot.getKey().equals("message"))) {
                     chats.add(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
+                    Handler.addMessage(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
                     dataSnapshot.getRef().removeValue();
 
 
@@ -167,9 +158,6 @@ public class MessageActivity extends AppCompatActivity {
                     Messages.scrollToPosition(chats.size()-1);
                 }
             }
-
-
-
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -192,23 +180,25 @@ public class MessageActivity extends AppCompatActivity {
 
        reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
 
-        adapter = new MessageAdapter(MessageActivity.this,chats);
-        Messages.setAdapter(adapter);
-
-
-
-
-
-
-
-
-        //Log.d("Reciever",FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
         reference.child("users").child(RecieverPhone).child(sender).removeEventListener(chreceiver);
         reference.child("users").child(sender).removeEventListener(chsender);
+        chats.clear();
+        Handler.close();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch(item.getItemId())
+        {
+            case android.R.id.home:
+                MessageActivity.this.finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

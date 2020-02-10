@@ -153,10 +153,6 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
     }
 
-
-
-
-
     @Override
     public void onItemSelected(final int index) {
         switch (index)
@@ -259,19 +255,10 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                                             .into(ivProfile);
                                     databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                             child("profile").setValue(uri.toString());
-                                    // ivProfile.setImageURI(uri);
-                                    // Log.d("tag",uri.toString());
-
-
                                 }
                             });
                 }
             });
-
-
-          //  ivProfile.setImageURI(data.getData());
-           // ivProfile.setScaleType(CircleImageView.ScaleType.FIT_XY);
-           // ivProfile.setRotation(90);
         }
     }
 }
