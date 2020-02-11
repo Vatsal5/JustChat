@@ -12,15 +12,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="60dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv"
 
-            app:cardCornerRadius="90dp"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
-
+            app:cardCornerRadius="80dp"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,13 +32,11 @@
                 android:backgroundTint="#ffffff"
                 android:layout_height="match_parent"
                 android:background="@drawable/image_background"
-                android:padding="5dp"
                 android:scaleType="fitXY"
                 android:clickable="true"
                 android:src="@drawable/person" />
 
         </androidx.cardview.widget.CardView>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -47,6 +44,6 @@
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"/>
+        android:layout_marginTop="20dp"/>
 
 </LinearLayout>
