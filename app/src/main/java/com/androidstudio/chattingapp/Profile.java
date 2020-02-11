@@ -2,6 +2,7 @@ package com.androidstudio.chattingapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
@@ -16,6 +17,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.util.Log;
@@ -42,6 +44,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -113,7 +117,8 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
                 }
                 else{
-                    pick_image();
+                    //pick_image();
+                    CropImage.startPickImageActivity(Profile.this);
                 }
             }
         });
@@ -218,47 +223,103 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
             }
             if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
             {
-                pick_image();
+                CropImage.startPickImageActivity(Profile.this);
             }
         }
     }
-    private  void pick_image()
-    {
-        Intent intent= new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent,50);
-    }
+//    private  void pick_image()
+//    {
+//        Intent intent= new Intent(Intent.ACTION_PICK);
+//        intent.setType("image/*");
+//        startActivityForResult(intent,50);
+//    }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode==50)
-        {
-            uri=data.getData();
-            File from= new File(uri.getLastPathSegment(),"old");
-            File to= new File("dp");
-            from.renameTo(to);
-            UploadTask uploadTask=reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").
-                    putFile(uri);
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(getApplicationContext(),"file uploaded", Toast.LENGTH_LONG).show();
+//        if (resultCode == RESULT_OK && requestCode==50)
+//        {
+//            uri=data.getData();
+//            File from= new File(uri.getLastPathSegment(),"old");
+//            File to= new File("dp");
+//            from.renameTo(to);
+//            UploadTask uploadTask=reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").
+//                    putFile(uri);
+//            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                    Toast.makeText(getApplicationContext(),"file uploaded", Toast.LENGTH_LONG).show();
+//
+//                    reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").getDownloadUrl().
+//                            addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                @Override
+//                                public void onSuccess(Uri uri) {
+//                                    Toast.makeText(getApplicationContext(),"hi", Toast.LENGTH_LONG).show();
+//                                    Glide.with(Profile.this)
+//                                            .load(uri.toString())
+//                                            .into(ivProfile);
+//                                    databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+//                                            child("profile").setValue(uri.toString());
+//                                }
+//                            });
+//                }
+//            });
+//        }
 
-                    reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").getDownloadUrl().
-                            addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    Toast.makeText(getApplicationContext(),"hi", Toast.LENGTH_LONG).show();
-                                    Glide.with(Profile.this)
-                                            .load(uri.toString())
-                                            .into(ivProfile);
-                                    databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                            child("profile").setValue(uri.toString());
-                                }
-                            });
-                }
-            });
+        if(requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK)
+        {
+            Uri imageuri = CropImage.getPickImageResultUri(this,data);
+            if(CropImage.isReadExternalStoragePermissionsRequired(this,imageuri))
+            {
+                uri = imageuri;
+                requestPermissions(new String []{Manifest.permission.READ_EXTERNAL_STORAGE},0);
+            }else {
+                startCrop(imageuri);
+            }
         }
+
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE)
+        {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if(resultCode == RESULT_OK)
+            {
+                uri = result.getUri();
+                File from= new File(uri.getLastPathSegment(),"old");
+                File to= new File("dp");
+                from.renameTo(to);
+                UploadTask uploadTask=reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").
+                        putFile(uri);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(getApplicationContext(),"file uploaded", Toast.LENGTH_LONG).show();
+
+                        reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").getDownloadUrl().
+                                addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        Toast.makeText(getApplicationContext(),"hi", Toast.LENGTH_LONG).show();
+                                        Glide.with(Profile.this)
+                                                .load(uri.toString())
+                                                .into(ivProfile);
+                                        databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                                child("profile").setValue(uri.toString());
+                                    }
+                                });
+                    }
+                });
+            }
+        }
+    }
+
+    private void startCrop(Uri imageuri)
+    {
+        CropImage.activity(imageuri)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setMultiTouchEnabled(true)
+                .setCropShape(CropImageView.CropShape.RECTANGLE)
+                .setRequestedSize(180,180)
+                .start(this);
     }
 }

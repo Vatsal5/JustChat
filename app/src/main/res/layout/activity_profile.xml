@@ -30,12 +30,11 @@
             <ImageView
                 android:id="@+id/ivProfile"
                 android:layout_width="match_parent"
-                android:adjustViewBounds="true"
                 android:backgroundTint="#ffffff"
                 android:layout_height="match_parent"
                 android:background="@drawable/image_background"
                 android:padding="5dp"
-                android:scaleType="fitCenter"
+                android:scaleType="fitXY"
                 android:clickable="true"
                 android:src="@drawable/person" />
 
