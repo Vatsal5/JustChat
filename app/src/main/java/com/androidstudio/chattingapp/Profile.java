@@ -165,7 +165,6 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
         adapter = new profile_listitem_adapter(Profile.this,data);
         list.setAdapter(adapter);
 
-
     }
 
     @Override

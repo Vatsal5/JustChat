@@ -33,7 +33,6 @@
                 android:backgroundTint="#ffffff"
                 android:layout_height="match_parent"
                 android:background="@drawable/image_background"
-                android:padding="5dp"
                 android:scaleType="fitXY"
                 android:clickable="true"
                 android:src="@drawable/person" />
@@ -47,6 +46,6 @@
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"/>
+        android:layout_marginTop="40dp" />
 
 </LinearLayout>
