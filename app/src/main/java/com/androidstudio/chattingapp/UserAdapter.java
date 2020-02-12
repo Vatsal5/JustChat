@@ -7,18 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -64,80 +58,7 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
         else
         {
         Glide.with(context).load(list.get(position).getUrl()).into(iv);}
-       // Log.d("tag",list.get(position).getUrl());
 
-
-
-//        if(list.get(position).getPh_number().substring(0,3).equals("+91")) {
-//            reference.child("users").child(list.get(position).getPh_number()).
-//                    addChildEventListener(new ChildEventListener() {
-//                        @Override
-//                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                            if (dataSnapshot.getKey().equals("profile")) {
-//                                Glide.with(context)
-//                                        .load(dataSnapshot.getValue())
-//                                        .into(iv);
-//                            }
-//
-//                        }
-//
-//                        @Override
-//                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                        }
-//                    });
-//        }
-//        else{
-//            reference.child("users").child("+91"+list.get(position).getPh_number()).
-//                    addChildEventListener(new ChildEventListener() {
-//                        @Override
-//                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                            if (dataSnapshot.getKey().equals("profile")) {
-//                                Glide.with(context)
-//                                        .load(dataSnapshot.getValue())
-//                                        .into(iv);
-//                            }
-//
-//                        }
-//
-//                        @Override
-//                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                        }
-//                    });
-//        }
 
 
         TextView tvUserName= v.findViewById(R.id.tv_username);

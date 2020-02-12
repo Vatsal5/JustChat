@@ -1,13 +1,5 @@
 package com.androidstudio.chattingapp;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -15,16 +7,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.FileObserver;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,6 +20,14 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -49,9 +45,6 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Profile extends AppCompatActivity implements profile_listitem_adapter.itemSelected {
 
@@ -85,12 +78,11 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
         data = new ArrayList<>();
 
-        data.add("Vatsal");
-        data.add("Work hard in Silence and let success make noise");
-        data.add(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+
+
 
         ivProfile = findViewById(R.id.ivProfile);
-      //  ivClick = findViewById(R.id.ivClick);
+
 
         llProfile = findViewById(R.id.llProfile);
         inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -103,8 +95,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
 
         list = findViewById(R.id.list);
-        adapter = new profile_listitem_adapter(Profile.this,data);
-        list.setAdapter(adapter);
+
 
         window = new PopupWindow(view, ActionBar.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         window.setFocusable(true);
@@ -132,6 +123,21 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                                     .load(dataSnapshot.getValue())
                                     .into(ivProfile);
                         }
+                        if(dataSnapshot.getKey().equals("name"))
+                        {
+
+                            data.add(0,dataSnapshot.getValue().toString());
+
+
+                        }
+                        if(dataSnapshot.getKey().equals("status"))
+                        {
+
+                            data.add(1,dataSnapshot.getValue().toString());
+
+
+                        }
+                       adapter.notifyDataSetChanged();
 
                     }
 
@@ -155,6 +161,10 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
                     }
                 });
+        data.add(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+        adapter = new profile_listitem_adapter(Profile.this,data);
+        list.setAdapter(adapter);
+
 
     }
 
@@ -175,6 +185,15 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
             @Override
             public void onClick(View view) {
                 data.remove(index);
+                if(index==0)
+                {
+                    databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("name").setValue(etData.getText().toString().trim());
+                }
+                else if(index==1)
+                {
+                    databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("status").setValue(etData.getText().toString().trim());
+
+                }
                 data.add(index,etData.getText().toString().trim());
                 adapter.notifyDataSetChanged();
                 window.dismiss();
@@ -227,45 +246,12 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
             }
         }
     }
-//    private  void pick_image()
-//    {
-//        Intent intent= new Intent(Intent.ACTION_PICK);
-//        intent.setType("image/*");
-//        startActivityForResult(intent,50);
-//    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == RESULT_OK && requestCode==50)
-//        {
-//            uri=data.getData();
-//            File from= new File(uri.getLastPathSegment(),"old");
-//            File to= new File("dp");
-//            from.renameTo(to);
-//            UploadTask uploadTask=reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").
-//                    putFile(uri);
-//            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                    Toast.makeText(getApplicationContext(),"file uploaded", Toast.LENGTH_LONG).show();
-//
-//                    reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").getDownloadUrl().
-//                            addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                @Override
-//                                public void onSuccess(Uri uri) {
-//                                    Toast.makeText(getApplicationContext(),"hi", Toast.LENGTH_LONG).show();
-//                                    Glide.with(Profile.this)
-//                                            .load(uri.toString())
-//                                            .into(ivProfile);
-//                                    databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-//                                            child("profile").setValue(uri.toString());
-//                                }
-//                            });
-//                }
-//            });
-//        }
+
 
         if(requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK)
         {
@@ -318,8 +304,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
         CropImage.activity(imageuri)
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setMultiTouchEnabled(true)
-                .setCropShape(CropImageView.CropShape.RECTANGLE)
-                .setRequestedSize(180,180)
+                .setAspectRatio(25,25)
                 .start(this);
     }
 }
