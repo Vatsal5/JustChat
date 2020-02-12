@@ -27,7 +27,7 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:background="#ffffff"
-                android:scaleType="fitCenter"
+                android:scaleType="fitXY"
                 app:srcCompat="@drawable/business" />
 
         </androidx.cardview.widget.CardView>
