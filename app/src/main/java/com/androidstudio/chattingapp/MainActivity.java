@@ -117,7 +117,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
                                 if (i == 0) {
-                                    if(dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
+                                    if((dataSnapshot.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("info").child("friend").exists()))
+                                    { if(dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
                                         contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class)));
                                     }
                                     else{
@@ -125,8 +126,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                         contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null"));
                                     }
                                     (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
-                                  //  (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("activeStatus")).setValue("online");
-                                    c = 1;
+                                   // (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("info").child("friend")).setValue("no");
+
+                                    //  (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("activeStatus")).setValue("online");
+                                    c = 1;}
                                 } else {
                                     for (int j = 0; j < c; j++) {
                                         if (contacts.get(i).getPh_number().equals(contacts1.get(j).getPh_number())) {
@@ -135,17 +138,21 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                         }
                                     }
                                     if (k == 0) {
-                                        if(dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
+                                        if((dataSnapshot.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("info").child("friend").exists()))
+                                        { if(dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
                                             Log.d("myapp",dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class));
                                             contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class)));
                                         }
                                         else{
 
                                             contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null"));
-                                        }                                           (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
+                                        }
+                                        (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
+
+                                      //  (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("info").child("friend")).setValue("no");
 
                                         c++;
-                                    }
+                                    }}
                                 }
                                 k = 0;
                             }
@@ -155,13 +162,17 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     {
                         if (dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).exists()) {
                             if (i == 0) {
-                                if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
+                                if((dataSnapshot.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("info").child("friend").exists()))
+                                {if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
                                     contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").getValue(String.class)));
                                 }
                                 else{
                                     contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null"));
-                                }                                 (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("message")).setValue("/null");
-                                c = 1;
+                                }
+                                (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("message")).setValue("/null");
+                              //  (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("info").child("friend")).setValue("no");
+
+                                c = 1;}
                             } else {
                                 for (int j = 0; j < c; j++) {
                                     if (contacts.get(i).getPh_number().equals(contacts1.get(j).getPh_number())) {
@@ -170,19 +181,21 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                     }
                                 }
                                 if (k == 0) {
-                                    if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
+                                    if((dataSnapshot.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("info").child("friend").exists()))
+                                    {  if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
                                         contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").getValue(String.class)));
                                     }
                                     else{
                                         contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null"));
                                     }
                                     (reference.child("users").child(currentUserNumber).child(("+91"+contacts.get(i).getPh_number())).child("message")).setValue("/null");
+                                  //  (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("info").child("friend")).setValue("no");
 
                                   //  (reference.child("users").child(currentUserNumber).child(("+91"+contacts.get(i).getPh_number())).child("activeStatus")).setValue("online");
 
 
                                     c++;
-                                }
+                                }}
                             }
                             k = 0;
                         }
