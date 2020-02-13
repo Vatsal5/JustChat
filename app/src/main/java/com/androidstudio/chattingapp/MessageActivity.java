@@ -1,22 +1,17 @@
 package com.androidstudio.chattingapp;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -148,7 +143,7 @@ public class MessageActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
-                if (!(dataSnapshot.getKey().equals("message"))) {
+                if (!(dataSnapshot.getKey().equals("message") && dataSnapshot.getKey().equals("activeStatus"))) {
                     chats.add(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
                     Handler.addMessage(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
                     dataSnapshot.getRef().removeValue();

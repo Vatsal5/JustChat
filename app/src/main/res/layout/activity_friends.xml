@@ -17,14 +17,11 @@
         android:fontFamily="@font/aclonica"
         android:gravity="center|start|left"
         android:paddingLeft="20dp"
-        android:text="Gossips"
+        android:text="Contacts"
         android:textColor="#ffffff"
         android:textSize="28sp"
         android:textStyle="bold" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <ListView
             android:id="@+id/lv"
@@ -37,18 +34,7 @@
 
         </ListView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btnContacts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="80dp"
-            android:clickable="true"
-            app:backgroundTint="#ffffff"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lv"
-            app:srcCompat="@drawable/contacts" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </LinearLayout>

@@ -9,6 +9,7 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
     ListView lv;
     FirebaseDatabase database;
+    FloatingActionButton btnContacts;
     String currentUserNumber;
     DatabaseReference reference;
 
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         number1= new ArrayList<String>();
         contacts = new ArrayList<>();
         contacts1 = new ArrayList<>();
+        btnContacts=findViewById(R.id.btnContacts);
 
         database=FirebaseDatabase.getInstance();
 
@@ -65,6 +69,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         {
             getcontact();
         }
+        btnContacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(MainActivity.this,FriendsActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -114,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                         contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null"));
                                     }
                                     (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
+                                  //  (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("activeStatus")).setValue("online");
                                     c = 1;
                                 } else {
                                     for (int j = 0; j < c; j++) {
@@ -165,6 +177,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                         contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null"));
                                     }
                                     (reference.child("users").child(currentUserNumber).child(("+91"+contacts.get(i).getPh_number())).child("message")).setValue("/null");
+
+                                  //  (reference.child("users").child(currentUserNumber).child(("+91"+contacts.get(i).getPh_number())).child("activeStatus")).setValue("online");
 
 
                                     c++;
@@ -218,4 +232,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }
