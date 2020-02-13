@@ -143,7 +143,7 @@ public class MessageActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
-                if (!(dataSnapshot.getKey().equals("message") && dataSnapshot.getKey().equals("activeStatus"))) {
+                if (!(dataSnapshot.getKey().equals("message") )) {
                     chats.add(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
                     Handler.addMessage(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
                     dataSnapshot.getRef().removeValue();
