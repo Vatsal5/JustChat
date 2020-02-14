@@ -143,6 +143,8 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+                reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
+
 
                 if (!(dataSnapshot.getKey().equals("message") )) {
                     if(dataSnapshot.getKey().equals("info")) {
