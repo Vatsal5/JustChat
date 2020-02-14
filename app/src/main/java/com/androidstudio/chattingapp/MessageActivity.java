@@ -68,6 +68,8 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
+                reference.child("users").child(RecieverPhone).child(sender).child("info").child("friend").setValue("yes");
+
 
                 if(etMessage.getText().toString().trim().isEmpty())
                     Toast.makeText(MessageActivity.this, "Please enter a message", Toast.LENGTH_LONG).show();
@@ -143,7 +145,6 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
-                reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 
 
                 if (!(dataSnapshot.getKey().equals("message") )) {
@@ -155,6 +156,7 @@ public class MessageActivity extends AppCompatActivity {
 
                    else if(!(dataSnapshot.getKey().equals("info") )){
 
+                        reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 
                         chats.add(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
                     Handler.addMessage(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
