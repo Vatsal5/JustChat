@@ -16,7 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -85,20 +87,22 @@ public class MessageActivity extends AppCompatActivity {
                     Toast.makeText(MessageActivity.this, "Please enter a message", Toast.LENGTH_LONG).show();
                 else
                     {
-                    reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            chats.add(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
-                            Handler.addMessage(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful())
+                            {
+                                chats.add(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
+                                Handler.addMessage(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
 
-                            adapter.notifyDataSetChanged();
-                            Messages.scrollToPosition(chats.size() - 1);
-                            etMessage.setText(null);
-                        }
-                    }).addOnCanceledListener(new OnCanceledListener() {
-                        @Override
-                        public void onCanceled() {
-                            Toast.makeText(MessageActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                                adapter.notifyDataSetChanged();
+                                Messages.scrollToPosition(chats.size() - 1);
+                                etMessage.setText(null);
+                            }
+                            else
+                            {
+                                Toast.makeText(MessageActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
                 }
