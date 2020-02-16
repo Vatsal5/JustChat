@@ -15,6 +15,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -83,16 +85,22 @@ public class MessageActivity extends AppCompatActivity {
                     Toast.makeText(MessageActivity.this, "Please enter a message", Toast.LENGTH_LONG).show();
                 else
                     {
-                    reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString());
-                    //   String pushKey= reference.child("users").child(sender).child(RecieverPhone).push().getKey();
-                    chats.add(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
-                    Handler.addMessage(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
-                    // reference.child("users").child(sender).child(RecieverPhone).child("message"+m).setValue(etMessage.getText().toString());
-                    //m++;
+                    reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            chats.add(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
+                            Handler.addMessage(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
 
-                    adapter.notifyDataSetChanged();
-                    Messages.scrollToPosition(chats.size() - 1);
-                    etMessage.setText(null);
+                            adapter.notifyDataSetChanged();
+                            Messages.scrollToPosition(chats.size() - 1);
+                            etMessage.setText(null);
+                        }
+                    }).addOnCanceledListener(new OnCanceledListener() {
+                        @Override
+                        public void onCanceled() {
+                            Toast.makeText(MessageActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
             }
         });
@@ -109,45 +117,8 @@ public class MessageActivity extends AppCompatActivity {
         adapter = new MessageAdapter(MessageActivity.this,chats);
         Messages.setAdapter(adapter);
 
-//        chsender = new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                if (dataSnapshot.getKey().equals(RecieverPhone)) {//chats.clear();
-//                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-//                        if (!(child.getKey().equals("message"))) {
-//
-//                            chats.add(new MessageModel(sender, RecieverPhone, child.getValue().toString()));
-//
-//                            adapter.notifyDataSetChanged();
-//                            Messages.scrollToPosition(chats.size() - 1);
-//                        }
-//
-//                    }
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        };
-//
-//        reference.child("users").child(sender).addChildEventListener(chsender);
+        Messages.scrollToPosition(chats.size()-1);
+
 
         chreceiver = new ChildEventListener() {
             @Override
@@ -219,21 +190,4 @@ public class MessageActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        //Status("online");
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        Status("offline");
-//    }
-//
-//    public void Status(String Status)
-//    {
-//        DatabaseReference rf = FirebaseDatabase.getInstance().getReference("UserStatus");
-//        rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(Status);
-//    }
 }

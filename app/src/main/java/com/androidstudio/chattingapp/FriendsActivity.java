@@ -48,6 +48,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         setSupportActionBar(toolbar);
 
         setTitle(null);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             number1= new ArrayList<String>();
             contacts = new ArrayList<>();
@@ -229,26 +230,13 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         {
             case R.id.Profile:
                 startActivity(new Intent(FriendsActivity.this,Profile.class));
+                break;
+
+            case android.R.id.home:
+                FriendsActivity.this.finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        Status("online");
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//
-//        Status("offline");
-//    }
-//    public void Status(String Status)
-//    {
-//        DatabaseReference rf = FirebaseDatabase.getInstance().getReference("UserStatus");
-//        rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(Status);
-//    }
 
 }
