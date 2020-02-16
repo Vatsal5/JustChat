@@ -13,8 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -23,7 +27,6 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
     private final Context context;
     ImageView iv;
     FirebaseDatabase database;
-    DatabaseReference reference;
     private ArrayList<UserDetailwithUrl> list;
 
     public interface itemSelected
@@ -48,9 +51,13 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
         LayoutInflater inflater= (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View v= inflater.inflate(R.layout.chats_listlayout,parent,false);
         iv=v.findViewById(R.id.imageView);
+
+        final ImageView ivStatus = v.findViewById(R.id.ivStatus);
+
         database=FirebaseDatabase.getInstance();
-        reference=database.getReference();
+        DatabaseReference dbreference=database.getReference();
         Log.d("tag",list.get(position).getUrl());
+
         if(list.get(position).getUrl().equals("null"))
         {
             iv.setImageResource(R.drawable.person);
@@ -58,6 +65,24 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
         else
         {
         Glide.with(context).load(list.get(position).getUrl()).into(iv);}
+
+
+        dbreference.child("UserStatus").child(list.get(position).getPh_number()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue()!=null) {
+                    if (dataSnapshot.getValue(String.class).equals("online"))
+                        ivStatus.setVisibility(View.VISIBLE);
+                    else
+                        ivStatus.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
 

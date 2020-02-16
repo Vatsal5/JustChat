@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -72,6 +74,13 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        setTitle("Profile");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         reference= FirebaseStorage.getInstance().getReference("docs/");
         firebaseDatabase=FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
@@ -303,7 +312,21 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
         CropImage.activity(imageuri)
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setMultiTouchEnabled(true)
+                .setAllowRotation(true)
                 .setAspectRatio(25,25)
                 .start(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                Profile.this.finish();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

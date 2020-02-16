@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -43,6 +44,10 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        setTitle(null);
 
             number1= new ArrayList<String>();
             contacts = new ArrayList<>();
@@ -228,5 +233,22 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         return super.onOptionsItemSelected(item);
     }
 
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        Status("online");
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//
+//        Status("offline");
+//    }
+//    public void Status(String Status)
+//    {
+//        DatabaseReference rf = FirebaseDatabase.getInstance().getReference("UserStatus");
+//        rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(Status);
+//    }
 
 }

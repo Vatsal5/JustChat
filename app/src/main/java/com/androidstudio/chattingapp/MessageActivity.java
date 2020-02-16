@@ -5,11 +5,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +32,7 @@ public class MessageActivity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference reference;
 
+    TextView title;
     RecyclerView Messages;
     String sender;
     LinearLayoutManager manager;
@@ -46,11 +49,16 @@ public class MessageActivity extends AppCompatActivity {
         database=FirebaseDatabase.getInstance();
         reference=database.getReference();
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle(null);
+
+        title = findViewById(R.id.title);
         Handler = new DBHandler(MessageActivity.this);
         Handler.Open();
 
         //getSupportActionBar().setTitle(getIntent().getStringExtra("title"));
-        setTitle(String.valueOf(getIntent().getStringExtra("title")));
+        title.setText(String.valueOf(getIntent().getStringExtra("title")));
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -210,4 +218,22 @@ public class MessageActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        //Status("online");
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        Status("offline");
+//    }
+//
+//    public void Status(String Status)
+//    {
+//        DatabaseReference rf = FirebaseDatabase.getInstance().getReference("UserStatus");
+//        rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(Status);
+//    }
 }

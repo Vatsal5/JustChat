@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -49,6 +50,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        setTitle(null);
+
         number1= new ArrayList<String>();
         contacts = new ArrayList<>();
         contacts1 = new ArrayList<>();
@@ -246,9 +253,23 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
         getcontact();
+        Status("online");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Status("offline");
+    }
+    public void Status(String Status)
+    {
+        DatabaseReference rf = FirebaseDatabase.getInstance().getReference("UserStatus");
+        rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(Status);
     }
 }
