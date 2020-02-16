@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         database=FirebaseDatabase.getInstance();
 
         reference=database.getReference();
+
         currentUserNumber= FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
         lv=findViewById(R.id.lv);
