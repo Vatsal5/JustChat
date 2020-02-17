@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#bdbdbd"
+        android:background="#99bdbdbd"
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
@@ -37,10 +37,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/alegreya_sans_thin"
+            android:layout_marginTop="23dp"
             android:text="User Name"
-            android:textSize="24sp"
+            android:textColor="#99000000"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
     </LinearLayout>
