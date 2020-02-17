@@ -9,6 +9,13 @@
     android:orientation="vertical"
     tools:context=".Profile">
 
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:id="@+id/toolbar">
+
+    </androidx.appcompat.widget.Toolbar>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="180dp"
@@ -35,7 +42,7 @@
                 android:background="@drawable/image_background"
                 android:scaleType="fitXY"
                 android:clickable="true"
-                android:src="@drawable/person" />
+                app:srcCompat="@drawable/person" />
 
         </androidx.cardview.widget.CardView>
 

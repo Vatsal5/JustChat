@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -43,28 +44,33 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-            number1= new ArrayList<String>();
-            contacts = new ArrayList<>();
-            contacts1 = new ArrayList<>();
+        setTitle(null);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            database=FirebaseDatabase.getInstance();
+        number1= new ArrayList<String>();
+        contacts = new ArrayList<>();
+        contacts1 = new ArrayList<>();
 
-            reference=database.getReference();
-            currentUserNumber= FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+        database=FirebaseDatabase.getInstance();
 
-            lv=findViewById(R.id.lv);
+        reference=database.getReference();
+        currentUserNumber= FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
-            if(ContextCompat.checkSelfPermission(FriendsActivity.this, Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED)
-            {
-                ActivityCompat.requestPermissions(FriendsActivity.this,new String[]{Manifest.permission.READ_CONTACTS},1);
-            }
-            else
-            {
-                getcontact();
-            }
+        lv=findViewById(R.id.lv);
 
+        if(ContextCompat.checkSelfPermission(FriendsActivity.this, Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(FriendsActivity.this,new String[]{Manifest.permission.READ_CONTACTS},1);
         }
+        else
+        {
+            getcontact();
+        }
+
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
@@ -182,7 +188,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                         }
                     }
                 }
-               // Log.d("tag",contacts1.get(0).getPh_number());
+                // Log.d("tag",contacts1.get(0).getPh_number());
                 userAdapter=new FriendsAdapter(FriendsActivity.this,contacts1);
                 lv.setAdapter(userAdapter);
             }
@@ -224,9 +230,13 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         {
             case R.id.Profile:
                 startActivity(new Intent(FriendsActivity.this,Profile.class));
+                break;
+
+            case android.R.id.home:
+                FriendsActivity.this.finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 }

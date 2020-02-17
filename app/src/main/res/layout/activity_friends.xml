@@ -8,18 +8,22 @@
     tools:context=".MainActivity">
 
 
-    <TextView
-        android:id="@+id/textView"
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#99000000"
-        android:fontFamily="@font/aclonica"
-        android:gravity="center|start|left"
-        android:paddingLeft="20dp"
-        android:text="Contacts"
-        android:textColor="#ffffff"
-        android:textSize="28sp"
-        android:textStyle="bold" />
+        android:layout_height="?android:attr/actionBarSize"
+        android:id="@+id/toolbar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/aclonica"
+            android:gravity="center|start|left"
+            android:text="Contacts"
+            android:textColor="#99000000"
+            android:textSize="23sp"
+            android:textStyle="bold" />
+
+    </androidx.appcompat.widget.Toolbar>
 
 
     <ListView
@@ -32,6 +36,8 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </ListView>
+
+
 
 
 </LinearLayout>

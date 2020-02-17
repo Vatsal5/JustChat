@@ -5,14 +5,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +34,7 @@ public class MessageActivity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference reference;
 
+    TextView title;
     RecyclerView Messages;
     String sender;
     LinearLayoutManager manager;
@@ -46,11 +51,16 @@ public class MessageActivity extends AppCompatActivity {
         database=FirebaseDatabase.getInstance();
         reference=database.getReference();
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle(null);
+
+        title = findViewById(R.id.title);
         Handler = new DBHandler(MessageActivity.this);
         Handler.Open();
 
         //getSupportActionBar().setTitle(getIntent().getStringExtra("title"));
-        setTitle(String.valueOf(getIntent().getStringExtra("title")));
+        title.setText(String.valueOf(getIntent().getStringExtra("title")));
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -74,17 +84,25 @@ public class MessageActivity extends AppCompatActivity {
                 if(etMessage.getText().toString().trim().isEmpty())
                     Toast.makeText(MessageActivity.this, "Please enter a message", Toast.LENGTH_LONG).show();
                 else
-                    {
-                    reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString());
-                    //   String pushKey= reference.child("users").child(sender).child(RecieverPhone).push().getKey();
-                    chats.add(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
-                    Handler.addMessage(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
-                    // reference.child("users").child(sender).child(RecieverPhone).child("message"+m).setValue(etMessage.getText().toString());
-                    //m++;
+                {
+                    reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful())
+                            {
+                                chats.add(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
+                                Handler.addMessage(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
 
-                    adapter.notifyDataSetChanged();
-                    Messages.scrollToPosition(chats.size() - 1);
-                    etMessage.setText(null);
+                                adapter.notifyDataSetChanged();
+                                Messages.scrollToPosition(chats.size() - 1);
+                                etMessage.setText(null);
+                            }
+                            else
+                            {
+                                Toast.makeText(MessageActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -101,45 +119,8 @@ public class MessageActivity extends AppCompatActivity {
         adapter = new MessageAdapter(MessageActivity.this,chats);
         Messages.setAdapter(adapter);
 
-//        chsender = new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                if (dataSnapshot.getKey().equals(RecieverPhone)) {//chats.clear();
-//                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-//                        if (!(child.getKey().equals("message"))) {
-//
-//                            chats.add(new MessageModel(sender, RecieverPhone, child.getValue().toString()));
-//
-//                            adapter.notifyDataSetChanged();
-//                            Messages.scrollToPosition(chats.size() - 1);
-//                        }
-//
-//                    }
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        };
-//
-//        reference.child("users").child(sender).addChildEventListener(chsender);
+        Messages.scrollToPosition(chats.size()-1);
+
 
         chreceiver = new ChildEventListener() {
             @Override
@@ -154,18 +135,18 @@ public class MessageActivity extends AppCompatActivity {
                         }
                     }
 
-                   else if(!(dataSnapshot.getKey().equals("info") )){
+                    else if(!(dataSnapshot.getKey().equals("info") )){
 
                         reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 
                         chats.add(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
-                    Handler.addMessage(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
-                    dataSnapshot.getRef().removeValue();
+                        Handler.addMessage(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
+                        dataSnapshot.getRef().removeValue();
 
 
-                    adapter.notifyDataSetChanged();
-                    Messages.scrollToPosition(chats.size()-1);
-                }}
+                        adapter.notifyDataSetChanged();
+                        Messages.scrollToPosition(chats.size()-1);
+                    }}
             }
 
             @Override
@@ -187,7 +168,7 @@ public class MessageActivity extends AppCompatActivity {
             }
         };
 
-       reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
+        reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
 
     }
     @Override
@@ -210,4 +191,5 @@ public class MessageActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
