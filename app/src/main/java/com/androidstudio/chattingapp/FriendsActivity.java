@@ -50,27 +50,27 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        number1= new ArrayList<String>();
-        contacts = new ArrayList<>();
-        contacts1 = new ArrayList<>();
+            number1= new ArrayList<String>();
+            contacts = new ArrayList<>();
+            contacts1 = new ArrayList<>();
 
-        database=FirebaseDatabase.getInstance();
+            database=FirebaseDatabase.getInstance();
 
-        reference=database.getReference();
-        currentUserNumber= FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+            reference=database.getReference();
+            currentUserNumber= FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
-        lv=findViewById(R.id.lv);
+            lv=findViewById(R.id.lv);
 
-        if(ContextCompat.checkSelfPermission(FriendsActivity.this, Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(FriendsActivity.this,new String[]{Manifest.permission.READ_CONTACTS},1);
+            if(ContextCompat.checkSelfPermission(FriendsActivity.this, Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(FriendsActivity.this,new String[]{Manifest.permission.READ_CONTACTS},1);
+            }
+            else
+            {
+                getcontact();
+            }
+
         }
-        else
-        {
-            getcontact();
-        }
-
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
@@ -188,7 +188,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                         }
                     }
                 }
-                // Log.d("tag",contacts1.get(0).getPh_number());
+               // Log.d("tag",contacts1.get(0).getPh_number());
                 userAdapter=new FriendsAdapter(FriendsActivity.this,contacts1);
                 lv.setAdapter(userAdapter);
             }

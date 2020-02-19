@@ -15,7 +15,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -84,7 +86,7 @@ public class MessageActivity extends AppCompatActivity {
                 if(etMessage.getText().toString().trim().isEmpty())
                     Toast.makeText(MessageActivity.this, "Please enter a message", Toast.LENGTH_LONG).show();
                 else
-                {
+                    {
                     reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -135,18 +137,18 @@ public class MessageActivity extends AppCompatActivity {
                         }
                     }
 
-                    else if(!(dataSnapshot.getKey().equals("info") )){
+                   else if(!(dataSnapshot.getKey().equals("info") )){
 
                         reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 
                         chats.add(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
-                        Handler.addMessage(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
-                        dataSnapshot.getRef().removeValue();
+                    Handler.addMessage(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
+                    dataSnapshot.getRef().removeValue();
 
 
-                        adapter.notifyDataSetChanged();
-                        Messages.scrollToPosition(chats.size()-1);
-                    }}
+                    adapter.notifyDataSetChanged();
+                    Messages.scrollToPosition(chats.size()-1);
+                }}
             }
 
             @Override
@@ -168,7 +170,7 @@ public class MessageActivity extends AppCompatActivity {
             }
         };
 
-        reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
+       reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
 
     }
     @Override

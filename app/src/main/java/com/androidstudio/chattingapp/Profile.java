@@ -146,7 +146,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
 
                         }
-                        adapter.notifyDataSetChanged();
+                       adapter.notifyDataSetChanged();
 
                     }
 
