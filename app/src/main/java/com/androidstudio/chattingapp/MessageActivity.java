@@ -240,7 +240,7 @@ public class MessageActivity extends AppCompatActivity {
 
         final String Legacy_SERVER_KEY = "AIzaSyBdu42ejssWEllOGpOlDYiEnlZRkWD1rgI";
         String msg = etMessage.getText().toString();
-        String title = "From "+sender;
+        String title = sender;
         String token = to;
 
         JSONObject obj = null;
