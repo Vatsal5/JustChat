@@ -306,10 +306,10 @@ public class MessageActivity extends AppCompatActivity {
         reference.child("tokens").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child(sender).exists())
-                {
-                   to= dataSnapshot.child(sender).getValue(String.class);
-                }
+
+
+                   to= dataSnapshot.child(RecieverPhone).getValue(String.class);
+                
             }
 
             @Override
