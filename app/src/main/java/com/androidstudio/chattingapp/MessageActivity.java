@@ -253,7 +253,7 @@ public class MessageActivity extends AppCompatActivity {
 
             objData.put("body", msg);
             objData.put("title", title);
-            objData.put("sound", MediaActionSound.SHUTTER_CLICK);
+            objData.put("sound", R.raw.notificationsound);
             objData.put("icon", R.drawable.icon); //   icon_name image must be there in drawable
             objData.put("tag", token);
             objData.put("priority", "high");
