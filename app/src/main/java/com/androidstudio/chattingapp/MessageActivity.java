@@ -36,6 +36,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
@@ -227,6 +228,7 @@ public class MessageActivity extends AppCompatActivity {
 
                         // Get new Instance ID token
                         String token = task.getResult().getToken();
+                        reference.child("tokens").child(sender).setValue(token);
                         to=token;
 
                         // Log and toast
@@ -237,8 +239,8 @@ public class MessageActivity extends AppCompatActivity {
                 });
 
         final String Legacy_SERVER_KEY = "AIzaSyBdu42ejssWEllOGpOlDYiEnlZRkWD1rgI";
-        String msg = "this is test message,.,,.,.";
-        String title = "my title";
+        String msg = etMessage.getText().toString();
+        String title = "From "+sender;
         String token = to;
 
         JSONObject obj = null;
@@ -298,5 +300,22 @@ public class MessageActivity extends AppCompatActivity {
         requestQueue.add(jsObjRequest);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        reference.child("tokens").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(RecieverPhone).exists())
+                {
+                   to= dataSnapshot.child(RecieverPhone).getValue(String.class);
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }
