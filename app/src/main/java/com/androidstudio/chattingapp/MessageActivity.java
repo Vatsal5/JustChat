@@ -229,7 +229,6 @@ public class MessageActivity extends AppCompatActivity {
                         // Get new Instance ID token
                         String token = task.getResult().getToken();
                         reference.child("tokens").child(sender).setValue(token);
-                        to=token;
 
                         // Log and toast
                        // String msg = getString(R.string.msg_token_fmt, token);
@@ -309,7 +308,7 @@ public class MessageActivity extends AppCompatActivity {
 
 
                    to= dataSnapshot.child(RecieverPhone).getValue(String.class);
-                
+
             }
 
             @Override
