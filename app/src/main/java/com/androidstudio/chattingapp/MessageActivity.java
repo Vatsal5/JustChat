@@ -1,5 +1,6 @@
 package com.androidstudio.chattingapp;
 
+import android.media.MediaActionSound;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -252,8 +253,8 @@ public class MessageActivity extends AppCompatActivity {
 
             objData.put("body", msg);
             objData.put("title", title);
-            objData.put("sound", "default");
-            objData.put("icon", "icon_name"); //   icon_name image must be there in drawable
+            objData.put("sound", MediaActionSound.SHUTTER_CLICK);
+            objData.put("icon", R.drawable.icon); //   icon_name image must be there in drawable
             objData.put("tag", token);
             objData.put("priority", "high");
 
