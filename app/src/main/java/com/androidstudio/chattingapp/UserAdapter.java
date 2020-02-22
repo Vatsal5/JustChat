@@ -64,10 +64,10 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
         }
         else
         {
-        Glide.with(context).load(list.get(position).getUrl()).into(iv);}
+            Glide.with(context).load(list.get(position).getUrl()).into(iv);}
 
 
-        dbreference.child("UserStatus").child(list.get(position).getPh_number()).addValueEventListener(new ValueEventListener() {
+        dbreference.child("UserStatus").child(Check(list.get(position).getPh_number())).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue()!=null) {
@@ -97,6 +97,19 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
         });
 
         return v;
+    }
+
+    public String Check(String phone)
+    {
+        String newPhone;
+        if(!phone.substring(0,3).equals("+91"))
+        {
+            newPhone = "+91".concat(phone);
+            return newPhone;
+        }
+        else
+            return phone;
+
     }
 
 }

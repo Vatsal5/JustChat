@@ -1,8 +1,12 @@
 package com.androidstudio.chattingapp;
 
+import android.content.Intent;
 import android.media.MediaActionSound;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -114,8 +118,8 @@ public class MessageActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful())
                             {
-                                chats.add(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
-                                Handler.addMessage(new MessageModel(sender, RecieverPhone, etMessage.getText().toString()));
+                                chats.add(new MessageModel(sender, RecieverPhone, etMessage.getText().toString(),"text",-1));
+                                Handler.addMessage(new MessageModel(sender, RecieverPhone, etMessage.getText().toString(),"text",-1));
 
                                 adapter.notifyDataSetChanged();
                                 Messages.scrollToPosition(chats.size() - 1);
@@ -139,6 +143,7 @@ public class MessageActivity extends AppCompatActivity {
         Messages.setLayoutManager(manager);
 
         chats = Handler.getMessages(RecieverPhone);
+        //chats.add(new MessageModel(RecieverPhone,sender,"https://images.unsplash.com/photo-1579256308218-d162fd41c801?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjF9&auto=format&fit=crop&w=500&q=60","image",0));
 
         adapter = new MessageAdapter(MessageActivity.this,chats);
         Messages.setAdapter(adapter);
@@ -163,8 +168,8 @@ public class MessageActivity extends AppCompatActivity {
 
                         reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 
-                        chats.add(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
-                    Handler.addMessage(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString()));
+                        chats.add(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString(),"text",-1));
+                    Handler.addMessage(new MessageModel(RecieverPhone, sender, dataSnapshot.getValue().toString(),"text",-1));
                     dataSnapshot.getRef().removeValue();
 
 
@@ -212,6 +217,11 @@ public class MessageActivity extends AppCompatActivity {
             case android.R.id.home:
                 MessageActivity.this.finish();
                 break;
+
+            case R.id.Image:
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent,"Select source"),420);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -317,5 +327,30 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.image,menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==420)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                Uri uri = data.getData();
+                MessageModel messageModel = new MessageModel(sender,RecieverPhone,null,"image",2);
+                messageModel.setUri(uri);
+                chats.add(messageModel);
+                adapter.notifyDataSetChanged();
+            }
+        }
     }
 }

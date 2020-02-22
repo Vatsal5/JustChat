@@ -217,7 +217,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.options,menu);
+        getMenuInflater().inflate(R.menu.profile,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
