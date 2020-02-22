@@ -3,6 +3,7 @@ package com.androidstudio.chattingapp;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,14 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
@@ -31,8 +38,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int MSG_TXT_RIGHT = 1;
     public static final int MSG_IMG_LEFT = 2;
     public static final int MSG_IMG_RIGHT = 3;
+    StorageReference reference;
 
     FirebaseUser user;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
 
     Context context;
     ArrayList <MessageModel> messages;
@@ -40,6 +50,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public MessageAdapter(Context context, ArrayList<MessageModel> messages) {
         this.context = context;
         this.messages = messages;
+        firebaseDatabase=FirebaseDatabase.getInstance();
+        databaseReference=firebaseDatabase.getReference();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder
@@ -90,6 +102,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull final MessageAdapter.ViewHolder holder, final int position)
     {
+        reference= FirebaseStorage.getInstance().getReference("docs/");
+
         if(messages.get(position).getDownloaded()==0)   //image is received but yet to be downloaded
         {
             holder.ivUpload.setVisibility(View.GONE);
@@ -127,6 +141,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                         }
                     }).into(holder.ivImage);
 
+
                 }
             });
         }
@@ -162,6 +177,36 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     holder.ivUpload.setVisibility(View.GONE);
                     holder.ivClose.setVisibility(View.VISIBLE);
                     holder.progress.setVisibility(View.VISIBLE);
+                   // Log.d("hi","hi");
+                    UploadTask uploadTask=reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/"+messages.get(position).getReciever()).child("images/"+messages.get(position).getUri().getLastPathSegment()).
+                            putFile(messages.get(position).getUri());
+                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(context,"file uploaded", Toast.LENGTH_LONG).show();
+                            holder.ivUpload.setVisibility(View.GONE);
+                            holder.ivClose.setVisibility(View.GONE);
+                            holder.progress.setVisibility(View.GONE);
+
+
+
+
+                                reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + messages.get(position).getReciever()).child("images/" + messages.get(position).getUri().getLastPathSegment()).getDownloadUrl().
+                                        addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+                                              //  Toast.makeText(context, "hi", Toast.LENGTH_LONG).show();
+
+                                                databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                                        child(messages.get(position).getReciever()).child("info").
+                                                        child("images").push().setValue(uri.toString());
+                                            }
+                                        });
+
+
+
+                        }
+                    });
                 }
             });
         }

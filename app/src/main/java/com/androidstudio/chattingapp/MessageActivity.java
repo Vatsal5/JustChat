@@ -155,6 +155,38 @@ public class MessageActivity extends AppCompatActivity {
 
         Messages.scrollToPosition(chats.size()-1);
 
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                MessageModel messageModel = new MessageModel(sender,RecieverPhone,null,"image",2);
+                messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
+
+                chats.add(messageModel);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         chreceiver = new ChildEventListener() {
             @Override
