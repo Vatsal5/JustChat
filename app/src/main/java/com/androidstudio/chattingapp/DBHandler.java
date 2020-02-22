@@ -15,6 +15,8 @@ public class DBHandler
     private static final String KEY_SENDER = "sender";
     private static final String KEY_RECEIVER = "receiver";
     private static final String KEY_MESSAGE = "message";
+    private static final String KEY_TYPE = "type";
+    private static final String KEY_ISDOWNLOADED = "downloaded";
 
     private static final String DATABASE_NAME = "CHATS_DATABASE";
     private static final String DATABASE_TABLE = "CHATS_TABLE";
@@ -40,7 +42,7 @@ public class DBHandler
         public void onCreate(SQLiteDatabase sqLiteDatabase)
         {
             String query = "CREATE TABLE "+DATABASE_TABLE+" ("+KEY_SENDER+" TEXT NOT NULL, "+
-                    KEY_RECEIVER+" TEXT NOT NULL, "+KEY_MESSAGE+" TEXT NOT NULL);";
+                    KEY_RECEIVER+" TEXT NOT NULL, "+KEY_MESSAGE+" TEXT NOT NULL, "+KEY_TYPE+" TEXT NOT NULL, "+KEY_ISDOWNLOADED+" TINYINT DEFAULT NULL);";
 
             sqLiteDatabase.execSQL(query);
         }
@@ -73,6 +75,15 @@ public class DBHandler
         contentValues.put(KEY_SENDER,messageModel.getSender());
         contentValues.put(KEY_RECEIVER,messageModel.getReciever());
         contentValues.put(KEY_MESSAGE,messageModel.getMessage());
+        contentValues.put(KEY_TYPE,messageModel.getType());
+        contentValues.put(KEY_ISDOWNLOADED,messageModel.getDownloaded());
+
+//        if(messageModel.getDownloaded())
+//            contentValues.put(KEY_ISDOWNLOADED,1);
+//        else if(!messageModel.getDownloaded())
+//            contentValues.put(KEY_ISDOWNLOADED,0);
+//        else
+//            contentValues.put(KEY_ISDOWNLOADED,null);
 
         return database.insert(DATABASE_TABLE,null,contentValues);
     }
@@ -80,17 +91,19 @@ public class DBHandler
     public ArrayList<MessageModel> getMessages(String receiver)
     {
         ArrayList<MessageModel> messages = new ArrayList<>();
-        String [] columns = {KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE};
+        String [] columns = {KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED};
         Cursor c = database.query(DATABASE_TABLE,columns,null,null,null,null,null,null);
 
         int iSender = c.getColumnIndex(KEY_SENDER);
         int iReceiver = c.getColumnIndex(KEY_RECEIVER);
         int iMessage = c.getColumnIndex(KEY_MESSAGE);
+        int iType = c.getColumnIndex(KEY_TYPE);
+        int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
 
         for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
         {
             if((c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver)))
-                messages.add(new MessageModel(c.getString(iSender),c.getString(iReceiver),c.getString(iMessage)));
+                messages.add(new MessageModel(c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded)));
         }
         c.close();
         return messages;
