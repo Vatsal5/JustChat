@@ -1,5 +1,6 @@
 package com.androidstudio.chattingapp;
 
+import android.Manifest;
 import android.content.Intent;
 import android.media.MediaActionSound;
 import android.net.Uri;
@@ -30,6 +31,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.internal.Constants;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,10 +46,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -353,4 +358,42 @@ public class MessageActivity extends AppCompatActivity {
             }
         }
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//
+//
+//
+//
+//            if(resultCode == RESULT_OK)
+//            {
+//                uri = result.getUri();
+//                File from= new File(uri.getLastPathSegment(),"old");
+//                File to= new File("dp");
+//                from.renameTo(to);
+//                UploadTask uploadTask=reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").
+//                        putFile(uri);
+//                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        Toast.makeText(getApplicationContext(),"file uploaded", Toast.LENGTH_LONG).show();
+//
+//                        reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").getDownloadUrl().
+//                                addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                    @Override
+//                                    public void onSuccess(Uri uri) {
+//                                        Toast.makeText(getApplicationContext(),"hi", Toast.LENGTH_LONG).show();
+//
+//                                        databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+//                                                child("profile").setValue(uri.toString());
+//                                    }
+//                                });
+//                    }
+//                });
+//            }
+//
+//    }
+
 }
