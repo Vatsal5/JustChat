@@ -90,7 +90,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull final MessageAdapter.ViewHolder holder, final int position)
     {
-        if(messages.get(position).getDownloaded()==0)
+        if(messages.get(position).getDownloaded()==0)   //image is received but yet to be downloaded
         {
             holder.ivUpload.setVisibility(View.GONE);
             holder.ivDownload.setVisibility(View.VISIBLE);
@@ -130,14 +130,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 }
             });
         }
-        else if(messages.get(position).getDownloaded() == 1)
+        else if(messages.get(position).getDownloaded() == 1) // image is downloaded or sent successfully
         {
             holder.ivDownload.setVisibility(View.GONE);
             holder.ivClose.setVisibility(View.GONE);
             holder.progress.setVisibility(View.GONE);
 
+            holder.ivImage.setImageURI(messages.get(position).getUri());
+
         }
-        else if(messages.get(position).getDownloaded() == 2)
+        else if(messages.get(position).getDownloaded() == 2) // when sender sends the image
         {
             holder.ivUpload.setVisibility(View.GONE);
             holder.ivDownload.setVisibility(View.GONE);
@@ -163,7 +165,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 }
             });
         }
-        else if(messages.get(position).getDownloaded() == -1)
+
+        else if(messages.get(position).getDownloaded() == -1) // if message is a text message
         {
             holder.tvMessage.setText(messages.get(position).getMessage());
         }

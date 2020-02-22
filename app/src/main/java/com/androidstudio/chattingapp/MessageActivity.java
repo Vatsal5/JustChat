@@ -221,7 +221,7 @@ public class MessageActivity extends AppCompatActivity {
             case R.id.Image:
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
-                startActivityForResult(intent,420);
+                startActivityForResult(Intent.createChooser(intent,"Select source"),420);
         }
         return super.onOptionsItemSelected(item);
     }
