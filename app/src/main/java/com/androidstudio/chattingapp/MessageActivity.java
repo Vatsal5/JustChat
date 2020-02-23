@@ -193,6 +193,7 @@ public class MessageActivity extends AppCompatActivity {
                 dataSnapshot.getRef().removeValue();
 
                 adapter.notifyDataSetChanged();
+                Messages.scrollToPosition(chats.size()-1);
 
             }
 
@@ -416,6 +417,7 @@ public class MessageActivity extends AppCompatActivity {
                 final MessageModel messageModel = new MessageModel("0",sender,RecieverPhone,uri.toString(),"image",2);
                 chats.add(messageModel);
                 adapter.notifyDataSetChanged();
+                Messages.scrollToPosition(chats.size()-1);
 
                 UploadTask uploadTask =rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/"+messageModel.getReciever()).child("images/"+Uri.parse(messageModel.getMessage()).getLastPathSegment()).
                         putFile(Uri.parse(messageModel.getMessage()));
@@ -444,6 +446,7 @@ public class MessageActivity extends AppCompatActivity {
                                         chats.remove(chats.size()-1);
                                         chats.add(messageModel);
                                         adapter.notifyDataSetChanged();
+                                        Messages.scrollToPosition(chats.size()-1);
 
                                         Handler.addMessage(messageModel);
 
