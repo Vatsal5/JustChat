@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public class DBHandler
 {
+    private static final String KEY_ID = "id";
     private static final String KEY_SENDER = "sender";
     private static final String KEY_RECEIVER = "receiver";
     private static final String KEY_MESSAGE = "message";
@@ -41,7 +42,7 @@ public class DBHandler
         @Override
         public void onCreate(SQLiteDatabase sqLiteDatabase)
         {
-            String query = "CREATE TABLE "+DATABASE_TABLE+" ("+KEY_SENDER+" TEXT NOT NULL, "+
+            String query = "CREATE TABLE "+DATABASE_TABLE+" ("+KEY_ID+" TEXT NOT NULL, "+KEY_SENDER+" TEXT NOT NULL, "+
                     KEY_RECEIVER+" TEXT NOT NULL, "+KEY_MESSAGE+" TEXT NOT NULL, "+KEY_TYPE+" TEXT NOT NULL, "+KEY_ISDOWNLOADED+" TINYINT DEFAULT NULL);";
 
             sqLiteDatabase.execSQL(query);
@@ -72,6 +73,7 @@ public class DBHandler
     {
         ContentValues contentValues = new ContentValues();
 
+        contentValues.put(KEY_ID,messageModel.getId());
         contentValues.put(KEY_SENDER,messageModel.getSender());
         contentValues.put(KEY_RECEIVER,messageModel.getReciever());
         contentValues.put(KEY_MESSAGE,messageModel.getMessage());
@@ -91,9 +93,10 @@ public class DBHandler
     public ArrayList<MessageModel> getMessages(String receiver)
     {
         ArrayList<MessageModel> messages = new ArrayList<>();
-        String [] columns = {KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED};
+        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED};
         Cursor c = database.query(DATABASE_TABLE,columns,null,null,null,null,null,null);
 
+        int iId = c.getColumnIndex(KEY_ID);
         int iSender = c.getColumnIndex(KEY_SENDER);
         int iReceiver = c.getColumnIndex(KEY_RECEIVER);
         int iMessage = c.getColumnIndex(KEY_MESSAGE);
@@ -103,11 +106,23 @@ public class DBHandler
         for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
         {
             if((c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver)))
-                messages.add(new MessageModel(c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded)));
+                messages.add(new MessageModel(c.getString(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded)));
         }
         c.close();
         return messages;
 
+    }
+
+    public long UpdateMessage(MessageModel message)
+    {
+        ContentValues values = new ContentValues();
+
+        values.put(KEY_SENDER,message.getSender());
+        values.put(KEY_RECEIVER,message.getReciever());
+        values.put(KEY_TYPE,message.getType());
+        values.put(KEY_ISDOWNLOADED,message.getDownloaded());
+
+        return database.update(DATABASE_TABLE,values,KEY_ID+"=?",new String[] {message.getId()});
     }
 
 }

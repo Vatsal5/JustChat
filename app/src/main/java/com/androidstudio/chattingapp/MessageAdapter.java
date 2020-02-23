@@ -38,26 +38,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int MSG_TXT_RIGHT = 1;
     public static final int MSG_IMG_LEFT = 2;
     public static final int MSG_IMG_RIGHT = 3;
-    StorageReference reference;
 
     FirebaseUser user;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
-
     Context context;
-    ArrayList <MessageModel> messages;
+    ArrayList<MessageModel> messages;
 
     public MessageAdapter(Context context, ArrayList<MessageModel> messages) {
         this.context = context;
         this.messages = messages;
-        firebaseDatabase=FirebaseDatabase.getInstance();
-        databaseReference=firebaseDatabase.getReference();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder
-    {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvMessage;
-        ImageView ivDownload,ivImage,ivUpload;
+        ImageView ivDownload, ivImage, ivUpload;
         ImageView ivClose;
         ProgressBar progress;
 
@@ -75,39 +68,30 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @NonNull
     @Override
-    public MessageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-    {
-        if(viewType == MSG_IMG_LEFT)
-        {
-            View v = LayoutInflater.from(context).inflate(R.layout.image_left,parent,false);
+    public MessageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == MSG_IMG_LEFT) {
+            View v = LayoutInflater.from(context).inflate(R.layout.image_left, parent, false);
             return new ViewHolder(v);
-        }
-        else if(viewType == MSG_IMG_RIGHT)
-        {
-            View v = LayoutInflater.from(context).inflate(R.layout.image_right,parent,false);
+        } else if (viewType == MSG_IMG_RIGHT) {
+            View v = LayoutInflater.from(context).inflate(R.layout.image_right, parent, false);
             return new ViewHolder(v);
-        }
-        else if(viewType == MSG_TXT_LEFT)
-        {
-            View v = LayoutInflater.from(context).inflate(R.layout.message_left,parent,false);
+        } else if (viewType == MSG_TXT_LEFT) {
+            View v = LayoutInflater.from(context).inflate(R.layout.message_left, parent, false);
             return new ViewHolder(v);
-        }
-        else
-        {
-            View v = LayoutInflater.from(context).inflate(R.layout.message_right,parent,false);
+        } else {
+            View v = LayoutInflater.from(context).inflate(R.layout.message_right, parent, false);
             return new ViewHolder(v);
         }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MessageAdapter.ViewHolder holder, final int position)
-    {
-        reference= FirebaseStorage.getInstance().getReference("docs/");
+    public void onBindViewHolder(@NonNull final MessageAdapter.ViewHolder holder, final int position) {
 
-        if(messages.get(position).getDownloaded()==0)   //image is received but yet to be downloaded
+        if (messages.get(position).getDownloaded() == 0)   //image is received but yet to be downloaded
         {
             holder.ivUpload.setVisibility(View.GONE);
             holder.ivDownload.setVisibility(View.VISIBLE);
+            holder.ivImage.setImageResource(0);
             holder.ivDownload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -137,6 +121,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                             holder.progress.setVisibility(View.GONE);
                             holder.ivClose.setVisibility(View.GONE);
 
+                            messages.get(position).setDownloaded(3);
+
+                            DBHandler Handler = new DBHandler(context);
+                            Handler.Open();
+                            Handler.UpdateMessage(messages.get(position));
+                            Handler.close();
+
                             return false;
                         }
                     }).into(holder.ivImage);
@@ -144,71 +135,30 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
                 }
             });
-        }
-        else if(messages.get(position).getDownloaded() == 1) // image is downloaded or sent successfully
+        } else if (messages.get(position).getDownloaded() == 1) // image is sent successfully
         {
             holder.ivDownload.setVisibility(View.GONE);
             holder.ivClose.setVisibility(View.GONE);
             holder.progress.setVisibility(View.GONE);
 
-            holder.ivImage.setImageURI(messages.get(position).getUri());
+            holder.ivImage.setImageURI(Uri.parse(messages.get(position).getMessage()));
 
-        }
-        else if(messages.get(position).getDownloaded() == 2) // when sender sends the image
+        } else if (messages.get(position).getDownloaded() == 2) // when sender sends the image
         {
-            holder.ivUpload.setVisibility(View.GONE);
-            holder.ivDownload.setVisibility(View.GONE);
+
             holder.ivClose.setVisibility(View.VISIBLE);
             holder.progress.setVisibility(View.VISIBLE);
-            holder.ivImage.setImageURI(messages.get(position).getUri());
+            holder.ivImage.setImageURI(Uri.parse(messages.get(position).getMessage()));
 
-            holder.ivClose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    holder.ivClose.setVisibility(View.GONE);
-                    holder.progress.setVisibility(View.GONE);
-                    holder.ivUpload.setVisibility(View.VISIBLE);
-                }
-            });
+        }
 
-            holder.ivUpload.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    holder.ivUpload.setVisibility(View.GONE);
-                    holder.ivClose.setVisibility(View.VISIBLE);
-                    holder.progress.setVisibility(View.VISIBLE);
-                   // Log.d("hi","hi");
-                    UploadTask uploadTask=reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/"+messages.get(position).getReciever()).child("images/"+messages.get(position).getUri().getLastPathSegment()).
-                            putFile(messages.get(position).getUri());
-                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(context,"file uploaded", Toast.LENGTH_LONG).show();
-                            holder.ivUpload.setVisibility(View.GONE);
-                            holder.ivClose.setVisibility(View.GONE);
-                            holder.progress.setVisibility(View.GONE);
+        else if(messages.get(position).getDownloaded()==3)
+        {
+            holder.ivDownload.setVisibility(View.GONE);
+            holder.ivClose.setVisibility(View.GONE);
+            holder.progress.setVisibility(View.GONE);
 
-
-
-
-                                reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + messages.get(position).getReciever()).child("images/" + messages.get(position).getUri().getLastPathSegment()).getDownloadUrl().
-                                        addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                            @Override
-                                            public void onSuccess(Uri uri) {
-                                              //  Toast.makeText(context, "hi", Toast.LENGTH_LONG).show();
-
-                                                databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                                        child(messages.get(position).getReciever()).child("info").
-                                                        child("images").push().setValue(uri.toString());
-                                            }
-                                        });
-
-
-
-                        }
-                    });
-                }
-            });
+            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
         }
 
         else if(messages.get(position).getDownloaded() == -1) // if message is a text message

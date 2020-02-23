@@ -4,20 +4,20 @@ import android.net.Uri;
 
 public class MessageModel
 {
+    private String id;
     private String sender;
     private String reciever;
     private String message;
     private String type;
     private int isDownloaded;
-    private Uri uri;
 
-    public MessageModel(String sender, String reciever, String message,String type,int isDownloaded) {
+    public MessageModel(String id,String sender, String reciever, String message,String type,int isDownloaded) {
+        this.id = id;
         this.sender = sender;
         this.reciever = reciever;
         this.message = message;
         this.type = type;
         this.isDownloaded = isDownloaded;
-        uri = null;
     }
 
     public String getSender() {
@@ -60,11 +60,11 @@ public class MessageModel
         isDownloaded = downloaded;
     }
 
-    public Uri getUri() {
-        return uri;
+    public String getId() {
+        return id;
     }
 
-    public void setUri(Uri uri) {
-        this.uri = uri;
+    public void setId(String id) {
+        this.id = id;
     }
 }
