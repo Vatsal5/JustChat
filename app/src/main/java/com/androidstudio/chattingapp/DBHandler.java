@@ -94,7 +94,7 @@ public class DBHandler
     {
         ArrayList<MessageModel> messages = new ArrayList<>();
         String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED};
-        Cursor c = database.query(DATABASE_TABLE,columns,null,null,null,null,null,null);
+        Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
 
         int iId = c.getColumnIndex(KEY_ID);
         int iSender = c.getColumnIndex(KEY_SENDER);
@@ -123,6 +123,11 @@ public class DBHandler
         values.put(KEY_ISDOWNLOADED,message.getDownloaded());
 
         return database.update(DATABASE_TABLE,values,KEY_ID+"=?",new String[] {message.getId()});
+    }
+
+    public long DeleteMessage(MessageModel message)
+    {
+        return database.delete(DATABASE_TABLE,KEY_ID+"=?",new String[]{message.getId()});
     }
 
 }

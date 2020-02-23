@@ -89,25 +89,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         if (messages.get(position).getDownloaded() == 0)   //image is received but yet to be downloaded
         {
-            holder.ivUpload.setVisibility(View.GONE);
-            holder.ivDownload.setVisibility(View.VISIBLE);
+            holder.ivClose.setVisibility(View.VISIBLE);
+            holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setImageResource(0);
-            holder.ivDownload.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    holder.ivDownload.setVisibility(View.GONE);
-                    holder.progress.setVisibility(View.VISIBLE);
-                    holder.ivClose.setVisibility(View.VISIBLE);
 
-                    Glide.with(context).load(messages.get(position).getMessage()).listener(new RequestListener<Drawable>() {
+            Glide.with(context).load(messages.get(position).getMessage()).listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-
-                            holder.progress.setVisibility(View.GONE);
-                            holder.ivClose.setVisibility(View.GONE);
-                            holder.ivDownload.setVisibility(View.VISIBLE);
-
-                            Toast.makeText(context, "Could not download the image", Toast.LENGTH_LONG).show();
 
                             return false;
                         }
@@ -117,7 +105,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
                             holder.ivImage.setImageDrawable(resource);
 
-                            holder.ivDownload.setVisibility(View.GONE);
                             holder.progress.setVisibility(View.GONE);
                             holder.ivClose.setVisibility(View.GONE);
 
@@ -125,17 +112,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
                             DBHandler Handler = new DBHandler(context);
                             Handler.Open();
-                            Handler.UpdateMessage(messages.get(position));
+                            Handler.DeleteMessage(messages.get(position));
+                            Handler.addMessage(messages.get(position));
                             Handler.close();
 
                             return false;
                         }
                     }).into(holder.ivImage);
 
-
-                }
-            });
-        } else if (messages.get(position).getDownloaded() == 1) // image is sent successfully
+        }
+        else if (messages.get(position).getDownloaded() == 1) // image is sent successfully
         {
             holder.ivDownload.setVisibility(View.GONE);
             holder.ivClose.setVisibility(View.GONE);

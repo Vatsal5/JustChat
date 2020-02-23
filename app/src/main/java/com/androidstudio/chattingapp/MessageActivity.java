@@ -173,6 +173,10 @@ public class MessageActivity extends AppCompatActivity {
         Messages.setLayoutManager(manager);
 
         chats = Handler.getMessages(RecieverPhone);
+        for(int i=0;i<chats.size();i++)
+        {
+            Log.d("messages",chats.get(i).getMessage());
+        }
         //chats.add(new MessageModel(RecieverPhone,sender,"https://images.unsplash.com/photo-1579256308218-d162fd41c801?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjF9&auto=format&fit=crop&w=500&q=60","image",0));
 
         adapter = new MessageAdapter(MessageActivity.this,chats);
