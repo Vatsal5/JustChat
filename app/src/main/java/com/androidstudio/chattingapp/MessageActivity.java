@@ -103,10 +103,7 @@ public class MessageActivity extends AppCompatActivity {
 
         RecieverPhone = getIntent().getStringExtra("phone");
         sender=FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
-        Messages = findViewById(R.id.Messages);
         chats = new ArrayList<>();
-
-        Messages.setHasFixedSize(true);
 
         etMessage = findViewById(R.id.etMessage);
         ivSend = findViewById(R.id.ivSend);
@@ -114,6 +111,7 @@ public class MessageActivity extends AppCompatActivity {
         ivSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
                 reference.child("users").child(RecieverPhone).child(sender).child("info").child("friend").setValue("yes");
                 sendFCMPush();
@@ -152,7 +150,6 @@ public class MessageActivity extends AppCompatActivity {
                                    Handler.addMessage(new MessageModel(id,sender, RecieverPhone, etMessage.getText().toString(),"text",-1));
 
                                    adapter.notifyDataSetChanged();
-                                   Messages.scrollToPosition(chats.size() - 1);
                                    etMessage.setText(null);
                                }
                                else
@@ -180,9 +177,51 @@ public class MessageActivity extends AppCompatActivity {
         //chats.add(new MessageModel(RecieverPhone,sender,"https://images.unsplash.com/photo-1579256308218-d162fd41c801?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjF9&auto=format&fit=crop&w=500&q=60","image",0));
 
         adapter = new MessageAdapter(MessageActivity.this,chats);
+
         Messages.setAdapter(adapter);
 
-        Messages.scrollToPosition(chats.size()-1);
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+
+                Messages.scrollToPosition(chats.size()-1);
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                super.onItemRangeChanged(positionStart, itemCount);
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount, @Nullable Object payload) {
+                super.onItemRangeChanged(positionStart, itemCount, payload);
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+
+                Messages.scrollToPosition(chats.size()-1);
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+            }
+
+            @Override
+            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+                super.onItemRangeMoved(fromPosition, toPosition, itemCount);
+            }
+        });
+
+        Messages.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Messages.scrollToPosition(chats.size()-1);
+            }
+        },500);
 
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").addChildEventListener(new ChildEventListener() {
             @Override
@@ -246,7 +285,6 @@ public class MessageActivity extends AppCompatActivity {
 
 
                     adapter.notifyDataSetChanged();
-                    Messages.scrollToPosition(chats.size()-1);
                 }}
             }
 
@@ -450,7 +488,6 @@ public class MessageActivity extends AppCompatActivity {
                                         chats.remove(chats.size()-1);
                                         chats.add(messageModel);
                                         adapter.notifyDataSetChanged();
-                                        Messages.scrollToPosition(chats.size()-1);
 
                                         Handler.addMessage(messageModel);
 
