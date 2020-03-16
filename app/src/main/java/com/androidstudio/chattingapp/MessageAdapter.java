@@ -1,36 +1,23 @@
 package com.androidstudio.chattingapp;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
 import java.util.ArrayList;
+
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
@@ -43,9 +30,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     Context context;
     ArrayList<MessageModel> messages;
 
+    public interface ImageSelected
+    {
+        public void showImage(int index);
+        public void downloadImage(int index);
+    }
+
+    ImageSelected Activity;
+
     public MessageAdapter(Context context, ArrayList<MessageModel> messages) {
         this.context = context;
         this.messages = messages;
+        Activity = (ImageSelected) context;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -87,41 +83,51 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull final MessageAdapter.ViewHolder holder, final int position) {
 
+        if(holder.ivImage!=null) {
+            holder.ivImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Activity.showImage(position);
+                }
+            });
+        }
+
         if (messages.get(position).getDownloaded() == 0)   //image is received but yet to be downloaded
         {
             holder.ivClose.setVisibility(View.VISIBLE);
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setImageResource(0);
 
-            Glide.with(context).load(messages.get(position).getMessage()).listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-
-                            holder.ivImage.setImageDrawable(resource);
-
-                            holder.progress.setVisibility(View.GONE);
-                            holder.ivClose.setVisibility(View.GONE);
-
-                            messages.get(position).setDownloaded(3);
-
-                            DBHandler Handler = new DBHandler(context);
-                            Handler.Open();
-                            Handler.DeleteMessage(messages.get(position));
-                            Handler.addMessage(messages.get(position));
-                            Handler.close();
-
-                            return false;
-                        }
-                    }).into(holder.ivImage);
+            Activity.downloadImage(position);
+//            Glide.with(context).load(messages.get(position).getMessage()).listener(new RequestListener<Drawable>() {
+//                        @Override
+//                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//
+//                            holder.ivImage.setImageDrawable(resource);
+//
+//                            holder.progress.setVisibility(View.GONE);
+//                            holder.ivClose.setVisibility(View.GONE);
+//
+//                            messages.get(position).setDownloaded(3);
+//
+//                            DBHandler Handler = new DBHandler(context);
+//                            Handler.Open();
+//                            Handler.DeleteMessage(messages.get(position));
+//                            Handler.addMessage(messages.get(position));
+//                            Handler.close();
+//
+//                            return false;
+//                        }
+//                    }).into(holder.ivImage);
 
         }
-        else if (messages.get(position).getDownloaded() == 1) // image is sent successfully
+        else if (messages.get(position).getDownloaded() == 1) // image is sent or downloaded successfully
         {
             holder.ivDownload.setVisibility(View.GONE);
             holder.ivClose.setVisibility(View.GONE);
@@ -136,15 +142,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setImageURI(Uri.parse(messages.get(position).getMessage()));
 
-        }
-
-        else if(messages.get(position).getDownloaded()==3)
-        {
-            holder.ivDownload.setVisibility(View.GONE);
-            holder.ivClose.setVisibility(View.GONE);
-            holder.progress.setVisibility(View.GONE);
-
-            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
         }
 
         else if(messages.get(position).getDownloaded() == -1) // if message is a text message
@@ -179,4 +176,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         return -1;
     }
+
+
 }

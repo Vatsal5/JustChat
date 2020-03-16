@@ -119,6 +119,7 @@ public class DBHandler
 
         values.put(KEY_SENDER,message.getSender());
         values.put(KEY_RECEIVER,message.getReciever());
+        values.put(KEY_MESSAGE,message.getMessage());
         values.put(KEY_TYPE,message.getType());
         values.put(KEY_ISDOWNLOADED,message.getDownloaded());
 

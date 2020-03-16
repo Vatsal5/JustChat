@@ -1,6 +1,7 @@
 package com.androidstudio.chattingapp;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -82,6 +84,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         {
             getcontact();
         }
+
+        if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},5);
+        }
         btnContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,6 +143,27 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
             {
                 getcontact();
+            }
+        }
+        if(requestCode==5)
+        {
+            if(grantResults[0] == PackageManager.PERMISSION_DENIED)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Permission Required")
+                        .setMessage("Permission to write External storage is required")
+                        .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},5);
+                            }
+                        })
+                .setNegativeButton("No Thanks", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
             }
         }
     }

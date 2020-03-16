@@ -1,10 +1,15 @@
 package com.androidstudio.chattingapp;
 
 import android.Manifest;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaActionSound;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
@@ -54,12 +59,21 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MessageActivity extends AppCompatActivity {
+public class MessageActivity extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
     EditText etMessage;
     ImageView ivSend;
@@ -68,6 +82,9 @@ public class MessageActivity extends AppCompatActivity {
     DatabaseReference reference;
 
     StorageReference rf;
+    int position;
+
+    MessageModel messageModel;
 
     TextView title;
     String to="";
@@ -121,25 +138,6 @@ public class MessageActivity extends AppCompatActivity {
                     Toast.makeText(MessageActivity.this, "Please enter a message", Toast.LENGTH_LONG).show();
                 else
                     {
-//                    reference.child("users").child(sender).child(RecieverPhone).push().setValue(etMessage.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<Void> task) {
-//                            if (task.isSuccessful())
-//                            {
-//                                chats.add(new MessageModel(sender, RecieverPhone, etMessage.getText().toString(),"text",-1));
-//                                Handler.addMessage(new MessageModel(sender, RecieverPhone, etMessage.getText().toString(),"text",-1));
-//
-//                                adapter.notifyDataSetChanged();
-//                                Messages.scrollToPosition(chats.size() - 1);
-//                                etMessage.setText(null);
-//                            }
-//                            else
-//                            {
-//                                Toast.makeText(MessageActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-
                        final String id = reference.child("users").child(sender).child(RecieverPhone).push().getKey();
                        reference.child("users").child(sender).child(RecieverPhone).child(id).setValue(etMessage.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                            @Override
@@ -456,10 +454,9 @@ public class MessageActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK)
             {
                 Uri uri = data.getData();
-                final MessageModel messageModel = new MessageModel("0",sender,RecieverPhone,uri.toString(),"image",2);
+                messageModel = new MessageModel("0",sender,RecieverPhone,uri.toString(),"image",2);
                 chats.add(messageModel);
                 adapter.notifyDataSetChanged();
-                Messages.scrollToPosition(chats.size()-1);
 
                 UploadTask uploadTask =rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/"+messageModel.getReciever()).child("images/"+Uri.parse(messageModel.getMessage()).getLastPathSegment()).
                         putFile(Uri.parse(messageModel.getMessage()));
@@ -500,41 +497,116 @@ public class MessageActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//
-//
-//
-//
-//            if(resultCode == RESULT_OK)
-//            {
-//                uri = result.getUri();
-//                File from= new File(uri.getLastPathSegment(),"old");
-//                File to= new File("dp");
-//                from.renameTo(to);
-//                UploadTask uploadTask=reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").
-//                        putFile(uri);
-//                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        Toast.makeText(getApplicationContext(),"file uploaded", Toast.LENGTH_LONG).show();
-//
-//                        reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").getDownloadUrl().
-//                                addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                    @Override
-//                                    public void onSuccess(Uri uri) {
-//                                        Toast.makeText(getApplicationContext(),"hi", Toast.LENGTH_LONG).show();
-//
-//                                        databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-//                                                child("profile").setValue(uri.toString());
-//                                    }
-//                                });
-//                    }
-//                });
-//            }
-//
-//    }
+    @Override
+    public void showImage(int index) {
+        Intent intent = new Intent(MessageActivity.this,ShowImage.class);
+        if(chats.get(index).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+            intent.putExtra("type","uri");
+        else
+            intent.putExtra("type","url");
+        intent.putExtra("source",chats.get(index).getMessage());
+
+        startActivity(intent);
+    }
+
+    @Override
+    public void downloadImage(int index) {
+        position = index;
+        new DownloadTask().execute(stringToURL(chats.get(index).getMessage()));
+    }
+
+    private class DownloadTask extends AsyncTask<URL,Void, Bitmap> {
+        protected void onPreExecute(){
+        }
+
+        protected Bitmap doInBackground(URL...urls){
+            URL url = urls[0];
+            HttpURLConnection connection = null;
+
+            try{
+                connection = (HttpURLConnection) url.openConnection();
+
+                connection.connect();
+
+                InputStream inputStream = connection.getInputStream();
+
+                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+
+                Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
+
+                return bmp;
+
+            }catch(IOException e){
+                e.printStackTrace();
+            } finally{
+                // Disconnect the http url connection
+                connection.disconnect();
+            }
+            return null;
+        }
+
+        // When all async task done
+        protected void onPostExecute(Bitmap result){
+            if(result!=null){
+
+                Uri imageInternalUri = saveImageToInternalStorage(result);
+                chats.get(position).setDownloaded(1);
+                chats.get(position).setMessage(imageInternalUri.toString());
+                adapter.notifyDataSetChanged();
+                Handler.UpdateMessage(chats.get(position));
+                // Set the ImageView image from internal storage
+
+            }else {
+                // Notify user that an error occurred while downloading image
+                Toast.makeText(MessageActivity.this, "Could not Download Image!!", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    // Custom method to convert string to url
+    protected URL stringToURL(String urlString){
+        try{
+            URL url = new URL(urlString);
+            return url;
+        }catch(MalformedURLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Custom method to save a bitmap into internal storage
+    protected Uri saveImageToInternalStorage(Bitmap bitmap){
+
+        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp");
+        if(!imagesFolder.exists())
+        {
+            imagesFolder.mkdirs();
+        }
+
+        // Create a file to save the image
+        File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis())+".jpg");
+        MessageActivity.this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+
+        try{
+            OutputStream stream = null;
+
+            stream = new FileOutputStream(file);
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
+
+            stream.flush();
+
+            stream.close();
+
+        }catch (IOException e) // Catch the exception
+        {
+            e.printStackTrace();
+        }
+
+        // Parse the gallery image url to uri
+        Uri savedImageURI = Uri.parse(file.getAbsolutePath());
+
+        return savedImageURI;
+    }
 
 }
