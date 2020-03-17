@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bogdwellers.pinchtozoom.ImageMatrixTouchHandler;
 import com.bumptech.glide.Glide;
 
 public class ShowImage extends AppCompatActivity{
@@ -27,6 +28,7 @@ public class ShowImage extends AppCompatActivity{
         String source = getIntent().getStringExtra("source");
 
         Glide.with(ShowImage.this).load(source).into(ivShowImage);
+        ivShowImage.setOnTouchListener(new ImageMatrixTouchHandler(ShowImage.this));
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override

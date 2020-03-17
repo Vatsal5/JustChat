@@ -35,6 +35,8 @@ dependencies {
 
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.4.5'
 
+    implementation 'com.bogdwellers:pinchtozoom:0.1'
+
     implementation 'com.google.firebase:firebase-core:17.2.2'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
