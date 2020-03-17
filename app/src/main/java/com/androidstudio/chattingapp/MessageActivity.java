@@ -552,20 +552,22 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         // When all async task done
         protected void onPostExecute(Bitmap result){
             if(result!=null){
+               // Toast.makeText(MessageActivity.this, "", Toast.LENGTH_LONG).show();
 
-                rf.child(messageModel.getReciever() + "/" + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("images/" +Uri.parse(messageModel.getMessage()).getLastPathSegment()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(MessageActivity.this, "file deleted successfully", Toast.LENGTH_LONG).show();
 
-                    }
-                });
                 Uri imageInternalUri = saveImageToInternalStorage(result);
                 chats.get(position).setDownloaded(1);
                 chats.get(position).setMessage(imageInternalUri.toString());
                 adapter.notifyDataSetChanged();
                 Handler.UpdateMessage(chats.get(position));
                 // Set the ImageView image from internal storage
+                rf.child(messageModel.getMessage()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(MessageActivity.this, "file deleted successfully", Toast.LENGTH_LONG).show();
+
+                    }
+                });
 
             }else {
                 // Notify user that an error occurred while downloading image
