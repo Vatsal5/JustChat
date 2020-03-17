@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -54,7 +56,6 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
     ListView list;
     profile_listitem_adapter adapter;
     ArrayList<String> data;
-    CardView cv;
 
     Uri uri;
     LayoutInflater inflater;
@@ -67,6 +68,9 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
     PopupWindow window;
     StorageReference reference;
 
+    ProgressBar progress;
+
+    String source;
     View view;
     private static  final int REQUEST_CODE=100;
 
@@ -87,11 +91,9 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
         data = new ArrayList<>();
 
-
-
-
         ivProfile = findViewById(R.id.ivProfile);
-
+        ivClick = findViewById(R.id.ivClick);
+        progress = findViewById(R.id.progress);
 
         llProfile = findViewById(R.id.llProfile);
         inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -108,7 +110,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
         window = new PopupWindow(view, ActionBar.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         window.setFocusable(true);
-        ivProfile.setOnClickListener(new View.OnClickListener() {
+        ivClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(ContextCompat.checkSelfPermission(Profile.this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
@@ -122,12 +124,23 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                 }
             }
         });
+
+        ivProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Profile.this,ShowImage.class);
+                intent.putExtra("source",source);
+                startActivity(intent);
+            }
+        });
+
         databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                 addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         if(dataSnapshot.getKey().equals("profile"))
                         {
+                            source = dataSnapshot.getValue(String.class);
                             Glide.with(Profile.this)
                                     .load(dataSnapshot.getValue())
                                     .into(ivProfile);
@@ -278,6 +291,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if(resultCode == RESULT_OK)
             {
+                progress.setVisibility(View.VISIBLE);
                 uri = result.getUri();
                 File from= new File(uri.getLastPathSegment(),"old");
                 File to= new File("dp");
@@ -287,20 +301,25 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                 uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getApplicationContext(),"file uploaded", Toast.LENGTH_LONG).show();
 
                         reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").getDownloadUrl().
                                 addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
-                                        Toast.makeText(getApplicationContext(),"hi", Toast.LENGTH_LONG).show();
+                                        source = uri.toString();
                                         Glide.with(Profile.this)
                                                 .load(uri.toString())
                                                 .into(ivProfile);
                                         databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                                 child("profile").setValue(uri.toString());
+                                        progress.setVisibility(View.GONE);
                                     }
-                                });
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                progress.setVisibility(View.GONE);
+                            }
+                        });
                     }
                 });
             }

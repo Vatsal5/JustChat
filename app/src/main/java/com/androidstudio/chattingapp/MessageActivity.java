@@ -40,6 +40,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.common.internal.Constants;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -67,6 +68,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -84,10 +86,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     StorageReference rf;
 
-    MessageModel messageModel;
-
     TextView title;
-    String to="";
+    String to = "";
     RecyclerView Messages;
     String sender;
     LinearLayoutManager manager;
@@ -101,10 +101,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
-        database=FirebaseDatabase.getInstance();
-        reference=database.getReference();
+        database = FirebaseDatabase.getInstance();
+        reference = database.getReference();
         rf = FirebaseStorage.getInstance().getReference("docs/");
-        lastpath="";
+        lastpath = "";
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -121,7 +121,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         RecieverPhone = getIntent().getStringExtra("phone");
-        sender=FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+        sender = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
         chats = new ArrayList<>();
 
         etMessage = findViewById(R.id.etMessage);
@@ -138,24 +138,20 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 sendFCMPush();
 
 
-                if(etMessage.getText().toString().trim().isEmpty())
+                if (etMessage.getText().toString().trim().isEmpty())
                     Toast.makeText(MessageActivity.this, "Please enter a message", Toast.LENGTH_LONG).show();
-                else
-                {
+                else {
                     final String id = reference.child("users").child(sender).child(RecieverPhone).push().getKey();
                     reference.child("users").child(sender).child(RecieverPhone).child(id).setValue(etMessage.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful())
-                            {
-                                chats.add(new MessageModel(id,sender, RecieverPhone, etMessage.getText().toString(),"text",-1));
-                                Handler.addMessage(new MessageModel(id,sender, RecieverPhone, etMessage.getText().toString(),"text",-1));
+                            if (task.isSuccessful()) {
+                                chats.add(new MessageModel(id, sender, RecieverPhone, etMessage.getText().toString(), "text", -1));
+                                Handler.addMessage(new MessageModel(id, sender, RecieverPhone, etMessage.getText().toString(), "text", -1));
 
                                 adapter.notifyDataSetChanged();
                                 etMessage.setText(null);
-                            }
-                            else
-                            {
+                            } else {
                                 Toast.makeText(MessageActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -174,13 +170,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         Messages.setLayoutManager(manager);
 
         chats = Handler.getMessages(RecieverPhone);
-        for(int i=0;i<chats.size();i++)
-        {
-            Log.d("messages",chats.get(i).getMessage());
+        for (int i = 0; i < chats.size(); i++) {
+            Log.d("messages", chats.get(i).getMessage());
         }
         //chats.add(new MessageModel(RecieverPhone,sender,"https://images.unsplash.com/photo-1579256308218-d162fd41c801?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjF9&auto=format&fit=crop&w=500&q=60","image",0));
 
-        adapter = new MessageAdapter(MessageActivity.this,chats);
+        adapter = new MessageAdapter(MessageActivity.this, chats);
 
         Messages.setAdapter(adapter);
 
@@ -189,7 +184,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onChanged() {
                 super.onChanged();
 
-                Messages.scrollToPosition(chats.size()-1);
+                Messages.scrollToPosition(chats.size() - 1);
             }
 
             @Override
@@ -206,7 +201,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
 
-                Messages.scrollToPosition(chats.size()-1);
+                Messages.scrollToPosition(chats.size() - 1);
             }
 
             @Override
@@ -223,9 +218,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         Messages.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Messages.scrollToPosition(chats.size()-1);
+                Messages.scrollToPosition(chats.size() - 1);
             }
-        },500);
+        }, 500);
 
 //**************************************************************************************************************************************************************************
 
@@ -233,7 +228,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                MessageModel messageModel = new MessageModel(dataSnapshot.getKey(),RecieverPhone,sender,dataSnapshot.getValue(String.class),"image",0);
+                MessageModel messageModel = new MessageModel(dataSnapshot.getKey(), RecieverPhone, sender, dataSnapshot.getValue(String.class), "image", 0);
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 
                 chats.add(messageModel);
@@ -242,7 +237,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 dataSnapshot.getRef().removeValue();
 
                 adapter.notifyDataSetChanged();
-                Messages.scrollToPosition(chats.size()-1);
+                Messages.scrollToPosition(chats.size() - 1);
 
             }
 
@@ -275,29 +270,29 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
 
-                if (!(dataSnapshot.getKey().equals("message") )) {
-                    if(dataSnapshot.getKey().equals("info")) {
+                if (!(dataSnapshot.getKey().equals("message"))) {
+                    if (dataSnapshot.getKey().equals("info")) {
                         if (!(dataSnapshot.child("friend").exists())) {
                             reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
                         }
-                    }
-
-                    else if(!(dataSnapshot.getKey().equals("info") )){
+                    } else if (!(dataSnapshot.getKey().equals("info"))) {
 
                         reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 
-                        chats.add(new MessageModel(dataSnapshot.getKey(),RecieverPhone, sender, dataSnapshot.getValue().toString(),"text",-1));
-                        Handler.addMessage(new MessageModel(dataSnapshot.getKey(),RecieverPhone, sender, dataSnapshot.getValue().toString(),"text",-1));
+                        chats.add(new MessageModel(dataSnapshot.getKey(), RecieverPhone, sender, dataSnapshot.getValue().toString(), "text", -1));
+                        Handler.addMessage(new MessageModel(dataSnapshot.getKey(), RecieverPhone, sender, dataSnapshot.getValue().toString(), "text", -1));
                         dataSnapshot.getRef().removeValue();
 
 
                         adapter.notifyDataSetChanged();
-                    }}
+                    }
+                }
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             }
+
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
@@ -331,16 +326,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch(item.getItemId())
-        {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 MessageActivity.this.finish();
                 break;
 
             case R.id.Image:
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(Intent.createChooser(intent,"Select source"),420);
+                CropImage.startPickImageActivity(MessageActivity.this);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -403,7 +395,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             e.printStackTrace();
         }
 
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,"https://fcm.googleapis.com/fcm/send", obj,
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, "https://fcm.googleapis.com/fcm/send", obj,
                 new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -441,7 +433,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
 
-                to= dataSnapshot.child(RecieverPhone).getValue(String.class);
+                to = dataSnapshot.child(RecieverPhone).getValue(String.class);
 
             }
 
@@ -455,60 +447,71 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.image,menu);
+        getMenuInflater().inflate(R.menu.image, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
-//*****************************************************************************************************************************************************************
+
+    //*****************************************************************************************************************************************************************
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode==420)
+        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK)
         {
-            if(resultCode == RESULT_OK)
-            {
-                Uri uri = data.getData();
-                messageModel = new MessageModel("0",sender,RecieverPhone,uri.toString(),"image",2);
-                chats.add(messageModel);
-                adapter.notifyDataSetChanged();
+            Uri uri = CropImage.getPickImageResultUri(this,data);
+            MessageModel messageModel = new MessageModel("0", sender, RecieverPhone, uri.toString(), "image", 2);
+            chats.add(messageModel);
+            adapter.notifyDataSetChanged();
+            Messages.scrollToPosition(chats.size() - 1);
 
-                UploadTask uploadTask =rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/"+messageModel.getReciever()).child("images/"+Uri.parse(messageModel.getMessage()).getLastPathSegment()).
-                        putFile(Uri.parse(messageModel.getMessage()));
-                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(MessageActivity.this,"file uploaded", Toast.LENGTH_LONG).show();
+            new UploadImage(chats.size() - 1).execute();
+    }
+    }
 
-                        rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + messageModel.getReciever()).child("images/" +Uri.parse(messageModel.getMessage()).getLastPathSegment()).getDownloadUrl().
-                                addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        //  Toast.makeText(context, "hi", Toast.LENGTH_LONG).show();
+    private class UploadImage extends AsyncTask<Void,Void,Boolean>
+    {
+        int index;
 
-                                        String id = reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                                child(messageModel.getReciever()).child("info").
-                                                child("images").push().getKey();
+        UploadImage(int position)
+        {
+            index = position;
+        }
 
-                                        reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                                child(messageModel.getReciever()).child("info").
-                                                child("images").child(id).setValue(uri.toString());
+        @Override
+        protected Boolean doInBackground(Void... avoid) {
 
-                                        messageModel.setId(id);
-                                        messageModel.setDownloaded(1);
+            UploadTask uploadTask =rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/"+chats.get(index).getReciever()).child("images/"+Uri.parse(chats.get(index).getMessage()).getLastPathSegment()).
+                    putFile(Uri.parse(chats.get(index).getMessage()));
 
-                                        chats.remove(chats.size()-1);
-                                        chats.add(messageModel);
-                                        adapter.notifyDataSetChanged();
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(MessageActivity.this, "file uploaded", Toast.LENGTH_LONG).show();
 
-                                        Handler.addMessage(messageModel);
+                    rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + chats.get(index).getReciever()).child("images/" + Uri.parse(chats.get(index).getMessage()).getLastPathSegment()).getDownloadUrl().
+                            addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    //  Toast.makeText(context, "hi", Toast.LENGTH_LONG).show();
 
-                                    }
-                                });
+                                    String id = reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                            child(chats.get(index).getReciever()).child("info").
+                                            child("images").push().getKey();
 
-                    }
-                });
-            }
+                                    reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                            child(chats.get(index).getReciever()).child("info").
+                                            child("images").child(id).setValue(uri.toString());
+
+                                    chats.get(index).setId(id);
+                                    chats.get(index).setDownloaded(1);
+                                    adapter.notifyDataSetChanged();
+                                    Handler.addMessage(chats.get(index));
+                                }
+                            });
+                }
+            });
+            return null;
         }
     }
 //***********************************************************************************************************************************************
