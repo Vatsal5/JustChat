@@ -83,7 +83,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     String lastpath;
 
     StorageReference rf;
-    int position;
 
     MessageModel messageModel;
 
@@ -513,12 +512,20 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     }
 
     @Override
-    public void downloadImage(int index) {
-        position = index;
-        new DownloadTask().execute(stringToURL(chats.get(index).getMessage()));
+    public void downloadImage(int index)
+    {
+        new DownloadTask(index).execute(stringToURL(chats.get(index).getMessage()));
     }
 
-    private class DownloadTask extends AsyncTask<URL,Void, Bitmap> {
+    private class DownloadTask extends AsyncTask<URL,Void, Bitmap>
+    {
+        int index;
+
+        DownloadTask(int position)
+        {
+            index = position;
+        }
+
         protected void onPreExecute(){
         }
 
@@ -555,7 +562,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 //deleted the downloaded image from the cloud storage using getReferenceFromUrl
 
                 StorageReference file;
-                file=FirebaseStorage.getInstance().getReferenceFromUrl(chats.get(position).getMessage());
+                file=FirebaseStorage.getInstance().getReferenceFromUrl(chats.get(index).getMessage());
                 file.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -566,10 +573,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
 
                 Uri imageInternalUri = saveImageToInternalStorage(result);
-                chats.get(position).setDownloaded(1);
-                chats.get(position).setMessage(imageInternalUri.toString());
+                chats.get(index).setDownloaded(1);
+                chats.get(index).setMessage(imageInternalUri.toString());
                 adapter.notifyDataSetChanged();
-                Handler.UpdateMessage(chats.get(position));
+                Handler.UpdateMessage(chats.get(index));
                 // Set the ImageView image from internal storage
 
 
