@@ -468,7 +468,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Toast.makeText(MessageActivity.this,"file uploaded", Toast.LENGTH_LONG).show();
 
-                        lastpath= Uri.parse(messageModel.getMessage()).getLastPathSegment();
                         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + messageModel.getReciever()).child("images/" +Uri.parse(messageModel.getMessage()).getLastPathSegment()).getDownloadUrl().
                                 addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
@@ -552,6 +551,17 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         // When all async task done
         protected void onPostExecute(Bitmap result){
             if(result!=null){
+
+                //deleted the downloaded image from the cloud storage using getReferenceFromUrl
+
+                StorageReference file;
+                file=FirebaseStorage.getInstance().getReferenceFromUrl(chats.get(position).getMessage());
+                file.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                });
                // Toast.makeText(MessageActivity.this, "", Toast.LENGTH_LONG).show();
 
 
@@ -561,13 +571,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 adapter.notifyDataSetChanged();
                 Handler.UpdateMessage(chats.get(position));
                 // Set the ImageView image from internal storage
-                rf.child(messageModel.getMessage()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(MessageActivity.this, "file deleted successfully", Toast.LENGTH_LONG).show();
 
-                    }
-                });
 
             }else {
                 // Notify user that an error occurred while downloading image
