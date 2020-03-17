@@ -105,6 +105,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         database=FirebaseDatabase.getInstance();
         reference=database.getReference();
         rf = FirebaseStorage.getInstance().getReference("docs/");
+        lastpath="";
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -552,7 +553,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         protected void onPostExecute(Bitmap result){
             if(result!=null){
 
-                rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + messageModel.getReciever()).child("images/" +Uri.parse(messageModel.getMessage()).getLastPathSegment()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                rf.child(messageModel.getReciever() + "/" + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("images/" +Uri.parse(messageModel.getMessage()).getLastPathSegment()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(MessageActivity.this, "file deleted successfully", Toast.LENGTH_LONG).show();
