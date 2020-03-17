@@ -234,7 +234,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 dataSnapshot.getRef().removeValue();
 
                 adapter.notifyDataSetChanged();
-                Messages.scrollToPosition(chats.size()-1);
 
             }
 
@@ -547,14 +546,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         // When all async task done
         protected void onPostExecute(Bitmap result){
-            if(result!=null){
-
+            if(result!=null)
+            {
                 Uri imageInternalUri = saveImageToInternalStorage(result);
                 chats.get(position).setDownloaded(1);
                 chats.get(position).setMessage(imageInternalUri.toString());
                 adapter.notifyDataSetChanged();
                 Handler.UpdateMessage(chats.get(position));
-                // Set the ImageView image from internal storage
 
             }else {
                 // Notify user that an error occurred while downloading image
