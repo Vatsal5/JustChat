@@ -80,6 +80,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     String RecieverPhone;
     FirebaseDatabase database;
     DatabaseReference reference;
+    String lastpath;
 
     StorageReference rf;
     int position;
@@ -104,6 +105,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         database=FirebaseDatabase.getInstance();
         reference=database.getReference();
         rf = FirebaseStorage.getInstance().getReference("docs/");
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -137,25 +139,25 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 if(etMessage.getText().toString().trim().isEmpty())
                     Toast.makeText(MessageActivity.this, "Please enter a message", Toast.LENGTH_LONG).show();
                 else
-                    {
-                       final String id = reference.child("users").child(sender).child(RecieverPhone).push().getKey();
-                       reference.child("users").child(sender).child(RecieverPhone).child(id).setValue(etMessage.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                           @Override
-                           public void onComplete(@NonNull Task<Void> task) {
-                               if (task.isSuccessful())
-                               {
-                                   chats.add(new MessageModel(id,sender, RecieverPhone, etMessage.getText().toString(),"text",-1));
-                                   Handler.addMessage(new MessageModel(id,sender, RecieverPhone, etMessage.getText().toString(),"text",-1));
+                {
+                    final String id = reference.child("users").child(sender).child(RecieverPhone).push().getKey();
+                    reference.child("users").child(sender).child(RecieverPhone).child(id).setValue(etMessage.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful())
+                            {
+                                chats.add(new MessageModel(id,sender, RecieverPhone, etMessage.getText().toString(),"text",-1));
+                                Handler.addMessage(new MessageModel(id,sender, RecieverPhone, etMessage.getText().toString(),"text",-1));
 
-                                   adapter.notifyDataSetChanged();
-                                   etMessage.setText(null);
-                               }
-                               else
-                               {
-                                   Toast.makeText(MessageActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-                               }
-                           }
-                       });
+                                adapter.notifyDataSetChanged();
+                                etMessage.setText(null);
+                            }
+                            else
+                            {
+                                Toast.makeText(MessageActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -234,6 +236,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 dataSnapshot.getRef().removeValue();
 
                 adapter.notifyDataSetChanged();
+                Messages.scrollToPosition(chats.size()-1);
 
             }
 
@@ -272,17 +275,17 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         }
                     }
 
-                   else if(!(dataSnapshot.getKey().equals("info") )){
+                    else if(!(dataSnapshot.getKey().equals("info") )){
 
                         reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 
                         chats.add(new MessageModel(dataSnapshot.getKey(),RecieverPhone, sender, dataSnapshot.getValue().toString(),"text",-1));
-                    Handler.addMessage(new MessageModel(dataSnapshot.getKey(),RecieverPhone, sender, dataSnapshot.getValue().toString(),"text",-1));
-                    dataSnapshot.getRef().removeValue();
+                        Handler.addMessage(new MessageModel(dataSnapshot.getKey(),RecieverPhone, sender, dataSnapshot.getValue().toString(),"text",-1));
+                        dataSnapshot.getRef().removeValue();
 
 
-                    adapter.notifyDataSetChanged();
-                }}
+                        adapter.notifyDataSetChanged();
+                    }}
             }
 
             @Override
@@ -304,7 +307,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             }
         };
 
-       reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
+        reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
 
     }
     @Override
@@ -349,9 +352,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         reference.child("tokens").child(sender).setValue(token);
 
                         // Log and toast
-                       // String msg = getString(R.string.msg_token_fmt, token);
-                       // Log.d("tag", msg);
-                       // Toast.makeText(MessageActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        // String msg = getString(R.string.msg_token_fmt, token);
+                        // Log.d("tag", msg);
+                        // Toast.makeText(MessageActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -425,7 +428,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
 
-                   to= dataSnapshot.child(RecieverPhone).getValue(String.class);
+                to= dataSnapshot.child(RecieverPhone).getValue(String.class);
 
             }
 
@@ -464,6 +467,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Toast.makeText(MessageActivity.this,"file uploaded", Toast.LENGTH_LONG).show();
 
+                        lastpath= Uri.parse(messageModel.getMessage()).getLastPathSegment();
                         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + messageModel.getReciever()).child("images/" +Uri.parse(messageModel.getMessage()).getLastPathSegment()).getDownloadUrl().
                                 addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
@@ -546,13 +550,21 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         // When all async task done
         protected void onPostExecute(Bitmap result){
-            if(result!=null)
-            {
+            if(result!=null){
+
+                rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + messageModel.getReciever()).child("images/" +Uri.parse(messageModel.getMessage()).getLastPathSegment()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(MessageActivity.this, "file deleted successfully", Toast.LENGTH_LONG).show();
+
+                    }
+                });
                 Uri imageInternalUri = saveImageToInternalStorage(result);
                 chats.get(position).setDownloaded(1);
                 chats.get(position).setMessage(imageInternalUri.toString());
                 adapter.notifyDataSetChanged();
                 Handler.UpdateMessage(chats.get(position));
+                // Set the ImageView image from internal storage
 
             }else {
                 // Notify user that an error occurred while downloading image
