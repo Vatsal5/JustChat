@@ -24,16 +24,9 @@ public class ShowImage extends AppCompatActivity{
         ivShowImage = findViewById(R.id.ivShowImage);
         ivBack = findViewById(R.id.ivBack);
 
-        String type = getIntent().getStringExtra("type");
         String source = getIntent().getStringExtra("source");
 
-        if(type.equals("url")) {
-            Glide.with(ShowImage.this).load(source).into(ivShowImage);
-        }
-        else
-        {
-            ivShowImage.setImageURI(Uri.parse(source));
-        }
+        Glide.with(ShowImage.this).load(source).into(ivShowImage);
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
@@ -99,32 +100,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivImage.setImageResource(0);
 
             Activity.downloadImage(position);
-//            Glide.with(context).load(messages.get(position).getMessage()).listener(new RequestListener<Drawable>() {
-//                        @Override
-//                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//
-//                            holder.ivImage.setImageDrawable(resource);
-//
-//                            holder.progress.setVisibility(View.GONE);
-//                            holder.ivClose.setVisibility(View.GONE);
-//
-//                            messages.get(position).setDownloaded(3);
-//
-//                            DBHandler Handler = new DBHandler(context);
-//                            Handler.Open();
-//                            Handler.DeleteMessage(messages.get(position));
-//                            Handler.addMessage(messages.get(position));
-//                            Handler.close();
-//
-//                            return false;
-//                        }
-//                    }).into(holder.ivImage);
 
         }
         else if (messages.get(position).getDownloaded() == 1) // image is sent or downloaded successfully
@@ -133,15 +108,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivClose.setVisibility(View.GONE);
             holder.progress.setVisibility(View.GONE);
 
-            holder.ivImage.setImageURI(Uri.parse(messages.get(position).getMessage()));
+            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
 
         } else if (messages.get(position).getDownloaded() == 2) // when sender sends the image
         {
 
             holder.ivClose.setVisibility(View.VISIBLE);
             holder.progress.setVisibility(View.VISIBLE);
-            holder.ivImage.setImageURI(Uri.parse(messages.get(position).getMessage()));
 
+            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
         }
 
         else if(messages.get(position).getDownloaded() == -1) // if message is a text message

@@ -127,6 +127,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         etMessage = findViewById(R.id.etMessage);
         ivSend = findViewById(R.id.ivSend);
 
+//******************************************************************************************************************************************************
+
         ivSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -161,6 +163,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 }
             }
         });
+
+//*******************************************************************************************************************************************************
 
         Messages = findViewById(R.id.Messages);
         Messages.setHasFixedSize(true);
@@ -223,6 +227,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             }
         },500);
 
+//**************************************************************************************************************************************************************************
+
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -261,6 +267,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             }
         });
 
+//********************************************************************************************************************************************************
 
         chreceiver = new ChildEventListener() {
             @Override
@@ -308,8 +315,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         };
 
         reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
-
     }
+
+//*******************************************************************************************************************************************************
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -335,6 +344,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         }
         return super.onOptionsItemSelected(item);
     }
+
+//*****************************************************************************************************************************************************
 
     private void sendFCMPush() {
 
@@ -420,6 +431,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         requestQueue.add(jsObjRequest);
     }
 
+//*****************************************************************************************************************************************************
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -446,7 +459,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         return super.onCreateOptionsMenu(menu);
     }
-
+//*****************************************************************************************************************************************************************
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -498,14 +511,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             }
         }
     }
-
+//***********************************************************************************************************************************************
     @Override
     public void showImage(int index) {
         Intent intent = new Intent(MessageActivity.this,ShowImage.class);
-        if(chats.get(index).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
-            intent.putExtra("type","uri");
-        else
-            intent.putExtra("type","url");
+
         intent.putExtra("source",chats.get(index).getMessage());
 
         startActivity(intent);
@@ -517,6 +527,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         new DownloadTask(index).execute(stringToURL(chats.get(index).getMessage()));
     }
 
+    //***********************************************************************************************************************************************
     private class DownloadTask extends AsyncTask<URL,Void, Bitmap>
     {
         int index;
@@ -557,30 +568,19 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         // When all async task done
         protected void onPostExecute(Bitmap result){
-            if(result!=null){
-
-                //deleted the downloaded image from the cloud storage using getReferenceFromUrl
-
+            if(result!=null)
+            {
                 StorageReference file;
                 file=FirebaseStorage.getInstance().getReferenceFromUrl(chats.get(index).getMessage());
-                file.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-
-                    }
-                });
-               // Toast.makeText(MessageActivity.this, "", Toast.LENGTH_LONG).show();
-
+                file.delete();
 
                 Uri imageInternalUri = saveImageToInternalStorage(result);
                 chats.get(index).setDownloaded(1);
                 chats.get(index).setMessage(imageInternalUri.toString());
                 adapter.notifyDataSetChanged();
                 Handler.UpdateMessage(chats.get(index));
-                // Set the ImageView image from internal storage
-
-
-            }else {
+            }
+            else {
                 // Notify user that an error occurred while downloading image
                 Toast.makeText(MessageActivity.this, "Could not Download Image!!", Toast.LENGTH_LONG).show();
             }
@@ -632,5 +632,5 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         return savedImageURI;
     }
-
+//**************************************************************************************************************************************
 }
