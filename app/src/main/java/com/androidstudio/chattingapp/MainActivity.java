@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -25,6 +26,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,16 +34,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity implements UserAdapter.itemSelected
 {
 
     ArrayList<UserDetail> contacts;
     ArrayList<UserDetailwithUrl> contacts1;
+    ArrayList<UserDetailwithUrl> contacts2;
+
     ArrayList<String> number1;
 
+    FirebaseDatabase database1;
+    DatabaseReference reference1;
     DatabaseReference UserStatus;
+    ChildEventListener chreceiver;
+    DBHandler Handler;
 
+    ArrayList<MessageModel> chats;
     ListView lv;
     FirebaseDatabase database;
     FloatingActionButton btnContacts;
@@ -50,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
     UserAdapter userAdapter;
     int c=0;
+    int messageno=0;
     int k=0;
 
     @Override
@@ -57,6 +68,15 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Handler = new DBHandler(MainActivity.this);
+        Handler.Open();
+        chats = new ArrayList<>();
+        database1= FirebaseDatabase.getInstance();
+        reference1 = database1.getReference();
+        messageno=0;
+
+
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -66,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         number1= new ArrayList<String>();
         contacts = new ArrayList<>();
         contacts1 = new ArrayList<>();
+        contacts2 = new ArrayList<>();
+
         btnContacts=findViewById(R.id.btnContacts);
 
         database=FirebaseDatabase.getInstance();
@@ -129,6 +151,57 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                 }
             });
+        }
+        Toast.makeText(MainActivity.this,contacts2.size()+"",Toast.LENGTH_LONG).show();
+        if(contacts2.size()>0) {
+            for (int i = 0; i < contacts2.size(); i++) {
+                chreceiver = new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+
+
+                        if (!(dataSnapshot.getKey().equals("message"))) {
+
+                            if (!(dataSnapshot.getKey().equals("info"))) {
+
+
+
+                                getcontact();
+                                Log.d("messagecount",messageno+"");
+                                Toast.makeText(MainActivity.this,messageno+"",Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                };
+                if (contacts2.get(i).getPh_number().substring(0,3).equals("+91") ) {
+                    reference.child("users").child(contacts2.get(i).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addChildEventListener(chreceiver);
+                }
+                else
+                {
+                    reference.child("users").child("+91"+contacts2.get(i).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addChildEventListener(chreceiver);
+
+                }
+            }
         }
 
     }
@@ -200,6 +273,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                                         contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null"));
                                     }
+                                     messageno=(int)dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                                getChildrenCount()-2;
                                     (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
                                    // (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("info").child("friend")).setValue("no");
 
@@ -222,6 +297,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                                             contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null"));
                                         }
+                                            messageno=(int)dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                                    getChildrenCount()-2;
                                         (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
 
                                       //  (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("info").child("friend")).setValue("no");
@@ -244,6 +321,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 else{
                                     contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null"));
                                 }
+                                    messageno=(int)dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                            getChildrenCount()-2;
                                 (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("message")).setValue("/null");
                               //  (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("info").child("friend")).setValue("no");
 
@@ -263,6 +342,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                     else{
                                         contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null"));
                                     }
+                                        messageno=(int)dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                                getChildrenCount()-2;
                                     (reference.child("users").child(currentUserNumber).child(("+91"+contacts.get(i).getPh_number())).child("message")).setValue("/null");
                                   //  (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("info").child("friend")).setValue("no");
 
@@ -276,6 +357,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         }
                     }
                 }
+                Collections.copy(contacts2,contacts1);
                 userAdapter=new UserAdapter(MainActivity.this,contacts1);
                 lv.setAdapter(userAdapter);
             }
@@ -285,6 +367,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
             }
         });
+
     }
 
     @Override
