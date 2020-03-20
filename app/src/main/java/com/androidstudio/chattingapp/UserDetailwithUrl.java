@@ -5,11 +5,13 @@ public class UserDetailwithUrl {
     String ph_number;
     String uID;
     String url;
+    int messagenum;
 
-    public UserDetailwithUrl(String ph_number, String uID,String url) {
+    public UserDetailwithUrl(String ph_number, String uID,String url,int messagenum) {
         this.ph_number = ph_number;
         this.uID = uID;
         this.url=url;
+        this.messagenum=messagenum;
 
     }
 
@@ -35,5 +37,13 @@ public class UserDetailwithUrl {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public int getMessagenum() {
+        return messagenum;
+    }
+
+    public void setMessagenum(int messagenum) {
+        this.messagenum = messagenum;
     }
 }
