@@ -189,6 +189,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                          if (!(dataSnapshot.getKey().equals("info"))) {
 
 
+                             contacts1.get(index).setLastmessage(dataSnapshot.getValue(String.class));
+
                              contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                              userAdapter.notifyDataSetChanged();
 //                             //Log.d("messagecount",index+"");
@@ -291,12 +293,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                     if((dataSnapshot.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("info").child("friend").exists()))
                                     { if(dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
                                         contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class),2
-                                                ));
+                                         ,null       ));
                                     }
                                     else{
 
                                         contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",2
-                                                ));
+                                         ,null       ));
                                     }
 
 
@@ -317,12 +319,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                         { if(dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
                                             Log.d("myapp",dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class));
                                             contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class),2
-                                                   ));
+                                             ,null      ));
                                         }
                                         else{
 
                                             contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",2
-                                                ));
+                                            ,null));
                                         }
 
 
@@ -345,11 +347,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 if((dataSnapshot.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("info").child("friend").exists()))
                                 {if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
                                     contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").getValue(String.class),2
-                                            ));
+                                        ,null    ));
                                 }
                                 else{
                                     contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",2
-                                         ));
+                                   ,null      ));
                                 }
 
                                     (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("message")).setValue("/null");
@@ -367,11 +369,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                     if((dataSnapshot.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("info").child("friend").exists()))
                                     {  if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
                                         contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").getValue(String.class),2
-                                                ));
+                                        ,null        ));
                                     }
                                     else{
                                         contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",2
-                                                ));
+                                        ,null        ));
                                     }
 
 

@@ -5,14 +5,24 @@ public class UserDetailwithUrl {
     String ph_number;
     String uID;
     String url;
+    String lastmessage;
     int messagenum;
 
-    public UserDetailwithUrl(String ph_number, String uID,String url,int messagenum) {
+    public UserDetailwithUrl(String ph_number, String uID,String url,int messagenum,String lastmessage) {
         this.ph_number = ph_number;
         this.uID = uID;
         this.url=url;
         this.messagenum=messagenum;
+        this.lastmessage=lastmessage;
 
+    }
+
+    public String getLastmessage() {
+        return lastmessage;
+    }
+
+    public void setLastmessage(String lastmessage) {
+        this.lastmessage = lastmessage;
     }
 
     public String getPh_number() {

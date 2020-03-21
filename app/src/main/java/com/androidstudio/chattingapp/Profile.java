@@ -150,7 +150,6 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
                             data.add(0,dataSnapshot.getValue().toString());
 
-
                         }
                         if(dataSnapshot.getKey().equals("status"))
                         {

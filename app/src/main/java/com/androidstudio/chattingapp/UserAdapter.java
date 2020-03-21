@@ -27,6 +27,7 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
     private final Context context;
     ImageView iv;
     FirebaseDatabase database;
+    TextView tvlastmessage;
     private ArrayList<UserDetailwithUrl> list;
 
     public interface itemSelected
@@ -52,12 +53,24 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
         final View v= inflater.inflate(R.layout.chats_listlayout,parent,false);
         iv=v.findViewById(R.id.imageView);
 
+        tvlastmessage=v.findViewById(R.id.lastmessage);
         final ImageView ivStatus = v.findViewById(R.id.ivStatus);
         TextView tvMessageNum = v.findViewById(R.id.tvMessageNum);
 
         database=FirebaseDatabase.getInstance();
         DatabaseReference dbreference=database.getReference();
         Log.d("tag",list.get(position).getUrl());
+        if(!(list.get(position).getLastmessage().equals(null)))
+        {
+            if(list.get(position).getLastmessage().length()>20) {
+                tvlastmessage.setText(list.get(position).getLastmessage().substring(0,20)+"..");
+            }
+            else
+            {
+                tvlastmessage.setText(list.get(position).getLastmessage());
+
+            }
+        }
 
         if(list.get(position).getUrl().equals("null"))
         {
