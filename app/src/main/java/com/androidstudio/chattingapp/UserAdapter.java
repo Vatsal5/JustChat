@@ -53,6 +53,7 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
         iv=v.findViewById(R.id.imageView);
 
         final ImageView ivStatus = v.findViewById(R.id.ivStatus);
+        TextView tvMessageNum = v.findViewById(R.id.tvMessageNum);
 
         database=FirebaseDatabase.getInstance();
         DatabaseReference dbreference=database.getReference();
@@ -88,6 +89,12 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
 
         TextView tvUserName= v.findViewById(R.id.tv_username);
         tvUserName.setText(list.get(position).getuID());
+
+        if(list.get(position).getMessagenum() > 2)
+        {
+            tvMessageNum.setText(list.get(position).getMessagenum()-2);
+            tvMessageNum.setVisibility(View.VISIBLE);
+        }
 
         v.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,6 +1,7 @@
 package com.androidstudio.chattingapp;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
 import android.view.LayoutInflater;
@@ -11,10 +12,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
@@ -108,7 +116,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivClose.setVisibility(View.GONE);
             holder.progress.setVisibility(View.GONE);
 
-            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
+            RequestOptions requestOptions = new RequestOptions();
+            requestOptions.error(R.drawable.error);
+
+            Glide.with(context).setDefaultRequestOptions(requestOptions).load(messages.get(position).getMessage()).addListener(new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    holder.ivImage.setClickable(false);
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    return false;
+                }
+            }).into(holder.ivImage);
 
         } else if (messages.get(position).getDownloaded() == 2) // when sender sends the image
         {

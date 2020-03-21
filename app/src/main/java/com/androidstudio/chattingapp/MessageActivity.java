@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
@@ -62,6 +63,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -190,18 +192,22 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             @Override
             public void onItemRangeChanged(int positionStart, int itemCount) {
                 super.onItemRangeChanged(positionStart, itemCount);
+
+                Messages.scrollToPosition(chats.size() - 1);
             }
 
             @Override
             public void onItemRangeChanged(int positionStart, int itemCount, @Nullable Object payload) {
                 super.onItemRangeChanged(positionStart, itemCount, payload);
+
+                Messages.scrollToPosition(chats.size() - 1);
             }
 
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
 
-                Messages.scrollToPosition(chats.size() - 1);
+                manager.smoothScrollToPosition(Messages,null, adapter.getItemCount());
             }
 
             @Override
@@ -215,7 +221,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             }
         });
 
-        Messages.postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 Messages.scrollToPosition(chats.size() - 1);
@@ -460,6 +466,34 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK)
         {
             Uri uri = CropImage.getPickImageResultUri(this,data);
+
+            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
+            if(!imagesFolder.exists())
+            {
+                imagesFolder.mkdirs();
+            }
+
+            // Create a file to save the image
+            File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis())+".jpg");
+
+            try {
+                InputStream in = getContentResolver().openInputStream(uri);
+                OutputStream out = new FileOutputStream(file);
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+                out.close();
+                in.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            uri = Uri.fromFile(file);
+
             MessageModel messageModel = new MessageModel("0", sender, RecieverPhone, uri.toString(), "image", 2);
             chats.add(messageModel);
             adapter.notifyDataSetChanged();
@@ -604,7 +638,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     // Custom method to save a bitmap into internal storage
     protected Uri saveImageToInternalStorage(Bitmap bitmap){
 
-        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp");
+        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Received");
         if(!imagesFolder.exists())
         {
             imagesFolder.mkdirs();
