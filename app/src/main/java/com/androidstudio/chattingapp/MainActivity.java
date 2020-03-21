@@ -138,8 +138,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         UserStatus.setValue("online").addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful())
-                                    Toast.makeText(MainActivity.this, "Online", Toast.LENGTH_LONG).show();
+                               // if(task.isSuccessful())
+                                   // Toast.makeText(MainActivity.this, "Online", Toast.LENGTH_LONG).show();
                             }
                         });
                     }
@@ -158,7 +158,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             public void run() {
                 if(contacts1.size()>0) {
                     for ( int q = 0; q < contacts1.size(); ) {
+                        new listener(q).piclistener();
                         new listener(q).child();
+
 
                         q++;
                     }
@@ -228,7 +230,57 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
              }
          }
+
+         public void piclistener()
+         {
+             chreceiver = new ChildEventListener() {
+                 @Override
+                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                     //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+
+
+
+                     contacts1.get(index).setLastmessage("Image");
+
+                             contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                             userAdapter.notifyDataSetChanged();
+//                             //Log.d("messagecount",index+"");
+
+
+
+                 }
+
+                 @Override
+                 public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                 }
+
+                 @Override
+                 public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                 }
+
+                 @Override
+                 public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                 }
+
+                 @Override
+                 public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                 }
+             };
+             if (contacts1.get(index).getPh_number().substring(0,3).equals("+91") ) {
+                 reference.child("users").child(contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("info").child("images").addChildEventListener(chreceiver);
+             }
+             else
+             {
+                 reference.child("users").child("+91"+contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("info").child("images").addChildEventListener(chreceiver);
+
+             }
+         }
     }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
