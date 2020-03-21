@@ -15,6 +15,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -128,6 +129,25 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         etMessage = findViewById(R.id.etMessage);
         ivSend = findViewById(R.id.ivSend);
+
+        etMessage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (etMessage.getRight() - etMessage.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width()))
+                    {
+                        CropImage.startPickImageActivity(MessageActivity.this);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 
 //******************************************************************************************************************************************************
 
@@ -336,9 +356,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             case android.R.id.home:
                 MessageActivity.this.finish();
                 break;
-
-            case R.id.Image:
-                CropImage.startPickImageActivity(MessageActivity.this);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -450,14 +467,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.image, menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
     //*****************************************************************************************************************************************************************
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -521,7 +530,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(MessageActivity.this, "file uploaded", Toast.LENGTH_LONG).show();
 
                     rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + chats.get(index).getReciever()).child("images/" + Uri.parse(chats.get(index).getMessage()).getLastPathSegment()).getDownloadUrl().
                             addOnSuccessListener(new OnSuccessListener<Uri>() {

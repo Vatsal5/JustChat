@@ -61,6 +61,7 @@
             android:background="@drawable/edittext_background"
             android:hint="Type a message"
             android:padding="10dp"
+            android:drawableRight="@drawable/image"
             android:textColor="#ffffff"
             android:textColorHint="#ffffff"
             android:textSize="18sp" />
