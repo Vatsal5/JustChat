@@ -60,7 +60,7 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
         database=FirebaseDatabase.getInstance();
         DatabaseReference dbreference=database.getReference();
         Log.d("tag",list.get(position).getUrl());
-        if(!(list.get(position).getLastmessage().equals(null)))
+        if(!(list.get(position).getLastmessage().equals("")))
         {
             if(list.get(position).getLastmessage().length()>20) {
                 tvlastmessage.setText(list.get(position).getLastmessage().substring(0,20)+"..");
