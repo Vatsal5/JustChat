@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +34,7 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
     public interface itemSelected
     {
         public void onItemSelected(int index);
+        public void onImageSelected(int index);
     }
 
     itemSelected Activity;
@@ -80,6 +82,8 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
         {
             Glide.with(context).load(list.get(position).getUrl()).into(iv);}
 
+        ConstraintLayout innerConstraintLayout = v.findViewById(R.id.innerConstraintLayout);
+
 
         dbreference.child("UserStatus").child(Check(list.get(position).getPh_number())).addValueEventListener(new ValueEventListener() {
             @Override
@@ -98,7 +102,12 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
             }
         });
 
-
+        iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Activity.onImageSelected(position);
+            }
+        });
 
         TextView tvUserName= v.findViewById(R.id.tv_username);
         tvUserName.setText(list.get(position).getuID());
@@ -109,7 +118,7 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
             tvMessageNum.setVisibility(View.VISIBLE);
         }
 
-        v.setOnClickListener(new View.OnClickListener() {
+        innerConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Activity.onItemSelected(position);

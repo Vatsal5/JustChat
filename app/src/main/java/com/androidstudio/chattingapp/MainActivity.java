@@ -424,6 +424,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     }
 
     @Override
+    public void onImageSelected(int index) {
+        Intent intent = new Intent(MainActivity.this,ShowImage.class);
+        intent.putExtra("source",contacts1.get(index).getUrl());
+        startActivity(intent);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.profile,menu);
         return super.onCreateOptionsMenu(menu);
