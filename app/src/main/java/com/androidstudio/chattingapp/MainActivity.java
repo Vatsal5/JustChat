@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                              contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                              userAdapter.notifyDataSetChanged();
-                             //Log.d("messagecount",index+"");
+//                             //Log.d("messagecount",index+"");
 
 
                          }
@@ -290,13 +290,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 if (i == 0) {
                                     if((dataSnapshot.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("info").child("friend").exists()))
                                     { if(dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
-                                        contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class),(int)dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                                getChildrenCount()));
+                                        contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class),2
+                                                ));
                                     }
                                     else{
 
-                                        contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",(int)dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                                getChildrenCount()));
+                                        contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",2
+                                                ));
                                     }
 
 
@@ -316,13 +316,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                         if((dataSnapshot.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("info").child("friend").exists()))
                                         { if(dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
                                             Log.d("myapp",dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class));
-                                            contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class),(int)dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                                    getChildrenCount()));
+                                            contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class),2
+                                                   ));
                                         }
                                         else{
 
-                                            contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",(int)dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                                    getChildrenCount()));
+                                            contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",2
+                                                ));
                                         }
 
 
@@ -344,12 +344,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             if (i == 0) {
                                 if((dataSnapshot.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("info").child("friend").exists()))
                                 {if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
-                                    contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").getValue(String.class),(int)dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                            getChildrenCount()));
+                                    contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").getValue(String.class),2
+                                            ));
                                 }
                                 else{
-                                    contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",(int)dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                            getChildrenCount()));
+                                    contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",2
+                                         ));
                                 }
 
                                     (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("message")).setValue("/null");
@@ -366,12 +366,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 if (k == 0) {
                                     if((dataSnapshot.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("info").child("friend").exists()))
                                     {  if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
-                                        contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").getValue(String.class),(int)dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                                getChildrenCount()));
+                                        contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").getValue(String.class),2
+                                                ));
                                     }
                                     else{
-                                        contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",(int)dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                                getChildrenCount()));
+                                        contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",2
+                                                ));
                                     }
 
 
