@@ -92,7 +92,7 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
 
         if(list.get(position).getMessagenum() > 2)
         {
-            tvMessageNum.setText(list.get(position).getMessagenum()-2);
+            tvMessageNum.setText(list.get(position).getMessagenum()-2+"");
             tvMessageNum.setVisibility(View.VISIBLE);
         }
 

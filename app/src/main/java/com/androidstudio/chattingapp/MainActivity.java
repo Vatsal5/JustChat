@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
                              contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
-                             userAdapter.notify();
+                             userAdapter.notifyDataSetChanged();
                              //Log.d("messagecount",index+"");
 
 
