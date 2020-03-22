@@ -65,6 +65,7 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
         final ImageView ivStatus = v.findViewById(R.id.ivStatus);
         TextView tvMessageNum = v.findViewById(R.id.tvMessageNum);
         ImageView ivImage = v.findViewById(R.id.ivImage);
+        final ImageView ivBackground = v.findViewById(R.id.ivBackground);
 
         database=FirebaseDatabase.getInstance();
         DatabaseReference dbreference=database.getReference();
@@ -89,21 +90,11 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
         if(list.get(position).getUrl().equals("null"))
         {
             iv.setImageResource(R.drawable.person);
+            iv.setClickable(false);
         }
         else
         {
-            Glide.with(context).load(list.get(position).getUrl()).listener(new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                    iv.setClickable(false);
-                    return false;
-                }
-
-                @Override
-                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                    return false;
-                }
-            }).into(iv);
+            Glide.with(context).load(list.get(position).getUrl()).into(iv);
         }
 
         ConstraintLayout innerConstraintLayout = v.findViewById(R.id.innerConstraintLayout);
@@ -114,9 +105,9 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue()!=null) {
                     if (dataSnapshot.getValue(String.class).equals("online"))
-                        iv.setBackgroundResource(R.drawable.white);
+                        ivBackground.setBackgroundResource(R.drawable.orange);
                     else
-                        iv.setBackground(null);
+                        ivBackground.setBackground(null);
                 }
             }
 
