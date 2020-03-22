@@ -133,7 +133,7 @@ public class DBHandler
 
     public String getLastMessage(String receiver)
     {
-        MessageModel model = new MessageModel();
+        MessageModel model=null;
         String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED};
         Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
 
@@ -156,6 +156,10 @@ public class DBHandler
                 return model.getMessage();
             else if (model.getType().equals("image"))
                 return " ";
+        }
+        else
+        {
+            return "null";
         }
 
         return null;

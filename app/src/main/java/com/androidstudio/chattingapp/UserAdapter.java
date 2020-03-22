@@ -86,6 +86,11 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
                 ivImage.setVisibility(View.VISIBLE);
                 tvlastmessage.setText("Image");
         }
+        if(list.get(position).getLastmessage().equals("null"))
+        {
+            ivImage.setVisibility(View.GONE);
+            tvlastmessage.setText(null);
+        }
 
         if(list.get(position).getUrl().equals("null"))
         {
