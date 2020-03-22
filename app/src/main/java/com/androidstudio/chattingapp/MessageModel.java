@@ -11,6 +11,15 @@ public class MessageModel
     private String type;
     private int isDownloaded;
 
+    public MessageModel(){
+        this.id = null;
+        this.sender = null;
+        this.reciever = null;
+        this.message = null;
+        this.type = null;
+        this.isDownloaded = -1;
+    };
+
     public MessageModel(String id,String sender, String reciever, String message,String type,int isDownloaded) {
         this.id = id;
         this.sender = sender;

@@ -131,4 +131,34 @@ public class DBHandler
         return database.delete(DATABASE_TABLE,KEY_ID+"=?",new String[]{message.getId()});
     }
 
+    public String getLastMessage(String receiver)
+    {
+        MessageModel model = new MessageModel();
+        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED};
+        Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
+
+        int iId = c.getColumnIndex(KEY_ID);
+        int iSender = c.getColumnIndex(KEY_SENDER);
+        int iReceiver = c.getColumnIndex(KEY_RECEIVER);
+        int iMessage = c.getColumnIndex(KEY_MESSAGE);
+        int iType = c.getColumnIndex(KEY_TYPE);
+        int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
+
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
+        {
+            if((c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver))) {
+                model = new MessageModel(c.getString(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded));
+            }
+        }
+
+        if(model !=null) {
+            if (model.getType().equals("text"))
+                return model.getMessage();
+            else if (model.getType().equals("image"))
+                return " ";
+        }
+
+        return null;
+    }
+
 }

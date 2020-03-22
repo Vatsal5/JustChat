@@ -99,6 +99,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     ChildEventListener chreceiver, chsender;
 
     DBHandler Handler;
+    int l;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -573,7 +574,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     }
 
     //***********************************************************************************************************************************************
-    private class DownloadTask extends AsyncTask<URL,Void, Bitmap>
+    private class DownloadTask extends AsyncTask<URL,Void,Void>
     {
         int index;
 
@@ -585,7 +586,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         protected void onPreExecute(){
         }
 
-        protected Bitmap doInBackground(URL...urls){
+        protected Void doInBackground(URL...urls){
             URL url = urls[0];
             HttpURLConnection connection = null;
 
@@ -600,7 +601,15 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
 
-                return bmp;
+                StorageReference file;
+                file=FirebaseStorage.getInstance().getReferenceFromUrl(chats.get(index).getMessage());
+                file.delete();
+
+                Uri imageInternalUri = saveImageToInternalStorage(bmp);
+                chats.get(index).setDownloaded(1);
+                chats.get(index).setMessage(imageInternalUri.toString());
+                adapter.notifyDataSetChanged();
+                Handler.UpdateMessage(chats.get(index));
 
             }catch(IOException e){
                 e.printStackTrace();
@@ -612,23 +621,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         }
 
         // When all async task done
-        protected void onPostExecute(Bitmap result){
-            if(result!=null)
-            {
-                StorageReference file;
-                file=FirebaseStorage.getInstance().getReferenceFromUrl(chats.get(index).getMessage());
-                file.delete();
+        protected void onPostExecute(Void avoid){
 
-                Uri imageInternalUri = saveImageToInternalStorage(result);
-                chats.get(index).setDownloaded(1);
-                chats.get(index).setMessage(imageInternalUri.toString());
-                adapter.notifyDataSetChanged();
-                Handler.UpdateMessage(chats.get(index));
-            }
-            else {
-                // Notify user that an error occurred while downloading image
-                Toast.makeText(MessageActivity.this, "Could not Download Image!!", Toast.LENGTH_LONG).show();
-            }
         }
     }
 
@@ -678,4 +672,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         return savedImageURI;
     }
 //**************************************************************************************************************************************
+
+
 }

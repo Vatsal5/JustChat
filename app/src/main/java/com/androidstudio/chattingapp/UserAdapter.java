@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -58,11 +59,12 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
         tvlastmessage=v.findViewById(R.id.lastmessage);
         final ImageView ivStatus = v.findViewById(R.id.ivStatus);
         TextView tvMessageNum = v.findViewById(R.id.tvMessageNum);
+        ImageView ivImage = v.findViewById(R.id.ivImage);
 
         database=FirebaseDatabase.getInstance();
         DatabaseReference dbreference=database.getReference();
         Log.d("tag",list.get(position).getUrl());
-        if(!(list.get(position).getLastmessage().equals("")))
+        if(!(list.get(position).getLastmessage().equals(" ")))
         {
             if(list.get(position).getLastmessage().length()>20) {
                 tvlastmessage.setText(list.get(position).getLastmessage().substring(0,20)+"..");
@@ -70,8 +72,13 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
             else
             {
                 tvlastmessage.setText(list.get(position).getLastmessage());
-
             }
+            ivImage.setVisibility(View.GONE);
+        }
+        if(list.get(position).getLastmessage().equals(" "))
+        {
+                ivImage.setVisibility(View.VISIBLE);
+                tvlastmessage.setText("Image");
         }
 
         if(list.get(position).getUrl().equals("null"))
@@ -90,9 +97,9 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue()!=null) {
                     if (dataSnapshot.getValue(String.class).equals("online"))
-                        ivStatus.setVisibility(View.VISIBLE);
+                        iv.setBackgroundResource(R.drawable.white);
                     else
-                        ivStatus.setVisibility(View.GONE);
+                        iv.setBackground(null);
                 }
             }
 
