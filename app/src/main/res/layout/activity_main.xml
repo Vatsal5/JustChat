@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#282828"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:id="@+id/toolbar"
         android:theme="@style/Theme.AppCompat.Light">
 
         <TextView
@@ -19,7 +20,7 @@
             android:fontFamily="@font/aclonica"
             android:gravity="center|start|left"
             android:text="Gossips"
-            android:textColor="#99000000"
+            android:textColor="#ffffff"
             android:textSize="23sp"
             android:textStyle="bold" />
 
