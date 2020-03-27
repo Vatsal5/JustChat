@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
@@ -23,6 +26,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -54,13 +61,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     DBHandler Handler;
 
     ArrayList<MessageModel> chats;
-    ListView lv;
+    SwipeMenuListView lv;
     FirebaseDatabase database;
     FloatingActionButton btnContacts;
     String currentUserNumber;
     DatabaseReference reference;
 
-    int l;
+    int l,pos;
 
     UserAdapter userAdapter;
     int c=0;
@@ -112,6 +119,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},5);
+        }
+        if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CALL_PHONE)!=PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CALL_PHONE},2);
+
         }
         btnContacts.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,6 +182,55 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
             }
         },2000);
+
+
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+            @Override
+            public void create(SwipeMenu menu) {
+                // create "open" item
+
+
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                        getApplicationContext());
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(getResources().getColor(R.color.myColor),
+                        0x3F, 0x25)));
+                // set item width
+                deleteItem.setWidth((150));
+                // set a icon
+                deleteItem.setIcon(R.drawable.ic_call);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+        };
+        lv.setSwipeDirection(SwipeMenuListView.DIRECTION_RIGHT);
+
+
+        lv.setMenuCreator(creator);
+
+        lv.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+
+                pos=position;
+
+                if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CALL_PHONE)!=PackageManager.PERMISSION_GRANTED)
+                {
+                    ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CALL_PHONE},2);
+
+                }
+                else{
+                     Intent intent= new Intent(Intent.ACTION_CALL);
+                     intent.setData(Uri.parse("tel:"+contacts1.get(position).getPh_number()));
+                     startActivity(intent);
+                }
+
+                // false : close the menu; true : not close the menu
+                return false;
+            }
+        });
 
     }
     public class listener
@@ -294,6 +355,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
             {
                 getcontact();
+            }
+        }
+        if(requestCode==2)
+        {
+            if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
+            {
+                checkpermission();
             }
         }
         if(requestCode==5)
@@ -543,5 +611,14 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         super.onRestart();
 
         contacts1.get(l).setMessagenum(2);
+    }
+
+    public  void checkpermission()
+    {
+        if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CALL_PHONE)==PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:" + contacts1.get(pos).getPh_number()));
+            startActivity(intent);
+        }
     }
 }
