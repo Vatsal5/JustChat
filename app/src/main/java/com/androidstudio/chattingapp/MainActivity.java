@@ -120,11 +120,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         {
             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},5);
         }
-        if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CALL_PHONE)!=PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CALL_PHONE},2);
-
-        }
         btnContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
