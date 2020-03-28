@@ -1,19 +1,14 @@
 package com.androidstudio.chattingapp;
 
-import android.Manifest;
-import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaActionSound;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,11 +33,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
-import com.google.android.gms.common.internal.Constants;
-import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -91,15 +82,17 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     TextView title;
     String to = "";
-    RecyclerView Messages;
+    static RecyclerView Messages;
     String sender;
-    LinearLayoutManager manager;
-    MessageAdapter adapter;
-    ArrayList<MessageModel> chats;
+    static LinearLayoutManager manager;
+    static MessageAdapter adapter;
+    static ArrayList<MessageModel> chats;
     ChildEventListener chreceiver, chsender;
 
-    DBHandler Handler;
+    static DBHandler Handler;
     int l;
+
+    ChildEventListener imagereceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +102,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         reference = database.getReference();
         rf = FirebaseStorage.getInstance().getReference("docs/");
         lastpath = "";
-
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -150,6 +142,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             }
         });
 
+        SharedPreferences sp = getSharedPreferences("Status", MODE_PRIVATE);
+        SharedPreferences.Editor ed = sp.edit();
+        ed.putBoolean("active", true);
+        ed.commit();
+
 //******************************************************************************************************************************************************
 
         ivSend.setOnClickListener(new View.OnClickListener() {
@@ -164,21 +161,14 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 if (etMessage.getText().toString().trim().isEmpty())
                     Toast.makeText(MessageActivity.this, "Please enter a message", Toast.LENGTH_LONG).show();
                 else {
-                    final String id = reference.child("users").child(sender).child(RecieverPhone).push().getKey();
-                    reference.child("users").child(sender).child(RecieverPhone).child(id).setValue(etMessage.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                chats.add(new MessageModel(id, sender, RecieverPhone, etMessage.getText().toString(), "text", -1));
-                                Handler.addMessage(new MessageModel(id, sender, RecieverPhone, etMessage.getText().toString(), "text", -1));
+                    MessageModel model = new MessageModel(-1, sender, RecieverPhone, etMessage.getText().toString(), "text", -2);
+                    etMessage.setText(null);
 
-                                adapter.notifyDataSetChanged();
-                                etMessage.setText(null);
-                            } else {
-                                Toast.makeText(MessageActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                    int id = Handler.addMessage(model);
+                    model.setId(id);
+                    chats.add(model);
+                    adapter.notifyItemInserted(chats.size()-1);
+
                 }
             }
         });
@@ -194,41 +184,37 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         chats = Handler.getMessages(RecieverPhone);
         for (int i = 0; i < chats.size(); i++) {
-            Log.d("messages", chats.get(i).getMessage());
+            Log.d("messages", chats.get(i).getId()+"");
         }
         //chats.add(new MessageModel(RecieverPhone,sender,"https://images.unsplash.com/photo-1579256308218-d162fd41c801?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjF9&auto=format&fit=crop&w=500&q=60","image",0));
 
         adapter = new MessageAdapter(MessageActivity.this, chats);
-
-        Messages.setAdapter(adapter);
 
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
                 super.onChanged();
 
-                Messages.scrollToPosition(chats.size() - 1);
+//                Messages.smoothScrollToPosition(chats.size()-1);
             }
 
             @Override
             public void onItemRangeChanged(int positionStart, int itemCount) {
                 super.onItemRangeChanged(positionStart, itemCount);
 
-                Messages.scrollToPosition(chats.size() - 1);
+                Messages.smoothScrollToPosition(chats.size()-1);
             }
 
             @Override
             public void onItemRangeChanged(int positionStart, int itemCount, @Nullable Object payload) {
                 super.onItemRangeChanged(positionStart, itemCount, payload);
-
-                Messages.scrollToPosition(chats.size() - 1);
             }
 
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
 
-                manager.smoothScrollToPosition(Messages,null, adapter.getItemCount());
+                Messages.smoothScrollToPosition(chats.size()-1);
             }
 
             @Override
@@ -242,30 +228,34 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             }
         });
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Messages.scrollToPosition(chats.size() - 1);
-            }
-        }, 500);
+        Messages.setAdapter(adapter);
+        if(chats.size()!=0)
+            adapter.notifyItemInserted(chats.size()-1);
+
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Messages.scrollToPosition(chats.size() - 1);
+//            }
+//        }, 500);
 
 //**************************************************************************************************************************************************************************
 
-        reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").addChildEventListener(new ChildEventListener() {
+        imagereceiver = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                MessageModel messageModel = new MessageModel(dataSnapshot.getKey(), RecieverPhone, sender, dataSnapshot.getValue(String.class), "image", 0);
+                MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class), "image", 0);
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 
                 chats.add(messageModel);
-                Handler.addMessage(messageModel);
+
+                int id = Handler.addMessage(chats.get(chats.size()-1));
+                chats.get(chats.size()-1).setId(id);
 
                 dataSnapshot.getRef().removeValue();
 
-                adapter.notifyDataSetChanged();
-                Messages.scrollToPosition(chats.size() - 1);
-
+                adapter.notifyItemInserted(chats.size()-1);
             }
 
             @Override
@@ -287,7 +277,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").addChildEventListener(imagereceiver);
+
 
 //********************************************************************************************************************************************************
 
@@ -306,12 +299,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                         reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 
-                        chats.add(new MessageModel(dataSnapshot.getKey(), RecieverPhone, sender, dataSnapshot.getValue().toString(), "text", -1));
-                        Handler.addMessage(new MessageModel(dataSnapshot.getKey(), RecieverPhone, sender, dataSnapshot.getValue().toString(), "text", -1));
+                        chats.add(new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue().toString(), "text", -1));
+                        Handler.addMessage(new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue().toString(), "text", -1));
                         dataSnapshot.getRef().removeValue();
 
 
-                        adapter.notifyDataSetChanged();
+                        adapter.notifyItemInserted(chats.size()-1);
                     }
                 }
             }
@@ -337,6 +330,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         };
 
         reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
+    }
+
+    public boolean getRunning()
+    {
+        SharedPreferences getshared = getSharedPreferences("Status",MODE_PRIVATE);
+         return getshared.getBoolean("active",true);
     }
 
 //*******************************************************************************************************************************************************
@@ -466,6 +465,34 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
             }
         });
+
+        SharedPreferences sp = getSharedPreferences("Status", MODE_PRIVATE);
+        SharedPreferences.Editor ed = sp.edit();
+        ed.putBoolean("active", true);
+        ed.apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").removeEventListener(imagereceiver);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        SharedPreferences sp = getSharedPreferences("Status", MODE_PRIVATE);
+        SharedPreferences.Editor ed = sp.edit();
+        ed.putBoolean("active", false);
+        ed.apply();
     }
 
     //*****************************************************************************************************************************************************************
@@ -504,58 +531,48 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
             uri = Uri.fromFile(file);
 
-            MessageModel messageModel = new MessageModel("0", sender, RecieverPhone, uri.toString(), "image", 2);
+            MessageModel messageModel = new MessageModel(-1, sender, RecieverPhone, uri.toString(), "image", 2);
+
+            int id = Handler.addMessage(messageModel);
+            messageModel.setId(id);
+
             chats.add(messageModel);
-            adapter.notifyDataSetChanged();
-            Messages.scrollToPosition(chats.size() - 1);
 
-            new UploadImage(chats.size() - 1).execute();
+            adapter.notifyItemInserted(chats.size()-1);
+
+            UploadImage(chats.size() - 1,chats.get(chats.size()-1));
     }
     }
 
-    private class UploadImage extends AsyncTask<Void,Void,Boolean>
+    public void UploadImage(final int index, final MessageModel message)
     {
-        int index;
+        Log.d("running","Outside "+getRunning());
+        rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).
+                putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Task<Uri> uri =rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).getDownloadUrl();
+                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                        child(message.getReciever()).child("info").
+                        child("images").push().setValue(uri.toString());
 
-        UploadImage(int position)
-        {
-            index = position;
-        }
+                Log.d("running","Inside "+getRunning());
+//                    if (getRunning()) {
+//                    chats.get(index).setDownloaded(1);
+//                    adapter.notifyDataSetChanged();
+//                }
 
-        @Override
-        protected Boolean doInBackground(Void... avoid) {
-
-            UploadTask uploadTask =rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/"+chats.get(index).getReciever()).child("images/"+Uri.parse(chats.get(index).getMessage()).getLastPathSegment()).
-                    putFile(Uri.parse(chats.get(index).getMessage()));
-
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                    rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + chats.get(index).getReciever()).child("images/" + Uri.parse(chats.get(index).getMessage()).getLastPathSegment()).getDownloadUrl().
-                            addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    //  Toast.makeText(context, "hi", Toast.LENGTH_LONG).show();
-
-                                    String id = reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                            child(chats.get(index).getReciever()).child("info").
-                                            child("images").push().getKey();
-
-                                    reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                            child(chats.get(index).getReciever()).child("info").
-                                            child("images").child(id).setValue(uri.toString());
-
-                                    chats.get(index).setId(id);
-                                    chats.get(index).setDownloaded(1);
-                                    adapter.notifyDataSetChanged();
-                                    Handler.addMessage(chats.get(index));
-                                }
-                            });
+                if(getRunning())
+                {
+                    chats.get(index).setDownloaded(1);
+                    adapter.notifyDataSetChanged();
                 }
-            });
-            return null;
-        }
+                message.setDownloaded(1);
+                Handler.UpdateMessage(message);
+
+
+            }
+        });
     }
 //***********************************************************************************************************************************************
     @Override
@@ -570,27 +587,36 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     @Override
     public void downloadImage(int index)
     {
-        new DownloadTask(index).execute(stringToURL(chats.get(index).getMessage()));
+
+        new DownloadTask(index,chats.get(index)).execute(stringToURL(chats.get(index).getMessage()));
+    }
+
+    @Override
+    public void sentTextMessage(final int index) {
+        new SendMessage(index,chats.get(index)).execute();
     }
 
     //***********************************************************************************************************************************************
-    private class DownloadTask extends AsyncTask<URL,Void,Void>
+    private class DownloadTask extends AsyncTask<URL,Void,Uri>
     {
         int index;
+        MessageModel message;
 
-        DownloadTask(int position)
+        DownloadTask(int position,MessageModel message)
         {
             index = position;
+            this.message = message;
         }
 
         protected void onPreExecute(){
         }
 
-        protected Void doInBackground(URL...urls){
+        protected Uri doInBackground(URL...urls){
             URL url = urls[0];
             HttpURLConnection connection = null;
 
             try{
+
                 connection = (HttpURLConnection) url.openConnection();
 
                 connection.connect();
@@ -602,15 +628,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
 
                 StorageReference file;
-                file=FirebaseStorage.getInstance().getReferenceFromUrl(chats.get(index).getMessage());
+                file=FirebaseStorage.getInstance().getReferenceFromUrl(message.getMessage());
                 file.delete();
 
                 Uri imageInternalUri = saveImageToInternalStorage(bmp);
-                chats.get(index).setDownloaded(1);
-                chats.get(index).setMessage(imageInternalUri.toString());
-                adapter.notifyDataSetChanged();
-                Handler.UpdateMessage(chats.get(index));
 
+                return imageInternalUri;
             }catch(IOException e){
                 e.printStackTrace();
             } finally{
@@ -621,8 +644,54 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         }
 
         // When all async task done
-        protected void onPostExecute(Void avoid){
+        protected void onPostExecute(Uri result) {
+            if (result != null) {
+                if (getRunning()) {
+                    chats.get(index).setDownloaded(1);
+                    chats.get(index).setMessage(result.toString());
+                    adapter.notifyItemChanged(index);
+                }
 
+                message.setDownloaded(1);
+                message.setMessage(result.toString());
+
+                Handler.UpdateMessage(message);
+            }
+            else
+                Toast.makeText(MessageActivity.this, "Could not send Image!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private class SendMessage extends AsyncTask
+    {
+        int index;
+        MessageModel message;
+
+        SendMessage(int index,MessageModel message)
+        {
+            this.index = index;
+            this.message = message;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            reference.child("users").child(sender).child(RecieverPhone).push().setValue(message.getMessage().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        if(getRunning()) {
+                            chats.get(index).setDownloaded(-1);
+                            adapter.notifyItemChanged(index);
+                        }
+                        message.setDownloaded(-1);
+                        Handler.UpdateMessage(message);
+
+                    } else {
+                        Toast.makeText(MessageActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            return null;
         }
     }
 

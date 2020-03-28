@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     DBHandler Handler;
 
     ArrayList<MessageModel> chats;
-    SwipeMenuListView lv;
+    ListView lv;
     FirebaseDatabase database;
     FloatingActionButton btnContacts;
     String currentUserNumber;

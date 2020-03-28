@@ -42,7 +42,7 @@ public class DBHandler
         @Override
         public void onCreate(SQLiteDatabase sqLiteDatabase)
         {
-            String query = "CREATE TABLE "+DATABASE_TABLE+" ("+KEY_ID+" TEXT NOT NULL, "+KEY_SENDER+" TEXT NOT NULL, "+
+            String query = "CREATE TABLE "+DATABASE_TABLE+" ("+KEY_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+KEY_SENDER+" TEXT NOT NULL, "+
                     KEY_RECEIVER+" TEXT NOT NULL, "+KEY_MESSAGE+" TEXT NOT NULL, "+KEY_TYPE+" TEXT NOT NULL, "+KEY_ISDOWNLOADED+" TINYINT DEFAULT NULL);";
 
             sqLiteDatabase.execSQL(query);
@@ -69,17 +69,17 @@ public class DBHandler
         Helper.close();
     }
 
-    public long addMessage(MessageModel messageModel)
+    public int addMessage(MessageModel messageModel)
     {
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(KEY_ID,messageModel.getId());
         contentValues.put(KEY_SENDER,messageModel.getSender());
         contentValues.put(KEY_RECEIVER,messageModel.getReciever());
         contentValues.put(KEY_MESSAGE,messageModel.getMessage());
         contentValues.put(KEY_TYPE,messageModel.getType());
         contentValues.put(KEY_ISDOWNLOADED,messageModel.getDownloaded());
 
+        database.insert(DATABASE_TABLE,null,contentValues);
 //        if(messageModel.getDownloaded())
 //            contentValues.put(KEY_ISDOWNLOADED,1);
 //        else if(!messageModel.getDownloaded())
@@ -87,7 +87,7 @@ public class DBHandler
 //        else
 //            contentValues.put(KEY_ISDOWNLOADED,null);
 
-        return database.insert(DATABASE_TABLE,null,contentValues);
+        return getID();
     }
 
     public ArrayList<MessageModel> getMessages(String receiver)
@@ -106,7 +106,7 @@ public class DBHandler
         for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
         {
             if((c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver)))
-                messages.add(new MessageModel(c.getString(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded)));
+                messages.add(new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded)));
         }
         c.close();
         return messages;
@@ -123,12 +123,12 @@ public class DBHandler
         values.put(KEY_TYPE,message.getType());
         values.put(KEY_ISDOWNLOADED,message.getDownloaded());
 
-        return database.update(DATABASE_TABLE,values,KEY_ID+"=?",new String[] {message.getId()});
+        return database.update(DATABASE_TABLE,values,KEY_ID+"=?",new String[] {message.getId()+""});
     }
 
     public long DeleteMessage(MessageModel message)
     {
-        return database.delete(DATABASE_TABLE,KEY_ID+"=?",new String[]{message.getId()});
+        return database.delete(DATABASE_TABLE,KEY_ID+"=?",new String[]{message.getId()+""});
     }
 
     public String getLastMessage(String receiver)
@@ -147,7 +147,7 @@ public class DBHandler
         for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
         {
             if((c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver))) {
-                model = new MessageModel(c.getString(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded));
+                model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded));
             }
         }
 
@@ -163,6 +163,21 @@ public class DBHandler
         }
 
         return null;
+    }
+
+    public int getID()
+    {
+        int id = -1;
+        String [] columns = {KEY_ID};
+        Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
+
+        int iId = c.getColumnIndex(KEY_ID);
+
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
+        {
+            id = c.getInt(iId);
+        }
+        return id;
     }
 
 }

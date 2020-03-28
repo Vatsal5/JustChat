@@ -4,7 +4,7 @@ import android.net.Uri;
 
 public class MessageModel
 {
-    private String id;
+    private int id;
     private String sender;
     private String reciever;
     private String message;
@@ -12,7 +12,7 @@ public class MessageModel
     private int isDownloaded;
 
     public MessageModel(){
-        this.id = null;
+        this.id = -1;
         this.sender = null;
         this.reciever = null;
         this.message = null;
@@ -20,7 +20,7 @@ public class MessageModel
         this.isDownloaded = -1;
     };
 
-    public MessageModel(String id,String sender, String reciever, String message,String type,int isDownloaded) {
+    public MessageModel(int id,String sender, String reciever, String message,String type,int isDownloaded) {
         this.id = id;
         this.sender = sender;
         this.reciever = reciever;
@@ -69,11 +69,11 @@ public class MessageModel
         isDownloaded = downloaded;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 }
