@@ -5,8 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.icu.lang.UCharacter;
+import android.icu.util.MeasureUnit;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
@@ -24,6 +28,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -43,6 +50,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+
 public class MainActivity extends AppCompatActivity implements UserAdapter.itemSelected
 {
 
@@ -58,15 +67,16 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     ChildEventListener chreceiver;
     ValueEventListener dataCreater;
     DBHandler Handler;
+    LinearLayoutManager linearLayoutManager;
 
     ArrayList<MessageModel> chats;
-    ListView lv;
+    RecyclerView lv;
     FirebaseDatabase database;
     FloatingActionButton btnContacts;
     String currentUserNumber;
     DatabaseReference reference;
 
-    int l;
+    int l,pos;
 
     UserAdapter userAdapter;
     int c=0;
@@ -84,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         chats = new ArrayList<>();
         database1= FirebaseDatabase.getInstance();
         reference1 = database1.getReference();
+        linearLayoutManager= new LinearLayoutManager(MainActivity.this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -104,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         currentUserNumber= FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
         lv=findViewById(R.id.lv);
+        lv.setLayoutManager(linearLayoutManager);
 
         if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED)
         {
@@ -177,10 +189,53 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             }
         },2000);
 
+        ItemTouchHelper itemTouchHelper= new ItemTouchHelper(simpleCallback);
+
+        itemTouchHelper.attachToRecyclerView(lv);
+
 
 
 
     }
+
+    ItemTouchHelper.SimpleCallback simpleCallback= new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            pos= viewHolder.getAdapterPosition();
+
+            if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CALL_PHONE)!=PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CALL_PHONE},2);
+            }
+            else
+            {
+                makecall();
+            }
+        }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.my_background))
+                    .addActionIcon(R.drawable.ic_call)
+                    .setIconHorizontalMargin(20)
+                    .addSwipeRightLabel("  Voice Call").setSwipeRightLabelColor(getResources().getColor(R.color.white))
+                    .create()
+                    .decorate();
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
+
+        }
+    };
+
     public class listener
     {
         int index;
@@ -203,10 +258,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
                              contacts1.get(index).setLastmessage(dataSnapshot.getValue(String.class));
-
                              contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                              userAdapter.notifyDataSetChanged();
-//                             //Log.d("messagecount",index+"");
+                             Log.d("messagecount",contacts1.get(index-1).getMessagenum()+"");
 
 
                          }
@@ -238,7 +292,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
              else
              {
                  reference.child("users").child("+91"+contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addChildEventListener(chreceiver);
-
              }
          }
 
@@ -249,15 +302,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                  public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                      //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
-
-
                      contacts1.get(index).setLastmessage(" ");
-
-                             contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
-                             userAdapter.notifyDataSetChanged();
-//                             //Log.d("messagecount",index+"");
-
-
+                     contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                     userAdapter.notifyDataSetChanged();
 
                  }
 
@@ -303,6 +350,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
             {
                 getcontact();
+            }
+        }
+        if(requestCode==2)
+        {
+            if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
+            {
+                makecall();
             }
         }
         if(requestCode==5)
@@ -552,5 +606,14 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         super.onRestart();
 
         contacts1.get(l).setMessagenum(2);
+    }
+    public void makecall()
+    {
+        if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CALL_PHONE)==PackageManager.PERMISSION_GRANTED)
+        {
+            Intent intent= new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:"+contacts1.get(pos).getPh_number()));
+            startActivity(intent);
+        }
     }
 }

@@ -14,6 +14,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -29,43 +30,23 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
+public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
-    private final Context context;
-    ImageView iv;
-    FirebaseDatabase database;
-    TextView tvlastmessage;
-    private ArrayList<UserDetailwithUrl> list;
-
-    public interface itemSelected
-    {
-        public void onItemSelected(int index);
-        public void onImageSelected(int index);
-    }
-
+     Context context;
     itemSelected Activity;
-
-    public UserAdapter(@NonNull Context context, ArrayList<UserDetailwithUrl>list) {
-        super(context, R.layout.chats_listlayout,list);
-
-        this.context = context;
-        this.list = list;
-        Activity = (itemSelected) context;
-    }
+    FirebaseDatabase database;
+     final ArrayList<UserDetailwithUrl> list;
 
     @NonNull
     @Override
-    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
+    public viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater= (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View v= inflater.inflate(R.layout.chats_listlayout,parent,false);
-        iv=v.findViewById(R.id.imageView);
+        return  new viewholder(v);
+    }
 
-        tvlastmessage=v.findViewById(R.id.lastmessage);
-        final ImageView ivStatus = v.findViewById(R.id.ivStatus);
-        TextView tvMessageNum = v.findViewById(R.id.tvMessageNum);
-        ImageView ivImage = v.findViewById(R.id.ivImage);
-        final ImageView ivBackground = v.findViewById(R.id.ivBackground);
+    @Override
+    public void onBindViewHolder(@NonNull final viewholder holder, final int position) {
 
         database=FirebaseDatabase.getInstance();
         DatabaseReference dbreference=database.getReference();
@@ -73,36 +54,36 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
         if(!(list.get(position).getLastmessage().equals(" ")))
         {
             if(list.get(position).getLastmessage().length()>20) {
-                tvlastmessage.setText(list.get(position).getLastmessage().substring(0,20)+"..");
+                holder.tvlastmessage.setText(list.get(position).getLastmessage().substring(0,20)+"..");
             }
             else
             {
-                tvlastmessage.setText(list.get(position).getLastmessage());
+                holder.tvlastmessage.setText(list.get(position).getLastmessage());
             }
-            ivImage.setVisibility(View.GONE);
+            holder.ivImage.setVisibility(View.GONE);
         }
         if(list.get(position).getLastmessage().equals(" "))
         {
-                ivImage.setVisibility(View.VISIBLE);
-                tvlastmessage.setText("Image");
+            holder.ivImage.setVisibility(View.VISIBLE);
+            holder.tvlastmessage.setText("Image");
         }
         if(list.get(position).getLastmessage().equals("null"))
         {
-            ivImage.setVisibility(View.GONE);
-            tvlastmessage.setText(null);
+            holder.ivImage.setVisibility(View.GONE);
+            holder.tvlastmessage.setText(null);
         }
 
         if(list.get(position).getUrl().equals("null"))
         {
-            iv.setImageResource(R.drawable.person);
-            iv.setClickable(false);
+            holder.iv.setImageResource(R.drawable.person);
+            holder.iv.setClickable(false);
         }
         else
         {
-            Glide.with(context).load(list.get(position).getUrl()).into(iv);
+            Glide.with(context).load(list.get(position).getUrl()).into(holder.iv);
         }
 
-        ConstraintLayout innerConstraintLayout = v.findViewById(R.id.innerConstraintLayout);
+
 
 
         dbreference.child("UserStatus").child(Check(list.get(position).getPh_number())).addValueEventListener(new ValueEventListener() {
@@ -110,9 +91,12 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue()!=null) {
                     if (dataSnapshot.getValue(String.class).equals("online"))
-                        ivBackground.setBackgroundResource(R.drawable.orange);
-                    else
-                        ivBackground.setBackground(null);
+                        holder.ivBackground.setBackgroundResource(R.drawable.orange);
+                    //holder.ivBackground.setVisibility(View.VISIBLE);
+                    else {
+                        holder.ivBackground.setVisibility(View.GONE);
+                        holder.ivBackground.setBackground(null);
+                    }
                 }
             }
 
@@ -124,31 +108,83 @@ public class UserAdapter extends ArrayAdapter<UserDetailwithUrl> {
 
 
 
-        iv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Activity.onImageSelected(position);
-            }
-        });
 
-        TextView tvUserName= v.findViewById(R.id.tv_username);
-        tvUserName.setText(list.get(position).getuID());
+
+
+        holder.tvUserName.setText(list.get(position).getuID());
 
         if(list.get(position).getMessagenum() > 2)
         {
-            tvMessageNum.setText(list.get(position).getMessagenum()-2+"");
-            tvMessageNum.setVisibility(View.VISIBLE);
+            holder.tvMessageNum.setText(list.get(position).getMessagenum()-2+"");
+            holder.tvMessageNum.setVisibility(View.VISIBLE);
+        }
+        else{
+           // holder.tvMessageNum.setText(list.get(position).getMessagenum()-2+"");
+            holder.tvMessageNum.setVisibility(View.GONE);
         }
 
-        innerConstraintLayout.setOnClickListener(new View.OnClickListener() {
+        holder.innerConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Activity.onItemSelected(position);
             }
         });
 
-        return v;
     }
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    public interface itemSelected
+    {
+        public void onItemSelected(int index);
+        public void onImageSelected(int index);
+    }
+
+
+
+
+    public UserAdapter(@NonNull Context context, ArrayList<UserDetailwithUrl>list) {
+
+
+        this.context = context;
+        this.list = list;
+        Activity = (itemSelected) context;
+    }
+    public  class viewholder extends RecyclerView.ViewHolder
+    {
+
+       final ImageView iv,ivStatus,ivImage,ivBackground;
+        TextView tvlastmessage,tvMessageNum,tvUserName;
+        ConstraintLayout innerConstraintLayout;
+
+
+        public viewholder(@NonNull View itemView) {
+            super(itemView);
+
+            iv=itemView.findViewById(R.id.imageView);
+            ivStatus = itemView.findViewById(R.id.ivStatus);
+            ivImage = itemView.findViewById(R.id.ivImage);
+            ivBackground = itemView.findViewById(R.id.ivBackground);
+            tvlastmessage=itemView.findViewById(R.id.lastmessage);
+            tvMessageNum = itemView.findViewById(R.id.tvMessageNum);
+            tvUserName= itemView.findViewById(R.id.tv_username);
+            innerConstraintLayout = itemView.findViewById(R.id.innerConstraintLayout);
+
+            iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Activity.onImageSelected(list.indexOf((UserDetailwithUrl)view.getTag()));
+                }
+            });
+
+
+        }
+    }
+
+
 
     public String Check(String phone)
     {
