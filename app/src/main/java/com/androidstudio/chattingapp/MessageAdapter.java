@@ -1,5 +1,6 @@
 package com.androidstudio.chattingapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -46,7 +47,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public void sentTextMessage(int index);
     }
 
-    ImageSelected Activity;
+    static ImageSelected Activity;
 
     public MessageAdapter(Context context, ArrayList<MessageModel> messages) {
         this.context = context;
@@ -120,18 +121,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.error(R.drawable.error);
 
-            Glide.with(context).setDefaultRequestOptions(requestOptions).load(messages.get(position).getMessage()).addListener(new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                    holder.ivImage.setClickable(false);
-                    return false;
-                }
+            if(isValidContextForGlide(context.getApplicationContext())) {
+                Glide.with(context.getApplicationContext()).setDefaultRequestOptions(requestOptions).load(messages.get(position).getMessage()).addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        holder.ivImage.setClickable(false);
+                        return false;
+                    }
 
-                @Override
-                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                    return false;
-                }
-            }).into(holder.ivImage);
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(holder.ivImage);
+            }
 
         } else if (messages.get(position).getDownloaded() == 2) // when sender sends the image
         {
@@ -139,7 +142,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivClose.setVisibility(View.VISIBLE);
             holder.progress.setVisibility(View.VISIBLE);
 
-            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
+            Glide.with(context.getApplicationContext()).load(messages.get(position).getMessage()).into(holder.ivImage);
         }
 
         else if(messages.get(position).getDownloaded() == -2)
@@ -179,6 +182,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
         }
         return -1;
+    }
+
+    public static boolean isValidContextForGlide(final Context context) {
+        if (context == null) {
+            return false;
+        }
+        if (context instanceof android.app.Activity) {
+            final Activity activity = (Activity) context;
+            if (activity.isDestroyed() || activity.isFinishing()) {
+                return false;
+            }
+        }
+        return true;
     }
 
 

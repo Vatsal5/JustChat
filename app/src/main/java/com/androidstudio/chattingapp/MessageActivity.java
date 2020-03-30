@@ -1,5 +1,6 @@
 package com.androidstudio.chattingapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -87,7 +88,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     String sender;
     LinearLayoutManager manager;
     MessageAdapter adapter;
-    static ArrayList<MessageModel> chats;
+    ArrayList<MessageModel> chats;
     ChildEventListener chreceiver, chsender;
 
     DBHandler Handler;
@@ -99,6 +100,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+
+        Log.d("context",MessageActivity.this+"");
+
         database = FirebaseDatabase.getInstance();
         reference = database.getReference();
         rf = FirebaseStorage.getInstance().getReference("docs/");
@@ -178,7 +182,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         manager.setStackFromEnd(true);
         Messages.setLayoutManager(manager);
 
-        chats = Handler.getMessages(RecieverPhone);
+        chats.addAll(Handler.getMessages(RecieverPhone));
         for (int i = 0; i < chats.size(); i++) {
             Log.d("messageme", chats.get(i).getMessage()+"");
         }
@@ -210,7 +214,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
 
-                Messages.smoothScrollToPosition(chats.size()-1);
+                Messages.smoothScrollToPosition(positionStart+itemCount);
             }
 
             @Override
@@ -247,9 +251,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 int id = Handler.addMessage(messageModel);
                 messageModel.setId(id);
 
-                chats.add(messageModel);
-
                 dataSnapshot.getRef().removeValue();
+
+                chats.add(messageModel);
 
                 adapter.notifyItemInserted(chats.size()-1);
             }
@@ -295,12 +299,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                         reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 
-                        chats.add(new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue().toString(), "text", -1));
-                        Handler.addMessage(new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue().toString(), "text", -1));
+                        int id = Handler.addMessage(new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue().toString(), "text", -1));
+                        chats.add(new MessageModel(id, RecieverPhone, sender, dataSnapshot.getValue().toString(), "text", -1));
                         dataSnapshot.getRef().removeValue();
 
 
-                        adapter.notifyItemInserted(chats.size()-1);
+                        adapter.notifyItemRangeInserted(chats.size()-1,1);
                     }
                 }
             }
@@ -554,6 +558,20 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
                                         child("images").push().setValue(uri.toString());
+
+                                message.setDownloaded(1);
+                                Handler.UpdateMessage(message);
+
+                                if(getRunning()){
+                                    chats.clear(); //here items is an ArrayList populating the RecyclerView
+                                    adapter.notifyDataSetChanged();
+                                    chats.addAll(Handler.getMessages(RecieverPhone));// add new data
+                                    for(int i=0;i<chats.size();i++)
+                                    {
+                                        Log.d("downloaded",chats.get(i).getDownloaded()+"");
+                                    }
+                                    adapter.notifyItemRangeInserted(0, chats.size());
+                                }
                             }
                         });
 
@@ -562,17 +580,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 //                    chats.get(index).setDownloaded(1);
 //                    adapter.notifyDataSetChanged();
 //                }
-
-                message.setDownloaded(1);
-                Handler.UpdateMessage(message);
-                Handler.close();
-
-                if(getRunning())
-                {
-                    Handler.Open();
-                    chats = Handler.getMessages(RecieverPhone);
-                    adapter.notifyDataSetChanged();
-                }
 
             }
         });
@@ -656,8 +663,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 Handler.UpdateMessage(message);
                 if (getRunning()) {
-                    chats = Handler.getMessages(RecieverPhone);
-                    adapter.notifyDataSetChanged();
+                    chats.get(index).setDownloaded(1);
+                    chats.get(index).setMessage(result.toString());
+                    adapter.notifyItemChanged(index);
                 }
 
             }
@@ -678,7 +686,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                     if(getRunning()) {
                         chats.get(index).setDownloaded(-1);
-                        adapter.notifyDataSetChanged();
+                        adapter.notifyItemChanged(index);
                     }
 
                 } else {
