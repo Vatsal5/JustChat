@@ -81,6 +81,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         else
         {
             Glide.with(context).load(list.get(position).getUrl()).into(holder.iv);
+            holder.iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Activity.onImageSelected(position);
+                }
+            });
         }
 
 
@@ -105,11 +111,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
             }
         });
-
-
-
-
-
 
         holder.tvUserName.setText(list.get(position).getuID());
 
@@ -172,15 +173,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             tvMessageNum = itemView.findViewById(R.id.tvMessageNum);
             tvUserName= itemView.findViewById(R.id.tv_username);
             innerConstraintLayout = itemView.findViewById(R.id.innerConstraintLayout);
-
-            iv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Activity.onImageSelected(list.indexOf((UserDetailwithUrl)view.getTag()));
-                }
-            });
-
-
         }
     }
 

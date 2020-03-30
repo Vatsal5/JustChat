@@ -22,6 +22,8 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.concurrent.TimeUnit;
 
@@ -37,6 +39,8 @@ public class Registration extends AppCompatActivity {
 
     ProgressDialog dialog;
 
+    DatabaseReference reference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,8 @@ public class Registration extends AppCompatActivity {
 
         etPhone = findViewById(R.id.etPhone);
         btnVerify = findViewById(R.id.btnSubmit);
+
+        reference = FirebaseDatabase.getInstance().getReference();
 
         dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -60,6 +66,8 @@ public class Registration extends AppCompatActivity {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
                 Log.d("myapp","Verification Completed");
+
+                signInWithPhoneAuthCredential(phoneAuthCredential);
             }
 
             @Override
@@ -110,5 +118,37 @@ public class Registration extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        FirebaseAuth.getInstance().signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+
+                            dialog.dismiss();
+
+                            (reference.child("users").child(phone).child("contact")).setValue(phone);
+                            (reference.child("users").child(phone).child("name")).setValue("Enter Your Name");
+
+                            (reference.child("users").child(phone).child("status")).setValue("What's Your Status");
+
+
+
+                            startActivity(new Intent(Registration.this,MainActivity.class));
+                            Registration.this.finish();
+                            // ...
+                        } else {
+                            dialog.dismiss();
+                            // Sign in failed, display a message and update the UI
+                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                // The verification code entered was invalid
+                                Toast.makeText(Registration.this, "Wrong OTP entered", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                });
     }
 }
