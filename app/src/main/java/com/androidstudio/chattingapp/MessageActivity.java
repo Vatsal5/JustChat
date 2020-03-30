@@ -596,7 +596,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     @Override
     public void sentTextMessage(final int index) {
-        SendMessage(chats.get(index));
+        SendMessage(index,chats.get(index));
     }
 
     //***********************************************************************************************************************************************
@@ -666,7 +666,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         }
     }
 
-    public void SendMessage(final MessageModel message)
+    public void SendMessage(final int index, final MessageModel message)
     {
         reference.child("users").child(sender).child(RecieverPhone).push().setValue(message.getMessage().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -677,7 +677,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     Handler.UpdateMessage(message);
 
                     if(getRunning()) {
-                        chats = Handler.getMessages(RecieverPhone);
+                        chats.get(index).setDownloaded(-1);
                         adapter.notifyDataSetChanged();
                     }
 
