@@ -55,6 +55,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Activity = (ImageSelected) context;
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvMessage;
         ImageView ivDownload, ivImage, ivUpload;
@@ -122,7 +123,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             requestOptions.error(R.drawable.error);
 
             if(isValidContextForGlide(context.getApplicationContext())) {
-                Glide.with(context.getApplicationContext()).setDefaultRequestOptions(requestOptions).load(messages.get(position).getMessage()).addListener(new RequestListener<Drawable>() {
+                Glide.with(context).setDefaultRequestOptions(requestOptions).load(messages.get(position).getMessage()).addListener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         holder.ivImage.setClickable(false);

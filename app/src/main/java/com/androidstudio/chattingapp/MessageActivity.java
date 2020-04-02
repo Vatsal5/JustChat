@@ -332,6 +332,14 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+
+        outState.putInt("activity", 0);
+
+        super.onSaveInstanceState(outState);
+    }
+
     public boolean getRunning()
     {
         SharedPreferences getshared = getSharedPreferences("Status",MODE_PRIVATE);
@@ -562,15 +570,22 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                 message.setDownloaded(1);
                                 Handler.UpdateMessage(message);
 
-                                if(getRunning()){
-                                    chats.clear(); //here items is an ArrayList populating the RecyclerView
-                                    adapter.notifyDataSetChanged();
-                                    chats.addAll(Handler.getMessages(RecieverPhone));// add new data
-                                    for(int i=0;i<chats.size();i++)
-                                    {
-                                        Log.d("downloaded",chats.get(i).getDownloaded()+"");
-                                    }
-                                    adapter.notifyItemRangeInserted(0, chats.size());
+                                if(getRunning()) {
+
+                                    Intent intent = getIntent();
+                                    finish();
+                                    startActivity(intent);
+
+//                                    chats.clear();
+//                                    adapter.notifyDataSetChanged();
+//                                    chats.addAll(Handler.getMessages(RecieverPhone));// add new data
+//                                    for(int i=0;i<chats.size();i++)
+//                                    {
+//                                        Log.d("downloaded",chats.get(i).getDownloaded()+"");
+//                                    }
+//                                    adapter.notifyItemRangeInserted(0, chats.size());
+
+
                                 }
                             }
                         });

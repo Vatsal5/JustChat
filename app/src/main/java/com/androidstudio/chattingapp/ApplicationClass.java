@@ -1,6 +1,7 @@
 package com.androidstudio.chattingapp;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 
