@@ -100,7 +100,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
                         holder.ivBackground.setBackgroundResource(R.drawable.orange);
                     //holder.ivBackground.setVisibility(View.VISIBLE);
                     else {
-
                         holder.ivBackground.setBackground(null);
                     }
                 }

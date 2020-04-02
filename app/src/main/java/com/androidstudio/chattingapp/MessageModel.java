@@ -10,6 +10,7 @@ public class MessageModel
     private String message;
     private String type;
     private int isDownloaded;
+    private String time;
 
     public MessageModel(){
         this.id = -1;
@@ -18,15 +19,17 @@ public class MessageModel
         this.message = null;
         this.type = null;
         this.isDownloaded = -1;
+        this.time = null;
     };
 
-    public MessageModel(int id,String sender, String reciever, String message,String type,int isDownloaded) {
+    public MessageModel(int id,String sender, String reciever, String message,String type,int isDownloaded,String time) {
         this.id = id;
         this.sender = sender;
         this.reciever = reciever;
         this.message = message;
         this.type = type;
         this.isDownloaded = isDownloaded;
+        this.time = time;
     }
 
     public String getSender() {
@@ -75,5 +78,13 @@ public class MessageModel
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

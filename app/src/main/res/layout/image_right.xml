@@ -19,48 +19,18 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/ivUpload"
-        android:visibility="gone"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        app:layout_constraintTop_toTopOf="@+id/ivImage"
-        app:layout_constraintLeft_toLeftOf="@+id/ivImage"
-        app:layout_constraintRight_toRightOf="@+id/ivImage"
-        app:layout_constraintBottom_toBottomOf="@+id/ivImage"
-        app:srcCompat="@drawable/upload"
-        android:background="@drawable/image_background"
-        android:padding="8dp"
-        android:clickable="true"/>
-
-    <ImageView
-        android:id="@+id/ivDownload"
-        android:visibility="gone"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        app:layout_constraintTop_toTopOf="@+id/ivImage"
-        app:layout_constraintLeft_toLeftOf="@+id/ivImage"
-        app:layout_constraintRight_toRightOf="@+id/ivImage"
-        app:layout_constraintBottom_toBottomOf="@+id/ivImage"
-        app:srcCompat="@drawable/download"
-        android:background="@drawable/image_background"
-        android:padding="8dp"
-        android:adjustViewBounds="true"
-        android:clickable="true"/>
-
-    <ImageView
-        android:id="@+id/ivClose"
-        android:visibility="gone"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        app:layout_constraintTop_toTopOf="@+id/ivImage"
-        app:layout_constraintLeft_toLeftOf="@+id/ivImage"
-        app:layout_constraintRight_toRightOf="@+id/ivImage"
-        app:layout_constraintBottom_toBottomOf="@+id/ivImage"
-        android:background="@drawable/image_background"
-        app:srcCompat="@drawable/close"
-        android:padding="10dp"
-        android:clickable="true"/>
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10:10"
+        android:textSize="14sp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="9dp"
+        app:layout_constraintBottom_toBottomOf="@id/ivImage"
+        app:layout_constraintRight_toRightOf="@id/ivImage"
+        android:layout_marginBottom="9dp"
+        android:textColor="#DFDBDB"/>
 
     <ProgressBar
         android:id="@+id/progress"

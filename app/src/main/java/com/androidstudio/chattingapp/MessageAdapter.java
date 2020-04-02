@@ -57,20 +57,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvMessage;
-        ImageView ivDownload, ivImage, ivUpload;
-        ImageView ivClose;
+        TextView tvMessage,tvTime;
+        ImageView ivImage;
         ProgressBar progress;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvMessage = itemView.findViewById(R.id.tvMessage);
-            ivDownload = itemView.findViewById(R.id.ivDownload);
             ivImage = itemView.findViewById(R.id.ivImage);
-            ivClose = itemView.findViewById(R.id.ivClose);
             progress = itemView.findViewById(R.id.progress);
-            ivUpload = itemView.findViewById(R.id.ivUpload);
+            tvTime = itemView.findViewById(R.id.tvTime);
         }
     }
 
@@ -106,7 +103,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         if (messages.get(position).getDownloaded() == 0)   //image is received but yet to be downloaded
         {
-            holder.ivClose.setVisibility(View.VISIBLE);
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setImageResource(0);
 
@@ -115,8 +111,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         else if (messages.get(position).getDownloaded() == 1) // image is sent or downloaded successfully
         {
-            holder.ivDownload.setVisibility(View.GONE);
-            holder.ivClose.setVisibility(View.GONE);
             holder.progress.setVisibility(View.GONE);
 
             RequestOptions requestOptions = new RequestOptions();
@@ -140,7 +134,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         } else if (messages.get(position).getDownloaded() == 2) // when sender sends the image
         {
 
-            holder.ivClose.setVisibility(View.VISIBLE);
             holder.progress.setVisibility(View.VISIBLE);
 
             Glide.with(context.getApplicationContext()).load(messages.get(position).getMessage()).into(holder.ivImage);
@@ -156,6 +149,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         {
             holder.tvMessage.setText(messages.get(position).getMessage());
         }
+
+        holder.tvTime.setText(messages.get(position).getTime());
     }
 
     @Override
