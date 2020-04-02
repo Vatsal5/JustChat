@@ -563,7 +563,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     public void UploadImage(final int index, final MessageModel message)
     {
      final    Date date=new Date();
-      final   SimpleDateFormat simpleDateFormat= new SimpleDateFormat("hh:mm:ss a");
+      final   SimpleDateFormat simpleDateFormat= new SimpleDateFormat("hh:mm:ss");
         Log.d("running","Outside "+getRunning());
         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).
                 putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -708,7 +708,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     public void SendMessage(final int index, final MessageModel message)
     {
         Date date=new Date();
-        SimpleDateFormat simpleDateFormat= new SimpleDateFormat("hh:mm:ss a");
+        SimpleDateFormat simpleDateFormat= new SimpleDateFormat("hh:mm:ss");
 
         reference.child("users").child(sender).child(RecieverPhone).push().setValue(simpleDateFormat.format(date).substring(0,8)+message.getMessage().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
