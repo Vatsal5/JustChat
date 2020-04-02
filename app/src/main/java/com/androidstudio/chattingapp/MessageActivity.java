@@ -1,12 +1,9 @@
 package com.androidstudio.chattingapp;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.icu.lang.UCharacter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -65,7 +62,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -99,12 +95,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     ChildEventListener imagereceiver;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-        ApplicationClass.context = MessageActivity.this;
+        ApplicationClass.MessageActivityContext = MessageActivity.this;
 
         database = FirebaseDatabase.getInstance();
         reference = database.getReference();
@@ -174,6 +171,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     int id = Handler.addMessage(model);
                     model.setId(id);
                     chats.add(model);
+                    ApplicationClass.SameActivity =true;
                     adapter.notifyItemInserted(chats.size()-1);
 
                 }
@@ -360,6 +358,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         reference.child("users").child(RecieverPhone).child(sender).removeEventListener(chreceiver);
         //reference.child("users").child(sender).removeEventListener(chsender);
         chats.clear();
+        ApplicationClass.SameActivity = false;
         //Handler.close();
     }
 
@@ -573,9 +572,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                 message.setDownloaded(1);
                                 Handler.UpdateMessage(message);
 
-                                if(!((Activity) ApplicationClass.context).isFinishing()) {
+                                if(!((Activity) ApplicationClass.MessageActivityContext).isFinishing()) {
                                     Intent intent = getIntent();
-                                    ((Activity) ApplicationClass.context).finish();
+                                    ((Activity) ApplicationClass.MessageActivityContext).finish();
                                     startActivity(intent);
 
                                     overridePendingTransition(0, 0);
@@ -664,9 +663,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 message.setMessage(result.toString());
 
                 Handler.UpdateMessage(message);
-                if (!((Activity) ApplicationClass.context).isFinishing()) {
+                if (!((Activity) ApplicationClass.MessageActivityContext).isFinishing()) {
                     Intent intent = getIntent();
-                    ((Activity) ApplicationClass.context).finish();
+                    ((Activity) ApplicationClass.MessageActivityContext).finish();
                     startActivity(intent);
 
                     overridePendingTransition(0, 0);
@@ -681,20 +680,23 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     public void SendMessage(final int index, final MessageModel message)
     {
 
-
         reference.child("users").child(sender).child(RecieverPhone).push().setValue(message.getTime()+message.getMessage().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful())
                 {
-
-
                     message.setDownloaded(-1);
                     Handler.UpdateMessage(message);
 
-                    if (!((Activity) ApplicationClass.context).isFinishing()) {
+                    if(ApplicationClass.SameActivity)
+                    {
+                        chats.get(index).setDownloaded(-1);
+                        adapter.notifyItemChanged(index);
+                    }
+
+                    else {
                         Intent intent = getIntent();
-                        ((Activity) ApplicationClass.context).finish();
+                        ((Activity) ApplicationClass.MessageActivityContext).finish();
                         startActivity(intent);
 
                         overridePendingTransition(0, 0);
