@@ -15,6 +15,8 @@ import com.google.firebase.database.ValueEventListener;
 public class ApplicationClass extends Application
 {
 
+    public static Context context;
+
     @Override
     public void onCreate() {
         super.onCreate();

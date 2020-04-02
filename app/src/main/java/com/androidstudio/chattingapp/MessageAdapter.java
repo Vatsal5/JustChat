@@ -105,6 +105,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         {
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setImageResource(0);
+            holder.ivImage.setClickable(false);
 
             Activity.downloadImage(position);
 
@@ -139,7 +140,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             Glide.with(context.getApplicationContext()).load(messages.get(position).getMessage()).into(holder.ivImage);
         }
 
-        else if(messages.get(position).getDownloaded() == -2)
+        else if(messages.get(position).getDownloaded() == -2) // when text message is being sent
         {
             holder.tvMessage.setText(messages.get(position).getMessage());
             Activity.sentTextMessage(position);

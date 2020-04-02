@@ -1,5 +1,6 @@
 package com.androidstudio.chattingapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -103,7 +104,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-        Log.d("context",MessageActivity.this+"");
+        ApplicationClass.context = MessageActivity.this;
 
         database = FirebaseDatabase.getInstance();
         reference = database.getReference();
@@ -236,7 +237,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         Messages.setAdapter(adapter);
         if(chats.size()!=0)
-            adapter.notifyItemInserted(chats.size()-1);
+            adapter.notifyItemRangeInserted(0,chats.size());
 
 //        new Handler().postDelayed(new Runnable() {
 //            @Override
@@ -349,12 +350,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         outState.putInt("activity", 0);
 
         super.onSaveInstanceState(outState);
-    }
-
-    public boolean getRunning()
-    {
-        SharedPreferences getshared = getSharedPreferences("Status",MODE_PRIVATE);
-         return getshared.getBoolean("active",true);
     }
 
 //*******************************************************************************************************************************************************
@@ -485,10 +480,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             }
         });
 
-        SharedPreferences sp = getSharedPreferences("Status", MODE_PRIVATE);
-        SharedPreferences.Editor ed = sp.edit();
-        ed.putBoolean("active", true);
-        ed.apply();
     }
 
     @Override
@@ -509,10 +500,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     protected void onStop() {
         super.onStop();
 
-        SharedPreferences sp = getSharedPreferences("Status", MODE_PRIVATE);
-        SharedPreferences.Editor ed = sp.edit();
-        ed.putBoolean("active", false);
-        ed.apply();
     }
 
     //*****************************************************************************************************************************************************************
@@ -570,7 +557,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     public void UploadImage(final int index, final MessageModel message)
     {
 
-        Log.d("running","Outside "+getRunning());
         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).
                 putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -580,9 +566,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                             @Override
                             public void onSuccess(Uri uri) {
 
-
-
-
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
                                         child("images").push().setValue(message.getTime()+uri.toString());
@@ -590,33 +573,15 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                 message.setDownloaded(1);
                                 Handler.UpdateMessage(message);
 
-                                if(getRunning()) {
-
+                                if(!((Activity) ApplicationClass.context).isFinishing()) {
                                     Intent intent = getIntent();
-                                    MessageActivity.this.finish();
+                                    ((Activity) ApplicationClass.context).finish();
                                     startActivity(intent);
 
                                     overridePendingTransition(0, 0);
-
-//                                    chats.clear();
-//                                    adapter.notifyDataSetChanged();
-//                                    chats.addAll(Handler.getMessages(RecieverPhone));// add new data
-//                                    for(int i=0;i<chats.size();i++)
-//                                    {
-//                                        Log.d("downloaded",chats.get(i).getDownloaded()+"");
-//                                    }
-//                                    adapter.notifyItemRangeInserted(0, chats.size());
-
-
                                 }
                             }
                         });
-
-                Log.d("running","Inside "+getRunning());
-//                    if (getRunning()) {
-//                    chats.get(index).setDownloaded(1);
-//                    adapter.notifyDataSetChanged();
-//                }
 
             }
         });
@@ -699,10 +664,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 message.setMessage(result.toString());
 
                 Handler.UpdateMessage(message);
-                if (getRunning()) {
-                    chats.get(index).setDownloaded(1);
-                    chats.get(index).setMessage(result.toString());
-                    adapter.notifyItemChanged(index);
+                if (!((Activity) ApplicationClass.context).isFinishing()) {
+                    Intent intent = getIntent();
+                    ((Activity) ApplicationClass.context).finish();
+                    startActivity(intent);
+
+                    overridePendingTransition(0, 0);
                 }
 
             }
@@ -725,9 +692,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     message.setDownloaded(-1);
                     Handler.UpdateMessage(message);
 
-                    if(getRunning()) {
-                        chats.get(index).setDownloaded(-1);
-                        adapter.notifyItemChanged(index);
+                    if (!((Activity) ApplicationClass.context).isFinishing()) {
+                        Intent intent = getIntent();
+                        ((Activity) ApplicationClass.context).finish();
+                        startActivity(intent);
+
+                        overridePendingTransition(0, 0);
                     }
 
                 } else {
