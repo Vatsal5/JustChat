@@ -246,8 +246,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         imagereceiver = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                String time;
+                time=dataSnapshot.getValue(String.class).substring(0,14);
 
-                MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class), "image", 0);
+                MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(14), "image", 0);
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 
                 int id = Handler.addMessage(messageModel);
@@ -300,12 +302,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         }
                     } else if (!(dataSnapshot.getKey().equals("info"))) {
 
-                        time=dataSnapshot.child("time").getValue().toString();
+                        time=dataSnapshot.getValue().toString().substring(0,14);
 
                         reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 
-                        int id = Handler.addMessage(new MessageModel(-1, RecieverPhone, sender, dataSnapshot.child("message").getValue().toString(), "text", -1));
-                        chats.add(new MessageModel(id, RecieverPhone, sender, dataSnapshot.child("message").getValue().toString(), "text", -1));
+                        int id = Handler.addMessage(new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue().toString().substring(14), "text", -1));
+                        chats.add(new MessageModel(id, RecieverPhone, sender, dataSnapshot.getValue().toString().substring(14), "text", -1));
                         dataSnapshot.getRef().removeValue();
 
 
@@ -560,6 +562,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     public void UploadImage(final int index, final MessageModel message)
     {
+     final    Date date=new Date();
+      final   SimpleDateFormat simpleDateFormat= new SimpleDateFormat("hh:mm:ss a");
         Log.d("running","Outside "+getRunning());
         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).
                 putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -569,9 +573,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         .addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
+
+
+
+
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
-                                        child("images").push().setValue(uri.toString());
+                                        child("images").push().setValue(simpleDateFormat.format(date)+uri.toString());
 
                                 message.setDownloaded(1);
                                 Handler.UpdateMessage(message);
@@ -699,16 +707,16 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     public void SendMessage(final int index, final MessageModel message)
     {
-       final String pushId=reference.child("users").child(sender).child(RecieverPhone).push().getKey();
-        reference.child("users").child(sender).child(RecieverPhone).child(pushId).child("message").setValue(message.getMessage().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
+        Date date=new Date();
+        SimpleDateFormat simpleDateFormat= new SimpleDateFormat("hh:mm:ss a");
+
+        reference.child("users").child(sender).child(RecieverPhone).push().setValue(simpleDateFormat.format(date)+message.getMessage().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful())
                 {
-                    Date date=new Date();
-                    SimpleDateFormat simpleDateFormat= new SimpleDateFormat("hh:mm:ss a");
 
-                    reference.child("users").child(sender).child(RecieverPhone).child(pushId).child("time").setValue(simpleDateFormat.format(date));
+
                     message.setDownloaded(-1);
                     Handler.UpdateMessage(message);
 

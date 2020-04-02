@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                          if (!(dataSnapshot.getKey().equals("info"))) {
 
 
-                             contacts1.get(index).setLastmessage(dataSnapshot.getValue(String.class));
+                             //contacts1.get(index).setLastmessage(dataSnapshot.getValue(String.class));
                              contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                              userAdapter.notifyDataSetChanged();
                              Log.d("messagecount",contacts1.get(index-1).getMessagenum()+"");
