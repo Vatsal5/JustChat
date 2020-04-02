@@ -491,6 +491,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         super.onPause();
 
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").removeEventListener(imagereceiver);
+        overridePendingTransition(0, 0);
     }
 
     @Override
@@ -573,8 +574,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                 if(getRunning()) {
 
                                     Intent intent = getIntent();
-                                    finish();
+                                    MessageActivity.this.finish();
                                     startActivity(intent);
+
+                                    overridePendingTransition(0, 0);
 
 //                                    chats.clear();
 //                                    adapter.notifyDataSetChanged();
