@@ -67,7 +67,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -289,6 +291,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
+                String time;
 
                 if (!(dataSnapshot.getKey().equals("message"))) {
                     if (dataSnapshot.getKey().equals("info")) {
@@ -297,10 +300,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         }
                     } else if (!(dataSnapshot.getKey().equals("info"))) {
 
+                        time=dataSnapshot.child("time").getValue().toString();
+
                         reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 
-                        int id = Handler.addMessage(new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue().toString(), "text", -1));
-                        chats.add(new MessageModel(id, RecieverPhone, sender, dataSnapshot.getValue().toString(), "text", -1));
+                        int id = Handler.addMessage(new MessageModel(-1, RecieverPhone, sender, dataSnapshot.child("message").getValue().toString(), "text", -1));
+                        chats.add(new MessageModel(id, RecieverPhone, sender, dataSnapshot.child("message").getValue().toString(), "text", -1));
                         dataSnapshot.getRef().removeValue();
 
 
@@ -694,11 +699,16 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     public void SendMessage(final int index, final MessageModel message)
     {
-        reference.child("users").child(sender).child(RecieverPhone).push().setValue(message.getMessage().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
+       final String pushId=reference.child("users").child(sender).child(RecieverPhone).push().getKey();
+        reference.child("users").child(sender).child(RecieverPhone).child(pushId).child("message").setValue(message.getMessage().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful())
                 {
+                    Date date=new Date();
+                    SimpleDateFormat simpleDateFormat= new SimpleDateFormat("hh:mm:ss a");
+
+                    reference.child("users").child(sender).child(RecieverPhone).child(pushId).child("time").setValue(simpleDateFormat.format(date));
                     message.setDownloaded(-1);
                     Handler.UpdateMessage(message);
 
