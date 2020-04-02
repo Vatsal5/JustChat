@@ -247,9 +247,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String time;
-                time=dataSnapshot.getValue(String.class).substring(0,14);
+                time=dataSnapshot.getValue(String.class).substring(0,8);
 
-                MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(14), "image", 0);
+                MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(8), "image", 0);
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 
                 int id = Handler.addMessage(messageModel);
@@ -302,12 +302,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         }
                     } else if (!(dataSnapshot.getKey().equals("info"))) {
 
-                        time=dataSnapshot.getValue().toString().substring(0,14);
+                        time=dataSnapshot.getValue().toString().substring(0,8);
 
                         reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 
-                        int id = Handler.addMessage(new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue().toString().substring(14), "text", -1));
-                        chats.add(new MessageModel(id, RecieverPhone, sender, dataSnapshot.getValue().toString().substring(14), "text", -1));
+                        int id = Handler.addMessage(new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue().toString().substring(8), "text", -1));
+                        chats.add(new MessageModel(id, RecieverPhone, sender, dataSnapshot.getValue().toString().substring(8), "text", -1));
                         dataSnapshot.getRef().removeValue();
 
 
@@ -579,7 +579,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
-                                        child("images").push().setValue(simpleDateFormat.format(date)+uri.toString());
+                                        child("images").push().setValue(simpleDateFormat.format(date).substring(0,8)+uri.toString());
 
                                 message.setDownloaded(1);
                                 Handler.UpdateMessage(message);
@@ -710,7 +710,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         Date date=new Date();
         SimpleDateFormat simpleDateFormat= new SimpleDateFormat("hh:mm:ss a");
 
-        reference.child("users").child(sender).child(RecieverPhone).push().setValue(simpleDateFormat.format(date)+message.getMessage().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
+        reference.child("users").child(sender).child(RecieverPhone).push().setValue(simpleDateFormat.format(date).substring(0,8)+message.getMessage().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful())
