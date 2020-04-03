@@ -51,6 +51,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         database=FirebaseDatabase.getInstance();
         DatabaseReference dbreference=database.getReference();
         Log.d("tag",list.get(position).getUrl());
+
+        if(!(list.get(position).getTime().equals("")))
+        {
+            holder.time.setText(list.get(position).getTime());
+        }
+        else
+        {
+            holder.time.setText("");
+        }
+
         if(!(list.get(position).getLastmessage().equals(" ")))
         {
             if(list.get(position).getLastmessage().length()>20) {
@@ -157,13 +167,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
     {
 
        final ImageView iv,ivStatus,ivImage,ivBackground;
-        TextView tvlastmessage,tvMessageNum,tvUserName;
+        TextView tvlastmessage,tvMessageNum,tvUserName,time;
         ConstraintLayout innerConstraintLayout;
 
 
         public viewholder(@NonNull View itemView) {
             super(itemView);
 
+            time=itemView.findViewById(R.id.time);
             iv=itemView.findViewById(R.id.imageView);
             ivStatus = itemView.findViewById(R.id.ivStatus);
             ivImage = itemView.findViewById(R.id.ivImage);
