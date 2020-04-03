@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -199,7 +200,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         manager.setStackFromEnd(true);
         Messages.setLayoutManager(manager);
 
-        chats.addAll(Handler.getMessages(RecieverPhone));
         for (int i = 0; i < chats.size(); i++) {
             Log.d("messageme", chats.get(i).getMessage()+"");
         }
@@ -231,7 +231,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
 
-                Messages.smoothScrollToPosition(positionStart+itemCount);
+                Messages.smoothScrollToPosition(positionStart+itemCount-1);
             }
 
             @Override
@@ -246,8 +246,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         });
 
         Messages.setAdapter(adapter);
-        if(chats.size()!=0)
+
+        chats.addAll(Handler.getMessages(RecieverPhone));
+        if(chats.size()>0)
             adapter.notifyItemRangeInserted(0,chats.size());
+//        if(chats.size()!=0)
+//            adapter.notifyItemRangeInserted(0,chats.size());
 
 //        new Handler().postDelayed(new Runnable() {
 //            @Override
@@ -616,7 +620,17 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                 message.setDownloaded(1);
                                 Handler.UpdateMessage(message);
 
-                                if(!((Activity) ApplicationClass.MessageActivityContext).isFinishing()) {
+                                if(!MessageActivity.this.isDestroyed())
+                                {
+                                    chats.get(index).setDownloaded(1);
+
+                                    if(!Messages.isComputingLayout())
+                                    {
+                                        adapter.notifyItemChanged(index);
+                                    }
+                                }
+
+                                if(MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                                     Intent intent = getIntent();
                                     ((Activity) ApplicationClass.MessageActivityContext).finish();
                                     startActivity(intent);
@@ -707,7 +721,19 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 message.setMessage(result.toString());
 
                 Handler.UpdateMessage(message);
-                if (!((Activity) ApplicationClass.MessageActivityContext).isFinishing()) {
+
+                if(!MessageActivity.this.isDestroyed())
+                {
+                    chats.get(index).setDownloaded(1);
+                    chats.get(index).setMessage(result.toString());
+
+                    if(!Messages.isComputingLayout())
+                    {
+                        adapter.notifyItemChanged(index);
+                    }
+                }
+
+                if (MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                     Intent intent = getIntent();
                     ((Activity) ApplicationClass.MessageActivityContext).finish();
                     startActivity(intent);
@@ -723,28 +749,43 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     public void SendMessage(final int index, final MessageModel message)
     {
-        reference.child("users").child(sender).child(RecieverPhone).push().setValue(message.getTime()+message.getMessage().trim());
+        reference.child("users").child(sender).child(RecieverPhone).push().setValue(message.getTime()+message.getMessage().trim()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                message.setDownloaded(-1);
+                Handler.UpdateMessage(message);
 
-        message.setDownloaded(-1);
+                if(!MessageActivity.this.isDestroyed())
+                {
+                    chats.get(index).setDownloaded(-1);
+
+                    if(!Messages.isComputingLayout())
+                        adapter.notifyItemChanged(index);
+                }
+
+                if(MessageActivity.this.isDestroyed()  && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed())
+                {
+                    Intent intent = getIntent();
+                    ((Activity) ApplicationClass.MessageActivityContext).finish();
+                    startActivity(intent);
+
+                    overridePendingTransition(0, 0);
+                }
+            }
+        });
+
+        message.setDownloaded(-3);
         Handler.UpdateMessage(message);
 
-        if(ApplicationClass.SameActivity)
+        if(MessageActivity.this.isDestroyed())
         {
-            chats.get(index).setDownloaded(-1);
+            chats.get(index).setDownloaded(-3);
 
             if(!Messages.isComputingLayout())
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemChanged(index);
         }
-
-        else {
-            Intent intent = getIntent();
-            ((Activity) ApplicationClass.MessageActivityContext).finish();
-            startActivity(intent);
-
-            overridePendingTransition(0, 0);
-        }
-
     }
+
 
     // Custom method to convert string to url
     protected URL stringToURL(String urlString){

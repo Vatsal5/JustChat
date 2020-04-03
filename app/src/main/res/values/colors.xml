@@ -6,4 +6,6 @@
     <color name="myColor">#282827</color>
     <color name="my_background">#283f25</color>
     <color name="white">#ffffff</color>
+    <color name="Orange">#99ff6e40</color>
+    <color name="RightBackground">#700F0F0F</color>
 </resources>

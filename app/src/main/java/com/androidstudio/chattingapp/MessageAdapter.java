@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -60,6 +61,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         TextView tvMessage,tvTime;
         ImageView ivImage;
         ProgressBar progress;
+        LinearLayout llMessageRight;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -68,6 +70,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             ivImage = itemView.findViewById(R.id.ivImage);
             progress = itemView.findViewById(R.id.progress);
             tvTime = itemView.findViewById(R.id.tvTime);
+            llMessageRight = itemView.findViewById(R.id.llMessageRight);
         }
     }
 
@@ -136,6 +139,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         {
 
             holder.progress.setVisibility(View.VISIBLE);
+            holder.ivImage.setBackgroundResource(R.drawable.orange2);
 
             Glide.with(context.getApplicationContext()).load(messages.get(position).getMessage()).into(holder.ivImage);
         }
@@ -143,12 +147,24 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         else if(messages.get(position).getDownloaded() == -2) // when text message is being sent
         {
             holder.tvMessage.setText(messages.get(position).getMessage());
+            holder.llMessageRight.setBackgroundResource(R.drawable.orange2);
             Activity.sentTextMessage(position);
+        }
+
+        else if(messages.get(position).getDownloaded() == -3) // when request has been sent to listener
+        {
+            holder.tvMessage.setText(messages.get(position).getMessage());
+
+            if(holder.llMessageRight !=null)
+                holder.llMessageRight.setBackgroundResource(R.drawable.orange2);
         }
 
         else if(messages.get(position).getDownloaded() == -1) // if text message is sent or received successfully
         {
             holder.tvMessage.setText(messages.get(position).getMessage());
+
+            if(holder.llMessageRight !=null)
+                holder.llMessageRight.setBackgroundResource(R.drawable.background_right);
         }
 
         holder.tvTime.setText(messages.get(position).getTime());

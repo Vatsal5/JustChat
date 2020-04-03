@@ -42,6 +42,6 @@
         app:layout_constraintRight_toRightOf="@+id/ivImage"
         app:layout_constraintBottom_toBottomOf="@+id/ivImage"
         android:indeterminate="true"
-        android:indeterminateTint="#FFFFFF"/>
+        android:indeterminateTint="#242323"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
