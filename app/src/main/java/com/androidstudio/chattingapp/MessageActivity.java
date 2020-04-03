@@ -742,8 +742,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 }
 
             }
-            else
-                Toast.makeText(MessageActivity.this, "Could not download Image!", Toast.LENGTH_LONG).show();
         }
     }
 
