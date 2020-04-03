@@ -219,7 +219,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onItemRangeChanged(int positionStart, int itemCount) {
                 super.onItemRangeChanged(positionStart, itemCount);
 
-                Messages.smoothScrollToPosition(chats.size()-1);
+                Messages.smoothScrollToPosition(positionStart);
             }
 
             @Override
@@ -229,9 +229,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
 
-                Messages.smoothScrollToPosition(positionStart+itemCount-1);
+                Messages.smoothScrollToPosition(adapter.getItemCount()-1);
+
+                super.onItemRangeInserted(positionStart, itemCount);
             }
 
             @Override
@@ -597,13 +598,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
             adapter.notifyItemInserted(chats.size()-1);
 
-            UploadImage(chats.size() - 1,chats.get(chats.size()-1));
+            UploadImage(chats.size() - 1,messageModel);
     }
     }
 
     public void UploadImage(final int index, final MessageModel message)
     {
-
         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).
                 putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override

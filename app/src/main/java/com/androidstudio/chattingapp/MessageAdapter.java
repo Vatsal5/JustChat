@@ -133,6 +133,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                         return false;
                     }
                 }).into(holder.ivImage);
+
+                if(messages.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                {
+                    holder.ivImage.setBackgroundResource(R.drawable.background_right);
+                }
             }
 
         } else if (messages.get(position).getDownloaded() == 2) // when sender sends the image

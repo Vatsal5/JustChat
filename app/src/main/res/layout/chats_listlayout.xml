@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="3dp"
                 android:text="User Name"
                 android:textColor="#282828"
                 android:textSize="18sp"
@@ -102,10 +102,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="25dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.178" />
+                app:layout_constraintVertical_bias="0.178"
+                android:textSize="13sp"/>
 
             <TextView
                 android:id="@+id/tvMessageNum"
