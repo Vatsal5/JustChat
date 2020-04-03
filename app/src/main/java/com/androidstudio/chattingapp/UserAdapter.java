@@ -52,7 +52,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         DatabaseReference dbreference=database.getReference();
         Log.d("tag",list.get(position).getUrl());
 
-        if(!(list.get(position).getTime().equals("")))
+        if(!(list.get(position).getTime().equals("null")))
         {
             holder.time.setText(list.get(position).getTime());
         }
@@ -98,9 +98,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
                 }
             });
         }
-
-
-
 
         dbreference.child("UserStatus").child(Check(list.get(position).getPh_number())).addValueEventListener(new ValueEventListener() {
             @Override
@@ -152,9 +149,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         public void onItemSelected(int index);
         public void onImageSelected(int index);
     }
-
-
-
 
     public UserAdapter(@NonNull Context context, ArrayList<UserDetailwithUrl>list) {
 

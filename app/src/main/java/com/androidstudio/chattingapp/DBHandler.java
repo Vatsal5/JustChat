@@ -170,6 +170,36 @@ public class DBHandler
         return null;
     }
 
+    public String getLastMessageTime(String receiver)
+    {
+        MessageModel model=null;
+        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME};
+        Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
+
+        int iId = c.getColumnIndex(KEY_ID);
+        int iSender = c.getColumnIndex(KEY_SENDER);
+        int iReceiver = c.getColumnIndex(KEY_RECEIVER);
+        int iMessage = c.getColumnIndex(KEY_MESSAGE);
+        int iType = c.getColumnIndex(KEY_TYPE);
+        int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
+        int iTime = c.getColumnIndex(KEY_TIME);
+
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
+        {
+            if((c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver))) {
+                model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime));
+            }
+        }
+
+        if(model !=null) {
+            return model.getTime();
+        }
+        else
+        {
+            return "null";
+        }
+    }
+
     public int getID()
     {
         int id = -1;

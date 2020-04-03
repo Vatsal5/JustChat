@@ -1,7 +1,10 @@
 package com.androidstudio.chattingapp;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -19,8 +22,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,6 +69,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.Permission;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -139,7 +146,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if(event.getRawX() >= (etMessage.getRight() - etMessage.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width()))
                     {
-                        CropImage.startPickImageActivity(MessageActivity.this);
+                        if(ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+                        {
+                            ActivityCompat.requestPermissions(MessageActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},5);
+                        }
+                        else
+                            CropImage.startPickImageActivity(MessageActivity.this);
                         return true;
                     }
                 }
@@ -461,6 +473,38 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
 //*****************************************************************************************************************************************************
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode==5)
+        {
+            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_DENIED)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+                builder.setTitle("Permission Required")
+                        .setMessage("Permission to write External storage is required")
+                        .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ActivityCompat.requestPermissions(MessageActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},5);
+                            }
+                        })
+                        .setNegativeButton("No Thanks", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+            }
+            else
+            {
+                CropImage.startPickImageActivity(MessageActivity.this);
+            }
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -679,36 +723,28 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     public void SendMessage(final int index, final MessageModel message)
     {
+        reference.child("users").child(sender).child(RecieverPhone).push().setValue(message.getTime()+message.getMessage().trim());
 
-        reference.child("users").child(sender).child(RecieverPhone).push().setValue(message.getTime()+message.getMessage().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful())
-                {
-                    message.setDownloaded(-1);
-                    Handler.UpdateMessage(message);
+        message.setDownloaded(-1);
+        Handler.UpdateMessage(message);
 
-                    if(ApplicationClass.SameActivity)
-                    {
-                        chats.get(index).setDownloaded(-1);
-                        adapter.notifyItemChanged(index);
-                    }
+        if(ApplicationClass.SameActivity)
+        {
+            chats.get(index).setDownloaded(-1);
 
-                    else {
-                        Intent intent = getIntent();
-                        ((Activity) ApplicationClass.MessageActivityContext).finish();
-                        startActivity(intent);
+            if(!Messages.isComputingLayout())
+                adapter.notifyDataSetChanged();
+        }
 
-                        overridePendingTransition(0, 0);
-                    }
+        else {
+            Intent intent = getIntent();
+            ((Activity) ApplicationClass.MessageActivityContext).finish();
+            startActivity(intent);
 
-                } else {
-                    Toast.makeText(MessageActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+            overridePendingTransition(0, 0);
+        }
+
     }
-
 
     // Custom method to convert string to url
     protected URL stringToURL(String urlString){

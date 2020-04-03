@@ -127,10 +127,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         }
 
-        if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},5);
-        }
         btnContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -360,27 +356,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 makecall();
             }
         }
-        if(requestCode==5)
-        {
-            if(grantResults[0] == PackageManager.PERMISSION_DENIED)
-            {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Permission Required")
-                        .setMessage("Permission to write External storage is required")
-                        .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},5);
-                            }
-                        })
-                .setNegativeButton("No Thanks", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-            }
-        }
     }
 
     public  void getcontact()
@@ -512,15 +487,15 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 //Toast.makeText(MainActivity.this,contacts2.size()+"",Toast.LENGTH_LONG).show();
                 for(int i=0;i<contacts1.size();i++)
                 {
-                    //contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
-                    //Log.d("contacts1",contacts1.get(i).getPh_number());
                     if(!contacts1.get(i).getPh_number().substring(0,3).equals("+91"))
                     {
                         contacts1.get(i).setLastmessage(Handler.getLastMessage("+91"+contacts1.get(i).getPh_number()));
+                        contacts1.get(i).setTime(Handler.getLastMessageTime("+91"+contacts1.get(i).getPh_number()));
                     }
                     else
                     {
                         contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
+                        contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
                     }
                 }
                 userAdapter=new UserAdapter(MainActivity.this,contacts1);
@@ -586,7 +561,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     @Override
     protected void onResume() {
         super.onResume();
-        getcontact();
         Status("online");
     }
 
@@ -607,6 +581,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         super.onRestart();
 
         contacts1.get(l).setMessagenum(2);
+        getcontact();
     }
     public void makecall()
     {
