@@ -519,7 +519,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                     if (contacts1.get(i).getPh_number().equals(dataSnapshot.getKey())) {
                                         tell = 1;
 
-//                                        break;
+                                       break;
                                     }
                                 }
                                 else
