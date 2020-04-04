@@ -179,10 +179,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             }
         };
 
-
-
-
-
         FirebaseDatabase.getInstance().getReference("UserStatus").child(RecieverPhone).addValueEventListener(Status);
 
         etMessage.setOnTouchListener(new View.OnTouchListener() {
@@ -287,6 +283,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             @Override
             public void onItemRangeRemoved(int positionStart, int itemCount) {
                 super.onItemRangeRemoved(positionStart, itemCount);
+
+                Messages.smoothScrollToPosition(positionStart);
             }
 
             @Override
@@ -316,6 +314,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String time;
+
+                MediaPlayer received = MediaPlayer.create(MessageActivity.this, R.raw.sharp);
+
                 time=dataSnapshot.getValue(String.class).substring(0,5);
 
                 MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(5), "image", 0,time);
@@ -329,6 +330,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 chats.add(messageModel);
 
                 adapter.notifyItemInserted(chats.size()-1);
+                received.start();
             }
 
             @Override
@@ -364,6 +366,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 String time;
 
+                MediaPlayer received = MediaPlayer.create(MessageActivity.this, R.raw.sharp);
+
                 if (!(dataSnapshot.getKey().equals("message"))) {
                     if (dataSnapshot.getKey().equals("info")) {
                         if (!(dataSnapshot.child("friend").exists())) {
@@ -381,6 +385,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
 
                         adapter.notifyItemRangeInserted(chats.size()-1,1);
+                        received.start();
                     }
                 }
             }
@@ -424,7 +429,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 MessageModel model = chats.get(pos);
                 chats.remove(model);
                 Handler.DeleteMessage(model);
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemRemoved(pos);
             }
 
         @Override
