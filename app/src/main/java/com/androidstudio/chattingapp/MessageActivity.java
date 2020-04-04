@@ -315,7 +315,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String time;
 
-                MediaPlayer received = MediaPlayer.create(MessageActivity.this, R.raw.sharp);
+                MediaPlayer received = MediaPlayer.create(MessageActivity.this, R.raw.received);
 
                 time=dataSnapshot.getValue(String.class).substring(0,5);
 
@@ -366,7 +366,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 String time;
 
-                MediaPlayer received = MediaPlayer.create(MessageActivity.this, R.raw.sharp);
+                MediaPlayer received = MediaPlayer.create(MessageActivity.this, R.raw.received);
 
                 if (!(dataSnapshot.getKey().equals("message"))) {
                     if (dataSnapshot.getKey().equals("info")) {
