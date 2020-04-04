@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     String currentUserNumber;
     DatabaseReference reference;
 
-    int l,pos,tell=0;
+    int l,pos;
 
     UserAdapter userAdapter;
     int c=0;
@@ -506,6 +506,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         if(!(dataSnapshot.getKey().equals("name") || dataSnapshot.getKey().equals("contact") ||dataSnapshot.getKey().equals("profile") ||
                                 dataSnapshot.getKey().equals("status"))) {
                           //  Log.d("contacts",dataSnapshot.getKey());
+                            int tell=0;
 
 
                             for (int i = 0; i < contacts1.size(); i++) {
@@ -518,10 +519,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 if(contacts1.get(i).getPh_number().substring(0,3).equals("+91")) {
                                     if (contacts1.get(i).getPh_number().equals(dataSnapshot.getKey())) {
                                         tell = 1;
-
-                                       break;
+                                        break;
                                     }
                                 }
+
                                 else
                                 {
                                     String ph="+91"+contacts1.get(i).getPh_number();
@@ -533,9 +534,14 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                             }
                             if (tell == 0) {
-                                contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), "", "null", 2
-                                        , "", ""));
-                            }
+                                if(dataSnapshot.child("info").child("friend").exists())
+                                {
+                                if(dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
+
+                                    contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), "","null" , 2
+                                            , "", ""));
+                                }
+                            }}
                             userAdapter.notifyDataSetChanged();
                         }
 
@@ -580,8 +586,14 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     public void onItemSelected(int index) {
 
         Intent intent = new Intent(MainActivity.this,MessageActivity.class);
-        intent.putExtra("title",contacts1.get(index).getuID());
-        contacts1.get(index).setMessagenum(2);
+        if(contacts1.get(index).getuID().equals(""))
+        {
+            intent.putExtra("title",contacts1.get(index).getPh_number());
+
+        }
+        else {
+            intent.putExtra("title", contacts1.get(index).getuID());
+        }contacts1.get(index).setMessagenum(2);
 
         l=index;
 
