@@ -418,24 +418,50 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
-            int pos = viewHolder.getAdapterPosition();
+                int pos = viewHolder.getAdapterPosition();
 
-            MessageModel model = chats.get(pos);
-            chats.remove(model);
-            Handler.DeleteMessage(model);
-            adapter.notifyDataSetChanged();
-        }
+                MessageModel model = chats.get(pos);
+                chats.remove(model);
+                Handler.DeleteMessage(model);
+                adapter.notifyDataSetChanged();
+            }
 
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 
-            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                    .create()
-                    .decorate();
+                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                        .create()
+                        .decorate();
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
 
+        }
+
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+
+            int dragFlags,swipeFlags;
+            if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 0 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 2
+                    ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -2 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -3)) {
+
+                if(chats.get(viewHolder.getAdapterPosition()).getSender().equals(RecieverPhone)) {
+                    dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+                    swipeFlags = ItemTouchHelper.END;
+                }
+                else
+                {
+                    dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+                    swipeFlags = ItemTouchHelper.START;
+                }
+            }
+            else
+            {
+                dragFlags = 0;
+                swipeFlags =0;
+            }
+
+            return makeMovementFlags(dragFlags, swipeFlags);
         }
     };
 
