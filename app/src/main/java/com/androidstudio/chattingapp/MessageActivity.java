@@ -423,6 +423,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             MessageModel model = chats.get(pos);
             chats.remove(model);
             Handler.DeleteMessage(model);
+            adapter.notifyDataSetChanged();
         }
 
         @Override
