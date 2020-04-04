@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -712,6 +713,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     public void UploadImage(final int index, final MessageModel message)
     {
+       final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).
                 putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -731,6 +733,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                 if(!MessageActivity.this.isDestroyed())
                                 {
                                     chats.get(index).setDownloaded(1);
+                                    mp.start();
 
                                     if(!Messages.isComputingLayout())
                                     {
@@ -742,6 +745,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                     Intent intent = getIntent();
                                     ((Activity) ApplicationClass.MessageActivityContext).finish();
                                     startActivity(intent);
+
+                                    mp.start();
 
                                     overridePendingTransition(0, 0);
                                 }
@@ -855,6 +860,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     public void SendMessage(final int index, final MessageModel message)
     {
+
+        final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
+
         reference.child("users").child(sender).child(RecieverPhone).push().setValue(message.getTime()+message.getMessage().trim()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -867,6 +875,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 if(!MessageActivity.this.isDestroyed())
                 {
                     chats.get(index).setDownloaded(-1);
+                    mp.start();
 
                     if(!Messages.isComputingLayout())
                         adapter.notifyItemChanged(index);
@@ -877,6 +886,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     Intent intent = getIntent();
                     ((Activity) ApplicationClass.MessageActivityContext).finish();
                     startActivity(intent);
+                    mp.start();
 
                     overridePendingTransition(0, 0);
                 }
