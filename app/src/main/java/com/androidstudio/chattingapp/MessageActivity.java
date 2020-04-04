@@ -179,8 +179,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         };
 
 
-        ItemTouchHelper itemTouchHelper= new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(Messages);
+
 
 
         FirebaseDatabase.getInstance().getReference("UserStatus").child(RecieverPhone).addValueEventListener(Status);
@@ -406,6 +405,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         };
 
         reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
+        ItemTouchHelper itemTouchHelper= new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(Messages);
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback= new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
