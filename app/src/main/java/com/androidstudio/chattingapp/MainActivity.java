@@ -604,7 +604,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             intent.putExtra("phone", "+91" + contacts1.get(index).getPh_number());
 
         }
-            startActivity(intent);
+        if(!contacts1.get(index).getUrl().equals("null"))
+            intent.putExtra("profile",contacts1.get(index).getUrl());
+        startActivity(intent);
     }
 
     @Override

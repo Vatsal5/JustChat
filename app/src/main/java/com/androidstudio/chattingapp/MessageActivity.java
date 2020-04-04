@@ -40,6 +40,8 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -81,7 +83,7 @@ import java.util.Map;
 public class MessageActivity extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
     EditText etMessage;
-    ImageView ivSend;
+    ImageView ivSend,ivProfile,ivBack;
     String RecieverPhone;
     FirebaseDatabase database;
     DatabaseReference reference;
@@ -102,6 +104,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     int l;
 
     ChildEventListener imagereceiver;
+    ValueEventListener Status;
 
 
     @Override
@@ -116,7 +119,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         rf = FirebaseStorage.getInstance().getReference("docs/");
         lastpath = "";
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle(null);
 
@@ -131,7 +134,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             title.setText(String.valueOf(getIntent().getStringExtra("title")));
 
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         RecieverPhone = getIntent().getStringExtra("phone");
         sender = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
@@ -139,6 +142,39 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         etMessage = findViewById(R.id.etMessage);
         ivSend = findViewById(R.id.ivSend);
+        ivProfile = findViewById(R.id.ivProfile);
+        ivBack = findViewById(R.id.ivBack);
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MessageActivity.this.finish();
+            }
+        });
+
+        if(getIntent().getStringExtra("profile") !=null)
+            Glide.with(MessageActivity.this).load(getIntent().getStringExtra("profile")).into(ivProfile);
+        else
+            ivProfile.setImageResource(R.drawable.person);
+
+        Status = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue().equals("online")) {
+                    title.setTextColor(getResources().getColor(R.color.Orange));
+                }
+                else {
+                    title.setTextColor(getResources().getColor(R.color.black));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        FirebaseDatabase.getInstance().getReference("UserStatus").child(RecieverPhone).addValueEventListener(Status);
 
         etMessage.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -381,6 +417,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         chats.clear();
         ApplicationClass.SameActivity = false;
         //Handler.close();
+
+        FirebaseDatabase.getInstance().getReference("UserStatus").child(RecieverPhone).removeEventListener(Status);
     }
 
     @Override
