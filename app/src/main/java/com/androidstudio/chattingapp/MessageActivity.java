@@ -430,6 +430,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 chats.remove(model);
                 Handler.DeleteMessage(model);
                 adapter.notifyItemRemoved(pos);
+                adapter.notifyItemRangeChanged(pos-1,1);
             }
 
         @Override
