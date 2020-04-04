@@ -529,6 +529,20 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                             , "", ""));
                                 }
                             }}
+
+                            for(int i=0;i<contacts1.size();i++)
+                            {
+                                if(!contacts1.get(i).getPh_number().substring(0,3).equals("+91"))
+                                {
+                                    contacts1.get(i).setLastmessage(Handler.getLastMessage("+91"+contacts1.get(i).getPh_number()));
+                                    contacts1.get(i).setTime(Handler.getLastMessageTime("+91"+contacts1.get(i).getPh_number()));
+                                }
+                                else
+                                {
+                                    contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
+                                    contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
+                                }
+                            }
                             userAdapter.notifyDataSetChanged();
                         }
 
@@ -554,22 +568,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                     }
                 });
-
-                for(int i=0;i<contacts1.size();i++)
-                {
-                    if(!contacts1.get(i).getPh_number().substring(0,3).equals("+91"))
-                    {
-                        contacts1.get(i).setLastmessage(Handler.getLastMessage("+91"+contacts1.get(i).getPh_number()));
-                        contacts1.get(i).setTime(Handler.getLastMessageTime("+91"+contacts1.get(i).getPh_number()));
-                    }
-                    else
-                    {
-                        contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
-                        contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
-                    }
-                }
-
-                userAdapter.notifyDataSetChanged();
 
             }
 
