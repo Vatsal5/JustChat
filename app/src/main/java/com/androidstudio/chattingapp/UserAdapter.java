@@ -103,11 +103,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue()!=null) {
-                    if (dataSnapshot.getValue(String.class).equals("online"))
+                    if (dataSnapshot.getValue(String.class).equals("online")) {
                         holder.ivBackground.setBackgroundResource(R.drawable.orange);
-                    //holder.ivBackground.setVisibility(View.VISIBLE);
+                        holder.ivBackground.setVisibility(View.VISIBLE);
+                    }
                     else {
                         holder.ivBackground.setBackground(null);
+                        holder.ivBackground.setVisibility(View.GONE);
                     }
                 }
             }
