@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     String currentUserNumber;
     DatabaseReference reference;
 
-    int l,pos;
+    int l,pos,tell=0;
 
     UserAdapter userAdapter;
     int c=0;
@@ -496,8 +496,74 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
                     }
                 }
+
                 userAdapter=new UserAdapter(MainActivity.this,contacts1);
                 lv.setAdapter(userAdapter);
+
+                reference.child("users").child(currentUserNumber).addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        if(!(dataSnapshot.getKey().equals("name") || dataSnapshot.getKey().equals("contact") ||dataSnapshot.getKey().equals("profile") ||
+                                dataSnapshot.getKey().equals("status"))) {
+                          //  Log.d("contacts",dataSnapshot.getKey());
+
+
+                            for (int i = 0; i < contacts1.size(); i++) {
+
+                               // Log.d("contact",contacts1.get(i).getPh_number());
+
+
+
+
+                                if(contacts1.get(i).getPh_number().substring(0,3).equals("+91")) {
+                                    if (contacts1.get(i).getPh_number().equals(dataSnapshot.getKey())) {
+                                        tell = 1;
+
+//                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    String ph="+91"+contacts1.get(i).getPh_number();
+                                    if (ph.equals(dataSnapshot.getKey())) {
+                                        tell = 1;
+                                        break;
+                                    }
+                                }
+
+                            }
+                            if (tell == 0) {
+                                contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), "", "null", 2
+                                        , "", ""));
+                            }
+                            userAdapter.notifyDataSetChanged();
+                        }
+
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
             }
 
             @Override

@@ -118,7 +118,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             }
         });
 
-        holder.tvUserName.setText(list.get(position).getuID());
+        if(list.get(position).getuID().equals(""))
+        {
+            holder.tvUserName.setText(list.get(position).getPh_number());
+
+        }
+        else{
+            holder.tvUserName.setText(list.get(position).getuID());
+
+        }
 
         if(list.get(position).getMessagenum() > 2)
         {

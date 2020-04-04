@@ -750,6 +750,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         reference.child("users").child(sender).child(RecieverPhone).push().setValue(message.getTime()+message.getMessage().trim()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                reference.child("users").child(RecieverPhone).child(sender).child("info").child("friend").setValue("yes");
+                reference.child("users").child(RecieverPhone).child(sender).child("message").setValue("/null");
+
                 message.setDownloaded(-1);
                 Handler.UpdateMessage(message);
 
