@@ -31,8 +31,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/ivStatus"
-                android:layout_width="37dp"
-                android:layout_height="37dp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 android:layout_marginRight="7dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
