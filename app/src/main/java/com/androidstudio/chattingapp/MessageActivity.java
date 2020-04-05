@@ -14,6 +14,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -89,7 +92,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 public class MessageActivity extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
     EmojiEditText etMessage;
-    ImageView ivSend,ivProfile,ivBack;
+    ImageView ivSend,ivProfile,ivBack,ivTyping,ivStatus;
     String RecieverPhone;
     FirebaseDatabase database;
     DatabaseReference reference;
@@ -104,7 +107,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     LinearLayoutManager manager;
     MessageAdapter adapter;
     ArrayList<MessageModel> chats;
-    ChildEventListener chreceiver, chsender;
+    ChildEventListener chreceiver;
 
     DBHandler Handler;
     int l;
@@ -150,6 +153,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ivSend = findViewById(R.id.ivSend);
         ivProfile = findViewById(R.id.ivProfile);
         ivBack = findViewById(R.id.ivBack);
+        ivTyping = findViewById(R.id.ivTyping);
+        ivStatus = findViewById(R.id.ivStatus);
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,11 +171,19 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         Status = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue().equals("online")) {
-                    title.setTextColor(getResources().getColor(R.color.Orange));
+                if(dataSnapshot.getValue().equals("typing")) {
+                    ivStatus.setBackgroundResource(R.drawable.orange);
+                    ivTyping.setVisibility(View.VISIBLE);
+                    Glide.with(MessageActivity.this).load(R.drawable.online).into(ivTyping);
                 }
+
+                else if(dataSnapshot.getValue().equals("online")) {
+                    ivStatus.setBackgroundResource(R.drawable.orange);
+                    ivTyping.setVisibility(View.GONE);
+                }
+
                 else {
-                    title.setTextColor(getResources().getColor(R.color.black));
+                    ivStatus.setBackground(null);
                 }
             }
 
@@ -203,6 +216,31 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     }
                 }
                 return false;
+            }
+        });
+
+        etMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if(etMessage.getText().toString().length()>0)
+                {
+                    FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("typing");
+                }
+                else
+                {
+                    FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("online");
+                }
             }
         });
 
