@@ -172,14 +172,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         else
             ivProfile.setImageResource(R.drawable.person);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(etMessage.getText().toString().trim().equals(message))
-                    FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("online");
-            }
-        },5000);
-
         Status = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -252,6 +244,14 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 {
                     FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("online");
                 }
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(etMessage.getText().toString().trim().equals(message))
+                            FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("online");
+                    }
+                },5000);
             }
         });
 
