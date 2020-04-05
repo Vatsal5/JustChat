@@ -182,6 +182,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 else if(dataSnapshot.getValue().equals("online")) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
+                    tvTyping.setVisibility(View.GONE);
                 }
 
                 else {
