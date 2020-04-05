@@ -68,6 +68,7 @@
                 android:layout_width="90dp"
                 android:layout_height="40dp"
                 android:src="@drawable/online"
+                android:visibility="gone"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>

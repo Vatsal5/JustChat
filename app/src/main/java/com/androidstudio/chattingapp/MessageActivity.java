@@ -115,6 +115,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     DBHandler Handler;
     int l;
+    int flag=0;
 
     ChildEventListener imagereceiver;
     ValueEventListener Status;
@@ -180,6 +181,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 if(dataSnapshot.getValue().equals("typing")) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
                     ivTyping.setVisibility(View.VISIBLE);
+                    Glide.with(MessageActivity.this).load(R.drawable.online).into(ivTyping);
                 }
 
                 else if(dataSnapshot.getValue().equals("online")) {
@@ -238,10 +240,19 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             @Override
             public void afterTextChanged(Editable editable) {
 
-                if(etMessage.getText().toString().trim().length()>0)
+                if(etMessage.getText().toString().trim().length()==0)
                 {
+
+                    flag=0;
+                }
+
+                if(etMessage.getText().toString().trim().length()>0)
+                {  if(!(flag==1)) {
                     FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("typing");
                     message = etMessage.getText().toString().trim();
+                    flag = 1;
+                }
+
                 }
                 else
                 {
@@ -295,7 +306,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         Messages.setHasFixedSize(true);
 
         manager = new LinearLayoutManager(MessageActivity.this);
-        manager.setStackFromEnd(true);
+        manager.setStackFromEnd(false);
         Messages.setLayoutManager(manager);
 
         for (int i = 0; i < chats.size(); i++) {
@@ -331,7 +342,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 Log.d("position",chats.size()-1+"");
 
-                Messages.smoothScrollToPosition(chats.size()-1);
+                Messages.scrollToPosition(chats.size()-1);
             }
 
             @Override
@@ -436,7 +447,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         dataSnapshot.getRef().removeValue();
 
 
-                        adapter.notifyItemRangeInserted(chats.size()-1,1);
+                        adapter.notifyItemInserted(chats.size()-1);
+                       // adapter.notifyItemRangeInserted(chats.size()-1,1);
                         received.start();
                     }
                 }
