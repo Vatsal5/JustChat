@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -92,11 +93,14 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 public class MessageActivity extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
     EmojiEditText etMessage;
-    ImageView ivSend,ivProfile,ivBack,ivTyping,ivStatus;
+    ImageView ivSend,ivProfile,ivBack,ivStatus;
+    TextView tvTyping;
     String RecieverPhone;
     FirebaseDatabase database;
     DatabaseReference reference;
     String lastpath;
+
+    String message;
 
     StorageReference rf;
 
@@ -153,7 +157,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ivSend = findViewById(R.id.ivSend);
         ivProfile = findViewById(R.id.ivProfile);
         ivBack = findViewById(R.id.ivBack);
-        ivTyping = findViewById(R.id.ivTyping);
+        tvTyping = findViewById(R.id.tvTyping);
         ivStatus = findViewById(R.id.ivStatus);
 
         ivBack.setOnClickListener(new View.OnClickListener() {
@@ -168,18 +172,24 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         else
             ivProfile.setImageResource(R.drawable.person);
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(etMessage.getText().toString().trim().equals(message))
+                    FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("online");
+            }
+        },5000);
+
         Status = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue().equals("typing")) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
-                    ivTyping.setVisibility(View.VISIBLE);
-                    Glide.with(MessageActivity.this).load(R.drawable.online).into(ivTyping);
+                    tvTyping.setVisibility(View.VISIBLE);
                 }
 
                 else if(dataSnapshot.getValue().equals("online")) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
-                    ivTyping.setVisibility(View.GONE);
                 }
 
                 else {
@@ -233,9 +243,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             @Override
             public void afterTextChanged(Editable editable) {
 
-                if(etMessage.getText().toString().length()>0)
+                if(etMessage.getText().toString().trim().length()>0)
                 {
                     FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("typing");
+                    message = etMessage.getText().toString().trim();
                 }
                 else
                 {
