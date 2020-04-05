@@ -315,7 +315,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onItemRangeChanged(int positionStart, int itemCount) {
                 super.onItemRangeChanged(positionStart, itemCount);
 
-                Messages.smoothScrollToPosition(positionStart);
+                if(positionStart>0)
+                    Messages.smoothScrollToPosition(positionStart);
             }
 
             @Override
@@ -335,7 +336,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onItemRangeRemoved(int positionStart, int itemCount) {
                 super.onItemRangeRemoved(positionStart, itemCount);
 
-                Messages.smoothScrollToPosition(positionStart);
+                if(positionStart>0)
+                    Messages.smoothScrollToPosition(positionStart);
             }
 
             @Override
@@ -480,8 +482,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 MessageModel model = chats.get(pos);
                 chats.remove(model);
                 Handler.DeleteMessage(model);
-                adapter.notifyItemRemoved(pos);
-                adapter.notifyItemRangeChanged(pos-1,1);
+
+                adapter.notifyDataSetChanged();
             }
 
         @Override
