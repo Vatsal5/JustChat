@@ -65,7 +65,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
-        <androidx.emoji.widget.EmojiAppCompatEditText
+        <androidx.emoji.widget.EmojiEditText
             android:id="@+id/etMessage"
             android:layout_width="0dp"
             android:layout_height="45dp"

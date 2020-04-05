@@ -14,6 +14,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.emoji.widget.EmojiTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -171,7 +172,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
     {
 
        final ImageView iv,ivStatus,ivImage,ivBackground;
-        TextView tvlastmessage,tvMessageNum,tvUserName,time;
+        TextView tvMessageNum,tvUserName,time;
+        EmojiTextView tvlastmessage;
         ConstraintLayout innerConstraintLayout;
 
 

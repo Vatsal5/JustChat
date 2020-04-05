@@ -6,7 +6,7 @@
     android:layout_marginLeft="8dp"
     android:layout_marginBottom="3dp">
 
-    <androidx.emoji.widget.EmojiAppCompatTextView
+    <androidx.emoji.widget.EmojiTextView
         android:id="@+id/tvMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.emoji.widget.EmojiTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -58,7 +59,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvMessage,tvTime;
+        TextView tvTime;
+        EmojiTextView tvMessage;
         ImageView ivImage;
         ProgressBar progress;
         LinearLayout llMessageRight;

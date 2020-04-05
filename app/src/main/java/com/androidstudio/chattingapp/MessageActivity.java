@@ -30,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.emoji.widget.EmojiEditText;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -87,7 +88,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 public class MessageActivity extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
-    EditText etMessage;
+    EmojiEditText etMessage;
     ImageView ivSend,ivProfile,ivBack;
     String RecieverPhone;
     FirebaseDatabase database;
