@@ -38,6 +38,7 @@ import androidx.emoji.widget.EmojiEditText;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -93,8 +94,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 public class MessageActivity extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
     EmojiEditText etMessage;
-    ImageView ivSend,ivProfile,ivBack,ivStatus;
-    TextView tvTyping;
+    ImageView ivSend,ivProfile,ivBack,ivStatus,ivTyping;
     String RecieverPhone;
     FirebaseDatabase database;
     DatabaseReference reference;
@@ -157,7 +157,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ivSend = findViewById(R.id.ivSend);
         ivProfile = findViewById(R.id.ivProfile);
         ivBack = findViewById(R.id.ivBack);
-        tvTyping = findViewById(R.id.tvTyping);
+        ivTyping = findViewById(R.id.ivTyping);
         ivStatus = findViewById(R.id.ivStatus);
 
         ivBack.setOnClickListener(new View.OnClickListener() {
@@ -166,6 +166,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 MessageActivity.this.finish();
             }
         });
+
+        Glide.with(MessageActivity.this).load(R.drawable.online).into(ivTyping);
 
         if(getIntent().getStringExtra("profile") !=null)
             Glide.with(MessageActivity.this).load(getIntent().getStringExtra("profile")).into(ivProfile);
@@ -177,12 +179,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue().equals("typing")) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
-                    tvTyping.setVisibility(View.VISIBLE);
+                    ivTyping.setVisibility(View.VISIBLE);
                 }
 
                 else if(dataSnapshot.getValue().equals("online")) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
-                    tvTyping.setVisibility(View.GONE);
+                    ivTyping.setVisibility(View.GONE);
                 }
 
                 else {
@@ -315,8 +317,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onItemRangeChanged(int positionStart, int itemCount) {
                 super.onItemRangeChanged(positionStart, itemCount);
 
-                if(positionStart>0)
-                    Messages.smoothScrollToPosition(positionStart);
+                Messages.smoothScrollToPosition(positionStart);
             }
 
             @Override
@@ -326,18 +327,16 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
-
-                Messages.smoothScrollToPosition(adapter.getItemCount()-1);
-
                 super.onItemRangeInserted(positionStart, itemCount);
+
+                Log.d("position",chats.size()-1+"");
+
+                Messages.smoothScrollToPosition(chats.size()-1);
             }
 
             @Override
             public void onItemRangeRemoved(int positionStart, int itemCount) {
                 super.onItemRangeRemoved(positionStart, itemCount);
-
-                if(positionStart>0)
-                    Messages.smoothScrollToPosition(positionStart);
             }
 
             @Override
@@ -350,7 +349,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         chats.addAll(Handler.getMessages(RecieverPhone));
         if(chats.size()>0)
-            adapter.notifyItemRangeInserted(0,chats.size());
+            adapter.notifyItemInserted(chats.size()-1);
 //        if(chats.size()!=0)
 //            adapter.notifyItemRangeInserted(0,chats.size());
 
@@ -483,7 +482,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 chats.remove(model);
                 Handler.DeleteMessage(model);
 
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemRemoved(pos);
             }
 
         @Override
@@ -494,8 +493,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         .decorate();
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-
-
         }
 
         @Override

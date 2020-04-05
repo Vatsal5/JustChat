@@ -59,23 +59,19 @@
                 android:text="Vatsal"
                 android:layout_marginTop="4dp"
                 app:layout_constraintLeft_toRightOf="@id/ivStatus"
-                app:layout_constraintBottom_toTopOf="@id/tvTyping"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginLeft="4dp" />
 
-            <TextView
-                android:id="@+id/tvTyping"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#ff6e40"
-                android:textSize="15sp"
+            <ImageView
+                android:id="@+id/ivTyping"
                 android:visibility="gone"
-                android:text="typing..."
-                app:layout_constraintLeft_toRightOf="@id/ivStatus"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title"
-                android:layout_marginLeft="8dp"
-                android:textStyle="bold"/>
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/online"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
