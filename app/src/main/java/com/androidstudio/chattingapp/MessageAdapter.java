@@ -37,6 +37,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int MSG_TXT_RIGHT = 1;
     public static final int MSG_IMG_LEFT = 2;
     public static final int MSG_IMG_RIGHT = 3;
+    public static final int DATE = 4;
 
     FirebaseUser user;
     Context context;
@@ -59,7 +60,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTime;
+        TextView tvTime,tvDate;
         EmojiTextView tvMessage;
         ImageView ivImage;
         ProgressBar progress;
@@ -73,6 +74,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             progress = itemView.findViewById(R.id.progress);
             tvTime = itemView.findViewById(R.id.tvTime);
             llMessageRight = itemView.findViewById(R.id.llMessageRight);
+            tvDate = itemView.findViewById(R.id.tvDate);
         }
     }
 
@@ -88,7 +90,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         } else if (viewType == MSG_TXT_LEFT) {
             View v = LayoutInflater.from(context).inflate(R.layout.message_left, parent, false);
             return new ViewHolder(v);
-        } else {
+        }
+        else if (viewType == DATE) {
+            View v = LayoutInflater.from(context).inflate(R.layout.date_layout, parent, false);
+            return new ViewHolder(v);
+        }
+        else {
             View v = LayoutInflater.from(context).inflate(R.layout.message_right, parent, false);
             return new ViewHolder(v);
         }
@@ -174,7 +181,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 holder.llMessageRight.setBackgroundResource(R.drawable.background_right);
         }
 
+        if(holder.tvTime!=null)
         holder.tvTime.setText(messages.get(position).getTime());
+
+        if(holder.tvDate !=null)
+            holder.tvDate.setText(messages.get(position).getMessage());
     }
 
     @Override
@@ -193,13 +204,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 return MSG_TXT_RIGHT;
             }
         }
-        else
+        else if(!messages.get(position).getSender().equals(user.getPhoneNumber()) && !messages.get(position).getSender().equals("null"))
         {
             if (messages.get(position).getType().equals("image")) {
                 return MSG_IMG_LEFT;
             } else if (messages.get(position).getType().equals("text")) {
                 return MSG_TXT_LEFT;
             }
+        }
+        else
+        {
+            return DATE;
         }
         return -1;
     }

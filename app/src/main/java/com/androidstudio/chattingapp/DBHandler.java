@@ -19,6 +19,7 @@ public class DBHandler
     private static final String KEY_TYPE = "type";
     private static final String KEY_ISDOWNLOADED = "downloaded";
     private static final String KEY_TIME = "time";
+    private static final String KEY_DATE = "date";
 
     private static final String DATABASE_NAME = "CHATS_DATABASE";
     private static final String DATABASE_TABLE = "CHATS_TABLE";
@@ -44,7 +45,7 @@ public class DBHandler
         public void onCreate(SQLiteDatabase sqLiteDatabase)
         {
             String query = "CREATE TABLE "+DATABASE_TABLE+" ("+KEY_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+KEY_SENDER+" TEXT NOT NULL, "+
-                    KEY_RECEIVER+" TEXT NOT NULL, "+KEY_MESSAGE+" TEXT NOT NULL, "+KEY_TYPE+" TEXT NOT NULL, "+KEY_ISDOWNLOADED+" TINYINT DEFAULT NULL, "+KEY_TIME+" TEXT NOT NULL);";
+                    KEY_RECEIVER+" TEXT NOT NULL, "+KEY_MESSAGE+" TEXT NOT NULL, "+KEY_TYPE+" TEXT NOT NULL, "+KEY_ISDOWNLOADED+" TINYINT DEFAULT NULL, "+KEY_TIME+" TEXT NOT NULL, "+KEY_DATE+" TEXT NOT NULL);";
 
             sqLiteDatabase.execSQL(query);
         }
@@ -80,6 +81,7 @@ public class DBHandler
         contentValues.put(KEY_TYPE,messageModel.getType());
         contentValues.put(KEY_ISDOWNLOADED,messageModel.getDownloaded());
         contentValues.put(KEY_TIME,messageModel.getTime());
+        contentValues.put(KEY_DATE,messageModel.getDate());
 
         database.insert(DATABASE_TABLE,null,contentValues);
 //        if(messageModel.getDownloaded())
@@ -105,11 +107,12 @@ public class DBHandler
         int iType = c.getColumnIndex(KEY_TYPE);
         int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
         int iTime = c.getColumnIndex(KEY_TIME);
+        int iDate = c.getColumnIndex(KEY_DATE);
 
         for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
         {
             if((c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver)))
-                messages.add(new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime)));
+                messages.add(new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate)));
         }
         c.close();
         return messages;
@@ -126,6 +129,7 @@ public class DBHandler
         values.put(KEY_TYPE,message.getType());
         values.put(KEY_ISDOWNLOADED,message.getDownloaded());
         values.put(KEY_TIME,message.getTime());
+        values.put(KEY_DATE,message.getDate());
 
         return database.update(DATABASE_TABLE,values,KEY_ID+"=?",new String[] {message.getId()+""});
     }
@@ -138,7 +142,7 @@ public class DBHandler
     public String getLastMessage(String receiver)
     {
         MessageModel model=null;
-        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME};
+        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE};
         Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
 
         int iId = c.getColumnIndex(KEY_ID);
@@ -148,11 +152,12 @@ public class DBHandler
         int iType = c.getColumnIndex(KEY_TYPE);
         int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
         int iTime = c.getColumnIndex(KEY_TIME);
+        int iDate = c.getColumnIndex(KEY_DATE);
 
         for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
         {
             if((c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver))) {
-                model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime));
+                model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate));
             }
         }
 
@@ -173,7 +178,7 @@ public class DBHandler
     public String getLastMessageTime(String receiver)
     {
         MessageModel model=null;
-        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME};
+        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE};
         Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
 
         int iId = c.getColumnIndex(KEY_ID);
@@ -183,11 +188,12 @@ public class DBHandler
         int iType = c.getColumnIndex(KEY_TYPE);
         int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
         int iTime = c.getColumnIndex(KEY_TIME);
+        int iDate = c.getColumnIndex(KEY_TIME);
 
         for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
         {
             if((c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver))) {
-                model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime));
+                model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate));
             }
         }
 

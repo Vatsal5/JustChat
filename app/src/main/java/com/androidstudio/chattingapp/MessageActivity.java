@@ -243,7 +243,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 if(etMessage.getText().toString().trim().length()==0)
                 {
-
                     flag=0;
                 }
 
