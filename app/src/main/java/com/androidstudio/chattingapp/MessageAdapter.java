@@ -104,7 +104,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull final MessageAdapter.ViewHolder holder, final int position) {
 
-        if(holder.ivImage!=null) {
+        if (holder.ivImage != null) {
             holder.ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -121,15 +121,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             Activity.downloadImage(position);
 
-        }
-        else if (messages.get(position).getDownloaded() == 1) // image is sent or downloaded successfully
+        } else if (messages.get(position).getDownloaded() == 1) // image is sent or downloaded successfully
         {
             holder.progress.setVisibility(View.GONE);
 
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.error(R.drawable.error);
 
-            if(isValidContextForGlide(context.getApplicationContext())) {
+            if (isValidContextForGlide(context.getApplicationContext())) {
                 Glide.with(context).setDefaultRequestOptions(requestOptions).load(messages.get(position).getMessage()).addListener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -143,8 +142,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     }
                 }).into(holder.ivImage);
 
-                if(messages.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
-                {
+                if (messages.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                     holder.ivImage.setBackgroundResource(R.drawable.background_right);
                 }
             }
@@ -156,36 +154,38 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
 
             Glide.with(context.getApplicationContext()).load(messages.get(position).getMessage()).into(holder.ivImage);
-        }
-
-        else if(messages.get(position).getDownloaded() == -2) // when text message is being sent
+        } else if (messages.get(position).getDownloaded() == -2) // when text message is being sent
         {
             holder.tvMessage.setText(messages.get(position).getMessage());
             holder.llMessageRight.setBackgroundResource(R.drawable.orange2);
             Activity.sentTextMessage(position);
-        }
-
-        else if(messages.get(position).getDownloaded() == -3) // when request has been sent to listener
+        } else if (messages.get(position).getDownloaded() == -3) // when request has been sent to listener
         {
             holder.tvMessage.setText(messages.get(position).getMessage());
 
-            if(holder.llMessageRight !=null)
+            if (holder.llMessageRight != null)
                 holder.llMessageRight.setBackgroundResource(R.drawable.orange2);
-        }
-
-        else if(messages.get(position).getDownloaded() == -1) // if text message is sent or received successfully
+        } else if (messages.get(position).getDownloaded() == -1) // if text message is sent or received successfully
         {
             holder.tvMessage.setText(messages.get(position).getMessage());
 
-            if(holder.llMessageRight !=null)
+            if (holder.llMessageRight != null)
                 holder.llMessageRight.setBackgroundResource(R.drawable.background_right);
         }
 
-        if(holder.tvTime!=null)
-        holder.tvTime.setText(messages.get(position).getTime());
+        if (holder.tvTime != null)
+            holder.tvTime.setText(messages.get(position).getTime());
 
-        if(holder.tvDate !=null)
-            holder.tvDate.setText(messages.get(position).getMessage());
+        if (holder.tvDate != null) {
+
+            long millis = System.currentTimeMillis();
+            java.sql.Date date = new java.sql.Date(millis);
+
+            if(messages.get(position).getDate().equals(date.toString()))
+                holder.tvDate.setText("Today");
+            else
+                holder.tvDate.setText(newDate(messages.get(position).getDate()));
+        }
     }
 
     @Override
@@ -204,7 +204,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 return MSG_TXT_RIGHT;
             }
         }
-        else if(!messages.get(position).getSender().equals(user.getPhoneNumber()) && !messages.get(position).getSender().equals("null"))
+        if(!messages.get(position).getSender().equals(user.getPhoneNumber()) && !messages.get(position).getSender().equals("null"))
         {
             if (messages.get(position).getType().equals("image")) {
                 return MSG_IMG_LEFT;
@@ -212,7 +212,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 return MSG_TXT_LEFT;
             }
         }
-        else
+        if(messages.get(position).getType().equals("Date"))
         {
             return DATE;
         }
@@ -232,5 +232,66 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         return true;
     }
 
+    public String newDate(String date)
+    {
+        String newDate;
+
+        newDate = date.substring(8,10);
+
+        switch (date.substring(5,7))
+        {
+            case "01":
+                newDate = newDate+" January ";
+                break;
+
+            case "02":
+                newDate = newDate+" February ";
+                break;
+
+            case "03":
+                newDate = newDate+" March ";
+                break;
+
+            case "04":
+                newDate = newDate+" April ";
+                break;
+
+            case "05":
+                newDate = newDate+" May ";
+                break;
+
+            case "06":
+                newDate = newDate+" June ";
+                break;
+
+            case "07":
+                newDate = newDate+" July ";
+                break;
+
+            case "08":
+                newDate = newDate+" August ";
+                break;
+
+            case "09":
+                newDate = newDate+" September ";
+                break;
+
+            case "10":
+                newDate = newDate+" October ";
+                break;
+
+            case "11":
+                newDate = newDate+" November ";
+                break;
+
+            case "12":
+                newDate = newDate+" December ";
+                break;
+        }
+
+        newDate = newDate+date.substring(0,4);
+
+        return newDate;
+    }
 
 }

@@ -22,7 +22,6 @@ public class ApplicationClass extends Application
 {
 
     public static Context MessageActivityContext;
-    public static boolean SameActivity = false; // to check that if activity is same in which text message is sent
 
     @Override
     public void onCreate() {
