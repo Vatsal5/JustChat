@@ -395,7 +395,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 chats.add(messageModel);
 
-                adapter.notifyItemInserted(chats.size()-1);
+                adapter.notifyDataSetChanged();
+               // adapter.notifyItemInserted(chats.size()-1);
                 received.start();
             }
 
