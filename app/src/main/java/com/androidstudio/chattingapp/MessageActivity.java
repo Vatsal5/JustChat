@@ -552,7 +552,29 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 chats.remove(model);
                 Handler.DeleteMessage(model);
 
-                adapter.notifyItemRemoved(pos);
+                if(pos<=chats.size()-1) {
+                    if (!chats.get(pos).getDate().equals(model.getDate())) {
+                        if (chats.get(pos - 1).getType().equals("Date")) {
+                            chats.remove(pos - 1);
+                        }
+                    }
+                    adapter.notifyItemRemoved(pos);
+                }
+
+                else {
+                    if(chats.size()==1)
+                    {
+                        chats.remove(0);
+                    }
+                    else
+                    {
+                        if (chats.get(pos - 2).getType().equals("Date")) {
+                            chats.remove(pos - 2);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+
             }
 
         @Override
@@ -570,7 +592,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
             int dragFlags,swipeFlags;
             if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 0 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 2
-                    ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -2 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -3)) {
+                    ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -2 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -3 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 60)) {
 
                 if(chats.get(viewHolder.getAdapterPosition()).getSender().equals(RecieverPhone)) {
                     dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
