@@ -547,35 +547,40 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
                 int pos = viewHolder.getAdapterPosition();
+            MessageModel model = chats.get(pos);
 
-                MessageModel model = chats.get(pos);
-                chats.remove(model);
-                Handler.DeleteMessage(model);
 
-                if(pos<=chats.size()-1) {
-                    if (!chats.get(pos).getDate().equals(model.getDate())) {
-                        if (chats.get(pos - 1).getType().equals("Date")) {
-                            chats.remove(pos - 1);
-                        }
-                    }
-                    adapter.notifyItemRemoved(pos);
+
+            if(pos<chats.size()-1) {
+                if (chats.get(pos - 1).getSender().equals("null") && chats.get(pos + 1).getSender().equals("null")) {
+                    chats.remove(model);
+                    Handler.DeleteMessage(model);
+                    model = chats.get(pos - 1);
+                    chats.remove(model);
+                    Handler.DeleteMessage(model);
                 }
-
-                else {
-                    if(chats.size()==1)
-                    {
-                        chats.remove(0);
-                    }
-                    else
-                    {
-                        if (chats.get(pos - 2).getType().equals("Date")) {
-                            chats.remove(pos - 2);
-                        }
-                    }
-                    adapter.notifyDataSetChanged();
+                else{
+                    chats.remove(model);
+                    Handler.DeleteMessage(model);
+                }
+            }
+            else{
+                if (chats.get(pos - 1).getSender().equals("null") ) {
+                    chats.remove(model);
+                    Handler.DeleteMessage(model);
+                    model = chats.get(pos - 1);
+                    chats.remove(model);
+                    Handler.DeleteMessage(model);
+                }
+                else{
+                    chats.remove(model);
+                    Handler.DeleteMessage(model);
                 }
 
             }
+            adapter.notifyDataSetChanged();
+
+        }
 
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
