@@ -166,6 +166,8 @@ public class DBHandler
                 return model.getMessage();
             else if (model.getType().equals("image"))
                 return " ";
+            else if(model.getType().equals("Date"))
+                return "null";
         }
         else
         {
