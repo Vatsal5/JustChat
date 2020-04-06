@@ -11,6 +11,7 @@ public class MessageModel
     private String type;
     private int isDownloaded;
     private String time;
+    private String date;
 
     public MessageModel(){
         this.id = -1;
@@ -20,9 +21,10 @@ public class MessageModel
         this.type = null;
         this.isDownloaded = -1;
         this.time = null;
+        this.date = null;
     };
 
-    public MessageModel(int id,String sender, String reciever, String message,String type,int isDownloaded,String time) {
+    public MessageModel(int id,String sender, String reciever, String message,String type,int isDownloaded,String time,String date) {
         this.id = id;
         this.sender = sender;
         this.reciever = reciever;
@@ -30,6 +32,15 @@ public class MessageModel
         this.type = type;
         this.isDownloaded = isDownloaded;
         this.time = time;
+        this.date=date;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getSender() {

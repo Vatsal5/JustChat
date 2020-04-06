@@ -84,6 +84,7 @@ import java.net.URL;
 import java.security.Permission;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -286,8 +287,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                     Date date=new Date();
                     SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
+                    long millis=System.currentTimeMillis();
+                    java.sql.Date date1=new java.sql.Date(millis);
 
-                    MessageModel model = new MessageModel(-1, sender, RecieverPhone, etMessage.getText().toString(), "text", -2,simpleDateFormat.format(date).substring(0,5));
+                    MessageModel model = new MessageModel(-1, sender, RecieverPhone, etMessage.getText().toString(), "text", -2,simpleDateFormat.format(date).substring(0,5),date1.toString());
                     etMessage.setText(null);
 
                     int id = Handler.addMessage(model);
@@ -376,13 +379,14 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         imagereceiver = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                String time;
+                String time,date;
 
                 MediaPlayer received = MediaPlayer.create(MessageActivity.this, R.raw.received);
 
                 time=dataSnapshot.getValue(String.class).substring(0,5);
+                date=dataSnapshot.getValue(String.class).substring(5,15);
 
-                MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(5), "image", 0,time);
+                MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(15), "image", 0,time,date);
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 
                 int id = Handler.addMessage(messageModel);
@@ -427,7 +431,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
-                String time;
+                String time, date;
 
                 MediaPlayer received = MediaPlayer.create(MessageActivity.this, R.raw.received);
 
@@ -439,11 +443,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     } else if (!(dataSnapshot.getKey().equals("info"))) {
 
                         time=dataSnapshot.getValue().toString().substring(0,5);
+                        date=dataSnapshot.getValue().toString().substring(5,15);
 
                         reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 
-                        int id = Handler.addMessage(new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue().toString().substring(5), "text", -1,time));
-                        chats.add(new MessageModel(id, RecieverPhone, sender, dataSnapshot.getValue().toString().substring(5), "text", -1,time));
+                        int id = Handler.addMessage(new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue().toString().substring(15), "text", -1,time,date));
+                        chats.add(new MessageModel(id, RecieverPhone, sender, dataSnapshot.getValue().toString().substring(15), "text", -1,time,date));
                         dataSnapshot.getRef().removeValue();
 
 
@@ -766,7 +771,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             Date date=new Date();
             SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
 
-            MessageModel messageModel = new MessageModel(-1, sender, RecieverPhone, uri.toString(), "image", 2,simpleDateFormat.format(date).substring(0,5));
+            long millis=System.currentTimeMillis();
+            java.sql.Date date1=new java.sql.Date(millis);
+
+            MessageModel messageModel = new MessageModel(-1, sender, RecieverPhone, uri.toString(), "image", 2,simpleDateFormat.format(date).substring(0,5),date1.toString());
 
             int id = Handler.addMessage(messageModel);
             messageModel.setId(id);
@@ -782,6 +790,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     public void UploadImage(final int index, final MessageModel message)
     {
        final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
+
+        long millis=System.currentTimeMillis();
+       final java.sql.Date date=new java.sql.Date(millis);
+
         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).
                 putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -793,7 +805,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
-                                        child("images").push().setValue(message.getTime()+uri.toString());
+                                        child("images").push().setValue(message.getTime()+date.toString()+uri.toString());
 
                                 message.setDownloaded(1);
                                 Handler.UpdateMessage(message);
@@ -930,8 +942,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     {
 
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
+        long millis=System.currentTimeMillis();
+        java.sql.Date date=new java.sql.Date(millis);
 
-        reference.child("users").child(sender).child(RecieverPhone).push().setValue(message.getTime()+message.getMessage().trim()).addOnSuccessListener(new OnSuccessListener<Void>() {
+
+        reference.child("users").child(sender).child(RecieverPhone).push().setValue(message.getTime()+date.toString() +message.getMessage().trim()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 reference.child("users").child(RecieverPhone).child(sender).child("info").child("friend").setValue("yes");
