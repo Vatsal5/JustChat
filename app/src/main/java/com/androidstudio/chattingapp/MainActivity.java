@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     DatabaseReference reference;
 
     int l,pos;
+    boolean flag=false;
 
     UserAdapter userAdapter;
     int c=0;
@@ -484,8 +485,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 // both the arraylists got clone
                 //Toast.makeText(MainActivity.this,contacts2.size()+"",Toast.LENGTH_LONG).show();
 
-                userAdapter=new UserAdapter(MainActivity.this,contacts1);
-                lv.setAdapter(userAdapter);
+
 
                 reference.child("users").child(currentUserNumber).addChildEventListener(new ChildEventListener() {
                     @Override
@@ -543,7 +543,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                     contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
                                 }
                             }
-                            userAdapter.notifyDataSetChanged();
+                            userAdapter=new UserAdapter(MainActivity.this,contacts1);
+                            lv.setAdapter(userAdapter);
+
                         }
 
                     }
@@ -584,6 +586,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     public void onItemSelected(int index) {
 
         Intent intent = new Intent(MainActivity.this,MessageActivity.class);
+        flag=true;
         if(contacts1.get(index).getuID().equals(""))
         {
             intent.putExtra("title",contacts1.get(index).getPh_number());
@@ -656,7 +659,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onRestart() {
         super.onRestart();
 
-        contacts1.get(l).setMessagenum(2);
+        if(flag==true)
+        {
+            flag=false;
+            contacts1.get(l).setMessagenum(2);
+        }
         getcontact();
     }
     public void makecall()
