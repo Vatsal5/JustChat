@@ -106,11 +106,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
                 if(dataSnapshot.getValue()!=null) {
                     if (dataSnapshot.getValue(String.class).equals("online") || dataSnapshot.getValue(String.class).equals("typing")) {
                         holder.ivBackground.setBackgroundResource(R.drawable.orange);
-                        holder.ivBackground.setVisibility(View.VISIBLE);
                     }
                     else {
                         holder.ivBackground.setBackground(null);
-                        holder.ivBackground.setVisibility(View.GONE);
                     }
                 }
             }
