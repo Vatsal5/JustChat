@@ -97,7 +97,7 @@ public class DBHandler
     public ArrayList<MessageModel> getMessages(String receiver)
     {
         ArrayList<MessageModel> messages = new ArrayList<>();
-        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME};
+        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE};
         Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
 
         int iId = c.getColumnIndex(KEY_ID);
