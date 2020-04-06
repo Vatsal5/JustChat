@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 }
 
             }
-        },2000);
+        },3000);
 
         ItemTouchHelper itemTouchHelper= new ItemTouchHelper(simpleCallback);
 
