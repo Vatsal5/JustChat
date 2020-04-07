@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -15,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -222,6 +224,15 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                             CropImage.startPickImageActivity(MessageActivity.this);
                         return true;
                     }
+
+                    if(event.getRawX() >= (etMessage.getLeft() - etMessage.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width()))
+                    {
+                        Intent intent = new Intent();
+                        intent.setType("video/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent,"Select Video"),100);
+                        return true;
+                    }
                 }
                 return false;
             }
@@ -241,31 +252,18 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             @Override
             public void afterTextChanged(Editable editable) {
 
-                if(etMessage.getText().toString().trim().length()==0)
-                {
-                    flag=0;
-                }
+                if (etMessage.getText().toString().trim().length() > 0) {
 
-                if(etMessage.getText().toString().trim().length()>0)
-                {  if(!(flag==1)) {
-                    FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("typing "+RecieverPhone);
-                    message = etMessage.getText().toString().trim();
-                    flag = 1;
-                }
+                    if (!(flag == 1)) {
+                        FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("typing " + RecieverPhone);
+                        flag = 1;
+                    }
 
-                }
-                else
-                {
+                } else {
+                    flag = 0;
                     FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("online");
                 }
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(etMessage.getText().toString().trim().equals(message))
-                            FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("online");
-                    }
-                },5000);
             }
         });
 
@@ -877,6 +875,34 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
             adapter.notifyItemInserted(chats.size()-1);
     }
+
+        if(requestCode==100)
+        {
+            if(resultCode==RESULT_OK)
+            {
+                Uri selectedImageUri = data.getData();
+
+                // OI FILE Manager
+                String filemanagerstring = selectedImageUri.getPath();
+
+                // MEDIA GALLERY
+                String selectedImagePath = getPath(selectedImageUri);
+            }
+        }
+    }
+
+    public String getPath(Uri uri) {
+        String[] projection = { MediaStore.Video.Media.DATA };
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
+            // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
+            int column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } else
+            return null;
     }
 
     public void UploadImage(final int index, final MessageModel message)
