@@ -145,9 +145,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         //getSupportActionBar().setTitle(getIntent().getStringExtra("title"));
 
-
-
-            title.setText(String.valueOf(getIntent().getStringExtra("title")));
+        title.setText(String.valueOf(getIntent().getStringExtra("title")));
 
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
