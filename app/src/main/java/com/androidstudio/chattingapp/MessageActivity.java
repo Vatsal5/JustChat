@@ -214,18 +214,15 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 final int DRAWABLE_BOTTOM = 3;
 
                 if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getRawX() >= (etMessage.getRight() - etMessage.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width()))
-                    {
-                        if(ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
-                        {
-                            ActivityCompat.requestPermissions(MessageActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},5);
-                        }
-                        else
+                    if (event.getRawX() >= (etMessage.getRight() - etMessage.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(MessageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 5);
+                        } else
                             CropImage.startPickImageActivity(MessageActivity.this);
                         return true;
                     }
 
-                    if(event.getRawX() >= (etMessage.getLeft() - etMessage.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width()))
+                    if(event.getRawX() <= (etMessage.getLeft() + etMessage.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width()))
                     {
                         Intent intent = new Intent();
                         intent.setType("video/*");
@@ -234,6 +231,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         return true;
                     }
                 }
+
                 return false;
             }
         });
