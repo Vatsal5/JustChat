@@ -48,6 +48,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public void showImage(int index);
         public void downloadImage(int index);
         public void sentTextMessage(int index);
+        public void sendImage(int index);
     }
 
     static ImageSelected Activity;
@@ -154,7 +155,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
 
             Glide.with(context.getApplicationContext()).load(messages.get(position).getMessage()).into(holder.ivImage);
-        } else if (messages.get(position).getDownloaded() == -2) // when text message is being sent
+             Activity.sendImage(position);
+        }
+        else if (messages.get(position).getDownloaded() == 3) // when sender sends the image
+        {
+
+            holder.progress.setVisibility(View.VISIBLE);
+            holder.ivImage.setBackgroundResource(R.drawable.orange2);
+
+            Glide.with(context.getApplicationContext()).load(messages.get(position).getMessage()).into(holder.ivImage);
+        }else if (messages.get(position).getDownloaded() == -2) // when text message is being sent
         {
             holder.tvMessage.setText(messages.get(position).getMessage());
             holder.llMessageRight.setBackgroundResource(R.drawable.orange2);

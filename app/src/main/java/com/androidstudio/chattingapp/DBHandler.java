@@ -223,4 +223,28 @@ public class DBHandler
         return id;
     }
 
+    public ArrayList<MessageModel> getAllMessages()
+    {
+        ArrayList<MessageModel> messages = new ArrayList<>();
+        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE};
+        Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
+
+        int iId = c.getColumnIndex(KEY_ID);
+        int iSender = c.getColumnIndex(KEY_SENDER);
+        int iReceiver = c.getColumnIndex(KEY_RECEIVER);
+        int iMessage = c.getColumnIndex(KEY_MESSAGE);
+        int iType = c.getColumnIndex(KEY_TYPE);
+        int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
+        int iTime = c.getColumnIndex(KEY_TIME);
+        int iDate = c.getColumnIndex(KEY_DATE);
+
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
+        {
+                messages.add(new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate)));
+        }
+        c.close();
+        return messages;
+
+    }
+
 }

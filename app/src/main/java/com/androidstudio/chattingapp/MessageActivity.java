@@ -121,6 +121,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     ChildEventListener imagereceiver;
     ValueEventListener Status;
 
+    OnCompleteListener SendMesage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -877,14 +878,20 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             chats.add(messageModel);
 
             adapter.notifyItemInserted(chats.size()-1);
-
-            UploadImage(chats.size() - 1,messageModel);
     }
     }
 
     public void UploadImage(final int index, final MessageModel message)
     {
        final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
+
+       message.setDownloaded(3);
+       Handler.UpdateMessage(message);
+
+       chats.get(index).setDownloaded(3);
+
+       if(!Messages.isComputingLayout())
+           adapter.notifyDataSetChanged();
 
         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).
                 putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -909,7 +916,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                                     if(!Messages.isComputingLayout())
                                     {
-                                        adapter.notifyItemChanged(index);
+                                        adapter.notifyDataSetChanged();
                                     }
                                 }
 
@@ -948,6 +955,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     @Override
     public void sentTextMessage(final int index) {
         SendMessage(index,chats.get(index));
+    }
+
+    @Override
+    public void sendImage(int index) {
+        UploadImage(index,chats.get(index));
     }
 
     //***********************************************************************************************************************************************
@@ -1014,7 +1026,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                     if(!Messages.isComputingLayout())
                     {
-                        adapter.notifyItemChanged(index);
+                        adapter.notifyDataSetChanged();
                     }
                 }
 
@@ -1033,14 +1045,23 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     public void SendMessage(final int index, final MessageModel message)
     {
 
+        message.setDownloaded(-3);
+        Handler.UpdateMessage(message);
+
+        chats.get(index).setDownloaded(-3);
+
+        if(!Messages.isComputingLayout())
+                adapter.notifyDataSetChanged();
+
+
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
         long millis=System.currentTimeMillis();
         java.sql.Date date=new java.sql.Date(millis);
 
 
-        reference.child("users").child(sender).child(RecieverPhone).push().setValue(message.getTime()+date.toString() +message.getMessage().trim()).addOnSuccessListener(new OnSuccessListener<Void>() {
+        SendMesage = new OnCompleteListener() {
             @Override
-            public void onSuccess(Void aVoid) {
+            public void onComplete(@NonNull Task task) {
                 reference.child("users").child(RecieverPhone).child(sender).child("info").child("friend").setValue("yes");
                 reference.child("users").child(RecieverPhone).child(sender).child("message").setValue("/null");
 
@@ -1053,7 +1074,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     mp.start();
 
                     if(!Messages.isComputingLayout())
-                        adapter.notifyItemChanged(index);
+                        adapter.notifyDataSetChanged();
                 }
 
                 if(MessageActivity.this.isDestroyed()  && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed())
@@ -1066,18 +1087,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     overridePendingTransition(0, 0);
                 }
             }
-        });
+        };
 
-        message.setDownloaded(-3);
-        Handler.UpdateMessage(message);
-
-        if(MessageActivity.this.isDestroyed())
-        {
-            chats.get(index).setDownloaded(-3);
-
-            if(!Messages.isComputingLayout())
-                adapter.notifyItemChanged(index);
-        }
+        reference.child("users").child(sender).child(RecieverPhone).push().setValue(message.getTime()+date.toString() +message.getMessage().trim()).addOnCompleteListener(SendMesage);
     }
 
 

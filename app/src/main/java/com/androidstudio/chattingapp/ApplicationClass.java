@@ -18,10 +18,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.logging.Handler;
+
 public class ApplicationClass extends Application
 {
-
     public static Context MessageActivityContext;
+    public static DBHandler handler;
 
     @Override
     public void onCreate() {
@@ -30,6 +33,23 @@ public class ApplicationClass extends Application
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         FirebaseDatabase.getInstance().getReference("users").keepSynced(true);
 
+        handler = new DBHandler(ApplicationClass.this);
+        handler.Open();
+
+        ArrayList<MessageModel> messages = new ArrayList<>();
+        messages.addAll(handler.getAllMessages());
+
+        for(int i=0;i<messages.size();i++)
+        {
+            MessageModel model = messages.get(i);
+            if(messages.get(i).getDownloaded() ==3)
+            {
+                model.setDownloaded(2);
+                handler.UpdateMessage(model);
+            }
+
+        }
+        handler.close();
 
         EmojiCompat.Config config = new BundledEmojiCompatConfig(this);
         EmojiCompat.init(config);
