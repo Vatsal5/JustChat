@@ -42,7 +42,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int MSG_TXT_RIGHT = 1;
     public static final int MSG_IMG_LEFT = 2;
     public static final int MSG_IMG_RIGHT = 3;
-    public static final int MSG_VIDEO_LEFT = 4;
+    public static final int MSG_VIDEO_LEFT = 6;
     public static final int MSG_VIDEO_RIGHT = 5;
     public static final int DATE = 4;
 
@@ -213,8 +213,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         else if(messages.get(position).getDownloaded()==101) // when video is received  and yet to be downloaded
         {
-            holder.progress.setVisibility(View.VISIBLE);
+
             holder.ivImage.setImageResource(0);
+            holder.progress.setVisibility(View.VISIBLE);
 
             Activity.DownloadVideo(position);
 

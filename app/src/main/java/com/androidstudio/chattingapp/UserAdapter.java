@@ -62,7 +62,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             holder.time.setText("");
         }
 
-        if(!(list.get(position).getLastmessage().equals(" ")) &&!(list.get(position).getLastmessage().equals("null")) &&!(list.get(position).getLastmessage().equals("  ")))
+        if(  !(list.get(position).getLastmessage().equals(" ")) &&!(list.get(position).getLastmessage().equals("null")) &&!(list.get(position).getLastmessage().equals("  ")))
         {
             if(list.get(position).getLastmessage().length()>20) {
                 holder.tvlastmessage.setText(list.get(position).getLastmessage().substring(0,20)+"..");
@@ -78,6 +78,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             holder.ivImage.setVisibility(View.VISIBLE);
             holder.tvlastmessage.setText("Image");
         }
+
         if(list.get(position).getLastmessage().equals("null"))
         {
             holder.ivImage.setVisibility(View.GONE);

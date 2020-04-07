@@ -176,8 +176,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 if(contacts1.size()>0) {
                     for ( int q = 0; q < contacts1.size(); ) {
                         new listener(q).piclistener();
+                        new listener(q).VideoListener();
                         new listener(q).child();
-
 
                         q++;
                     }
@@ -233,6 +233,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         }
     };
 
+
+
     public class listener
     {
         int index;
@@ -240,6 +242,64 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
          {
             this.index=index;
          }
+
+         public void VideoListener()
+         {
+             chreceiver = new ChildEventListener() {
+                 @Override
+                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                     //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+
+                     contacts1.get(index).setLastmessage("  ");
+                     contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                     userAdapter.notifyDataSetChanged();
+
+                     MessageModel model;
+
+                     if (contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
+                         model = new MessageModel(1110, contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+                                 , dataSnapshot.getValue(String.class).substring(15), "video", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
+                     }
+                     else
+                     {
+                         model = new MessageModel(1110,"+91"+contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+                                 , dataSnapshot.getValue(String.class).substring(15), "video", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
+                     }
+                     Handler.addMessage(model);
+
+                     dataSnapshot.getRef().removeValue();
+
+                 }
+
+                 @Override
+                 public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                 }
+
+                 @Override
+                 public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                 }
+
+                 @Override
+                 public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                 }
+
+                 @Override
+                 public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                 }
+             };
+             if (contacts1.get(index).getPh_number().substring(0,3).equals("+91") ) {
+                 reference.child("users").child(contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("info").child("videos").addChildEventListener(chreceiver);
+             }
+             else
+             {
+                 reference.child("users").child("+91"+contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("info").child("videos").addChildEventListener(chreceiver);
+
+             }
+         }
+
 
          public void child()
          {
