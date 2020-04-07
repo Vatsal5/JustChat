@@ -903,6 +903,52 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             return null;
     }
 
+    public void uploadVideo(final int index, final MessageModel message)
+    {
+        rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("videos/" + Uri.parse(message.getMessage()).getLastPathSegment()).
+                putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("videos/" + Uri.parse(message.getMessage()).getLastPathSegment()).getDownloadUrl()
+                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+
+                                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                        child(message.getReciever()).child("info").
+                                        child("videos").push().setValue(message.getTime()+message.getDate()+uri.toString());
+                                Toast.makeText(getApplicationContext(),"Ghaint",Toast.LENGTH_LONG).show();
+
+//                                message.setDownloaded(1);
+//                                Handler.UpdateMessage(message);
+
+//                                if(!MessageActivity.this.isDestroyed())
+//                                {
+//                                    chats.get(index).setDownloaded(1);
+//                                   // mp.start();
+//
+//                                    if(!Messages.isComputingLayout())
+//                                    {
+//                                        adapter.notifyDataSetChanged();
+//                                    }
+//                                }
+//
+//                                if(MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
+//                                    Intent intent = getIntent();
+//                                    ((Activity) ApplicationClass.MessageActivityContext).finish();
+//                                    startActivity(intent);
+//
+//                                   // mp.start();
+//
+//                                    overridePendingTransition(0, 0);
+//                                }
+                            }
+                        });
+
+            }
+        });
+    }
+
     public void UploadImage(final int index, final MessageModel message)
     {
        final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
