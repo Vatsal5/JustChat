@@ -114,7 +114,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     LinearLayoutManager manager;
     MessageAdapter adapter;
     ArrayList<MessageModel> chats;
-    ChildEventListener chreceiver;
+    ChildEventListener chreceiver,videoreceiver;
 
     DBHandler Handler;
     int l;
@@ -453,6 +453,73 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         };
 
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").addChildEventListener(imagereceiver);
+
+        videoreceiver = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                String time,date;
+                String uri;
+
+                MediaPlayer received = MediaPlayer.create(MessageActivity.this, R.raw.received);
+
+                time=dataSnapshot.getValue(String.class).substring(0,5);
+                date=dataSnapshot.getValue(String.class).substring(5,15);
+                uri=dataSnapshot.getValue(String.class).substring(15);
+                Toast.makeText(getApplicationContext(),"galbaat",Toast.LENGTH_LONG).show();
+
+
+//                MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(15), "image", 0,time,date);
+//                //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
+//
+//                if(chats.size()!=0) {
+//                    if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
+//                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
+//                        int id = Handler.addMessage(message);
+//                        message.setId(id);
+//                        chats.add(message);
+//                    }
+//                }
+//                else {
+//                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
+//                    int id = Handler.addMessage(message);
+//                    message.setId(id);
+//                    chats.add(message);
+//                }
+//
+//                int id = Handler.addMessage(messageModel);
+//                messageModel.setId(id);
+
+                dataSnapshot.getRef().removeValue();
+
+              //  chats.add(messageModel);
+
+              //  adapter.notifyDataSetChanged();
+                // adapter.notifyItemInserted(chats.size()-1);
+              //  received.start();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("videos").addChildEventListener(videoreceiver);
 
 
 //********************************************************************************************************************************************************
