@@ -49,6 +49,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public void downloadImage(int index);
         public void sentTextMessage(int index);
         public void sendImage(int index);
+        public void SendVideo(int index);
     }
 
     static ImageSelected Activity;
@@ -181,6 +182,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             if (holder.llMessageRight != null)
                 holder.llMessageRight.setBackgroundResource(R.drawable.background_right);
+        }
+        else if(messages.get(position).getDownloaded()==100) // when sender sends video
+        {
+            Activity.SendVideo(position);
         }
 
         if (holder.tvTime != null)

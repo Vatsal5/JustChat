@@ -878,7 +878,18 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         {
             if(resultCode==RESULT_OK)
             {
+                Date date=new Date();
+                SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
+
+                long millis=System.currentTimeMillis();
+                java.sql.Date date1=new java.sql.Date(millis);
+
                 Uri selectedImageUri = data.getData();
+
+                MessageModel model = new MessageModel(1190,sender,RecieverPhone,selectedImageUri.toString(),"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString());
+                chats.add(model);
+
+                adapter.notifyDataSetChanged();
 
                 // OI FILE Manager
                 String filemanagerstring = selectedImageUri.getPath();
@@ -1028,6 +1039,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     @Override
     public void sendImage(int index) {
         UploadImage(index,chats.get(index));
+    }
+
+    @Override
+    public void SendVideo(int index) {
+        uploadVideo(index,chats.get(index));
     }
 
     //***********************************************************************************************************************************************
