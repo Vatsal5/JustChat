@@ -168,6 +168,8 @@ public class DBHandler
                 return " ";
             else if(model.getType().equals("Date"))
                 return "null";
+            else if(model.getType().equals("video"))
+                return "  ";
         }
         else
         {

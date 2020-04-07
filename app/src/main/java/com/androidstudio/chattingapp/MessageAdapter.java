@@ -2,9 +2,14 @@ package com.androidstudio.chattingapp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +42,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int MSG_TXT_RIGHT = 1;
     public static final int MSG_IMG_LEFT = 2;
     public static final int MSG_IMG_RIGHT = 3;
+    public static final int MSG_VIDEO_LEFT = 4;
+    public static final int MSG_VIDEO_RIGHT = 5;
     public static final int DATE = 4;
 
     FirebaseUser user;
@@ -50,6 +57,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public void sentTextMessage(int index);
         public void sendImage(int index);
         public void SendVideo(int index);
+        public void DownloadVideo(int index);
+        public void showVideo(int index);
     }
 
     static ImageSelected Activity;
@@ -64,7 +73,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTime,tvDate;
         EmojiTextView tvMessage;
-        ImageView ivImage;
+        ImageView ivImage,ivPlay;
         ProgressBar progress;
         LinearLayout llMessageRight;
 
@@ -77,6 +86,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             tvTime = itemView.findViewById(R.id.tvTime);
             llMessageRight = itemView.findViewById(R.id.llMessageRight);
             tvDate = itemView.findViewById(R.id.tvDate);
+            ivPlay = itemView.findViewById(R.id.ivPlay);
         }
     }
 
@@ -95,6 +105,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         else if (viewType == DATE) {
             View v = LayoutInflater.from(context).inflate(R.layout.date_layout, parent, false);
+            return new ViewHolder(v);
+        }
+        else if (viewType == MSG_VIDEO_LEFT) {
+            View v = LayoutInflater.from(context).inflate(R.layout.video_left, parent, false);
+            return new ViewHolder(v);
+        }
+        else if (viewType == MSG_VIDEO_RIGHT) {
+            View v = LayoutInflater.from(context).inflate(R.layout.video_right, parent, false);
             return new ViewHolder(v);
         }
         else {
@@ -185,8 +203,39 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         else if(messages.get(position).getDownloaded()==100) // when sender sends video
         {
+            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
+            holder.progress.setVisibility(View.VISIBLE);
+            holder.ivPlay.setVisibility(View.GONE);
+
+            holder.ivImage.setClickable(false);
+
             Activity.SendVideo(position);
         }
+        else if(messages.get(position).getDownloaded()==101) // when video is received  and yet to be downloaded
+        {
+            holder.progress.setVisibility(View.VISIBLE);
+            holder.ivImage.setImageResource(0);
+
+            Activity.DownloadVideo(position);
+
+            holder.ivImage.setClickable(false);
+        }
+        else if(messages.get(position).getDownloaded()==102) // when video is sent or downloaded successfully
+        {
+            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
+            holder.progress.setVisibility(View.GONE);
+            holder.ivPlay.setVisibility(View.VISIBLE);
+
+            holder.ivImage.setClickable(false);
+
+            holder.ivPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Activity.showVideo(position);
+                }
+            });
+        }
+
 
         if (holder.tvTime != null)
             holder.tvTime.setText(messages.get(position).getTime());
@@ -217,6 +266,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 return MSG_IMG_RIGHT;
             } else if (messages.get(position).getType().equals("text")) {
                 return MSG_TXT_RIGHT;
+            }else if(messages.get(position).getType().equals("video")){
+                return MSG_VIDEO_RIGHT;
             }
         }
         if(!messages.get(position).getSender().equals(user.getPhoneNumber()) && !messages.get(position).getSender().equals("null"))
@@ -225,6 +276,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 return MSG_IMG_LEFT;
             } else if (messages.get(position).getType().equals("text")) {
                 return MSG_TXT_LEFT;
+            }else if(messages.get(position).getType().equals("video")) {
+                return MSG_VIDEO_LEFT;
             }
         }
         if(messages.get(position).getType().equals("Date"))
@@ -245,6 +298,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
         }
         return true;
+    }
+
+    public Bitmap getThumbnail(Uri Uri)
+    {
+        Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(Uri.toString(), MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
+        return bitmap;
     }
 
     public String newDate(String date)

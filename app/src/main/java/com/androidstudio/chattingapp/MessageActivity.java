@@ -9,22 +9,18 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +36,6 @@ import androidx.emoji.widget.EmojiEditText;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -52,7 +47,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -74,6 +68,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -83,10 +79,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.Permission;
+import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -465,37 +460,38 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 time=dataSnapshot.getValue(String.class).substring(0,5);
                 date=dataSnapshot.getValue(String.class).substring(5,15);
                 uri=dataSnapshot.getValue(String.class).substring(15);
+
+                MessageModel messageModel = new MessageModel(-1,RecieverPhone,sender,uri,"video",101,time,date);
+
                 Toast.makeText(getApplicationContext(),"galbaat",Toast.LENGTH_LONG).show();
 
+                //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 
-//                MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(15), "image", 0,time,date);
-//                //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
-//
-//                if(chats.size()!=0) {
-//                    if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
-//                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
-//                        int id = Handler.addMessage(message);
-//                        message.setId(id);
-//                        chats.add(message);
-//                    }
-//                }
-//                else {
-//                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
-//                    int id = Handler.addMessage(message);
-//                    message.setId(id);
-//                    chats.add(message);
-//                }
-//
-//                int id = Handler.addMessage(messageModel);
-//                messageModel.setId(id);
+                if(chats.size()!=0) {
+                    if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
+                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
+                        int id = Handler.addMessage(message);
+                        message.setId(id);
+                        chats.add(message);
+                    }
+                }
+                else {
+                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
+                    int id = Handler.addMessage(message);
+                    message.setId(id);
+                    chats.add(message);
+                }
+
+                int id = Handler.addMessage(messageModel);
+                messageModel.setId(id);
 
                 dataSnapshot.getRef().removeValue();
 
-              //  chats.add(messageModel);
+                chats.add(messageModel);
 
-              //  adapter.notifyDataSetChanged();
-                // adapter.notifyItemInserted(chats.size()-1);
-              //  received.start();
+//                adapter.notifyDataSetChanged();
+                 adapter.notifyItemInserted(chats.size()-1);
+                received.start();
             }
 
             @Override
@@ -953,10 +949,40 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 Uri selectedImageUri = data.getData();
 
+                File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
+                if(!imagesFolder.exists())
+                {
+                    imagesFolder.mkdirs();
+                }
+
+                // Create a file to save the image
+                File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis())+".mp4");
+
+                try {
+                    InputStream in = getContentResolver().openInputStream(selectedImageUri);
+                    OutputStream out = new FileOutputStream(file);
+                    byte[] buf = new byte[1024];
+                    int len;
+                    while ((len = in.read(buf)) > 0) {
+                        out.write(buf, 0, len);
+                    }
+                    out.close();
+                    in.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                selectedImageUri = Uri.fromFile(file);
+
                 MessageModel model = new MessageModel(1190,sender,RecieverPhone,selectedImageUri.toString(),"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString());
+
+                int id = Handler.addMessage(model);
+                model.setId(id);
                 chats.add(model);
 
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemInserted(chats.size()-1);
 
                 // OI FILE Manager
                 String filemanagerstring = selectedImageUri.getPath();
@@ -997,29 +1023,27 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                         child("videos").push().setValue(message.getTime()+message.getDate()+uri.toString());
                                 Toast.makeText(getApplicationContext(),"Ghaint",Toast.LENGTH_LONG).show();
 
-//                                message.setDownloaded(1);
-//                                Handler.UpdateMessage(message);
+                                message.setDownloaded(102);
+                                Handler.UpdateMessage(message);
 
-//                                if(!MessageActivity.this.isDestroyed())
-//                                {
-//                                    chats.get(index).setDownloaded(1);
-//                                   // mp.start();
-//
-//                                    if(!Messages.isComputingLayout())
-//                                    {
-//                                        adapter.notifyDataSetChanged();
-//                                    }
-//                                }
-//
-//                                if(MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
-//                                    Intent intent = getIntent();
-//                                    ((Activity) ApplicationClass.MessageActivityContext).finish();
-//                                    startActivity(intent);
-//
-//                                   // mp.start();
-//
-//                                    overridePendingTransition(0, 0);
-//                                }
+                                if(!MessageActivity.this.isDestroyed())
+                                {
+                                    chats.get(index).setDownloaded(102);
+
+                                    if(!Messages.isComputingLayout())
+                                    {
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }
+
+                                if(MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
+                                    Intent intent = getIntent();
+                                    ((Activity) ApplicationClass.MessageActivityContext).finish();
+                                    startActivity(intent);
+
+
+                                    overridePendingTransition(0, 0);
+                                }
                             }
                         });
 
@@ -1113,7 +1137,100 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         uploadVideo(index,chats.get(index));
     }
 
+    @Override
+    public void DownloadVideo(int index) {
+        new DownloadVideo(index,chats.get(index)).execute(chats.get(index).getMessage());
+    }
+
+    @Override
+    public void showVideo(int index) {
+
+    }
+
     //***********************************************************************************************************************************************
+    private class DownloadVideo extends AsyncTask<String, Void, Uri>
+    {
+        int index;
+        MessageModel message;
+
+        DownloadVideo(int position,MessageModel message)
+        {
+            index = position;
+            this.message = message;
+        }
+
+        @Override
+        protected Uri doInBackground(String... strings) {
+            try{
+                URL u = new URL(strings[0]);
+                URLConnection conn = u.openConnection();
+                int contentLength = conn.getContentLength();
+
+                DataInputStream stream = new DataInputStream(u.openStream());
+
+                byte[] buffer = new byte[contentLength];
+                stream.readFully(buffer);
+                stream.close();
+
+                File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Received");
+                if(!imagesFolder.exists())
+                {
+                    imagesFolder.mkdirs();
+                }
+
+                // Create a file to save the image
+                File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis())+".mp4");
+
+                DataOutputStream fos = new DataOutputStream(new FileOutputStream(file));
+                fos.write(buffer);
+                fos.flush();
+                fos.close();
+
+                Uri uri = Uri.fromFile(file);
+
+                return uri;
+            } catch(FileNotFoundException e) {
+                e.printStackTrace(); // swallow a 404
+            } catch (IOException e) {
+                e.printStackTrace(); // swallow a 404
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Uri uri) {
+            super.onPostExecute(uri);
+
+            if (uri != null) {
+
+                message.setDownloaded(102);
+                message.setMessage(uri.toString());
+
+                Handler.UpdateMessage(message);
+
+                if(!MessageActivity.this.isDestroyed())
+                {
+                    chats.get(index).setDownloaded(102);
+                    chats.get(index).setMessage(uri.toString());
+
+                    if(!Messages.isComputingLayout())
+                    {
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+
+                if (MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
+                    Intent intent = getIntent();
+                    ((Activity) ApplicationClass.MessageActivityContext).finish();
+                    startActivity(intent);
+
+                    overridePendingTransition(0, 0);
+                }
+
+            }
+        }
+    }
+
     private class DownloadTask extends AsyncTask<URL,Void,Uri>
     {
         int index;

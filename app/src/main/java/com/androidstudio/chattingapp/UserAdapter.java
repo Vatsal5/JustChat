@@ -62,7 +62,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             holder.time.setText("");
         }
 
-        if(!(list.get(position).getLastmessage().equals(" ")) &&!(list.get(position).getLastmessage().equals("null")))
+        if(!(list.get(position).getLastmessage().equals(" ")) &&!(list.get(position).getLastmessage().equals("null")) &&!(list.get(position).getLastmessage().equals("  ")))
         {
             if(list.get(position).getLastmessage().length()>20) {
                 holder.tvlastmessage.setText(list.get(position).getLastmessage().substring(0,20)+"..");
@@ -84,11 +84,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             holder.tvlastmessage.setText(null);
         }
 
-        if(list.get(position).getUrl().equals("null"))
+        if(list.get(position).getLastmessage().equals("  "))
         {
+            holder.tvlastmessage.setText("Video");
+            holder.ivImage.setVisibility(View.GONE);
+        }
+
+        if(list.get(position).getUrl().equals("null")) {
             holder.iv.setImageResource(R.drawable.person);
             holder.iv.setClickable(false);
         }
+
         else
         {
             Glide.with(context).load(list.get(position).getUrl()).into(holder.iv);
