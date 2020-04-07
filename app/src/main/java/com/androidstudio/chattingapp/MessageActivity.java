@@ -179,19 +179,20 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         Status = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue().equals("typing")) {
+                if(dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
                     ivTyping.setVisibility(View.VISIBLE);
                     Glide.with(MessageActivity.this).load(R.drawable.online).into(ivTyping);
                 }
 
-                else if(dataSnapshot.getValue().equals("online")) {
+                else if(dataSnapshot.getValue().equals("online") || (dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && !dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
                     ivTyping.setVisibility(View.GONE);
                 }
 
                 else {
                     ivStatus.setBackground(null);
+                    ivTyping.setVisibility(View.GONE);
                 }
             }
 
@@ -248,7 +249,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 if(etMessage.getText().toString().trim().length()>0)
                 {  if(!(flag==1)) {
-                    FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("typing");
+                    FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("typing "+RecieverPhone);
                     message = etMessage.getText().toString().trim();
                     flag = 1;
                 }
