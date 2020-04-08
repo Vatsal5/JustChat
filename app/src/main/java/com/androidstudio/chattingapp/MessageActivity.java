@@ -159,6 +159,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ivTyping = findViewById(R.id.ivTyping);
         ivStatus = findViewById(R.id.ivStatus);
 
+        if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MessageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 150);
+        }
+
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -830,6 +834,28 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 CropImage.startPickImageActivity(MessageActivity.this);
             }
         }
+
+        if(requestCode==150)
+        {
+            if(grantResults[0]==PackageManager.PERMISSION_DENIED)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+                builder.setTitle("Permission Required")
+                        .setMessage("Permission is required to receive and send media")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ActivityCompat.requestPermissions(MessageActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},5);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+            }
+        }
     }
 
     @Override
@@ -880,78 +906,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK)
         {
 
-            Bitmap bitmap= null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(MessageActivity.this.getContentResolver(), CropImage.getPickImageResultUri(this,data));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            byte[] bytes=null;
-            ByteArrayOutputStream stream= new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
-            bytes=stream.toByteArray();
-            Bitmap bitmap1= BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-            String path = MediaStore.Images.Media.insertImage(MessageActivity.this.getContentResolver(), bitmap1, "Title", null);
-            Uri uri=Uri.parse(path);
-
-
-
-            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
-            if(!imagesFolder.exists())
-            {
-                imagesFolder.mkdirs();
-            }
-
-            // Create a file to save the image
-            File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis())+".jpg");
-
-            try {
-                InputStream in = getContentResolver().openInputStream(uri);
-                OutputStream out = new FileOutputStream(file);
-                byte[] buf = new byte[1024];
-                int len;
-                while ((len = in.read(buf)) > 0) {
-                    out.write(buf, 0, len);
-                }
-                out.close();
-                in.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            uri = Uri.fromFile(file);
-
-            Date date=new Date();
-            SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
-
-            long millis=System.currentTimeMillis();
-            java.sql.Date date1=new java.sql.Date(millis);
-
-            MessageModel messageModel = new MessageModel(-1, sender, RecieverPhone, uri.toString(), "image", 2,simpleDateFormat.format(date).substring(0,5),date1.toString());
-
-            if(chats.size()!=0) {
-                if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate()) || chats.size() == 0) {
-                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
-                    int id = Handler.addMessage(message);
-                    message.setId(id);
-                    chats.add(message);
-                }
-            }
-            else {
-                MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
-                int id = Handler.addMessage(message);
-                message.setId(id);
-                chats.add(message);
-            }
-
-            int id = Handler.addMessage(messageModel);
-            messageModel.setId(id);
-
-            chats.add(messageModel);
-
-            adapter.notifyItemInserted(chats.size()-1);
+            Uri uri = CropImage.getPickImageResultUri(this,data);
+            new CompressImage().execute(uri);
     }
 
         if(requestCode==100)
@@ -1007,6 +963,91 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 // MEDIA GALLERY
                 String selectedImagePath = getPath(selectedImageUri);
             }
+        }
+    }
+
+    public class CompressImage extends AsyncTask<Uri,Void,Uri>
+    {
+        @Override
+        protected Uri doInBackground(Uri... uris) {
+            Bitmap bitmap= null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(MessageActivity.this.getContentResolver(),uris[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            byte[] bytes=null;
+            ByteArrayOutputStream stream= new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
+            bytes=stream.toByteArray();
+            Bitmap bitmap1= BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+            String path = MediaStore.Images.Media.insertImage(MessageActivity.this.getContentResolver(), bitmap1, "Title", null);
+            Uri uri=Uri.parse(path);
+
+
+
+            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
+            if(!imagesFolder.exists())
+            {
+                imagesFolder.mkdirs();
+            }
+
+            // Create a file to save the image
+            File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis())+".jpg");
+
+            try {
+                InputStream in = getContentResolver().openInputStream(uri);
+                OutputStream out = new FileOutputStream(file);
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+                out.close();
+                in.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            uri = Uri.fromFile(file);
+            return uri;
+        }
+
+        @Override
+        protected void onPostExecute(Uri uri) {
+            super.onPostExecute(uri);
+
+            Date date=new Date();
+            SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
+
+            long millis=System.currentTimeMillis();
+            java.sql.Date date1=new java.sql.Date(millis);
+
+            MessageModel messageModel = new MessageModel(-1, sender, RecieverPhone, uri.toString(), "image", 2,simpleDateFormat.format(date).substring(0,5),date1.toString());
+
+            if(chats.size()!=0) {
+                if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate()) || chats.size() == 0) {
+                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
+                    int id = Handler.addMessage(message);
+                    message.setId(id);
+                    chats.add(message);
+                }
+            }
+            else {
+                MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
+                int id = Handler.addMessage(message);
+                message.setId(id);
+                chats.add(message);
+            }
+
+            int id = Handler.addMessage(messageModel);
+            messageModel.setId(id);
+
+            chats.add(messageModel);
+
+            adapter.notifyItemInserted(chats.size()-1);
         }
     }
 
