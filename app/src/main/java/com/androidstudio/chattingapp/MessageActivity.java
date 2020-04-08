@@ -845,7 +845,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                ActivityCompat.requestPermissions(MessageActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},5);
+                                ActivityCompat.requestPermissions(MessageActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},150);
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
