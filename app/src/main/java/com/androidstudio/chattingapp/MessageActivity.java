@@ -68,6 +68,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -395,6 +396,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 time=dataSnapshot.getValue(String.class).substring(0,5);
                 date=dataSnapshot.getValue(String.class).substring(5,15);
+
 
                 MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(15), "image", 0,time,date);
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
@@ -877,7 +879,22 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK)
         {
-            Uri uri = CropImage.getPickImageResultUri(this,data);
+
+            Bitmap bitmap= null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(MessageActivity.this.getContentResolver(), CropImage.getPickImageResultUri(this,data));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            byte[] bytes=null;
+            ByteArrayOutputStream stream= new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
+            bytes=stream.toByteArray();
+            Bitmap bitmap1= BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+            String path = MediaStore.Images.Media.insertImage(MessageActivity.this.getContentResolver(), bitmap1, "Title", null);
+            Uri uri=Uri.parse(path);
+
+
 
             File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
             if(!imagesFolder.exists())

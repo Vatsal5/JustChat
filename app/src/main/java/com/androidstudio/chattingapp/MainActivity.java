@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     String currentUserNumber;
     DatabaseReference reference;
 
-    int l,pos;
+    int l, pos;
     boolean flag=false;
 
     UserAdapter userAdapter;
