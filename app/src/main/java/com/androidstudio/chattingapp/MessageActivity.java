@@ -232,7 +232,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 //                        intent.setAction(Intent.ACTION_GET_CONTENT);
 
                         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-                        intent.setType("video/*");
                         startActivityForResult(intent, 100);
                         //startActivityForResult(intent,100);
                         return true;
@@ -923,7 +922,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
             Uri uri = CropImage.getPickImageResultUri(this,data);
             new CompressImage().execute(uri);
-    }
+        }
 
         if(requestCode==100)
         {
@@ -931,7 +930,39 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             {
                 Uri selectedImageUri = data.getData();
 
-                new CompressVideo().execute(selectedImageUri);
+                File file = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent/"+new Timestamp(System.currentTimeMillis())+".mp4");
+
+                try {
+                    InputStream in = getContentResolver().openInputStream(selectedImageUri);
+                    OutputStream out = new FileOutputStream(file);
+                    byte[] buf = new byte[1024];
+                    int len;
+                    while ((len = in.read(buf)) > 0) {
+                        out.write(buf, 0, len);
+                    }
+                    out.close();
+                    in.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                selectedImageUri = Uri.fromFile(file);
+
+                Date date=new Date();
+                SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
+
+                long millis=System.currentTimeMillis();
+                java.sql.Date date1=new java.sql.Date(millis);
+
+                MessageModel model = new MessageModel(1190,sender,RecieverPhone,selectedImageUri.toString(),"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString());
+
+                int id = Handler.addMessage(model);
+                model.setId(id);
+                chats.add(model);
+
+                adapter.notifyItemInserted(chats.size()-1);
 
 //                File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
 //                if(!imagesFolder.exists())
@@ -960,45 +991,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 //selectedImageUri = Uri.fromFile(new File(filepath));
             }
-        }
-    }
-
-    public class CompressVideo extends AsyncTask<Uri,Void,Uri>
-    {
-
-        @Override
-        protected Uri doInBackground(Uri... uris) {
-
-            File inputFile = new File(uris[0].getPath());
-            File outPutFile = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Sent");
-
-
-
-
-
-
-            
-            return uri;
-        }
-
-        @Override
-        protected void onPostExecute(Uri uri) {
-            super.onPostExecute(uri);
-
-            Date date=new Date();
-            SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
-
-            long millis=System.currentTimeMillis();
-            java.sql.Date date1=new java.sql.Date(millis);
-
-            MessageModel model = new MessageModel(1190,sender,RecieverPhone,uri.toString(),"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString());
-
-            int id = Handler.addMessage(model);
-            model.setId(id);
-            chats.add(model);
-
-            adapter.notifyItemInserted(chats.size()-1);
-
         }
     }
 
