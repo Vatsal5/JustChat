@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/aclonica"
                 android:gravity="center|start|left"
-                android:textColor="#d6514a"
+                android:textColor="#282828"
                 android:textSize="19sp"
                 android:text="Vatsal"
                 android:layout_marginTop="4dp"

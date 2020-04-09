@@ -50,7 +50,7 @@ public class profile_listitem_adapter extends ArrayAdapter
         switch (position)
         {
             case 0:
-                ivImage.setImageResource(R.drawable.person);
+                ivImage.setImageResource(R.drawable.person1);
                 tvHeading.setText("Name");
                 tvData.setText(data.get(position));
                 break;

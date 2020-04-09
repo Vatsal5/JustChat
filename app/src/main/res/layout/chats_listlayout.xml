@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="1px"
+    android:background="#212121"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ffffff">
+        android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ivBackground"
@@ -66,7 +65,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:text="User Name"
-                android:textColor="#212121"
+                android:textColor="#ffffff"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -89,7 +88,7 @@
                 android:layout_height="19dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="3dp"
-                android:textColor="#d6514a"
+                android:textColor="#ffffff"
                 android:textSize="15sp"
                 app:layout_constraintLeft_toLeftOf="@id/ivImage"
                 app:layout_constraintTop_toBottomOf="@+id/tv_username" />
@@ -100,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="25dp"
-                android:textColor="#d6514a"
+                android:textColor="#ffffff"
                 android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -110,7 +109,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginRight="30dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="14dp"
                 android:background="@drawable/tvbackground"
                 android:fontFamily="@font/amaranth"
                 android:gravity="center"
@@ -121,20 +120,19 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
 
-            <View
+<!--            <View-->
 
-                android:layout_width="match_parent"
-                android:background="#ffffff"
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="1dp"-->
 
-                android:layout_height="1dp"
-                app:layout_constraintBottom_toBottomOf="parent" />
+<!--                android:background="#ffffff"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent" />-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-    
 
 
 </LinearLayout>

@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#99bdbdbd"
+        android:background="#ffffff"
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
@@ -26,7 +26,7 @@
                 android:id="@+id/imageView"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="#ffffff"
+                android:background="#99d6514a"
                 android:scaleType="fitXY"
                 app:srcCompat="@drawable/business" />
 
@@ -44,7 +44,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:text="User Name"
-                android:textColor="#99000000"
+                android:textColor="#212121"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -56,7 +56,8 @@
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:scrollbars="vertical"
-                android:text="One's Status" />
+                android:text="One's Status"
+                android:textColor="#d6514a" />
         </LinearLayout>
 
     </LinearLayout>
