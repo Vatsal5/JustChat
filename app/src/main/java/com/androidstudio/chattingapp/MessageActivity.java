@@ -235,6 +235,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
                         startActivityForResult(intent, 100);
+                        intent.setType("video/*");
                         //startActivityForResult(intent,100);
                         return true;
                     }
