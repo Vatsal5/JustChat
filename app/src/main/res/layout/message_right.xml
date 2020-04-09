@@ -11,6 +11,7 @@
         android:id="@+id/llMessageRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minHeight="50dp"
         android:background="@drawable/background_right"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -20,14 +21,15 @@
         android:id="@+id/tvMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textColor="#ffffff"
         android:layout_marginTop="2dp"
         android:paddingTop="3dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="8dp"
+        android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:maxWidth="250dp"
+        android:minHeight="50dp"
+        android:minWidth="50dp"
         android:text="Hello"/>
 
     <TextView
