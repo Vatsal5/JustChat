@@ -63,7 +63,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.iceteck.silicompressorr.SiliCompressor;
+
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import org.json.JSONException;
@@ -81,7 +81,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
+
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
@@ -175,10 +175,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         Glide.with(MessageActivity.this).load(R.drawable.online).into(ivTyping);
 
-        if(getIntent().getStringExtra("profile") !=null)
-            Glide.with(MessageActivity.this).load(getIntent().getStringExtra("profile")).into(ivProfile);
-        else
-            ivProfile.setImageResource(R.drawable.person);
+        if(getIntent().getStringExtra("profile") !=null){
+            ApplicationClass.url=getIntent().getStringExtra("profile");
+            Glide.with(MessageActivity.this).load(getIntent().getStringExtra("profile")).into(ivProfile);}
+        else{
+            ApplicationClass.url="null";
+            ivProfile.setImageResource(R.drawable.person);}
 
         Status = new ValueEventListener() {
             @Override

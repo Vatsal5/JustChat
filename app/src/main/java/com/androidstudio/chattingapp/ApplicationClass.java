@@ -26,6 +26,7 @@ public class ApplicationClass extends Application
 {
     public static Context MessageActivityContext;
     public static DBHandler handler;
+    public static String url;
 
     @Override
     public void onCreate() {

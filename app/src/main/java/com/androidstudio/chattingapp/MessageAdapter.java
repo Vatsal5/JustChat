@@ -73,7 +73,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTime,tvDate;
         EmojiTextView tvMessage;
-        ImageView ivImage,ivPlay;
+        ImageView ivImage,ivPlay,ivProfile;
         ProgressBar progress;
         LinearLayout llMessageRight;
 
@@ -82,6 +82,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             tvMessage = itemView.findViewById(R.id.tvMessage);
             ivImage = itemView.findViewById(R.id.ivImage);
+            ivProfile = itemView.findViewById(R.id.ivProfile);
             progress = itemView.findViewById(R.id.progress);
             tvTime = itemView.findViewById(R.id.tvTime);
             llMessageRight = itemView.findViewById(R.id.llMessageRight);
@@ -131,6 +132,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     Activity.showImage(position);
                 }
             });
+        }
+        if(holder.ivProfile!=null) {
+            if (!(ApplicationClass.url.equals("null"))) {
+                // holder.ivProfile.setVisibility(View.VISIBLE);
+
+                Glide.with(context.getApplicationContext()).load(ApplicationClass.url).into(holder.ivProfile);
+            }
+        }
+        else
+        {
+            //holder.ivProfile.setVisibility(View.GONE);
         }
 
         if (messages.get(position).getDownloaded() == 0)   //image is received but yet to be downloaded
