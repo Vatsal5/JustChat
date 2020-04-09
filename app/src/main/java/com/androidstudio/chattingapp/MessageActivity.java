@@ -969,7 +969,16 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         @Override
         protected Uri doInBackground(Uri... uris) {
 
-            return uris[0];
+            File inputFile = new File(uris[0].getPath());
+            File outPutFile = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Sent");
+
+
+
+
+
+
+            
+            return uri;
         }
 
         @Override
