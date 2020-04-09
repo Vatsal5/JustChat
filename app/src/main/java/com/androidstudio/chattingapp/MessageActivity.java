@@ -1,6 +1,7 @@
 package com.androidstudio.chattingapp;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -231,6 +232,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 //                        intent.setAction(Intent.ACTION_GET_CONTENT);
 
                         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                        intent.setType("video/*");
                         startActivityForResult(intent, 100);
                         //startActivityForResult(intent,100);
                         return true;
@@ -406,6 +408,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 time=dataSnapshot.getValue(String.class).substring(0,5);
                 date=dataSnapshot.getValue(String.class).substring(5,15);
 
+                Log.d("Received","Image");
+
 
                 MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(15), "image", 0,time,date);
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
@@ -468,11 +472,16 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 MediaPlayer received = MediaPlayer.create(MessageActivity.this, R.raw.received);
 
+                Toast.makeText(MessageActivity.this, "Video", Toast.LENGTH_SHORT).show();
+
+                Log.d("Received","Video");
+
                 time=dataSnapshot.getValue(String.class).substring(0,5);
                 date=dataSnapshot.getValue(String.class).substring(5,15);
                 uri=dataSnapshot.getValue(String.class).substring(15);
 
                 MessageModel messageModel = new MessageModel(-1,RecieverPhone,sender,uri,"video",101,time,date);
+                Log.d("video",messageModel.getMessage());
 
                 Toast.makeText(getApplicationContext(),"galbaat",Toast.LENGTH_LONG).show();
 
@@ -708,6 +717,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         //Handler.close();
 
         FirebaseDatabase.getInstance().getReference("UserStatus").child(RecieverPhone).removeEventListener(Status);
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("videos").removeEventListener(videoreceiver);
     }
 
     @Override
@@ -959,16 +969,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         @Override
         protected Uri doInBackground(Uri... uris) {
 
-            String filepath = "";
-            try {
-                filepath = SiliCompressor.with(MessageActivity.this).compressVideo(getPath(uris[0]),Environment.getExternalStorageDirectory().getAbsolutePath()+"/ChattingApp/Sent",900,900,12);
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-
-            Uri uri = Uri.fromFile(new File(filepath));
-
-            return uri;
+            return uris[0];
         }
 
         @Override
@@ -1222,7 +1223,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     }
 
     @Override
-    public void DownloadVideo(int index) {
+    public void Downloadvideo(int index) {
         new DownloadVideo(index,chats.get(index)).execute(chats.get(index).getMessage());
     }
 
@@ -1232,6 +1233,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     }
 
     //***********************************************************************************************************************************************
+    @SuppressLint("StaticFieldLeak")
     private class DownloadVideo extends AsyncTask<String, Void, Uri>
     {
         int index;

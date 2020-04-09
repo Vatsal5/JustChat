@@ -57,7 +57,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public void sentTextMessage(int index);
         public void sendImage(int index);
         public void SendVideo(int index);
-        public void DownloadVideo(int index);
+        public void Downloadvideo(int index);
         public void showVideo(int index);
     }
 
@@ -176,7 +176,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             Glide.with(context.getApplicationContext()).load(messages.get(position).getMessage()).into(holder.ivImage);
              Activity.sendImage(position);
         }
-        else if (messages.get(position).getDownloaded() == 3) // when sender sends the image
+        else if (messages.get(position).getDownloaded() == 3) // when request has been sent to upload image
         {
 
             holder.progress.setVisibility(View.VISIBLE);
@@ -217,7 +217,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivImage.setImageResource(0);
             holder.progress.setVisibility(View.VISIBLE);
 
-            Activity.DownloadVideo(position);
+            Activity.Downloadvideo(position);
 
             holder.ivImage.setClickable(false);
         }
