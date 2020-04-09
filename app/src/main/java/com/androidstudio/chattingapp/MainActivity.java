@@ -256,16 +256,16 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                      MessageModel model;
 
-                     if (contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
-                         model = new MessageModel(1110, contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
-                                 , dataSnapshot.getValue(String.class).substring(15), "video", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
-                     }
-                     else
-                     {
-                         model = new MessageModel(1110,"+91"+contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
-                                 , dataSnapshot.getValue(String.class).substring(15), "video", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
-                     }
-                     Handler.addMessage(model);
+//                     if (contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
+//                         model = new MessageModel(1110, contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+//                                 , dataSnapshot.getValue(String.class).substring(15), "video", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
+//                     }
+//                     else
+//                     {
+//                         model = new MessageModel(1110,"+91"+contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+//                                 , dataSnapshot.getValue(String.class).substring(15), "video", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
+//                     }
+//                     Handler.addMessage(model);
 
                      dataSnapshot.getRef().removeValue();
 
@@ -316,21 +316,21 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                              contacts1.get(index).setTime(dataSnapshot.getValue(String.class).substring(0,5));
                              contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
 
-                             MessageModel model;
-
-                             if (contacts1.get(index).getPh_number().substring(0,3).equals("+91"))
-                             {
-                                 model = new MessageModel(1110, contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
-                                         , dataSnapshot.getValue(String.class).substring(15), "text", -1, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
-
-                             }
-                             else
-                             {
-                                 model = new MessageModel(1110, "+91"+contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
-                                         , dataSnapshot.getValue(String.class).substring(15), "text", -1, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
-                             }
-
-                             Handler.addMessage(model);
+//                             MessageModel model;
+//
+//                             if (contacts1.get(index).getPh_number().substring(0,3).equals("+91"))
+//                             {
+//                                 model = new MessageModel(1110, contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+//                                         , dataSnapshot.getValue(String.class).substring(15), "text", -1, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
+//
+//                             }
+//                             else
+//                             {
+//                                 model = new MessageModel(1110, "+91"+contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+//                                         , dataSnapshot.getValue(String.class).substring(15), "text", -1, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
+//                             }
+//
+//                             Handler.addMessage(model);
 
                              dataSnapshot.getRef().removeValue();
 
@@ -381,18 +381,18 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                      contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                      userAdapter.notifyDataSetChanged();
 
-                     MessageModel model;
-
-                     if (contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
-                         model = new MessageModel(1110, contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
-                                 , dataSnapshot.getValue(String.class).substring(15), "image", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
-                     }
-                     else
-                     {
-                         model = new MessageModel(1110,"+91"+contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
-                                 , dataSnapshot.getValue(String.class).substring(15), "image", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
-                     }
-                     Handler.addMessage(model);
+//                     MessageModel model;
+//
+//                     if (contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
+//                         model = new MessageModel(1110, contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+//                                 , dataSnapshot.getValue(String.class).substring(15), "image", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
+//                     }
+//                     else
+//                     {
+//                         model = new MessageModel(1110,"+91"+contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+//                                 , dataSnapshot.getValue(String.class).substring(15), "image", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
+//                     }
+//                     Handler.addMessage(model);
 
                      dataSnapshot.getRef().removeValue();
 
