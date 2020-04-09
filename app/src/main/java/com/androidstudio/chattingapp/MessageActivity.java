@@ -62,6 +62,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.iceteck.silicompressorr.SiliCompressor;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import org.json.JSONException;
@@ -79,6 +80,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
@@ -224,10 +226,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                     if(event.getRawX() <= (etMessage.getLeft() + etMessage.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width()))
                     {
-                        Intent intent = new Intent();
-                        intent.setType("video/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent,"Select Video"),100);
+//                        Intent intent = new Intent();
+//                        intent.setType("video/*");
+//                        intent.setAction(Intent.ACTION_GET_CONTENT);
+
+                        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(intent, 100);
+                        //startActivityForResult(intent,100);
                         return true;
                     }
                 }
@@ -914,55 +919,76 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         {
             if(resultCode==RESULT_OK)
             {
-                Date date=new Date();
-                SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
-
-                long millis=System.currentTimeMillis();
-                java.sql.Date date1=new java.sql.Date(millis);
-
                 Uri selectedImageUri = data.getData();
 
-                File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
-                if(!imagesFolder.exists())
-                {
-                    imagesFolder.mkdirs();
-                }
+                new CompressVideo().execute(selectedImageUri);
+
+//                File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
+//                if(!imagesFolder.exists())
+//                {
+//                    imagesFolder.mkdirs();
+//                }
 
                 // Create a file to save the image
-                File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis())+".mp4");
+//                File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis())+".mp4");
 
-                try {
-                    InputStream in = getContentResolver().openInputStream(selectedImageUri);
-                    OutputStream out = new FileOutputStream(file);
-                    byte[] buf = new byte[1024];
-                    int len;
-                    while ((len = in.read(buf)) > 0) {
-                        out.write(buf, 0, len);
-                    }
-                    out.close();
-                    in.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    InputStream in = getContentResolver().openInputStream(selectedImageUri);
+//                    OutputStream out = new FileOutputStream(file);
+//                    byte[] buf = new byte[1024];
+//                    int len;
+//                    while ((len = in.read(buf)) > 0) {
+//                        out.write(buf, 0, len);
+//                    }
+//                    out.close();
+//                    in.close();
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 
-                selectedImageUri = Uri.fromFile(file);
-
-                MessageModel model = new MessageModel(1190,sender,RecieverPhone,selectedImageUri.toString(),"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString());
-
-                int id = Handler.addMessage(model);
-                model.setId(id);
-                chats.add(model);
-
-                adapter.notifyItemInserted(chats.size()-1);
-
-                // OI FILE Manager
-                String filemanagerstring = selectedImageUri.getPath();
-
-                // MEDIA GALLERY
-                String selectedImagePath = getPath(selectedImageUri);
+                //selectedImageUri = Uri.fromFile(new File(filepath));
             }
+        }
+    }
+
+    public class CompressVideo extends AsyncTask<Uri,Void,Uri>
+    {
+
+        @Override
+        protected Uri doInBackground(Uri... uris) {
+
+            String filepath = "";
+            try {
+                filepath = SiliCompressor.with(MessageActivity.this).compressVideo(getPath(uris[0]),Environment.getExternalStorageDirectory().getAbsolutePath()+"/ChattingApp/Sent",900,900,12);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+            Uri uri = Uri.fromFile(new File(filepath));
+
+            return uri;
+        }
+
+        @Override
+        protected void onPostExecute(Uri uri) {
+            super.onPostExecute(uri);
+
+            Date date=new Date();
+            SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
+
+            long millis=System.currentTimeMillis();
+            java.sql.Date date1=new java.sql.Date(millis);
+
+            MessageModel model = new MessageModel(1190,sender,RecieverPhone,uri.toString(),"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString());
+
+            int id = Handler.addMessage(model);
+            model.setId(id);
+            chats.add(model);
+
+            adapter.notifyItemInserted(chats.size()-1);
+
         }
     }
 
