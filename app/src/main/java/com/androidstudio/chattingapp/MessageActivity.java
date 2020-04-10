@@ -131,8 +131,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     OnCompleteListener SendMesage;
 
-    BroadcastReceiver onDownloadComplete;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -626,54 +624,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ItemTouchHelper itemTouchHelper= new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(Messages);
 
-        onDownloadComplete = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                SharedPreferences pref = getApplicationContext().getSharedPreferences("Download", 0);
-                //Fetching the download id received with the broadcast
-                long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-                ApplicationClass.DownloadIds.remove(id);
-                Log.d("Downloadid",id+"");
-                //Checking if the received broadcast is for our enqueued download by matching download id
-
-                Long messageId = pref.getLong(String.valueOf(id),-878);
-                Uri uri = Uri.parse(pref.getString(String.valueOf(id),"null"));
-                for(int i= chats.size()-1;i>=0;i--)
-                {
-                    if(chats.get(i).getId() == messageId)
-                    {
-                        MessageModel message = chats.get(i);
-                        message.setMessage(uri.toString());
-                        message.setDownloaded(102);
-
-                        Handler.UpdateMessage(message);
-
-                        if(!MessageActivity.this.isDestroyed())
-                        {
-                            chats.get(i).setDownloaded(102);
-                            chats.get(i).setMessage(uri.toString());
-
-                            if(!Messages.isComputingLayout())
-                            {
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
-
-                        if (MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
-                            Intent intent1 = getIntent();
-                            ((Activity) ApplicationClass.MessageActivityContext).finish();
-                            startActivity(intent1);
-
-                            overridePendingTransition(0, 0);
-                        }
-                        break;
-                    }
-                }
-
-            }
-        };
-
-        registerReceiver(onDownloadComplete,new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback= new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
@@ -1300,47 +1250,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     }
 
     //***********************************************************************************************************************************************
-
-    public void DownloadVideoRequest(int index,MessageModel model) {
-
-        chats.get(index).setDownloaded(103);
-        model.setDownloaded(103);
-        Handler.UpdateMessage(model);
-        if(!Messages.isComputingLayout())
-            adapter.notifyDataSetChanged();
-
-            File file = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Received/" + System.currentTimeMillis() + ".mp4");
-        /*
-        Create a DownloadManager.Request with all the information necessary to start the download
-         */
-            DownloadManager.Request request = null;// Set if download is allowed on roaming network
-            request = new DownloadManager.Request(Uri.parse(model.getMessage()))
-                    .setTitle("Video")// Title of the Download Notification
-                    .setDescription("Downloading")// Description of the Download Notification
-                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)// Visibility of the download Notification
-                    .setDestinationUri(Uri.fromFile(file))// Uri of the destination file// Set if charging is required to begin the download
-                    .setAllowedOverMetered(true)// Set if download is allowed on Mobile network
-                    .setAllowedOverRoaming(true);
-
-            DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-            Long downloadID = downloadManager.enqueue(request);// enqueue puts the download request in the queue.
-
-        ApplicationClass.DownloadIds.add(downloadID);
-
-        Log.d("Downloadid",downloadID+"");
-
-
-            SharedPreferences pref = getApplicationContext().getSharedPreferences("Download", 0); // 0 - for private mode
-            SharedPreferences.Editor editor = pref.edit();
-
-            editor.putLong(String.valueOf(downloadID),model.getId());
-            editor.putString(String.valueOf(downloadID),Uri.fromFile(file).toString());
-
-            editor.apply();
-        }
-
-
-
     @SuppressLint("StaticFieldLeak")
     private class DownloadVideo extends AsyncTask<String, Void, Uri>
     {
