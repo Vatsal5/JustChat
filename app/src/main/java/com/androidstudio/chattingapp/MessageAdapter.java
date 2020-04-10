@@ -140,16 +140,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 Glide.with(context.getApplicationContext()).load(ApplicationClass.url).into(holder.ivProfile);
             }
         }
-
-        if(holder.ivPlay!=null)
+        else
         {
-            holder.ivPlay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Activity.showVideo(position);
-
-                }
-            });
+            //holder.ivProfile.setVisibility(View.GONE);
         }
 
         if (messages.get(position).getDownloaded() == 0)   //image is received but yet to be downloaded
@@ -229,6 +222,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivImage.setClickable(false);
 
             Activity.SendVideo(position);
+        }
+        else if(messages.get(position).getDownloaded()==103) // when request has been sent
+        {
+            holder.ivImage.setImageResource(0);
+            holder.progress.setVisibility(View.VISIBLE);
+
+            holder.ivImage.setClickable(false);
         }
         else if(messages.get(position).getDownloaded()==101) // when video is received  and yet to be downloaded
         {

@@ -254,7 +254,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                      contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                      userAdapter.notifyDataSetChanged();
 
-                     MessageModel model;
 
 //                     if (contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
 //                         model = new MessageModel(1110, contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
@@ -267,7 +266,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                     }
 //                     Handler.addMessage(model);
 
-                     
 
                  }
 
@@ -331,7 +329,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                             }
 //
 //                             Handler.addMessage(model);
-
 
                              userAdapter.notifyDataSetChanged();
                             // Log.d("messagecount",contacts1.get(index-1).getMessagenum()+"");

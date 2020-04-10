@@ -3,8 +3,13 @@ package com.androidstudio.chattingapp;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -125,6 +130,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     ValueEventListener Status;
 
     OnCompleteListener SendMesage;
+
+    BroadcastReceiver onDownloadComplete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -618,6 +625,51 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
         ItemTouchHelper itemTouchHelper= new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(Messages);
+
+        onDownloadComplete = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                SharedPreferences pref = getApplicationContext().getSharedPreferences("Download", 0);
+                //Fetching the download id received with the broadcast
+                long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                Log.d("Downloadid",id+"");
+                //Checking if the received broadcast is for our enqueued download by matching download id
+
+                Long messageId = pref.getLong(String.valueOf(id),-878);
+                for(int i= chats.size()-1;i>=0;i--)
+                {
+                    if(chats.get(i).getId() == messageId)
+                    {
+                        MessageModel message = chats.get(i);
+                        message.setDownloaded(102);
+
+                        Handler.UpdateMessage(message);
+
+                        if(!MessageActivity.this.isDestroyed())
+                        {
+                            chats.get(i).setDownloaded(102);
+
+                            if(!Messages.isComputingLayout())
+                            {
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        if (MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
+                            Intent intent1 = getIntent();
+                            ((Activity) ApplicationClass.MessageActivityContext).finish();
+                            startActivity(intent1);
+
+                            overridePendingTransition(0, 0);
+                        }
+                        break;
+                    }
+                }
+
+            }
+        };
+
+        registerReceiver(onDownloadComplete,new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback= new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
@@ -722,6 +774,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         FirebaseDatabase.getInstance().getReference("UserStatus").child(RecieverPhone).removeEventListener(Status);
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("videos").removeEventListener(videoreceiver);
+
+        unregisterReceiver(onDownloadComplete);
     }
 
     @Override
@@ -935,25 +989,25 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             {
                 Uri selectedImageUri = data.getData();
 
-                File file = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent/"+new Timestamp(System.currentTimeMillis())+".mp4");
-
-                try {
-                    InputStream in = getContentResolver().openInputStream(selectedImageUri);
-                    OutputStream out = new FileOutputStream(file);
-                    byte[] buf = new byte[1024];
-                    int len;
-                    while ((len = in.read(buf)) > 0) {
-                        out.write(buf, 0, len);
-                    }
-                    out.close();
-                    in.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                selectedImageUri = Uri.fromFile(file);
+//                File file = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent/"+new Timestamp(System.currentTimeMillis())+".mp4");
+//
+//                try {
+//                    InputStream in = getContentResolver().openInputStream(selectedImageUri);
+//                    OutputStream out = new FileOutputStream(file);
+//                    byte[] buf = new byte[1024];
+//                    int len;
+//                    while ((len = in.read(buf)) > 0) {
+//                        out.write(buf, 0, len);
+//                    }
+//                    out.close();
+//                    in.close();
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                selectedImageUri = Uri.fromFile(file);
 
                 Date date=new Date();
                 SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
@@ -1230,18 +1284,59 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     @Override
     public void Downloadvideo(int index) {
-        new DownloadVideo(index,chats.get(index)).execute(chats.get(index).getMessage());
+        //new DownloadVideo(index,chats.get(index)).execute(chats.get(index).getMessage());
+
+        DownloadVideoRequest(index,chats.get(index));
     }
 
     @Override
     public void showVideo(int index) {
-
         Intent intent= new Intent(MessageActivity.this,VideoActivity.class);
         intent.putExtra("uri",chats.get(index).getMessage());
         startActivity(intent);
     }
 
     //***********************************************************************************************************************************************
+
+    public void DownloadVideoRequest(int index,MessageModel model) {
+
+        chats.get(index).setDownloaded(103);
+        model.setDownloaded(103);
+        Handler.UpdateMessage(model);
+        if(!Messages.isComputingLayout())
+            adapter.notifyDataSetChanged();
+
+            File file = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Received/" + System.currentTimeMillis() + ".mp4");
+        /*
+        Create a DownloadManager.Request with all the information necessary to start the download
+         */
+            DownloadManager.Request request = null;// Set if download is allowed on roaming network
+            request = new DownloadManager.Request(Uri.parse(model.getMessage()))
+                    .setTitle("Video")// Title of the Download Notification
+                    .setDescription("Downloading")// Description of the Download Notification
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)// Visibility of the download Notification
+                    .setDestinationUri(Uri.fromFile(file))// Uri of the destination file// Set if charging is required to begin the download
+                    .setAllowedOverMetered(true)// Set if download is allowed on Mobile network
+                    .setAllowedOverRoaming(true);
+
+            DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+            Long downloadID = downloadManager.enqueue(request);// enqueue puts the download request in the queue.
+
+        Log.d("Downloadid",downloadID+"");
+
+        model.setMessage(Uri.fromFile(file).toString());
+        Handler.UpdateMessage(model);
+
+            SharedPreferences pref = getApplicationContext().getSharedPreferences("Download", 0); // 0 - for private mode
+            SharedPreferences.Editor editor = pref.edit();
+
+            editor.putLong(String.valueOf(downloadID),model.getId());
+
+            editor.apply();
+        }
+
+
+
     @SuppressLint("StaticFieldLeak")
     private class DownloadVideo extends AsyncTask<String, Void, Uri>
     {
