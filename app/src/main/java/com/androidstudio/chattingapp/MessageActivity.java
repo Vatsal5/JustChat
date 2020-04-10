@@ -204,20 +204,22 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 else if(dataSnapshot.getValue().equals("online") || (dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && !dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
 
-                    if(chats.get(index[0]).getType().equals("typing"))
-                    {
-                        chats.remove(chats.size()-1);
-                        adapter.notifyDataSetChanged();
+                    if(chats.size()>0) {
+                        if (chats.get(index[0]).getType().equals("typing")) {
+                            chats.remove(chats.size() - 1);
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 }
 
                 else {
                     ivStatus.setBackground(null);
 
-                    if(chats.get(index[0]).getType().equals("typing"))
-                    {
-                        chats.remove(chats.size()-1);
-                        adapter.notifyDataSetChanged();
+                    if (chats.size() > 0) {
+                        if (chats.get(index[0]).getType().equals("typing")) {
+                            chats.remove(chats.size() - 1);
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 }
             }
