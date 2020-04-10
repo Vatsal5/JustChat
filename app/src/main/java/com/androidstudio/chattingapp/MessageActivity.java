@@ -147,6 +147,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         setSupportActionBar(toolbar);
         setTitle(null);
 
+        final int[] index = new int[1];
+
         title = findViewById(R.id.title);
         Handler = new DBHandler(MessageActivity.this);
         Handler.Open();
@@ -193,24 +195,29 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     ivStatus.setBackgroundResource(R.drawable.orange);
 
                     chats.add(new MessageModel(-88,"nul   ",RecieverPhone,"nul  ","typing",-77868,"nul  ","nul   "));
-                    adapter.notifyItemInserted(chats.size()-1);
+                    index[0] = chats.size()-1;
+
+                    if(!Messages.isComputingLayout())
+                        adapter.notifyItemInserted(chats.size()-1);
                 }
 
                 else if(dataSnapshot.getValue().equals("online") || (dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && !dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
 
-                    if(chats.get(chats.size()-1).getType().equals("typing"))
+                    if(chats.get(index[0]).getType().equals("typing"))
                     {
                         chats.remove(chats.size()-1);
+                        adapter.notifyDataSetChanged();
                     }
                 }
 
                 else {
                     ivStatus.setBackground(null);
 
-                    if(chats.get(chats.size()-1).getType().equals("typing"))
+                    if(chats.get(index[0]).getType().equals("typing"))
                     {
                         chats.remove(chats.size()-1);
+                        adapter.notifyDataSetChanged();
                     }
                 }
             }
