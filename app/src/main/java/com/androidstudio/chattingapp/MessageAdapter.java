@@ -218,6 +218,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivPlay.setVisibility(View.GONE);
+            holder.ivImage.setBackgroundResource(R.drawable.orange2);
 
             holder.ivImage.setClickable(false);
 
@@ -227,6 +228,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         {
             holder.ivImage.setImageResource(0);
             holder.progress.setVisibility(View.VISIBLE);
+            holder.ivImage.setBackgroundResource(R.drawable.orange2);
 
             holder.ivImage.setClickable(false);
         }
@@ -245,6 +247,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
             holder.progress.setVisibility(View.GONE);
             holder.ivPlay.setVisibility(View.VISIBLE);
+            holder.ivImage.setBackgroundResource(R.drawable.background_right);
 
             holder.ivImage.setClickable(false);
 

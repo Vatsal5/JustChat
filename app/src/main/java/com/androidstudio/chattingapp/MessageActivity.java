@@ -632,15 +632,18 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 SharedPreferences pref = getApplicationContext().getSharedPreferences("Download", 0);
                 //Fetching the download id received with the broadcast
                 long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                ApplicationClass.DownloadIds.remove(id);
                 Log.d("Downloadid",id+"");
                 //Checking if the received broadcast is for our enqueued download by matching download id
 
                 Long messageId = pref.getLong(String.valueOf(id),-878);
+                Uri uri = Uri.parse(pref.getString(String.valueOf(id),"null"));
                 for(int i= chats.size()-1;i>=0;i--)
                 {
                     if(chats.get(i).getId() == messageId)
                     {
                         MessageModel message = chats.get(i);
+                        message.setMessage(uri.toString());
                         message.setDownloaded(102);
 
                         Handler.UpdateMessage(message);
@@ -648,6 +651,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         if(!MessageActivity.this.isDestroyed())
                         {
                             chats.get(i).setDownloaded(102);
+                            chats.get(i).setMessage(uri.toString());
 
                             if(!Messages.isComputingLayout())
                             {
@@ -775,7 +779,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         FirebaseDatabase.getInstance().getReference("UserStatus").child(RecieverPhone).removeEventListener(Status);
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("videos").removeEventListener(videoreceiver);
 
-        unregisterReceiver(onDownloadComplete);
     }
 
     @Override
@@ -1286,7 +1289,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     public void Downloadvideo(int index) {
         //new DownloadVideo(index,chats.get(index)).execute(chats.get(index).getMessage());
 
-        DownloadVideoRequest(index,chats.get(index));
+        new DownloadVideo(index,chats.get(index)).execute(chats.get(index).getMessage());
     }
 
     @Override
@@ -1322,15 +1325,16 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
             Long downloadID = downloadManager.enqueue(request);// enqueue puts the download request in the queue.
 
+        ApplicationClass.DownloadIds.add(downloadID);
+
         Log.d("Downloadid",downloadID+"");
 
-        model.setMessage(Uri.fromFile(file).toString());
-        Handler.UpdateMessage(model);
 
             SharedPreferences pref = getApplicationContext().getSharedPreferences("Download", 0); // 0 - for private mode
             SharedPreferences.Editor editor = pref.edit();
 
             editor.putLong(String.valueOf(downloadID),model.getId());
+            editor.putString(String.valueOf(downloadID),Uri.fromFile(file).toString());
 
             editor.apply();
         }
@@ -1351,45 +1355,58 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         @Override
         protected Uri doInBackground(String... strings) {
-            try{
-                URL u = new URL(strings[0]);
-                URLConnection conn = u.openConnection();
-                int contentLength = conn.getContentLength();
+                InputStream urlInputStream = null;
 
-                DataInputStream stream = new DataInputStream(u.openStream());
+                URLConnection urlConnection;
+
+                File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".mp4");
+
+                try{
+                //Form a new URL
+                URL finalUrl = new URL(strings[0]);
+
+                urlConnection = finalUrl.openConnection();
+
+                //Get the size of the (file) inputstream from server..
+                int contentLength = urlConnection.getContentLength();
+
+                DataInputStream stream = new DataInputStream(finalUrl.openStream());
 
                 byte[] buffer = new byte[contentLength];
                 stream.readFully(buffer);
                 stream.close();
 
-                File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Received");
-                if(!imagesFolder.exists())
-                {
-                    imagesFolder.mkdirs();
+                if (buffer.length > 0) {
+                    try {
+                        FileOutputStream fos = new FileOutputStream(file);
+                        Log.d("5FILE", "Writing from buffer to the new file..");
+                        fos.write(buffer);
+                        fos.flush();
+                        fos.close();
+                        return Uri.fromFile(file);
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        /*Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();*/
+                    }
+                } else {
+                    //Could not download the file...
+                    Log.e("8ERROR", "Buffer size is zero ! & returning 'false'.......");
+
                 }
-
-                // Create a file to save the image
-                File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis())+".mp4");
-
-                DataOutputStream fos = new DataOutputStream(new FileOutputStream(file));
-                fos.write(buffer);
-                fos.flush();
-                fos.close();
-
-                Uri uri = Uri.fromFile(file);
-
-                return uri;
-            } catch(FileNotFoundException e) {
-                e.printStackTrace(); // swallow a 404
-            } catch (IOException e) {
-                e.printStackTrace(); // swallow a 404
-            }
-            return null;
+            } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
         }
 
         @Override
         protected void onPostExecute(Uri uri) {
             super.onPostExecute(uri);
+
+            Log.d("videoDownload","PostExecute");
 
             if (uri != null) {
 

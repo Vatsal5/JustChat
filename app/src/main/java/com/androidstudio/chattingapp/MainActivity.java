@@ -1,8 +1,10 @@
 package com.androidstudio.chattingapp;
 
 import android.Manifest;
+import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Canvas;
@@ -90,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Handler = new DBHandler(MainActivity.this);
         Handler.Open();
         chats = new ArrayList<>();
@@ -736,6 +739,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onDestroy() {
         super.onDestroy();
 
+        Log.d("destroy","App is killed");
+
         Status("offline");
     }
     public void Status(String Status)
@@ -763,5 +768,41 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             intent.setData(Uri.parse("tel:"+contacts1.get(pos).getPh_number()));
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        Log.d("Destroy","onPause");
+
+        if(flag==false) {
+
+            DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+
+            ArrayList<MessageModel> models = new ArrayList<>();
+            models.addAll(new DBHandler(this).Open().getAllMessages());
+
+            for (int i = 0; i < ApplicationClass.DownloadIds.size(); i++) {
+                SharedPreferences pref = getApplicationContext().getSharedPreferences("Download", 0);
+                Long id = pref.getLong(String.valueOf(ApplicationClass.DownloadIds.get(i)), -8768);
+
+                for (int j = models.size() - 1; j >= 0; j--) {
+                    if (models.get(j).getId() == id) {
+                        downloadManager.remove(id);
+                        models.get(j).setDownloaded(101);
+                        new DBHandler(this).Open().UpdateMessage(models.get(j));
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        Log.d("Destroy","onStop");
     }
 }

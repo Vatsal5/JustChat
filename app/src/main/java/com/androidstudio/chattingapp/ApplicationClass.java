@@ -27,6 +27,7 @@ public class ApplicationClass extends Application
     public static Context MessageActivityContext;
     public static DBHandler handler;
     public static String url;
+    public static ArrayList<Long>DownloadIds;
 
     @Override
     public void onCreate() {
@@ -36,6 +37,8 @@ public class ApplicationClass extends Application
         FirebaseDatabase.getInstance().getReference("users").keepSynced(true);
 
         FirebaseDatabase.getInstance().purgeOutstandingWrites();
+
+        DownloadIds = new ArrayList<>();
 
         handler = new DBHandler(ApplicationClass.this);
         handler.Open();
@@ -62,6 +65,11 @@ public class ApplicationClass extends Application
                         handler.UpdateMessage(model);
                     }
                 });
+            }
+            if(messages.get(i).getDownloaded()==103)
+            {
+                model.setDownloaded(100);
+                handler.UpdateMessage(model);
             }
         }
 
