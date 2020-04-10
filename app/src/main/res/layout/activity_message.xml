@@ -31,9 +31,9 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/ivStatus"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_marginRight="7dp"
+                android:layout_width="39dp"
+                android:layout_height="39dp"
+                android:layout_marginLeft="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -45,8 +45,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:background="@drawable/white"
-            android:layout_marginRight="8dp"/>
+            android:layout_marginLeft="4dp"/>
 
             <TextView
                 android:id="@+id/title"

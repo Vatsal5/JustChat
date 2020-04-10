@@ -151,6 +151,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
                 Glide.with(context.getApplicationContext()).load(ApplicationClass.url).into(holder.ivProfile);
             }
+            else{
+                holder.ivProfile.setImageResource(R.drawable.person);
+            }
         }
         else
         {
