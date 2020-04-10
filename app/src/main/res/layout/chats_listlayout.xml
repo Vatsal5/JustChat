@@ -29,7 +29,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_marginLeft="17dp"
-            android:background="@drawable/orange"
+            android:background="@drawable/white"
             android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
