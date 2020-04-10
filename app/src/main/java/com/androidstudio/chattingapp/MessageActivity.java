@@ -225,29 +225,35 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 final int DRAWABLE_RIGHT = 2;
                 final int DRAWABLE_BOTTOM = 3;
 
+                String [] choices = {"Image","Video"};
+
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (etMessage.getRight() - etMessage.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(MessageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 5);
-                        } else
-                            CropImage.startPickImageActivity(MessageActivity.this);
-                        return true;
-                    }
 
-                    if(event.getRawX() <= (etMessage.getLeft() + etMessage.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width()))
-                    {
-//                        Intent intent = new Intent();
-//                        intent.setType("video/*");
-//                        intent.setAction(Intent.ACTION_GET_CONTENT);
-
-                        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(intent, 100);
-                        intent.setType("video/*");
-                        //startActivityForResult(intent,100);
-                        return true;
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+                        builder.setTitle("Select item")
+                                .setItems(choices, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        switch (i){
+                                            case 0:
+                                                if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                                    ActivityCompat.requestPermissions(MessageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 5);
+                                                } else
+                                                    CropImage.startPickImageActivity(MessageActivity.this);
+                                                break;
+                                            case 1:
+                                                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                                                intent.setType("video/*");
+                                                startActivityForResult(intent, 100);
+                                                break;
+                                        }
+                                    }
+                                });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
                     }
                 }
-
                 return false;
             }
         });

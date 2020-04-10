@@ -236,6 +236,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         {
 
             holder.ivImage.setImageResource(0);
+            holder.ivImage.setBackgroundResource(R.drawable.background_left);
             holder.progress.setVisibility(View.VISIBLE);
 
             Activity.Downloadvideo(position);
@@ -247,7 +248,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
             holder.progress.setVisibility(View.GONE);
             holder.ivPlay.setVisibility(View.VISIBLE);
-            holder.ivImage.setBackgroundResource(R.drawable.background_right);
 
             holder.ivImage.setClickable(false);
 
