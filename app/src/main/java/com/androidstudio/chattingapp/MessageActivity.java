@@ -103,7 +103,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 public class MessageActivity extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
     EmojiEditText etMessage;
-    ImageView ivSend,ivProfile,ivBack,ivStatus,ivTyping;
+    ImageView ivSend,ivProfile,ivBack,ivStatus;
     String RecieverPhone;
     FirebaseDatabase database;
     DatabaseReference reference;
@@ -166,7 +166,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ivSend = findViewById(R.id.ivSend);
         ivProfile = findViewById(R.id.ivProfile);
         ivBack = findViewById(R.id.ivBack);
-        ivTyping = findViewById(R.id.ivTyping);
         ivStatus = findViewById(R.id.ivStatus);
 
         if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -180,8 +179,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             }
         });
 
-        Glide.with(MessageActivity.this).load(R.drawable.online).into(ivTyping);
-
         if(getIntent().getStringExtra("profile") !=null){
             ApplicationClass.url=getIntent().getStringExtra("profile");
             Glide.with(MessageActivity.this).load(getIntent().getStringExtra("profile")).into(ivProfile);}
@@ -194,18 +191,27 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
-                    ivTyping.setVisibility(View.VISIBLE);
-                    Glide.with(MessageActivity.this).load(R.drawable.online).into(ivTyping);
+
+                    chats.add(new MessageModel(-88,"nul   ",RecieverPhone,"nul  ","typing",-77868,"nul  ","nul   "));
+                    adapter.notifyItemInserted(chats.size()-1);
                 }
 
                 else if(dataSnapshot.getValue().equals("online") || (dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && !dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
-                    ivTyping.setVisibility(View.GONE);
+
+                    if(chats.get(chats.size()-1).getType().equals("typing"))
+                    {
+                        chats.remove(chats.size()-1);
+                    }
                 }
 
                 else {
                     ivStatus.setBackground(null);
-                    ivTyping.setVisibility(View.GONE);
+
+                    if(chats.get(chats.size()-1).getType().equals("typing"))
+                    {
+                        chats.remove(chats.size()-1);
+                    }
                 }
             }
 
