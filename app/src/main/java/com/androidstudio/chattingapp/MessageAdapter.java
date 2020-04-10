@@ -140,9 +140,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 Glide.with(context.getApplicationContext()).load(ApplicationClass.url).into(holder.ivProfile);
             }
         }
-        else
+
+        if(holder.ivPlay!=null)
         {
-            //holder.ivProfile.setVisibility(View.GONE);
+            holder.ivPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Activity.showVideo(position);
+
+                }
+            });
         }
 
         if (messages.get(position).getDownloaded() == 0)   //image is received but yet to be downloaded

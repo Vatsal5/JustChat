@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#212121"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -65,7 +64,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:text="User Name"
-                android:textColor="#ffffff"
+                android:textColor="#212121"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -88,7 +87,7 @@
                 android:layout_height="19dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="3dp"
-                android:textColor="#ffffff"
+                android:textColor="#d6514a"
                 android:textSize="15sp"
                 app:layout_constraintLeft_toLeftOf="@id/ivImage"
                 app:layout_constraintTop_toBottomOf="@+id/tv_username" />
@@ -99,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="25dp"
-                android:textColor="#ffffff"
+                android:textColor="#d6514a"
                 android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -120,13 +119,13 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
 
-<!--            <View-->
+            <!--            <View-->
 
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="1dp"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="1dp"-->
 
-<!--                android:background="#ffffff"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent" />-->
+            <!--                android:background="#ffffff"-->
+            <!--                app:layout_constraintBottom_toBottomOf="parent" />-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

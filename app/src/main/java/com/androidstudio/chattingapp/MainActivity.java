@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                     }
 //                     Handler.addMessage(model);
 
-                     dataSnapshot.getRef().removeValue();
+                     
 
                  }
 
@@ -332,7 +332,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //
 //                             Handler.addMessage(model);
 
-                             dataSnapshot.getRef().removeValue();
 
                              userAdapter.notifyDataSetChanged();
                             // Log.d("messagecount",contacts1.get(index-1).getMessagenum()+"");
@@ -394,7 +393,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                     }
 //                     Handler.addMessage(model);
 
-                     dataSnapshot.getRef().removeValue();
 
                  }
 

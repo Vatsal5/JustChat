@@ -10,9 +10,11 @@
     tools:context=".Profile">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:id="@+id/toolbar">
+        android:background="#d6514a"
+        app:titleTextColor="#ffffff">
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -28,7 +30,7 @@
             android:layout_height="180dp"
             android:background="@drawable/image_background"
             android:clickable="true"
-            android:src="@drawable/person"
+            app:srcCompat="@drawable/person"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +40,7 @@
             android:id="@+id/ivClick"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:src="@drawable/camera"
+            app:srcCompat="@drawable/camera"
             android:background="@drawable/image_background2"
             android:padding="10dp"
             android:clickable="true"

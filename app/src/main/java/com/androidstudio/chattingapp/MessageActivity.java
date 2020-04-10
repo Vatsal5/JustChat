@@ -1236,6 +1236,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     @Override
     public void showVideo(int index) {
 
+        Intent intent= new Intent(MessageActivity.this,VideoActivity.class);
+        intent.putExtra("uri",chats.get(index).getMessage());
+        startActivity(intent);
     }
 
     //***********************************************************************************************************************************************

@@ -36,7 +36,6 @@ dependencies {
     implementation 'com.android.support:support-emoji-bundled:26.1.0'
 
 
-
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.4.5'
 
     implementation 'com.bogdwellers:pinchtozoom:0.1'
