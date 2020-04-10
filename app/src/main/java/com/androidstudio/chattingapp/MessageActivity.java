@@ -244,7 +244,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     if (event.getRawX() >= (etMessage.getRight() - etMessage.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
-                        builder.setTitle("Select item")
+                        builder.setTitle("Send...")
                                 .setItems(choices, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -464,8 +464,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 chats.add(messageModel);
 
-                adapter.notifyDataSetChanged();
-               // adapter.notifyItemInserted(chats.size()-1);
+//                adapter.notifyDataSetChanged();
+                adapter.notifyItemInserted(chats.size()-1);
                 received.start();
             }
 
