@@ -70,7 +70,7 @@
                 android:src="@drawable/typing"
                 android:scaleType="centerCrop"
                 android:layout_marginLeft="6dp"
-                android:layout_marginBottom="7dp"
+                android:layout_marginBottom="11dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/ivStatus" />
 

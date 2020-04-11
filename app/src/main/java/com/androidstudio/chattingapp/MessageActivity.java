@@ -131,6 +131,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     ValueEventListener Status;
 
     OnCompleteListener SendMesage;
+    String defaultvalue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,14 +140,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         ApplicationClass.MessageActivityContext = MessageActivity.this;
 
-        SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode",0);
-        String defaultvalue = pref.getString("mode"+RecieverPhone,"null");
-
-        if((defaultvalue.equals("null"))){
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putString("mode"+RecieverPhone, "public");
-            editor.apply();
-        }
 
         database = FirebaseDatabase.getInstance();
         reference = database.getReference();
@@ -378,6 +371,17 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         adapter = new MessageAdapter(MessageActivity.this, chats);
 
+        SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode"+RecieverPhone,0);
+        defaultvalue = pref.getString("mode"+RecieverPhone,"null");
+
+        if((defaultvalue.equals("null"))){
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("mode"+RecieverPhone, "public");
+            editor.apply();
+        }
+
+        Log.d("mode",defaultvalue);
+
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -420,12 +424,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         Messages.setAdapter(adapter);
 
-        chats.addAll(Handler.getMessages(RecieverPhone));
+        if(!defaultvalue.equals("private"))
+            chats.addAll(Handler.getMessages(RecieverPhone));
 
-        for(int i=0;i<chats.size();i++)
-        {
-            Log.d("messages",chats.get(i).getMessage());
-        }
         if(chats.size()!=0)
             adapter.notifyItemInserted(chats.size()-1);
 
@@ -933,6 +934,29 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     @Override
     protected void onResume() {
         super.onResume();
+
+        SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode"+RecieverPhone,0);
+        defaultvalue = pref.getString("mode"+RecieverPhone,"null");
+        Log.d("mode",defaultvalue);
+
+        if(defaultvalue.equals("private"))
+        {
+            if(chats.size()!=0)
+            {
+                chats.clear();
+                if(!Messages.isComputingLayout())
+                    adapter.notifyDataSetChanged();
+            }
+        }
+        else
+        {
+            if(chats.size()==0)
+            {
+                chats.addAll(Handler.getMessages(RecieverPhone));
+                if(!Messages.isComputingLayout())
+                    adapter.notifyItemInserted(chats.size()-1);
+            }
+        }
 
     }
 

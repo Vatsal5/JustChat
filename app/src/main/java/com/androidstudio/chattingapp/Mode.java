@@ -78,11 +78,11 @@ public class Mode extends AppCompatActivity {
                     }
                   else{
                       editor.putString("mode"+number,"private");
+                      editor.apply();
                   }
                 }
                 else
                 {
-
                     llSelectMode.setVisibility(View.GONE);
                     llConfirmPassword.setVisibility(View.VISIBLE);
 
