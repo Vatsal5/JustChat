@@ -435,9 +435,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                     if (flag1) {
                         llTyping.setVisibility(View.VISIBLE);
-                        Messages.scrollToPosition(chats.size()-1);
-
-
+                        if(chats.size()!=0)
+                        {
+                        Messages.scrollToPosition(chats.size()-1);}
 
                     } else {
                         llTyping.setVisibility(View.GONE);
