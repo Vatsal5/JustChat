@@ -124,6 +124,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     DBHandler Handler;
     int l;
     int flag=0;
+    SharedPreferences pref;
 
 
 
@@ -167,6 +168,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         sender = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
         chats = new ArrayList<>();
 
+         pref= getApplicationContext().getSharedPreferences("Mode"+RecieverPhone,0);
+        defaultvalue = pref.getString("mode"+RecieverPhone,"null");
         etMessage = findViewById(R.id.etMessage);
         ivSend = findViewById(R.id.ivSend);
         ivProfile = findViewById(R.id.ivProfile);
@@ -340,10 +343,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     }
                     else
                     {
+                        if((!(defaultvalue.equals("private")))) {
                             MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
                             int id = Handler.addMessage(messageModel);
                             messageModel.setId(id);
                             chats.add(messageModel);
+                        }
                     }
 
                         int id = Handler.addMessage(model);
@@ -371,8 +376,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         adapter = new MessageAdapter(MessageActivity.this, chats);
 
-        SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode"+RecieverPhone,0);
-        defaultvalue = pref.getString("mode"+RecieverPhone,"null");
+
 
         if((defaultvalue.equals("null"))){
             SharedPreferences.Editor editor = pref.edit();
@@ -459,10 +463,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     }
                 }
                 else {
+                    if(!(defaultvalue.equals("private")))
+                    {
                         MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
                         int id = Handler.addMessage(message);
                         message.setId(id);
                         chats.add(message);
+                }
                 }
 
                 int id = Handler.addMessage(messageModel);
@@ -532,10 +539,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     }
                 }
                 else {
-                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
-                    int id = Handler.addMessage(message);
-                    message.setId(id);
-                    chats.add(message);
+                    if (!(defaultvalue.equals("private"))) {
+                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
+                        int id = Handler.addMessage(message);
+                        message.setId(id);
+                        chats.add(message);
+                    }
                 }
 
                 int id = Handler.addMessage(messageModel);
@@ -608,10 +617,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                             }
                         }
                         else {
+                            if(!(defaultvalue.equals("private")))
+                            {
                             MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
                             int id = Handler.addMessage(message);
                             message.setId(id);
                             chats.add(message);
+                        }
                         }
 
                         int id = Handler.addMessage(messageModel);
@@ -1126,11 +1138,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 }
             }
             else {
+                if(!(defaultvalue.equals("private")))
+                {
                 MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
                 int id = Handler.addMessage(message);
                 message.setId(id);
                 chats.add(message);
-            }
+            }}
 
             int id = Handler.addMessage(messageModel);
             messageModel.setId(id);
