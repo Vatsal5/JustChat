@@ -104,7 +104,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 public class MessageActivity extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
     EmojiEditText etMessage;
-    ImageView ivSend,ivProfile,ivBack,ivStatus,ivProfile2,ivTyping;
+    ImageView ivSend,ivProfile,ivBack,ivStatus,ivTyping;
     String RecieverPhone;
     FirebaseDatabase database;
     DatabaseReference reference;
@@ -112,7 +112,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     StorageReference rf;
 
-    LinearLayout llTyping;
+
 
     TextView title;
     String to = "";
@@ -127,7 +127,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     int l;
     int flag=0;
 
-    Boolean flag1=false;
+
 
     ChildEventListener imagereceiver;
     ValueEventListener Status;
@@ -172,9 +172,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ivProfile = findViewById(R.id.ivProfile);
         ivBack = findViewById(R.id.ivBack);
         ivStatus = findViewById(R.id.ivStatus);
-        ivProfile2 = findViewById(R.id.ivProfile2);
+
         ivTyping = findViewById(R.id.ivTyping);
-        llTyping = findViewById(R.id.llTying);
+
 
         if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MessageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 150);
@@ -194,14 +194,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             ApplicationClass.url="null";
             ivProfile.setImageResource(R.drawable.person);}
 
-        if(ApplicationClass.url!=null)
-        {
-            Glide.with(MessageActivity.this).load(ApplicationClass.url).into(ivProfile2);
-        }
-        else
-        {
-            Glide.with(MessageActivity.this).load(R.drawable.person).into(ivProfile2);
-        }
+
+
+
 
         Glide.with(MessageActivity.this).load(R.drawable.typing).into(ivTyping);
 
@@ -209,25 +204,22 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
-                    ivStatus.setBackgroundResource(R.drawable.orange);
+                    ivStatus.setBackgroundResource(R.drawable.white);
 
-                    if(!Messages.canScrollVertically(1)) {
-                        llTyping.setVisibility(View.VISIBLE);
-                        adapter.notifyItemInserted(chats.size()-1);
-                    }
-                    flag1 = true;
+                    ivTyping.setVisibility(View.VISIBLE);
+
                 }
 
                 else if(dataSnapshot.getValue().equals("online") || (dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && !dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
-                    ivStatus.setBackgroundResource(R.drawable.orange);
-                    llTyping.setVisibility(View.GONE);
-                    flag1=false;
+                    ivStatus.setBackgroundResource(R.drawable.white);
+
+                    ivTyping.setVisibility(View.GONE);
                 }
 
                 else {
                     ivStatus.setBackground(null);
-                    llTyping.setVisibility(View.GONE);
-                    flag1=false;
+
+                    ivTyping.setVisibility(View.GONE);
                 }
             }
 
@@ -421,30 +413,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         {
             Log.d("messages",chats.get(i).getMessage());
         }
-        if(chats.size()>0)
+        if(chats.size()!=0)
             adapter.notifyItemInserted(chats.size()-1);
 
-        Messages.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
 
-                if (Messages.canScrollVertically(1)) {
-                    llTyping.setVisibility(View.GONE);
-                } else {
-
-                    if (flag1) {
-                        llTyping.setVisibility(View.VISIBLE);
-                        if(chats.size()!=0)
-                        {
-                        Messages.scrollToPosition(chats.size()-1);}
-
-                    } else {
-                        llTyping.setVisibility(View.GONE);
-                    }
-                }
-            }
-        });
 
 //**************************************************************************************************************************************************************************
 
