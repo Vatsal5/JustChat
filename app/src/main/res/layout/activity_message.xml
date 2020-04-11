@@ -53,25 +53,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
+                app:layout_constrainedHeight="true"
                 android:fontFamily="@font/aclonica"
                 android:gravity="center|start|left"
                 android:text="Vatsal"
                 android:textColor="#ffffff"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@id/ivTyping"
+                app:layout_constraintBottom_toBottomOf="@id/ivTyping"
                 app:layout_constraintLeft_toRightOf="@id/ivStatus"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/ivTyping"
                 android:layout_width="37dp"
-                android:layout_height="15dp"
+                android:layout_height="12dp"
                 android:src="@drawable/typing"
-                android:visibility="gone"
+                android:scaleType="centerCrop"
+                android:layout_marginLeft="6dp"
+                android:layout_marginBottom="7dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/ivStatus"
-                app:layout_constraintTop_toBottomOf="@id/title"
-                />
+                app:layout_constraintLeft_toRightOf="@id/ivStatus" />
 
             <TextView
                 android:id="@+id/tvMode"

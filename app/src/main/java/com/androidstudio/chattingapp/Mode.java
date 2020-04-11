@@ -51,7 +51,7 @@ public class Mode extends AppCompatActivity {
          pref= getApplicationContext().getSharedPreferences("Mode"+number,0);
         String defaultvalue=pref.getString("mode"+number,"null");
         final String defaultpassword=pref.getString("password","null");
-        final String username=pref.getString("username"+number,"null");
+        final String username=pref.getString("username","null");
         editor = pref.edit();
         if((defaultvalue.equals("null"))){
 
@@ -71,7 +71,7 @@ public class Mode extends AppCompatActivity {
                 if(isChecked)
                 {
                     llSelectMode.setVisibility(View.GONE);
-                  if(!(defaultpassword.equals("null")))
+                  if((defaultpassword.equals("null")))
                     {
                         llcreatePassword.setVisibility(View.VISIBLE);
                     }
@@ -114,6 +114,7 @@ public class Mode extends AppCompatActivity {
                    llSelectMode.setVisibility(View.VISIBLE);
                    llConfirmPassword.setVisibility(View.GONE);
                    editor.putString("mode"+number,"private");
+                   editor.apply();
 
                 }
 
@@ -139,10 +140,11 @@ public class Mode extends AppCompatActivity {
             public void onClick(View v) {
 
                 editor.putString("password",etEnterPassword.getText().toString().trim());
-                editor.putString("username"+number,etEnterUsername.getText().toString().trim());
+                editor.putString("username",etEnterUsername.getText().toString().trim());
                 llSelectMode.setVisibility(View.VISIBLE);
                 llcreatePassword.setVisibility(View.GONE);
-
+                editor.putString("mode"+number,"private");
+                editor.apply();
             }
         });
 
