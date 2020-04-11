@@ -112,6 +112,17 @@
             android:textColor="#d6514a"
             android:textColorHint="#d6514a"
             android:textSize="18dp"></EditText>
+        <EditText
+            android:id="@+id/etAcceptUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="20dp"
+            android:hint="Enter your user name"
+            android:textColor="#d6514a"
+            android:textColorHint="#d6514a"
+            android:textSize="18dp"></EditText>
 
         <TextView
             android:id="@+id/tvForgot"
@@ -150,7 +161,7 @@
         android:layout_weight="1">
 
         <EditText
-            android:id="@+id/etAcceptUsername"
+            android:id="@+id/etConfirmUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"

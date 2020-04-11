@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 public class Mode extends AppCompatActivity {
 
-    EditText etEnterPassword, etAcceptPassword, etAcceptUsername, etEnterUsername;
+    EditText etEnterPassword, etAcceptPassword, etAcceptUsername, etEnterUsername,etConfirm;
     TextView tvForgot,tvShowPassword;
     Button btnCreate, btnConfirm, btnConfirmUsername;
     Switch mode;
@@ -44,6 +44,7 @@ public class Mode extends AppCompatActivity {
         llWrongId=findViewById(R.id.WrongId);
         llWrongPassword=findViewById(R.id.WrongPassword);
         llShowPassword=findViewById(R.id.Showpassword);
+        etConfirm=findViewById(R.id.etConfirmUsername);
 
         final String number = getIntent().getStringExtra("number");
 
@@ -123,7 +124,7 @@ public class Mode extends AppCompatActivity {
             public void onClick(View v) {
                 llForgotPassword.setVisibility(View.GONE);
 
-                if(username.equals(etAcceptUsername.getText().toString().trim()))
+                if(username.equals(etConfirm.getText().toString().trim()))
                 {
                     llShowPassword.setVisibility(View.VISIBLE);
                     tvShowPassword.setText("Your Password Is "+defaultpassword);
