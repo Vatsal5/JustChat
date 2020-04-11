@@ -60,34 +60,34 @@
         android:id="@+id/selectmode"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:layout_weight="1">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="40dp"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="40dp"
             android:layout_marginRight="20dp"
-            >
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Private Mode"
                 android:layout_weight="1"
-                android:textStyle="bold"
-                android:textSize="18dp"></TextView>
+                android:text="Private Mode"
+                android:textSize="18dp"
+                android:textStyle="bold"></TextView>
 
-        <Switch
-            android:id="@+id/changeMode"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:checked="false"
-            android:textOff="OFF"
-            android:textOn="ON"
-            android:layout_height="wrap_content"></Switch>
+            <Switch
+                android:id="@+id/changeMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:textOff="OFF"
+                android:textOn="ON"></Switch>
 
         </LinearLayout>
 
@@ -216,6 +216,24 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="30dp"></TextView>
+        <LinearLayout
+            android:id="@+id/WrongPassword"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="You have entered wrong Password !! Go back and Try Again"
+                android:clickable="true"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"></TextView>
+        </LinearLayout>
 
 
     </LinearLayout>
