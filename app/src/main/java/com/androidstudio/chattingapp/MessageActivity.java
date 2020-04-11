@@ -213,6 +213,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                     if(!Messages.canScrollVertically(1)) {
                         llTyping.setVisibility(View.VISIBLE);
+                        adapter.notifyItemInserted(chats.size()-1);
                     }
                     flag1 = true;
                 }
@@ -423,22 +424,27 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         if(chats.size()>0)
             adapter.notifyItemInserted(chats.size()-1);
 
-//        Messages.setOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//
-//                if (Messages.canScrollVertically(1)) {
-//                    llTyping.setVisibility(View.GONE);
-//                } else {
-//                    if (flag1) {
-//                        llTyping.setVisibility(View.VISIBLE);
-//                    } else {
-//                        llTyping.setVisibility(View.GONE);
-//                    }
-//                }
-//            }
-//        });
+        Messages.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (Messages.canScrollVertically(1)) {
+                    llTyping.setVisibility(View.GONE);
+                } else {
+
+                    if (flag1) {
+                        llTyping.setVisibility(View.VISIBLE);
+                        Messages.scrollToPosition(chats.size()-1);
+
+
+
+                    } else {
+                        llTyping.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
 
 //**************************************************************************************************************************************************************************
 
