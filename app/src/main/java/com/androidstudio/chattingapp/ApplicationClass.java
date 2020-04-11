@@ -2,6 +2,7 @@ package com.androidstudio.chattingapp;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.provider.FontRequest;
 import android.util.Log;
 

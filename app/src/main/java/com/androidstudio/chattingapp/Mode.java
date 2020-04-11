@@ -22,6 +22,7 @@ public class Mode extends AppCompatActivity {
     SharedPreferences.Editor editor;
 
     LinearLayout llcreatePassword, llSelectMode, llConfirmPassword, llForgotPassword, llWrongId, llShowPassword, llWrongPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,14 +45,16 @@ public class Mode extends AppCompatActivity {
         llWrongPassword=findViewById(R.id.WrongPassword);
         llShowPassword=findViewById(R.id.Showpassword);
 
-         pref= getApplicationContext().getSharedPreferences("Mode",0);
-        String defaultvalue=pref.getString("mode","null");
-        final String defaultpassword=pref.getString("password","null");
-        final String username=pref.getString("username","null");
-        editor = pref.edit();
-        if(!(defaultvalue.equals("null"))){
+        final String number = getIntent().getStringExtra("number");
 
-            editor.putString("mode", "public");
+         pref= getApplicationContext().getSharedPreferences("Mode"+number,0);
+        String defaultvalue=pref.getString("mode"+number,"null");
+        final String defaultpassword=pref.getString("password","null");
+        final String username=pref.getString("username"+number,"null");
+        editor = pref.edit();
+        if((defaultvalue.equals("null"))){
+
+            editor.putString("mode"+number, "public");
             editor.commit();
         }
         if(defaultvalue.equals("private"))
@@ -109,7 +112,7 @@ public class Mode extends AppCompatActivity {
                 {
                    llSelectMode.setVisibility(View.VISIBLE);
                    llConfirmPassword.setVisibility(View.GONE);
-                   editor.putString("mode","private");
+                   editor.putString("mode"+number,"private");
 
                 }
 
@@ -135,7 +138,7 @@ public class Mode extends AppCompatActivity {
             public void onClick(View v) {
 
                 editor.putString("password",etEnterPassword.getText().toString().trim());
-                editor.putString("username",etEnterUsername.getText().toString().trim());
+                editor.putString("username"+number,etEnterUsername.getText().toString().trim());
                 llSelectMode.setVisibility(View.VISIBLE);
                 llcreatePassword.setVisibility(View.GONE);
 

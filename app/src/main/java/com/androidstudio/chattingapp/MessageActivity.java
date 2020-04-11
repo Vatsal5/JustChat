@@ -112,9 +112,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     StorageReference rf;
 
-
-
-    TextView title;
+    TextView title,tvMode;
     String to = "";
     RecyclerView Messages;
     String sender;
@@ -140,6 +138,15 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         setContentView(R.layout.activity_message);
 
         ApplicationClass.MessageActivityContext = MessageActivity.this;
+
+        SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode",0);
+        String defaultvalue = pref.getString("mode"+RecieverPhone,"null");
+
+        if((defaultvalue.equals("null"))){
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("mode"+RecieverPhone, "public");
+            editor.apply();
+        }
 
         database = FirebaseDatabase.getInstance();
         reference = database.getReference();
@@ -172,13 +179,22 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ivProfile = findViewById(R.id.ivProfile);
         ivBack = findViewById(R.id.ivBack);
         ivStatus = findViewById(R.id.ivStatus);
-
         ivTyping = findViewById(R.id.ivTyping);
+        tvMode = findViewById(R.id.tvMode);
 
 
         if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MessageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 150);
         }
+
+        tvMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MessageActivity.this,Mode.class);
+                intent.putExtra("number",RecieverPhone);
+                startActivity(intent);
+            }
+        });
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,9 +209,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         else{
             ApplicationClass.url="null";
             ivProfile.setImageResource(R.drawable.person);}
-
-
-
 
 
         Glide.with(MessageActivity.this).load(R.drawable.typing).into(ivTyping);
