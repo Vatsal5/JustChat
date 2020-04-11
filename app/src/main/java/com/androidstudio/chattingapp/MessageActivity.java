@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -103,15 +104,15 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 public class MessageActivity extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
     EmojiEditText etMessage;
-    ImageView ivSend,ivProfile,ivBack,ivStatus;
+    ImageView ivSend,ivProfile,ivBack,ivStatus,ivProfile2,ivTyping;
     String RecieverPhone;
     FirebaseDatabase database;
     DatabaseReference reference;
     String lastpath;
 
-    String message;
-
     StorageReference rf;
+
+    LinearLayout llTyping;
 
     TextView title;
     String to = "";
@@ -125,6 +126,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     DBHandler Handler;
     int l;
     int flag=0;
+
+    Boolean flag1=false;
 
     ChildEventListener imagereceiver;
     ValueEventListener Status;
@@ -169,6 +172,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ivProfile = findViewById(R.id.ivProfile);
         ivBack = findViewById(R.id.ivBack);
         ivStatus = findViewById(R.id.ivStatus);
+        ivProfile2 = findViewById(R.id.ivProfile2);
+        ivTyping = findViewById(R.id.ivTyping);
+        llTyping = findViewById(R.id.llTying);
 
         if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MessageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 150);
@@ -188,39 +194,39 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             ApplicationClass.url="null";
             ivProfile.setImageResource(R.drawable.person);}
 
+        if(ApplicationClass.url!=null)
+        {
+            Glide.with(MessageActivity.this).load(ApplicationClass.url).into(ivProfile2);
+        }
+        else
+        {
+            Glide.with(MessageActivity.this).load(R.drawable.person).into(ivProfile2);
+        }
+
+        Glide.with(MessageActivity.this).load(R.drawable.typing).into(ivTyping);
+
         Status = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
 
-                    chats.add(new MessageModel(-88,"nul   ",RecieverPhone,"nul  ","typing",-77868,"nul  ","nul   "));
-                    index[0] = chats.size()-1;
-
-                    if(!Messages.isComputingLayout())
-                        adapter.notifyItemInserted(chats.size()-1);
+                    if(!Messages.canScrollVertically(1)) {
+                        llTyping.setVisibility(View.VISIBLE);
+                    }
+                    flag1 = true;
                 }
 
                 else if(dataSnapshot.getValue().equals("online") || (dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && !dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
-
-                    if(chats.size()>0) {
-                        if (chats.get(index[0]).getType().equals("typing")) {
-                            chats.remove(chats.size() - 1);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
+                    llTyping.setVisibility(View.GONE);
+                    flag1=false;
                 }
 
                 else {
                     ivStatus.setBackground(null);
-
-                    if (chats.size() > 0) {
-                        if (chats.get(index[0]).getType().equals("typing")) {
-                            chats.remove(chats.size() - 1);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
+                    llTyping.setVisibility(View.GONE);
+                    flag1=false;
                 }
             }
 
@@ -416,15 +422,23 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         }
         if(chats.size()>0)
             adapter.notifyItemInserted(chats.size()-1);
-//        if(chats.size()!=0)
-//            adapter.notifyItemRangeInserted(0,chats.size());
 
-//        new Handler().postDelayed(new Runnable() {
+//        Messages.setOnScrollListener(new RecyclerView.OnScrollListener() {
 //            @Override
-//            public void run() {
-//                Messages.scrollToPosition(chats.size() - 1);
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//
+//                if (Messages.canScrollVertically(1)) {
+//                    llTyping.setVisibility(View.GONE);
+//                } else {
+//                    if (flag1) {
+//                        llTyping.setVisibility(View.VISIBLE);
+//                    } else {
+//                        llTyping.setVisibility(View.GONE);
+//                    }
+//                }
 //            }
-//        }, 500);
+//        });
 
 //**************************************************************************************************************************************************************************
 
