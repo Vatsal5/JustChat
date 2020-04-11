@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
+        <activity android:name=".Mode"></activity>
         <activity android:name=".VideoActivity" />
         <activity android:name=".ShowImage" />
         <activity android:name=".FriendsActivity" />

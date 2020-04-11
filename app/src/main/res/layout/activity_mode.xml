@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".Mode">
+
+    <LinearLayout
+        android:id="@+id/CreatePassword"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <EditText
+            android:id="@+id/etEnterUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="20dp"
+            android:hint="Enter Username "
+            android:textColor="#d6514a"
+            android:textColorHint="#d6514a"
+            android:textSize="18dp"></EditText>
+
+        <EditText
+            android:id="@+id/etEnterPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="20dp"
+            android:hint="Enter password "
+            android:textColor="#d6514a"
+            android:textColorHint="#d6514a"
+            android:textSize="18dp"></EditText>
+
+        <Button
+            android:id="@+id/btnCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+
+            android:background="@drawable/button_background"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="5dp"
+            android:text="Done"
+            android:textColor="#ffffff"
+            android:textSize="14dp"></Button>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/selectmode"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Private Mode"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textSize="18dp"></TextView>
+
+        <Switch
+            android:id="@+id/changeMode"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:textOff="OFF"
+            android:textOn="ON"
+            android:layout_height="wrap_content"></Switch>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/confirmpassword"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+        android:visibility="gone"
+    android:orientation="vertical"
+    android:layout_weight="1">
+
+        <EditText
+            android:id="@+id/etAcceptPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="20dp"
+            android:hint="Enter password"
+            android:textColor="#d6514a"
+            android:textColorHint="#d6514a"
+            android:textSize="18dp"></EditText>
+
+        <TextView
+            android:id="@+id/tvForgot"
+            android:text="Forgot Password"
+            android:clickable="true"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"></TextView>
+
+        <Button
+            android:id="@+id/btnConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="confirm"
+            android:textColor="#ffffff"
+            android:background="@drawable/button_background"
+            android:paddingHorizontal="15dp"
+            android:textSize="14dp"
+            android:paddingVertical="5dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"></Button>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/forgotPassword"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <EditText
+            android:id="@+id/etAcceptUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="20dp"
+            android:hint="Enter your user name"
+            android:textColor="#d6514a"
+            android:textColorHint="#d6514a"
+            android:textSize="18dp"></EditText>
+
+
+
+        <Button
+            android:id="@+id/btnConfirmUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="confirm"
+            android:paddingHorizontal="15dp"
+            android:textColor="#ffffff"
+
+            android:paddingVertical="5dp"
+            android:background="@drawable/button_background"
+            android:textSize="14dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"></Button>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/WrongId"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <TextView
+            android:text="You have entered wrong user Id !! Go back and Try Again"
+            android:clickable="true"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"></TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/Showpassword"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tvShowPassword"
+            android:text="Your password is "
+            android:clickable="true"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"></TextView>
+
+
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>
