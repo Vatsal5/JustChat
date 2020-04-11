@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 public class Mode extends AppCompatActivity {
 
-    EditText etEnterPassword, etAcceptPassword, etAcceptUsername, etEnterUsername,etConfirm;
+    EditText etEnterPassword, etAcceptPassword, etEnterUsername,etConfirm;
     TextView tvForgot,tvShowPassword;
     Button btnCreate, btnConfirm, btnConfirmUsername;
     Switch mode;
@@ -28,7 +28,7 @@ public class Mode extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mode);
         etAcceptPassword= findViewById(R.id.etAcceptPassword);
-        etAcceptUsername= findViewById(R.id.etAcceptUsername);
+
         etEnterPassword= findViewById(R.id.etEnterPassword);
         etEnterUsername= findViewById(R.id.etEnterUsername);
         tvForgot= findViewById(R.id.tvForgot);
@@ -70,22 +70,21 @@ public class Mode extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked)
                 {
-                    llSelectMode.setVisibility(View.GONE);
+
                   if((defaultpassword.equals("null")))
                     {
+                        llSelectMode.setVisibility(View.GONE);
                         llcreatePassword.setVisibility(View.VISIBLE);
                     }
                   else{
-                      llConfirmPassword.setVisibility(View.VISIBLE);
-
+                      editor.putString("mode"+number,"private");
                   }
-
-
                 }
                 else
                 {
 
-                    llShowPassword.setVisibility(View.VISIBLE);
+                    llSelectMode.setVisibility(View.GONE);
+                    llConfirmPassword.setVisibility(View.VISIBLE);
 
                 }
             }
@@ -107,13 +106,19 @@ public class Mode extends AppCompatActivity {
                 {
                     llWrongPassword.setVisibility(View.VISIBLE);
                     llConfirmPassword.setVisibility(View.GONE);
-                    mode.setChecked(false);
+                    mode.setChecked(true);
+                    editor.putString("mode" + number, "private");
+                    editor.apply();
                 }
                 else
                 {
                    llSelectMode.setVisibility(View.VISIBLE);
                    llConfirmPassword.setVisibility(View.GONE);
-                   editor.putString("mode"+number,"private");
+                   if(pref.getString("mode"+number,"null").equals("public") ||
+                           pref.getString("mode"+number,"null").equals("null")) {
+                       editor.putString("mode" + number, "private");
+                   }
+                   editor.putString("mode"+number,"public");
                    editor.apply();
 
                 }

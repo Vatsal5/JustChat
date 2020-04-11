@@ -112,17 +112,6 @@
             android:textColor="#d6514a"
             android:textColorHint="#d6514a"
             android:textSize="18dp"></EditText>
-        <EditText
-            android:id="@+id/etAcceptUsername"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="20dp"
-            android:hint="Enter your user name"
-            android:textColor="#d6514a"
-            android:textColorHint="#d6514a"
-            android:textSize="18dp"></EditText>
 
         <TextView
             android:id="@+id/tvForgot"
@@ -227,30 +216,28 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="30dp"></TextView>
-        <LinearLayout
-            android:id="@+id/WrongPassword"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            android:orientation="vertical"
-            android:layout_weight="1">
-
-            <TextView
-                android:text="You have entered wrong Password !! Go back and Try Again"
-                android:clickable="true"
-                android:textStyle="bold"
-                android:textSize="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="30dp"></TextView>
-        </LinearLayout>
 
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/WrongPassword"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
+            android:clickable="true"
+            android:text="You have entered wrong Password !! Go back and Try Again"
+            android:textSize="16dp"
+            android:textStyle="bold"></TextView>
+    </LinearLayout>
 
 
 </LinearLayout>
