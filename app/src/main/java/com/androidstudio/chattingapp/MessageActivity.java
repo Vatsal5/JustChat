@@ -125,9 +125,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     int l;
     int flag=0;
     SharedPreferences pref;
-
-
-
     ChildEventListener imagereceiver;
     ValueEventListener Status;
 
@@ -433,6 +430,70 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         if(chats.size()!=0)
             adapter.notifyItemInserted(chats.size()-1);
+
+        // to forward a message
+
+
+        String type=getIntent().getStringExtra("type");
+        String message1=getIntent().getStringExtra("message");
+
+        if(!(type.equals(" ")))
+        {
+            Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+        long millis = System.currentTimeMillis();
+        java.sql.Date date1 = new java.sql.Date(millis);
+
+            if(type.equals("text"))
+            {
+                reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
+                reference.child("users").child(RecieverPhone).child(sender).child("info").child("friend").setValue("yes");
+                sendFCMPush();
+
+
+                    MessageModel model = new MessageModel(-1, sender, RecieverPhone,message1 , "text", -2, simpleDateFormat.format(date).substring(0, 5), date1.toString());
+                    etMessage.setText(null);
+
+                    if (chats.size() != 0) {
+                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                            MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    }
+                    else
+                    {
+                        if((!(defaultvalue.equals("private")))) {
+                            MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    }
+
+                    int id = Handler.addMessage(model);
+                    model.setId(id);
+                    chats.add(model);
+                    adapter.notifyItemInserted(chats.size() - 1);
+
+
+            }
+            else if(type.equals("image"))
+            {
+                new CompressImage().execute(Uri.parse(message1));
+            }
+            else
+            {
+                MessageModel model = new MessageModel(1190,sender,RecieverPhone,message1,"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString());
+
+                int id = Handler.addMessage(model);
+                model.setId(id);
+                chats.add(model);
+
+                adapter.notifyItemInserted(chats.size()-1);
+            }
+        }
 
 
 

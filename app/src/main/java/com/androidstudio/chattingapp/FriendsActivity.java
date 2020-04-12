@@ -212,6 +212,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             intent.putExtra("phone", "+91" + contacts1.get(index).getPh_number());
 
         }
+        intent.putExtra("type","");
+        intent.putExtra("message","");
         startActivity(intent);
     }
 
