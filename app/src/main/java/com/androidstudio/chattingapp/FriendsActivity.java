@@ -32,7 +32,6 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     FirebaseDatabase database;
     String currentUserNumber;
     DatabaseReference reference;
-
     FriendsAdapter userAdapter;
     ArrayList<UserDetail> contacts;
     ArrayList<UserDetailWithStatus> contacts1;
