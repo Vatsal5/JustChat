@@ -680,6 +680,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         Intent intent = new Intent(MainActivity.this,MessageActivity.class);
         flag=true;
         intent.putExtra("type"," ");
+        intent.putExtra("messagecount",contacts1.get(index).getMessagenum());
         if(contacts1.get(index).getuID().equals(""))
         {
             intent.putExtra("title",contacts1.get(index).getPh_number());

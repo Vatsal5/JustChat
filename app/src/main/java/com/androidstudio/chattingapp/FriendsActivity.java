@@ -204,6 +204,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
         Intent intent = new Intent(FriendsActivity.this,MessageActivity.class);
         intent.putExtra("title",contacts1.get(index).getuID());
+
         if( contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
             intent.putExtra("phone", contacts1.get(index).getPh_number());
         }
@@ -211,8 +212,10 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             intent.putExtra("phone", "+91" + contacts1.get(index).getPh_number());
 
         }
-        intent.putExtra("type","");
-        intent.putExtra("message","");
+        intent.putExtra("type",getIntent().getStringExtra("type"));
+        intent.putExtra("message",getIntent().getStringExtra("message"));
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.finish();
         startActivity(intent);
     }
 

@@ -111,6 +111,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     String lastpath;
 
     StorageReference rf;
+    int messagecount;
 
     TextView title,tvMode;
     String to = "";
@@ -153,6 +154,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         title = findViewById(R.id.title);
         Handler = new DBHandler(MessageActivity.this);
         Handler.Open();
+        messagecount=getIntent().getIntExtra("messagecount",2);
 
         //getSupportActionBar().setTitle(getIntent().getStringExtra("title"));
 
@@ -481,11 +483,30 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             }
             else if(type.equals("image"))
             {
+
                 new CompressImage().execute(Uri.parse(message1));
             }
             else
             {
                 MessageModel model = new MessageModel(1190,sender,RecieverPhone,message1,"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString());
+
+                if (chats.size() != 0) {
+                    if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                        MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
+                        int id = Handler.addMessage(messageModel);
+                        messageModel.setId(id);
+                        chats.add(messageModel);
+                    }
+                }
+                else
+                {
+                    if((!(defaultvalue.equals("private")))) {
+                        MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
+                        int id = Handler.addMessage(messageModel);
+                        messageModel.setId(id);
+                        chats.add(messageModel);
+                    }
+                }
 
                 int id = Handler.addMessage(model);
                 model.setId(id);
@@ -503,7 +524,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String time,date;
-
                 MediaPlayer received = MediaPlayer.create(MessageActivity.this, R.raw.received);
 
                 time=dataSnapshot.getValue(String.class).substring(0,5);
@@ -542,7 +562,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
 //                adapter.notifyDataSetChanged();
                 adapter.notifyItemInserted(chats.size()-1);
-                received.start();
+                if(messagecount==2)
+                    received.start();
+                else messagecount--;
             }
 
             @Override
@@ -617,7 +639,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
 //                adapter.notifyDataSetChanged();
                  adapter.notifyItemInserted(chats.size()-1);
-                received.start();
+                if(messagecount==2)
+                    received.start();
+                else messagecount--;
             }
 
             @Override
@@ -695,7 +719,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                         adapter.notifyItemInserted(chats.size()-1);
                        // adapter.notifyItemRangeInserted(chats.size()-1,1);
-                        received.start();
+                        if(messagecount==2)
+                            received.start();
+                        else messagecount--;
                     }
                 }
             }
@@ -1372,6 +1398,38 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         Intent intent= new Intent(MessageActivity.this,VideoActivity.class);
         intent.putExtra("uri",chats.get(index).getMessage());
         startActivity(intent);
+    }
+
+    @Override
+    public void Onlongclick(final int index) {
+
+        String [] choices = {"Copy","Forward"};
+
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+                builder.setTitle("Choose")
+                        .setItems(choices, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                switch (i){
+                                    case 0:
+
+                                        break;
+                                    case 1:
+                                        Intent intent = new Intent(MessageActivity.this,FriendsActivity.class);
+                                        intent.putExtra("type",chats.get(index).getType());
+                                        intent.putExtra("message",chats.get(index).getMessage());
+
+                                        startActivity(intent);
+                                        break;
+                                }
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
     }
 
     //***********************************************************************************************************************************************

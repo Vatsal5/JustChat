@@ -59,6 +59,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public void SendVideo(int index);
         public void Downloadvideo(int index);
         public void showVideo(int index);
+        public void Onlongclick(int index);
     }
 
     static ImageSelected Activity;
@@ -88,6 +89,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             llMessageRight = itemView.findViewById(R.id.llMessageRight);
             tvDate = itemView.findViewById(R.id.tvDate);
             ivPlay = itemView.findViewById(R.id.ivPlay);
+
+
         }
     }
 
@@ -124,6 +127,25 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull final MessageAdapter.ViewHolder holder, final int position) {
+
+       if( holder.ivImage!=null) {
+           holder.ivImage.setOnLongClickListener(new View.OnLongClickListener() {
+               @Override
+               public boolean onLongClick(View v) {
+                   Activity.Onlongclick(position);
+                   return false;
+               }
+           });
+       }
+        if( holder.tvMessage!=null) {
+            holder.tvMessage.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Activity.Onlongclick(position);
+                    return false;
+                }
+            });
+        }
 
         if (holder.ivImage != null) {
             holder.ivImage.setOnClickListener(new View.OnClickListener() {
