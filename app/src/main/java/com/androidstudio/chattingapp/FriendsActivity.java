@@ -94,8 +94,20 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
             final String name= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             final String number= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            contacts.add(new UserDetail(number, name));
-            number1.add(number);
+            if(number.substring(0,3).equals("+91")) {
+                if (!(number.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
+                    contacts.add(new UserDetail(number, name));
+                    number1.add(number);
+                }
+            }
+            else {
+
+                if (!(("+91" + number).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
+
+                    contacts.add(new UserDetail(number, name));
+                    number1.add(number);
+                }
+            }
 
         }
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -105,7 +117,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                 for(int i=0;i<contacts.size();i++) {
 
                     if ((number1.get(i)).substring(0, 3).equals("+91")) {
-                        if (!(number1.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
+
                             if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).exists()) {
 
 
@@ -144,13 +156,13 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                 }
                                 k = 0;
                             }
-                        }
+
                     }
 
                     else
                     {
-                        if(!(("+91"+number1).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())))
-                        {
+
+
                             if (dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).exists()) {
                             if (i == 0) {
                                 if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
@@ -187,7 +199,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                 }
                             }
                             k = 0;
-                        }}
+                        }
                     }
                 }
                // Log.d("tag",contacts1.get(0).getPh_number());
