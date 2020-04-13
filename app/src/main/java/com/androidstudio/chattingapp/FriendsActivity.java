@@ -218,6 +218,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             this.finish();
         }
+        intent.putExtra("profile",contacts1.get(index).getUrl());
         startActivity(intent);
     }
 
