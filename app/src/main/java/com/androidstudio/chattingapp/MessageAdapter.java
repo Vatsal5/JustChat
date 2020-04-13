@@ -147,7 +147,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             });
         }
 
-        if (holder.ivImage != null) {
+        if (holder.ivImage != null  &&  !messages.get(position).getType().equals("video")) {
             holder.ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -263,6 +263,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivImage.setImageResource(0);
             holder.ivImage.setBackgroundResource(R.drawable.background_left);
             holder.progress.setVisibility(View.VISIBLE);
+            holder.ivPlay.setVisibility(View.GONE);
 
             Activity.Downloadvideo(position);
 

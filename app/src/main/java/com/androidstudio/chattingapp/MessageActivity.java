@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -190,6 +192,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 startActivity(intent);
             }
         });
+
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -824,27 +827,24 @@ if(getIntent().getIntExtra("path",1)==2) {
         @Override
         public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
 
-            int dragFlags,swipeFlags;
+            int swipeFlags;
             if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 0 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 2
                     ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -2 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -3 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 60)) {
 
                 if(chats.get(viewHolder.getAdapterPosition()).getSender().equals(RecieverPhone)) {
-                    dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
                     swipeFlags = ItemTouchHelper.END;
                 }
                 else
                 {
-                    dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
                     swipeFlags = ItemTouchHelper.START;
                 }
             }
             else
             {
-                dragFlags = 0;
                 swipeFlags =0;
             }
 
-            return makeMovementFlags(dragFlags, swipeFlags);
+            return makeMovementFlags(0, swipeFlags);
         }
     };
 
@@ -1054,6 +1054,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 
         if(defaultvalue.equals("private"))
         {
+            tvMode.setText("Private");
             if(chats.size()!=0)
             {
                 chats.clear();
@@ -1063,12 +1064,14 @@ if(getIntent().getIntExtra("path",1)==2) {
         }
         else
         {
-            if(chats.size()==0)
-            {
+            tvMode.setText("Public");
+            if(chats.size()!=0) {
+                chats.clear();
+                adapter.notifyDataSetChanged();
+            }
                 chats.addAll(Handler.getMessages(RecieverPhone));
                 if(!Messages.isComputingLayout())
                     adapter.notifyItemInserted(chats.size()-1);
-            }
         }
 
     }
@@ -1429,7 +1432,9 @@ if(getIntent().getIntExtra("path",1)==2) {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         switch (i){
                             case 0:
-
+                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clip = ClipData.newPlainText("copy", chats.get(index).getMessage());
+                                clipboard.setPrimaryClip(clip);
                                 break;
                             case 1:
                                 Intent intent = new Intent(MessageActivity.this,FriendsActivity.class);

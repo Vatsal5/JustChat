@@ -16,7 +16,7 @@ public class Mode extends AppCompatActivity {
 
     EditText etEnterPassword, etAcceptPassword, etEnterUsername,etConfirm;
     TextView tvForgot,tvShowPassword;
-    Button btnCreate, btnConfirm, btnConfirmUsername;
+    Button btnCreate, btnConfirm, btnConfirmUsername,btnWrongUderId, btnWrongPassword;
     Switch mode;
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -29,6 +29,8 @@ public class Mode extends AppCompatActivity {
         setContentView(R.layout.activity_mode);
         etAcceptPassword= findViewById(R.id.etAcceptPassword);
 
+        btnWrongUderId = findViewById(R.id.btnWrongUserId);
+        btnWrongPassword=findViewById(R.id.btnWrongPassword);
         etEnterPassword= findViewById(R.id.etEnterPassword);
         etEnterUsername= findViewById(R.id.etEnterUsername);
         tvForgot= findViewById(R.id.tvForgot);
@@ -153,6 +155,21 @@ public class Mode extends AppCompatActivity {
             }
         });
 
+        btnWrongPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               llWrongPassword.setVisibility(View.GONE);
+               llConfirmPassword.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btnWrongUderId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                llWrongId.setVisibility(View.GONE);
+                llForgotPassword.setVisibility(View.VISIBLE);
+            }
+        });
 
 
     }

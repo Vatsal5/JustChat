@@ -16,12 +16,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Mode"></activity>
-        <activity android:name=".VideoActivity" />
+        <activity android:name=".Mode"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".VideoActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".ShowImage" />
         <activity android:name=".FriendsActivity" />
         <activity
             android:name=".Profile"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".Verification"
