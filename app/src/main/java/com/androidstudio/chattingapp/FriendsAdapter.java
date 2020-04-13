@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -73,6 +74,8 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> {
                 @Override
                 public void onClick(View view) {
                     Activity.onItemSelected(position);
+
+
                 }
             });
 

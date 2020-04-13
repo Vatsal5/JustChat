@@ -105,50 +105,53 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                 for(int i=0;i<contacts.size();i++) {
 
                     if ((number1.get(i)).substring(0, 3).equals("+91")) {
-                        if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).exists()) {
+                        if (!(number1.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
+                            if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).exists()) {
 
 
-                            if (i == 0) {
-                                if(dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
-                                    contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class),
-                                            dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("status").getValue(String.class)));
-                                }
-                                else{
-
-                                    contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",
-                                            dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("status").getValue(String.class)));
-                                }
-                                (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
-                                //  (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("activeStatus")).setValue("online");
-                                c = 1;
-                            } else {
-                                for (int j = 0; j < c; j++) {
-                                    if (contacts.get(i).getPh_number().equals(contacts1.get(j).getPh_number())) {
-                                        k = 1;
-                                        break;
-                                    }
-                                }
-                                if (k == 0) {
-                                    if(dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
-                                        Log.d("myapp",dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class));
+                                if (i == 0) {
+                                    if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
                                         contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class),
                                                 dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("status").getValue(String.class)));
+                                    } else {
+
+                                        contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",
+                                                dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("status").getValue(String.class)));
                                     }
-                                    else{
+                                    (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
+                                    //  (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("activeStatus")).setValue("online");
+                                    c = 1;
+                                } else {
+                                    for (int j = 0; j < c; j++) {
+                                        if (contacts.get(i).getPh_number().equals(contacts1.get(j).getPh_number())) {
+                                            k = 1;
+                                            break;
+                                        }
+                                    }
+                                    if (k == 0) {
+                                        if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
+                                            Log.d("myapp", dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class));
+                                            contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class),
+                                                    dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("status").getValue(String.class)));
+                                        } else {
 
-                                        contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null", dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("status").getValue(String.class)));
-                                    }                                           (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
+                                            contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null", dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("status").getValue(String.class)));
+                                        }
+                                        (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
 
-                                    c++;
+                                        c++;
+                                    }
                                 }
+                                k = 0;
                             }
-                            k = 0;
                         }
                     }
 
                     else
                     {
-                        if (dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).exists()) {
+                        if(!(("+91"+number1).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())))
+                        {
+                            if (dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).exists()) {
                             if (i == 0) {
                                 if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
                                     contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").getValue(String.class),
@@ -184,7 +187,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                 }
                             }
                             k = 0;
-                        }
+                        }}
                     }
                 }
                // Log.d("tag",contacts1.get(0).getPh_number());
@@ -213,6 +216,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
         }
         if(getIntent().getIntExtra("path",2)==1) {
+            intent.putExtra("path",2);
             intent.putExtra("type", getIntent().getStringExtra("type"));
             intent.putExtra("message", getIntent().getStringExtra("message"));
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
