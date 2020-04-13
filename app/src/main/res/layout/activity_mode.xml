@@ -3,17 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+
+    android:background="#212121"
+    android:clipToPadding="false"
+    android:orientation="vertical"
     tools:context=".Mode">
 
     <LinearLayout
         android:id="@+id/CreatePassword"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_weight="1">
+        android:visibility="visible">
 
         <EditText
             android:id="@+id/etEnterUsername"
@@ -62,7 +65,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -77,7 +80,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Private Mode"
-                android:textSize="18dp"
+                android:textColor="#ffffff"
+                android:textSize="22dp"
                 android:textStyle="bold"></TextView>
 
             <Switch
@@ -87,19 +91,33 @@
                 android:layout_weight="1"
                 android:checked="false"
                 android:textOff="OFF"
-                android:textOn="ON"></Switch>
+                android:textOn="ON"
+                android:textSize="22sp"></Switch>
+
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:text="Privet mode allows to hide your chat. Chat can be retrieved anytime by turning it off. Do remember your username and password to turn it off"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:textStyle="normal" />
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/confirmpassword"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-        android:visibility="gone"
-    android:orientation="vertical"
-    android:layout_weight="1">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/etAcceptPassword"
@@ -115,28 +133,27 @@
 
         <TextView
             android:id="@+id/tvForgot"
-            android:text="Forgot Password"
-            android:clickable="true"
-            android:textStyle="bold"
-            android:textSize="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"></TextView>
+            android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:text="Forgot Password"
+            android:textSize="16dp"
+            android:textStyle="bold"></TextView>
 
         <Button
             android:id="@+id/btnConfirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="confirm"
-            android:textColor="#ffffff"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
             android:background="@drawable/button_background"
             android:paddingHorizontal="15dp"
-            android:textSize="14dp"
             android:paddingVertical="5dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"></Button>
-
+            android:text="confirm"
+            android:textColor="#ffffff"
+            android:textSize="14dp"></Button>
 
 
     </LinearLayout>
@@ -145,9 +162,9 @@
         android:id="@+id/forgotPassword"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_weight="1">
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/etConfirmUsername"
@@ -162,20 +179,19 @@
             android:textSize="18dp"></EditText>
 
 
-
         <Button
             android:id="@+id/btnConfirmUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="confirm"
-            android:paddingHorizontal="15dp"
-            android:textColor="#ffffff"
-
-            android:paddingVertical="5dp"
-            android:background="@drawable/button_background"
-            android:textSize="14dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"></Button>
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_background"
+
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="5dp"
+            android:text="confirm"
+            android:textColor="#ffffff"
+            android:textSize="14dp"></Button>
 
     </LinearLayout>
 
@@ -183,39 +199,39 @@
         android:id="@+id/WrongId"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_weight="1">
+        android:visibility="gone">
 
         <TextView
-            android:text="You have entered wrong user Id !! Go back and Try Again"
-            android:clickable="true"
-            android:textStyle="bold"
-            android:textSize="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="30dp"></TextView>
+            android:layout_marginTop="30dp"
+            android:clickable="true"
+            android:text="You have entered wrong user Id !! Go back and Try Again"
+            android:textSize="16dp"
+            android:textStyle="bold"></TextView>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/Showpassword"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_weight="1">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tvShowPassword"
-            android:text="Your password is "
-            android:clickable="true"
-            android:textStyle="bold"
-            android:textSize="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="30dp"></TextView>
+            android:layout_marginTop="30dp"
+            android:clickable="true"
+            android:text="Your password is "
+            android:textSize="16dp"
+            android:textStyle="bold"></TextView>
 
 
     </LinearLayout>

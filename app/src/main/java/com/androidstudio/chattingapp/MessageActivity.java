@@ -1408,6 +1408,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+
                 builder.setTitle("Choose")
                         .setItems(choices, new DialogInterface.OnClickListener() {
                             @Override
@@ -1419,6 +1420,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                     case 1:
                                         Intent intent = new Intent(MessageActivity.this,FriendsActivity.class);
                                         intent.putExtra("type",chats.get(index).getType());
+                                        intent.putExtra("path",1);
                                         intent.putExtra("message",chats.get(index).getMessage());
 
                                         startActivity(intent);
