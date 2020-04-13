@@ -484,7 +484,31 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             else if(type.equals("image"))
             {
 
-                new CompressImage().execute(Uri.parse(message1));
+                MessageModel messageModel = new MessageModel(-1, sender, RecieverPhone, message1, "image", 2,simpleDateFormat.format(date).substring(0,5),date1.toString());
+
+                if(chats.size()!=0) {
+                    if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate()) || chats.size() == 0) {
+                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
+                        int id = Handler.addMessage(message);
+                        message.setId(id);
+                        chats.add(message);
+                    }
+                }
+                else {
+                    if(!(defaultvalue.equals("private")))
+                    {
+                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
+                        int id = Handler.addMessage(message);
+                        message.setId(id);
+                        chats.add(message);
+                    }}
+
+                int id = Handler.addMessage(messageModel);
+                messageModel.setId(id);
+
+                chats.add(messageModel);
+
+                adapter.notifyItemInserted(chats.size()-1);
             }
             else
             {
@@ -1547,34 +1571,54 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         }
 
         protected Uri doInBackground(URL...urls){
-            URL url = urls[0];
-            HttpURLConnection connection = null;
-            Uri imageInternalUri = null;
+            InputStream urlInputStream = null;
+
+            URLConnection urlConnection;
+
+            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".jpg");
 
             try{
+                //Form a new URL
+                URL finalUrl = urls[0];
 
-                connection = (HttpURLConnection) url.openConnection();
+                urlConnection = finalUrl.openConnection();
 
-                connection.connect();
+                //Get the size of the (file) inputstream from server..
+                int contentLength = urlConnection.getContentLength();
 
-                InputStream inputStream = connection.getInputStream();
+                DataInputStream stream = new DataInputStream(finalUrl.openStream());
 
-                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+                byte[] buffer = new byte[contentLength];
+                stream.readFully(buffer);
+                stream.close();
 
-                Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
+                if (buffer.length > 0) {
+                    try {
+                        FileOutputStream fos = new FileOutputStream(file);
+                        Log.d("5FILE", "Writing from buffer to the new file..");
+                        fos.write(buffer);
+                        fos.flush();
+                        fos.close();
 
-                StorageReference file;
-                file=FirebaseStorage.getInstance().getReferenceFromUrl(message.getMessage());
-                file.delete();
+                        StorageReference file1;
+                        file1=FirebaseStorage.getInstance().getReferenceFromUrl(message.getMessage());
+                        file1.delete();
 
-                imageInternalUri = saveImageToInternalStorage(bmp);
-                return imageInternalUri;
+                        return Uri.fromFile(file);
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        /*Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();*/
+                    }
+                } else {
+                    //Could not download the file...
+                    Log.e("8ERROR", "Buffer size is zero ! & returning 'false'.......");
 
-            }catch(IOException e){
+                }
+            } catch (MalformedURLException e) {
                 e.printStackTrace();
-            } finally{
-                // Disconnect the http url connection
-                connection.disconnect();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             return null;
         }
