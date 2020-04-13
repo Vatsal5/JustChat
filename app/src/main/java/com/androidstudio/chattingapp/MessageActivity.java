@@ -216,21 +216,40 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                     ivStatus.setBackgroundResource(R.drawable.white);
-
                     ivTyping.setVisibility(View.VISIBLE);
 
+                    chats.add(new MessageModel(-678,"null  ","null  ","jgvjhv","typing",45,"null  ","null  "));
+                    if(!Messages.isComputingLayout())
+                    {
+                        adapter.notifyItemInserted(chats.size()-1);
+                    }
                 }
 
                 else if(dataSnapshot.getValue().equals("online") || (dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && !dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
                     ivStatus.setBackgroundResource(R.drawable.white);
 
                     ivTyping.setVisibility(View.GONE);
+
+                    if(chats.get(chats.size()-1).getType().equals("typing"))
+                    {
+                        chats.remove(chats.size()-1);
+                        if(!Messages.isComputingLayout())
+                            adapter.notifyDataSetChanged();
+                    }
+
                 }
 
                 else {
                     ivStatus.setBackground(null);
 
                     ivTyping.setVisibility(View.GONE);
+
+                    if(chats.get(chats.size()-1).getType().equals("typing"))
+                    {
+                        chats.remove(chats.size()-1);
+                        if(!Messages.isComputingLayout())
+                            adapter.notifyDataSetChanged();
+                    }
                 }
             }
 
@@ -1419,36 +1438,58 @@ if(getIntent().getIntExtra("path",1)==2) {
     @Override
     public void Onlongclick(final int index) {
 
-        String [] choices = {"Copy","Forward"};
+        if(!(chats.get(index).getType().equals("video") || chats.get(index).getType().equals("image"))) {
+            String[] choices = {"Copy", "Forward"};
 
+            AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
 
+            builder.setTitle("Choose")
+                    .setItems(choices, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            switch (i) {
+                                case 0:
+                                    ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                    ClipData clip = ClipData.newPlainText("copy", chats.get(index).getMessage());
+                                    clipboard.setPrimaryClip(clip);
+                                    break;
+                                case 1:
+                                    Intent intent = new Intent(MessageActivity.this, FriendsActivity.class);
+                                    intent.putExtra("type", chats.get(index).getType());
+                                    intent.putExtra("path", 1);
+                                    intent.putExtra("message", chats.get(index).getMessage());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
-
-        builder.setTitle("Choose")
-                .setItems(choices, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        switch (i){
-                            case 0:
-                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                ClipData clip = ClipData.newPlainText("copy", chats.get(index).getMessage());
-                                clipboard.setPrimaryClip(clip);
-                                break;
-                            case 1:
-                                Intent intent = new Intent(MessageActivity.this,FriendsActivity.class);
-                                intent.putExtra("type",chats.get(index).getType());
-                                intent.putExtra("path",1);
-                                intent.putExtra("message",chats.get(index).getMessage());
-
-                                startActivity(intent);
-                                break;
+                                    startActivity(intent);
+                                    break;
+                            }
                         }
-                    }
-                });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+        else
+        {
+            String [] choices = {"Forward"};
+            AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
 
+            builder.setItems(choices, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            switch (i) {
+                                case 0:
+                                    Intent intent = new Intent(MessageActivity.this, FriendsActivity.class);
+                                    intent.putExtra("type", chats.get(index).getType());
+                                    intent.putExtra("path", 1);
+                                    intent.putExtra("message", chats.get(index).getMessage());
+
+                                    startActivity(intent);
+                                    break;
+                            }
+                        }
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
 
     }
 

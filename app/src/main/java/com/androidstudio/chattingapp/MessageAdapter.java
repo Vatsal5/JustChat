@@ -45,6 +45,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int MSG_VIDEO_LEFT = 6;
     public static final int MSG_VIDEO_RIGHT = 5;
     public static final int DATE = 4;
+    public static final int TYPING = 7;
 
     FirebaseUser user;
     Context context;
@@ -74,7 +75,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTime,tvDate;
         EmojiTextView tvMessage;
-        ImageView ivImage,ivPlay,ivProfile;
+        ImageView ivImage,ivPlay,ivProfile,ivTyping;
         ProgressBar progress;
         LinearLayout llMessageRight;
 
@@ -89,8 +90,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             llMessageRight = itemView.findViewById(R.id.llMessageRight);
             tvDate = itemView.findViewById(R.id.tvDate);
             ivPlay = itemView.findViewById(R.id.ivPlay);
-
-
+            ivTyping = itemView.findViewById(R.id.ivTyping);
         }
     }
 
@@ -117,6 +117,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         else if (viewType == MSG_VIDEO_RIGHT) {
             View v = LayoutInflater.from(context).inflate(R.layout.video_right, parent, false);
+            return new ViewHolder(v);
+        }
+        else if (viewType == TYPING) {
+            View v = LayoutInflater.from(context).inflate(R.layout.typing_layout, parent, false);
             return new ViewHolder(v);
         }
         else {
@@ -165,9 +169,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 holder.ivProfile.setImageResource(R.drawable.person);
             }
         }
-        else
+
+        if(holder.ivTyping!=null)
         {
-            //holder.ivProfile.setVisibility(View.GONE);
+            Glide.with(context).load(R.drawable.typing).into(holder.ivTyping);
         }
 
         if (messages.get(position).getDownloaded() == 0)   //image is received but yet to be downloaded
@@ -310,6 +315,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public int getItemViewType(int position) {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(messages.get(position).getType().equals("typing"))
+        {
+            return TYPING;
+        }
 
         if(messages.get(position).getSender().equals(user.getPhoneNumber())) {
             if (messages.get(position).getType().equals("image")) {

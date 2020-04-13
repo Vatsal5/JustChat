@@ -15,7 +15,7 @@ import android.widget.TextView;
 public class Mode extends AppCompatActivity {
 
     EditText etEnterPassword, etAcceptPassword, etEnterUsername,etConfirm;
-    TextView tvForgot,tvShowPassword;
+    TextView tvForgot,tvShowPassword,tvIncompleteDetails;
     Button btnCreate, btnConfirm, btnConfirmUsername,btnWrongUderId, btnWrongPassword;
     Switch mode;
     SharedPreferences pref;
@@ -47,6 +47,7 @@ public class Mode extends AppCompatActivity {
         llWrongPassword=findViewById(R.id.WrongPassword);
         llShowPassword=findViewById(R.id.Showpassword);
         etConfirm=findViewById(R.id.etConfirmUsername);
+        tvIncompleteDetails=findViewById(R.id.textView3);
 
         final String number = getIntent().getStringExtra("number");
 
@@ -145,13 +146,19 @@ public class Mode extends AppCompatActivity {
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(etEnterPassword.getText().toString().trim().length()>0 && etEnterUsername.getText().toString().trim().length()>0) {
 
-                editor.putString("password",etEnterPassword.getText().toString().trim());
-                editor.putString("username",etEnterUsername.getText().toString().trim());
-                llSelectMode.setVisibility(View.VISIBLE);
-                llcreatePassword.setVisibility(View.GONE);
-                editor.putString("mode"+number,"private");
-                editor.apply();
+                    editor.putString("password", etEnterPassword.getText().toString().trim());
+                    editor.putString("username", etEnterUsername.getText().toString().trim());
+                    llSelectMode.setVisibility(View.VISIBLE);
+                    llcreatePassword.setVisibility(View.GONE);
+                    editor.putString("mode" + number, "private");
+                    editor.apply();
+                }
+                else
+                {
+                    tvIncompleteDetails.setVisibility(View.VISIBLE);
+                }
             }
         });
 
