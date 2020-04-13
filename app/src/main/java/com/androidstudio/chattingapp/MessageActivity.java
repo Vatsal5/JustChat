@@ -236,13 +236,15 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                     ivTyping.setVisibility(View.GONE);
 
-                    if(chats.get(chats.size()-1).getType().equals("typing"))
-                    {
-                        chats.remove(chats.size()-1);
-                        if(!Messages.isComputingLayout())
-                            adapter.notifyDataSetChanged();
+                    if(chats.size()!=0) {
 
-                        flag1=false;
+                        if (chats.get(chats.size() - 1).getType().equals("typing")) {
+                            chats.remove(chats.size() - 1);
+                            if (!Messages.isComputingLayout())
+                                adapter.notifyDataSetChanged();
+
+                            flag1 = false;
+                        }
                     }
 
                 }
@@ -252,13 +254,15 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                     ivTyping.setVisibility(View.GONE);
 
-                    if(chats.get(chats.size()-1).getType().equals("typing"))
-                    {
-                        chats.remove(chats.size()-1);
-                        if(!Messages.isComputingLayout())
-                            adapter.notifyDataSetChanged();
+                    if(chats.size()!=0) {
 
-                        flag1=false;
+                        if (chats.get(chats.size() - 1).getType().equals("typing")) {
+                            chats.remove(chats.size() - 1);
+                            if (!Messages.isComputingLayout())
+                                adapter.notifyDataSetChanged();
+
+                            flag1 = false;
+                        }
                     }
                 }
             }

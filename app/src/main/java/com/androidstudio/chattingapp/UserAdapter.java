@@ -72,23 +72,26 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
                 holder.tvlastmessage.setText(list.get(position).getLastmessage());
             }
             holder.ivImage.setVisibility(View.GONE);
+            holder.tvlastmessage.setVisibility(View.VISIBLE);
         }
         if(list.get(position).getLastmessage().equals(" "))
         {
             holder.ivImage.setVisibility(View.VISIBLE);
             holder.tvlastmessage.setText("Image");
+            holder.tvlastmessage.setVisibility(View.VISIBLE);
         }
 
         if(list.get(position).getLastmessage().equals("null"))
         {
             holder.ivImage.setVisibility(View.GONE);
-            holder.tvlastmessage.setText(null);
+            holder.tvlastmessage.setVisibility(View.GONE);
         }
 
         if(list.get(position).getLastmessage().equals("  "))
         {
             holder.tvlastmessage.setText("Video");
             holder.ivImage.setVisibility(View.GONE);
+            holder.tvlastmessage.setVisibility(View.VISIBLE);
         }
 
         if(list.get(position).getUrl().equals("null")) {
