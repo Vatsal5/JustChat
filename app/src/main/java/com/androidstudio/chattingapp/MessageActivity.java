@@ -134,6 +134,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     OnCompleteListener SendMesage;
     String defaultvalue;
 
+    boolean flag1 = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -220,10 +222,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     ivStatus.setBackgroundResource(R.drawable.white);
                     ivTyping.setVisibility(View.VISIBLE);
 
-                    chats.add(new MessageModel(-678,"null  ","null  ","jgvjhv","typing",45,"null  ",date1.toString()));
-                    if(!Messages.isComputingLayout())
-                    {
-                        adapter.notifyItemInserted(chats.size()-1);
+                    if(!flag1) {
+                        chats.add(new MessageModel(-678, "null  ", "null  ", "jgvjhv", "typing", 45, "null  ", date1.toString()));
+                        if (!Messages.isComputingLayout()) {
+                            adapter.notifyItemInserted(chats.size() - 1);
+                        }
+                        flag1=true;
                     }
                 }
 
@@ -237,6 +241,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         chats.remove(chats.size()-1);
                         if(!Messages.isComputingLayout())
                             adapter.notifyDataSetChanged();
+
+                        flag1=false;
                     }
 
                 }
@@ -251,6 +257,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         chats.remove(chats.size()-1);
                         if(!Messages.isComputingLayout())
                             adapter.notifyDataSetChanged();
+
+                        flag1=false;
                     }
                 }
             }
@@ -1076,6 +1084,9 @@ if(getIntent().getIntExtra("path",1)==2) {
     protected void onResume() {
         super.onResume();
 
+        long millis = System.currentTimeMillis();
+        java.sql.Date date1 = new java.sql.Date(millis);
+
         SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode"+RecieverPhone,0);
         defaultvalue = pref.getString("mode"+RecieverPhone,"null");
         Log.d("mode",defaultvalue);
@@ -1102,6 +1113,11 @@ if(getIntent().getIntExtra("path",1)==2) {
                     adapter.notifyItemInserted(chats.size()-1);
         }
 
+        if(flag1) {
+            chats.add(new MessageModel(-678, "null  ", "null  ", "jgvjhv", "typing", 45, "null  ", date1.toString()));
+            if(!Messages.isComputingLayout())
+                adapter.notifyItemInserted(chats.size()-1);
+        }
     }
 
     @Override
@@ -1280,6 +1296,9 @@ if(getIntent().getIntExtra("path",1)==2) {
                     message.setId(id);
                     chats.add(message);
                 }}
+
+            Log.d("type",chats.get(chats.size()-1).getType());
+
             if(chats.get(chats.size()-1).getType().equals("typing")) {
 
                 int id = Handler.addMessage(messageModel);
