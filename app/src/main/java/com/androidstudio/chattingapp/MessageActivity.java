@@ -167,7 +167,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         sender = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
         chats = new ArrayList<>();
 
-         pref= getApplicationContext().getSharedPreferences("Mode"+RecieverPhone,0);
+        pref= getApplicationContext().getSharedPreferences("Mode"+RecieverPhone,0);
         defaultvalue = pref.getString("mode"+RecieverPhone,"null");
         etMessage = findViewById(R.id.etMessage);
         ivSend = findViewById(R.id.ivSend);
@@ -350,12 +350,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         }
                     }
 
-                        int id = Handler.addMessage(model);
-                        model.setId(id);
-                        chats.add(model);
-                        adapter.notifyItemInserted(chats.size() - 1);
+                    int id = Handler.addMessage(model);
+                    model.setId(id);
+                    chats.add(model);
+                    adapter.notifyItemInserted(chats.size() - 1);
 
-                    }
+                }
             }
         });
 
@@ -442,9 +442,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         if(!(type.equals(" ")))
         {
             Date date = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-        long millis = System.currentTimeMillis();
-        java.sql.Date date1 = new java.sql.Date(millis);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+            long millis = System.currentTimeMillis();
+            java.sql.Date date1 = new java.sql.Date(millis);
 
             if(type.equals("text"))
             {
@@ -453,31 +453,31 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 sendFCMPush();
 
 
-                    MessageModel model = new MessageModel(-1, sender, RecieverPhone,message1 , "text", -2, simpleDateFormat.format(date).substring(0, 5), date1.toString());
-                    etMessage.setText(null);
+                MessageModel model = new MessageModel(-1, sender, RecieverPhone,message1 , "text", -2, simpleDateFormat.format(date).substring(0, 5), date1.toString());
+                etMessage.setText(null);
 
-                    if (chats.size() != 0) {
-                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                            MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
-                            int id = Handler.addMessage(messageModel);
-                            messageModel.setId(id);
-                            chats.add(messageModel);
-                        }
+                if (chats.size() != 0) {
+                    if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                        MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
+                        int id = Handler.addMessage(messageModel);
+                        messageModel.setId(id);
+                        chats.add(messageModel);
                     }
-                    else
-                    {
-                        if((!(defaultvalue.equals("private")))) {
-                            MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
-                            int id = Handler.addMessage(messageModel);
-                            messageModel.setId(id);
-                            chats.add(messageModel);
-                        }
+                }
+                else
+                {
+                    if((!(defaultvalue.equals("private")))) {
+                        MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
+                        int id = Handler.addMessage(messageModel);
+                        messageModel.setId(id);
+                        chats.add(messageModel);
                     }
+                }
 
-                    int id = Handler.addMessage(model);
-                    model.setId(id);
-                    chats.add(model);
-                    adapter.notifyItemInserted(chats.size() - 1);
+                int id = Handler.addMessage(model);
+                model.setId(id);
+                chats.add(model);
+                adapter.notifyItemInserted(chats.size() - 1);
 
 
             }
@@ -574,7 +574,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         int id = Handler.addMessage(message);
                         message.setId(id);
                         chats.add(message);
-                }
+                    }
                 }
 
                 int id = Handler.addMessage(messageModel);
@@ -662,7 +662,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 chats.add(messageModel);
 
 //                adapter.notifyDataSetChanged();
-                 adapter.notifyItemInserted(chats.size()-1);
+                adapter.notifyItemInserted(chats.size()-1);
                 if(messagecount==2)
                     received.start();
                 else messagecount--;
@@ -728,11 +728,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         else {
                             if(!(defaultvalue.equals("private")))
                             {
-                            MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
-                            int id = Handler.addMessage(message);
-                            message.setId(id);
-                            chats.add(message);
-                        }
+                                MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
+                                int id = Handler.addMessage(message);
+                                message.setId(id);
+                                chats.add(message);
+                            }
                         }
 
                         int id = Handler.addMessage(messageModel);
@@ -742,7 +742,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
 
                         adapter.notifyItemInserted(chats.size()-1);
-                       // adapter.notifyItemRangeInserted(chats.size()-1,1);
+                        // adapter.notifyItemRangeInserted(chats.size()-1,1);
                         if(messagecount==2)
                             received.start();
                         else messagecount--;
@@ -785,7 +785,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
-                int pos = viewHolder.getAdapterPosition();
+            int pos = viewHolder.getAdapterPosition();
             MessageModel model = chats.get(pos);
 
 
@@ -824,9 +824,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 
-                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                        .create()
-                        .decorate();
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .create()
+                    .decorate();
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
@@ -1251,11 +1251,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             else {
                 if(!(defaultvalue.equals("private")))
                 {
-                MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
-                int id = Handler.addMessage(message);
-                message.setId(id);
-                chats.add(message);
-            }}
+                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString());
+                    int id = Handler.addMessage(message);
+                    message.setId(id);
+                    chats.add(message);
+                }}
 
             int id = Handler.addMessage(messageModel);
             messageModel.setId(id);
@@ -1326,15 +1326,15 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     public void UploadImage(final int index, final MessageModel message)
     {
-       final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
+        final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
 
-       message.setDownloaded(3);
-       Handler.UpdateMessage(message);
+        message.setDownloaded(3);
+        Handler.UpdateMessage(message);
 
-       chats.get(index).setDownloaded(3);
+        chats.get(index).setDownloaded(3);
 
-       if(!Messages.isComputingLayout())
-           adapter.notifyDataSetChanged();
+        if(!Messages.isComputingLayout())
+            adapter.notifyDataSetChanged();
 
         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).
                 putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -1378,7 +1378,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             }
         });
     }
-//***********************************************************************************************************************************************
+    //***********************************************************************************************************************************************
     @Override
     public void showImage(int index) {
         Intent intent = new Intent(MessageActivity.this,ShowImage.class);
@@ -1431,29 +1431,29 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
 
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
 
-                builder.setTitle("Choose")
-                        .setItems(choices, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                switch (i){
-                                    case 0:
+        builder.setTitle("Choose")
+                .setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i){
+                            case 0:
 
-                                        break;
-                                    case 1:
-                                        Intent intent = new Intent(MessageActivity.this,FriendsActivity.class);
-                                        intent.putExtra("type",chats.get(index).getType());
-                                        intent.putExtra("path",1);
-                                        intent.putExtra("message",chats.get(index).getMessage());
+                                break;
+                            case 1:
+                                Intent intent = new Intent(MessageActivity.this,FriendsActivity.class);
+                                intent.putExtra("type",chats.get(index).getType());
+                                intent.putExtra("path",1);
+                                intent.putExtra("message",chats.get(index).getMessage());
 
-                                        startActivity(intent);
-                                        break;
-                                }
-                            }
-                        });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                                startActivity(intent);
+                                break;
+                        }
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
 
 
     }
@@ -1473,13 +1473,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         @Override
         protected Uri doInBackground(String... strings) {
-                InputStream urlInputStream = null;
+            InputStream urlInputStream = null;
 
-                URLConnection urlConnection;
+            URLConnection urlConnection;
 
-                File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".mp4");
+            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".mp4");
 
-                try{
+            try{
                 //Form a new URL
                 URL finalUrl = new URL(strings[0]);
 
@@ -1513,11 +1513,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 }
             } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 
         @Override
@@ -1664,7 +1664,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         chats.get(index).setDownloaded(-3);
 
         if(!Messages.isComputingLayout())
-                adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
 
 
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
