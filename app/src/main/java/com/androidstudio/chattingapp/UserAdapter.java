@@ -76,6 +76,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         }
         if(list.get(position).getLastmessage().equals(" "))
         {
+            holder.ivImage.setImageResource(R.drawable.image);
             holder.ivImage.setVisibility(View.VISIBLE);
             holder.tvlastmessage.setText("Image");
             holder.tvlastmessage.setVisibility(View.VISIBLE);
@@ -89,8 +90,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
         if(list.get(position).getLastmessage().equals("  "))
         {
+            holder.ivImage.setImageResource(R.drawable.video);
             holder.tvlastmessage.setText("Video");
-            holder.ivImage.setVisibility(View.GONE);
+            holder.ivImage.setVisibility(View.VISIBLE);
             holder.tvlastmessage.setVisibility(View.VISIBLE);
         }
 
