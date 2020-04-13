@@ -172,7 +172,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         if(holder.ivTyping!=null)
         {
-            Glide.with(context).load(R.drawable.typing).into(holder.ivTyping);
+            Glide.with(context).load(R.drawable.typing1).into(holder.ivTyping);
         }
 
         if (messages.get(position).getDownloaded() == 0)   //image is received but yet to be downloaded
