@@ -214,11 +214,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         Status = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                long millis = System.currentTimeMillis();
+                java.sql.Date date1 = new java.sql.Date(millis);
                 if(dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                     ivStatus.setBackgroundResource(R.drawable.white);
                     ivTyping.setVisibility(View.VISIBLE);
 
-                    chats.add(new MessageModel(-678,"null  ","null  ","jgvjhv","typing",45,"null  ","null  "));
+                    chats.add(new MessageModel(-678,"null  ","null  ","jgvjhv","typing",45,"null  ",date1.toString()));
                     if(!Messages.isComputingLayout())
                     {
                         adapter.notifyItemInserted(chats.size()-1);
@@ -371,11 +373,19 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                             chats.add(messageModel);
                         }
                     }
+                    if(chats.get(chats.size()-1).getType().equals("typing"))
+                    {
+                        int id = Handler.addMessage(model);
+                        model.setId(id);
+                        chats.add(chats.size()-1,model);
+                        adapter.notifyItemInserted(chats.size() - 1);
+                    }
+                    else{
 
                     int id = Handler.addMessage(model);
                     model.setId(id);
                     chats.add(model);
-                    adapter.notifyItemInserted(chats.size() - 1);
+                    adapter.notifyItemInserted(chats.size() - 1);}
 
                 }
             }
@@ -1156,7 +1166,10 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                 int id = Handler.addMessage(model);
                 model.setId(id);
-                chats.add(model);
+                if(chats.get(chats.size()-1).getType().equals("typing"))
+                chats.add(chats.size()-1,model);
+                else
+                    chats.add(model);
 
                 adapter.notifyItemInserted(chats.size()-1);
 
@@ -1267,13 +1280,24 @@ if(getIntent().getIntExtra("path",1)==2) {
                     message.setId(id);
                     chats.add(message);
                 }}
+            if(chats.get(chats.size()-1).getType().equals("typing")) {
 
-            int id = Handler.addMessage(messageModel);
-            messageModel.setId(id);
+                int id = Handler.addMessage(messageModel);
+                messageModel.setId(id);
 
-            chats.add(messageModel);
+                chats.add(chats.size()-1,messageModel);
 
-            adapter.notifyItemInserted(chats.size()-1);
+                adapter.notifyItemInserted(chats.size() - 1);
+            }
+            else
+            {
+                int id = Handler.addMessage(messageModel);
+                messageModel.setId(id);
+
+                chats.add(messageModel);
+
+                adapter.notifyItemInserted(chats.size() - 1);
+            }
         }
     }
 
