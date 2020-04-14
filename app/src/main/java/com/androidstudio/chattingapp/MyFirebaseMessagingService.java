@@ -67,7 +67,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
 
         //Set notification color to match your app color template
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
+            notificationBuilder.setColor(getResources().getColor(R.color.red));
         }
         notificationManager.notify(notificationID, notificationBuilder.build());
     }
