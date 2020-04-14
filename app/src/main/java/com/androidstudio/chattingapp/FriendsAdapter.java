@@ -75,7 +75,6 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> {
                 public void onClick(View view) {
                     Activity.onItemSelected(position);
 
-
                 }
             });
 

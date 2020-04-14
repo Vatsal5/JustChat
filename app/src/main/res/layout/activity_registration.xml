@@ -4,52 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#212121"
     android:orientation="vertical"
-    tools:context=".Registration"
-    android:background="@drawable/registration_background">
+    tools:context=".Registration">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:src="@drawable/icon"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop = "40dp"
-        android:padding="10dp"
-        android:background="@drawable/image_background"/>
+        android:layout_marginTop="40dp"
+        android:background="@drawable/image_background"
+        android:padding="4dp"
+        android:src="@drawable/icon" />
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/aclonica"
+        android:text="GossipBlock"
+        android:textColor="#ffffff"
+        android:textSize="24sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ChatApp will send a SMS message to verify your phone number.Please enter your phone number"
-        android:layout_marginTop="30dp"
         android:layout_marginLeft="40dp"
+        android:layout_marginTop="30dp"
         android:layout_marginRight="40dp"
-        android:textSize="20sp"
-        android:textColor="#ffffff"
+        android:fontFamily="sans-serif-condensed"
         android:gravity="center_horizontal"
-        android:fontFamily="sans-serif-condensed"/>
+        android:text="GossipBlock will send a SMS message to verify your phone number.Please enter your phone number"
+        android:textColor="#ffffff"
+        android:textSize="20sp" />
 
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:textColorHint="#ffffff"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp">
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="40dp"
+        android:textColorHint="#ffffff">
 
         <EditText
             android:id="@+id/etPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Mobile no."
+            android:backgroundTint="#ffffff"
             android:fontFamily="sans-serif-condensed"
+            android:hint="Mobile no."
+            android:inputType="number"
             android:textColor="#ffffff"
             android:textColorHint="#ffffff"
-            android:inputType="number"
-            android:textSize="20sp"
-            android:backgroundTint="#ffffff"/>
+            android:textSize="20sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,12 +67,12 @@
         android:id="@+id/btnSubmit"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="45dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="45dp"
+        android:background="@drawable/button_background"
         android:text="Submit"
         android:textColor="#ffffff"
-        android:textSize="18sp"
-        android:background="@drawable/button_background"/>
+        android:textSize="18sp" />
 
 </LinearLayout>
