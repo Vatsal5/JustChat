@@ -27,6 +27,7 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> {
 
         private final Context context;
         CircleImageView iv;
+    ImageView ivSelected;
         FirebaseDatabase database;
         DatabaseReference reference;
         private ArrayList<UserDetailWithStatus> list;
@@ -55,11 +56,12 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> {
             iv=v.findViewById(R.id.imageView);
             database=FirebaseDatabase.getInstance();
             reference=database.getReference();
+            ivSelected=v.findViewById(R.id.ivSelected);
             Log.d("tag",list.get(position).getUrl());
 
             if(list.get(position).getSelected()==1)
             {
-                
+                ivSelected.setVisibility(View.VISIBLE);
             }
             if(list.get(position).getUrl().equals("null"))
             {

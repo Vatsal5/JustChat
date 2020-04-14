@@ -29,10 +29,16 @@ public class ApplicationClass extends Application
     public static DBHandler handler;
     public static String url;
     public static ArrayList<Long>DownloadIds;
+    public static ArrayList<String>members;
+    public static String Groupname,GroupDp,groupkey;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        members=new ArrayList<>();
+        Groupname=null;
+        GroupDp=null;
+        groupkey=null;
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         FirebaseDatabase.getInstance().getReference("users").keepSynced(true);

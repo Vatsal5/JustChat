@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -23,6 +24,7 @@ public class CreateGroup extends AppCompatActivity {
 
     ImageView ivGroupDP,ivClick;
     ProgressBar progress;
+    TextView tvInstruct;
     EditText etGroupName;
     Button btnCreate;
 
@@ -33,15 +35,32 @@ public class CreateGroup extends AppCompatActivity {
 
         ivGroupDP = findViewById(R.id.ivGroupDP);
         ivClick = findViewById(R.id.ivClick);
+        tvInstruct=findViewById(R.id.tvInstruct);
 
         progress = findViewById(R.id.progress);
 
         etGroupName = findViewById(R.id.etGroupName);
         btnCreate = findViewById(R.id.btnCreate);
 
+
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                ApplicationClass.Groupname=etGroupName.getText().toString();
+
+                if(etGroupName.getText().toString().trim().length()>0)
+                {
+                    Intent intent=new Intent(CreateGroup.this, MainActivity.class);
+                    CreateGroup.this.finish();
+                    intent.putExtra("create",0);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+                else
+                {
+                    tvInstruct.setVisibility(View.VISIBLE);
+                }
 
             }
         });
@@ -82,6 +101,7 @@ public class CreateGroup extends AppCompatActivity {
 
                 progress.setVisibility(View.VISIBLE);
                 Uri uri = result.getUri();
+                ApplicationClass.GroupDp=uri.toString();
 
 
             }

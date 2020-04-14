@@ -680,8 +680,40 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                     }
                 });
+                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(
+                        new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(),"null" , 2
+                                        , "", ""));
+                                userAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                            }
+
+                            @Override
+                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                            }
+
+                            @Override
+                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        }
+                );
 
             }
+
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -749,7 +781,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 break;
 
             case R.id.CreateGroup:
-                startActivity(new Intent(MainActivity.this,CreateGroup.class));
+                Intent intent=new Intent(MainActivity.this,FriendsActivity.class);
+                intent.putExtra("createGroup",1);
+                startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -760,6 +794,21 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onResume() {
         super.onResume();
         Status("online");
+        if(getIntent().getIntExtra("create",1)==0)
+        {
+            ApplicationClass.groupkey=reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").push().getKey();
+            reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).child("groupName").setValue(ApplicationClass.Groupname);
+            for(int i=0;i<ApplicationClass.members.size();i++)
+            {
+                reference.child("groups").child(ApplicationClass.groupkey).child("members").push().setValue(ApplicationClass.members.get(i));
+                reference.child("users").child(ApplicationClass.members.get(i)).child("groups").child(ApplicationClass.groupkey).setValue(ApplicationClass.Groupname);
+
+            }
+            reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).setValue(ApplicationClass.Groupname);
+
+            reference.child("groups").child(ApplicationClass.groupkey).child("profile").setValue(ApplicationClass.GroupDp);
+            reference.child("groups").child(ApplicationClass.groupkey).child("admin").setValue(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+        }
     }
 
     @Override

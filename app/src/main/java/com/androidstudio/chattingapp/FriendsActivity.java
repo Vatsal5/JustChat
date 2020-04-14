@@ -9,7 +9,10 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,11 +34,14 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     ListView lv;
     FirebaseDatabase database;
     String currentUserNumber;
+    TextView tvCreateGroup;
+
     DatabaseReference reference;
     FriendsAdapter userAdapter;
     ArrayList<UserDetail> contacts;
     ArrayList<UserDetailWithStatus> contacts1;
     ArrayList<String> number1;
+    int yes=0;
     int c=0;
     int k=0;
     @Override
@@ -45,6 +51,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        tvCreateGroup=findViewById(R.id.tvCreate);
+
 
         setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -68,6 +76,14 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             {
                 getcontact();
             }
+
+            tvCreateGroup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FriendsActivity.this.finish();
+                    startActivity(new Intent(FriendsActivity.this,CreateGroup.class));
+                }
+            });
 
         }
 
@@ -217,25 +233,41 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     @Override
     public void onItemSelected(int index) {
 
-        Intent intent = new Intent(FriendsActivity.this,MessageActivity.class);
-        intent.putExtra("title",contacts1.get(index).getuID());
+        if (getIntent().getIntExtra("createGroup", 2) == 1) {
+            yes=1;
+            tvCreateGroup.setVisibility(View.VISIBLE);
 
-        if( contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
-            intent.putExtra("phone", contacts1.get(index).getPh_number());
-        }
-        else{
-            intent.putExtra("phone", "+91" + contacts1.get(index).getPh_number());
 
+            contacts1.get(index).setSelected(1);
+            userAdapter.notifyDataSetChanged();
+            if(contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
+                ApplicationClass.members.add(contacts1.get(index).getPh_number());
+            }
+            else
+            {
+                ApplicationClass.members.add("+91"+contacts1.get(index).getPh_number());
+            }
+
+        } else {
+            Intent intent = new Intent(FriendsActivity.this, MessageActivity.class);
+            intent.putExtra("title", contacts1.get(index).getuID());
+
+            if (contacts1.get(index).getPh_number().substring(0, 3).equals("+91")) {
+                intent.putExtra("phone", contacts1.get(index).getPh_number());
+            } else {
+                intent.putExtra("phone", "+91" + contacts1.get(index).getPh_number());
+
+            }
+            if (getIntent().getIntExtra("path", 2) == 1) {
+                intent.putExtra("path", 2);
+                intent.putExtra("type", getIntent().getStringExtra("type"));
+                intent.putExtra("message", getIntent().getStringExtra("message"));
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                this.finish();
+            }
+            intent.putExtra("profile", contacts1.get(index).getUrl());
+            startActivity(intent);
         }
-        if(getIntent().getIntExtra("path",2)==1) {
-            intent.putExtra("path",2);
-            intent.putExtra("type", getIntent().getStringExtra("type"));
-            intent.putExtra("message", getIntent().getStringExtra("message"));
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            this.finish();
-        }
-        intent.putExtra("profile",contacts1.get(index).getUrl());
-        startActivity(intent);
     }
 
     @Override
