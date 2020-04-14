@@ -135,6 +135,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     String defaultvalue;
 
     boolean flag1 = false;
+    String dpUrl ="null";
+    ValueEventListener dp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +145,20 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         ApplicationClass.MessageActivityContext = MessageActivity.this;
 
+        dp = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue(String.class)!=null)
+                    dpUrl = dataSnapshot.getValue(String.class);
+                else
+                    dpUrl = "null";
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
 
         database = FirebaseDatabase.getInstance();
         reference = database.getReference();
@@ -170,6 +186,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         RecieverPhone = getIntent().getStringExtra("phone");
         sender = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
         chats = new ArrayList<>();
+
+        FirebaseDatabase.getInstance().getReference("users").child(sender).child("profile").addListenerForSingleValueEvent(dp);
+
 
         pref= getApplicationContext().getSharedPreferences("Mode"+RecieverPhone,0);
         defaultvalue = pref.getString("mode"+RecieverPhone,"null");
@@ -353,7 +372,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
                 reference.child("users").child(RecieverPhone).child(sender).child("info").child("friend").setValue("yes");
-                sendFCMPush();
 
 
                 if (etMessage.getText().toString().trim().isEmpty())
@@ -391,6 +409,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         model.setId(id);
                         chats.add(chats.size()-1,model);
                         adapter.notifyItemInserted(chats.size() - 1);
+                        sendFCMPush(model.getMessage());
                     }
                     else{
 
@@ -398,7 +417,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     model.setId(id);
                     chats.add(model);
                     adapter.notifyItemInserted(chats.size() - 1);}
-
+                    sendFCMPush(model.getMessage());
                 }
             }
         });
@@ -492,11 +511,11 @@ if(getIntent().getIntExtra("path",1)==2) {
         if (type.equals("text")) {
             reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
             reference.child("users").child(RecieverPhone).child(sender).child("info").child("friend").setValue("yes");
-            sendFCMPush();
 
 
             MessageModel model = new MessageModel(-1, sender, RecieverPhone, message1, "text", -2, simpleDateFormat.format(date).substring(0, 5), date1.toString());
             etMessage.setText(null);
+            sendFCMPush(model.getMessage());
 
             if (chats.size() != 0) {
                 if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
@@ -908,7 +927,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 
         FirebaseDatabase.getInstance().getReference("UserStatus").child(RecieverPhone).removeEventListener(Status);
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("videos").removeEventListener(videoreceiver);
-
+        FirebaseDatabase.getInstance().getReference("users").child(sender).child("profile").removeEventListener(dp);
     }
 
     @Override
@@ -924,7 +943,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 
 //*****************************************************************************************************************************************************
 
-    private void sendFCMPush() {
+    private void sendFCMPush(String message) {
 
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -959,23 +978,26 @@ if(getIntent().getIntExtra("path",1)==2) {
             obj = new JSONObject();
             objData = new JSONObject();
 
-            objData.put("body", msg);
+            objData.put("body", message);
             objData.put("title", title);
             objData.put("sound", R.raw.notificationsound);
             objData.put("icon", R.drawable.icon); //   icon_name image must be there in drawable
             objData.put("tag", token);
             objData.put("priority", "high");
 
+            Log.d("dp1",dpUrl+" back ");
+
             dataobjData = new JSONObject();
-            dataobjData.put("text", msg);
+            dataobjData.put("text", message);
             dataobjData.put("title", title);
+            dataobjData.put("dp",dpUrl);
 
             obj.put("to", token);
             //obj.put("priority", "high");
 
-            obj.put("notification", objData);
+//            obj.put("notification", objData);
             obj.put("data", dataobjData);
-            Log.e("!_@rj@_@@_PASS:>", obj.toString());
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1357,6 +1379,8 @@ if(getIntent().getIntExtra("path",1)==2) {
                                 message.setDownloaded(102);
                                 Handler.UpdateMessage(message);
 
+                                sendFCMPush("Video");
+
                                 if(!MessageActivity.this.isDestroyed())
                                 {
                                     chats.get(index).setDownloaded(102);
@@ -1409,6 +1433,8 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                                 message.setDownloaded(1);
                                 Handler.UpdateMessage(message);
+
+                                sendFCMPush("Image");
 
                                 if(!MessageActivity.this.isDestroyed())
                                 {
