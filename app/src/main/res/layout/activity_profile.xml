@@ -30,7 +30,7 @@
             android:layout_height="180dp"
             android:background="@drawable/image_background"
             android:clickable="true"
-            app:srcCompat="@drawable/person"
+            android:src="@drawable/person"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

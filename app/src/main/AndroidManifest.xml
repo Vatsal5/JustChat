@@ -16,10 +16,13 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Mode"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".VideoActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".CreateGroup"></activity>
+        <activity
+            android:name=".Mode"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".VideoActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".ShowImage" />
         <activity android:name=".FriendsActivity" />
         <activity
@@ -51,7 +54,8 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/AppTheme" />
 
-        <service android:name=".MyFirebaseMessagingService"
+        <service
+            android:name=".MyFirebaseMessagingService"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

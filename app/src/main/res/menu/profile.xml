@@ -7,4 +7,9 @@
         android:title="Profile"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/CreateGroup"
+        android:title="Create New Group"
+        app:showAsAction="never"/>
+
 </menu>
