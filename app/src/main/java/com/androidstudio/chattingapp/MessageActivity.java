@@ -238,7 +238,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 long millis = System.currentTimeMillis();
                 java.sql.Date date1 = new java.sql.Date(millis);
                 if(dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
-                    ivStatus.setBackgroundResource(R.drawable.white);
+                    ivStatus.setBackgroundResource(R.drawable.orange);
                     ivTyping.setVisibility(View.VISIBLE);
 
                     if(!flag1) {
@@ -251,7 +251,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 }
 
                 else if(dataSnapshot.getValue().equals("online") || (dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && !dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
-                    ivStatus.setBackgroundResource(R.drawable.white);
+                    ivStatus.setBackgroundResource(R.drawable.orange);
 
                     ivTyping.setVisibility(View.GONE);
 
@@ -407,9 +407,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     {
                         int id = Handler.addMessage(model);
                         model.setId(id);
-                        chats.add(chats.size()-1,model);
-                        adapter.notifyItemInserted(chats.size() - 1);
-                        sendFCMPush(model.getMessage());
+                        if(flag1==true) {
+
+                            chats.add(chats.size() - 1, model);
+                            adapter.notifyItemInserted(chats.size() - 1);
+                            sendFCMPush(model.getMessage());
+                        }
                     }
                     else{
 
@@ -630,15 +633,33 @@ if(getIntent().getIntExtra("path",1)==2) {
                     }
                 }
 
-                int id = Handler.addMessage(messageModel);
-                messageModel.setId(id);
+                if(chats.get(chats.size()-1).getType().equals("typing")) {
 
-                dataSnapshot.getRef().removeValue();
 
-                chats.add(messageModel);
+                    int id = Handler.addMessage(messageModel);
+                    messageModel.setId(id);
+
+                    dataSnapshot.getRef().removeValue();
+
+                    chats.add(chats.size()-1,messageModel);
 
 //                adapter.notifyDataSetChanged();
-                adapter.notifyItemInserted(chats.size()-1);
+                    adapter.notifyItemInserted(chats.size() - 1);
+                }
+                else
+                {
+                    int id = Handler.addMessage(messageModel);
+                    messageModel.setId(id);
+
+                    if(flag1==true) {
+
+                        dataSnapshot.getRef().removeValue();
+
+                    chats.add(messageModel);}
+
+//                adapter.notifyDataSetChanged();
+                    adapter.notifyItemInserted(chats.size() - 1);
+                }
                 if(messagecount==2)
                     received.start();
                 else messagecount--;
@@ -706,13 +727,26 @@ if(getIntent().getIntExtra("path",1)==2) {
                         chats.add(message);
                     }
                 }
+                if(chats.get(chats.size()-1).getType().equals("typing")) {
 
-                int id = Handler.addMessage(messageModel);
-                messageModel.setId(id);
+                    int id = Handler.addMessage(messageModel);
+                    messageModel.setId(id);
 
-                dataSnapshot.getRef().removeValue();
+                    if(flag1==true) {
 
-                chats.add(messageModel);
+                        dataSnapshot.getRef().removeValue();
+
+                    chats.add(chats.size()-1,messageModel);}
+                }
+                else
+                {
+                    int id = Handler.addMessage(messageModel);
+                    messageModel.setId(id);
+
+                    dataSnapshot.getRef().removeValue();
+
+                    chats.add(messageModel);
+                }
 
 //                adapter.notifyDataSetChanged();
                 adapter.notifyItemInserted(chats.size()-1);
@@ -788,10 +822,21 @@ if(getIntent().getIntExtra("path",1)==2) {
                             }
                         }
 
-                        int id = Handler.addMessage(messageModel);
-                        messageModel.setId(id);
-                        chats.add(messageModel);
-                        dataSnapshot.getRef().removeValue();
+                        if(chats.get(chats.size()-1).getType().equals("typing")) {
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            if(flag1==true) {
+                                chats.add(chats.size()-1,messageModel);
+                                dataSnapshot.getRef().removeValue();
+                            }
+                        }
+                        else{
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+
+                            chats.add(messageModel);
+                            dataSnapshot.getRef().removeValue();
+                        }
 
 
                         adapter.notifyItemInserted(chats.size()-1);
@@ -1208,8 +1253,10 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                 int id = Handler.addMessage(model);
                 model.setId(id);
-                if(chats.get(chats.size()-1).getType().equals("typing"))
-                chats.add(chats.size()-1,model);
+                if(chats.get(chats.size()-1).getType().equals("typing")) {
+                    if(flag1==true)
+                        chats.add(chats.size() - 1, model);
+                }
                 else
                     chats.add(model);
 
@@ -1330,9 +1377,12 @@ if(getIntent().getIntExtra("path",1)==2) {
                 int id = Handler.addMessage(messageModel);
                 messageModel.setId(id);
 
-                chats.add(chats.size()-1,messageModel);
+                if(flag1==true) {
 
-                adapter.notifyItemInserted(chats.size() - 1);
+                    chats.add(chats.size() - 1, messageModel);
+
+                    adapter.notifyItemInserted(chats.size() - 1);
+                }
             }
             else
             {

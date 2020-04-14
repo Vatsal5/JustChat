@@ -674,12 +674,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                            if(num==0) {
+
                                 contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
                                         , "", ""));
                                 userAdapter.notifyDataSetChanged();
                                 num++;
-                            }
+
                         }
 
 
@@ -714,7 +714,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
             }
         };
-        reference.addListenerForSingleValueEvent(dataCreater);
+        if(num==0)
+        {
+            reference.addListenerForSingleValueEvent(dataCreater);
+        }
 
     }
 
@@ -846,7 +849,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         Log.d("Destroy","onPause");
 
-        reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").removeEventListener(Group);
 
     }
 
