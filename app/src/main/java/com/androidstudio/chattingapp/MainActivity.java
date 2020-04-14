@@ -746,6 +746,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         {
             case R.id.Profile:
                 startActivity(new Intent(MainActivity.this,Profile.class));
+                break;
+
+            case R.id.CreateGroup:
+                startActivity(new Intent(MainActivity.this,CreateGroup.class));
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

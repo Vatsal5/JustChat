@@ -124,11 +124,11 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                 if (i == 0) {
                                     if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
                                         contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class),
-                                                dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("status").getValue(String.class)));
+                                                dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("status").getValue(String.class),0));
                                     } else {
 
                                         contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",
-                                                dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("status").getValue(String.class)));
+                                                dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("status").getValue(String.class),0));
                                     }
                                     (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
                                     //  (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("activeStatus")).setValue("online");
@@ -144,10 +144,10 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                         if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
                                             Log.d("myapp", dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class));
                                             contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class),
-                                                    dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("status").getValue(String.class)));
+                                                    dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("status").getValue(String.class),0));
                                         } else {
 
-                                            contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null", dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("status").getValue(String.class)));
+                                            contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null", dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("status").getValue(String.class),0));
                                         }
                                         (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
 
@@ -167,11 +167,11 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                             if (i == 0) {
                                 if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
                                     contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").getValue(String.class),
-                                            dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("status").getValue(String.class)));
+                                            dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("status").getValue(String.class),0));
                                 }
                                 else{
                                     contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",
-                                            dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("status").getValue(String.class)));
+                                            dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("status").getValue(String.class),0));
                                 }                                 (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("message")).setValue("/null");
                                 c = 1;
                             } else {
@@ -184,11 +184,11 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                 if (k == 0) {
                                     if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
                                         contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").getValue(String.class),
-                                                dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("status").getValue(String.class)));
+                                                dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("status").getValue(String.class),0));
                                     }
                                     else{
                                         contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",
-                                                dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("status").getValue(String.class)));
+                                                dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("status").getValue(String.class),0));
                                     }
                                     (reference.child("users").child(currentUserNumber).child(("+91"+contacts.get(i).getPh_number())).child("message")).setValue("/null");
 
@@ -257,6 +257,10 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
             case android.R.id.home:
                 FriendsActivity.this.finish();
+                break;
+
+            case R.id.CreateGroup:
+                startActivity(new Intent(FriendsActivity.this,CreateGroup.class));
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -6,12 +6,14 @@ public class UserDetailWithStatus {
     String uID;
     String url;
     String status;
+    int selected;
 
-    public UserDetailWithStatus(String ph_number, String uID,String url,String status) {
+    public UserDetailWithStatus(String ph_number, String uID,String url,String status, int selected) {
         this.ph_number = ph_number;
         this.uID = uID;
         this.url=url;
         this.status=status;
+        this.selected=selected;
 
     }
 
@@ -45,5 +47,13 @@ public class UserDetailWithStatus {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getSelected() {
+        return selected;
+    }
+
+    public void setSelected(int selected) {
+        this.selected = selected;
     }
 }

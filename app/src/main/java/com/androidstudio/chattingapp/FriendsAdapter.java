@@ -56,6 +56,11 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> {
             database=FirebaseDatabase.getInstance();
             reference=database.getReference();
             Log.d("tag",list.get(position).getUrl());
+
+            if(list.get(position).getSelected()==1)
+            {
+                
+            }
             if(list.get(position).getUrl().equals("null"))
             {
                 iv.setImageResource(R.drawable.person);
