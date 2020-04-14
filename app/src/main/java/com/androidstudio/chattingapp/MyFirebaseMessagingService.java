@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -27,6 +28,7 @@ import java.util.Random;
 public class MyFirebaseMessagingService extends FirebaseMessagingService
 {
 
+    SharedPreferences pref;
     private final String ADMIN_CHANNEL_ID ="admin_channel";
     Bitmap largeIcon;
 
@@ -35,6 +37,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
         final Intent intent = new Intent(this, Registration.class);
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         int notificationID = new Random().nextInt(3000);
+
+        pref= getApplicationContext().getSharedPreferences("Names",0);
+        String name = pref.getString(remoteMessage.getData().get("title"),"null");
+
+        if(name.equals("null"))
+        {
+            name = remoteMessage.getData().get("title");
+        }
 
       /*
         Apps targeting SDK 26 or above (Android O) must implement notification channels and add its notifications
@@ -59,7 +69,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
                 .setSmallIcon(R.drawable.icon)
                 .setLargeIcon(largeIcon)
-                .setContentTitle(remoteMessage.getData().get("title"))
+                .setContentTitle(name)
                 .setContentText(remoteMessage.getData().get("text"))
                 .setAutoCancel(true)
                 .setSound(notificationSoundUri)
