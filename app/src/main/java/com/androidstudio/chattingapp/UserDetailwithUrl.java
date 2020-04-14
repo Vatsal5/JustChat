@@ -6,17 +6,35 @@ public class UserDetailwithUrl {
     String uID;
     String url;
     String lastmessage;
-    String time;
+    String time,groupkey, groupname;
     int messagenum;
 
-    public UserDetailwithUrl(String ph_number, String uID,String url,int messagenum,String lastmessage,String time) {
+    public UserDetailwithUrl(String ph_number, String uID,String url,int messagenum,String lastmessage,String time,String groupkey, String groupname) {
         this.ph_number = ph_number;
         this.uID = uID;
         this.url=url;
         this.messagenum=messagenum;
         this.lastmessage=lastmessage;
         this.time=time;
+        this.groupkey=groupkey;
+        this.groupname=groupname;
 
+    }
+
+    public String getGroupkey() {
+        return groupkey;
+    }
+
+    public void setGroupkey(String groupkey) {
+        this.groupkey = groupkey;
+    }
+
+    public String getGroupname() {
+        return groupname;
+    }
+
+    public void setGroupname(String groupname) {
+        this.groupname = groupname;
     }
 
     public String getTime() {
