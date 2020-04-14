@@ -44,6 +44,7 @@
                 android:layout_height="35dp"
                 android:layout_marginLeft="4dp"
                 android:background="@drawable/white"
+                android:padding="1dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

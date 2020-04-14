@@ -19,12 +19,14 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> {
 
 
 
         private final Context context;
-        ImageView iv;
+        CircleImageView iv;
         FirebaseDatabase database;
         DatabaseReference reference;
         private ArrayList<UserDetailWithStatus> list;
