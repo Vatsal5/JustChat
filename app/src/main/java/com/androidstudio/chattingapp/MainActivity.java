@@ -78,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     String currentUserNumber;
     DatabaseReference reference;
 
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+
     int l, pos;
     boolean flag=false;
 
@@ -92,6 +95,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        pref= getApplicationContext().getSharedPreferences("Names",0);
+        editor = pref.edit();
 
         Handler = new DBHandler(MainActivity.this);
         Handler.Open();
@@ -626,11 +632,23 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             {
                                 if(!contacts1.get(i).getPh_number().substring(0,3).equals("+91"))
                                 {
+                                    String name = pref.getString("+91"+contacts1.get(i).getPh_number(),"null");
+                                    if(name.equals("null"))
+                                    {
+                                        editor.putString("+91"+contacts1.get(i).getPh_number(),contacts1.get(i).getuID());
+                                        editor.apply();
+                                    }
                                     contacts1.get(i).setLastmessage(Handler.getLastMessage("+91"+contacts1.get(i).getPh_number()));
                                     contacts1.get(i).setTime(Handler.getLastMessageTime("+91"+contacts1.get(i).getPh_number()));
                                 }
                                 else
                                 {
+                                    String name = pref.getString(contacts1.get(i).getPh_number(),"null");
+                                    if(name.equals("null"))
+                                    {
+                                        editor.putString(contacts1.get(i).getPh_number(),contacts1.get(i).getuID());
+                                        editor.apply();
+                                    }
                                     contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
                                     contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
                                 }
