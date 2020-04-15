@@ -804,6 +804,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         {
             ApplicationClass.groupkey=reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").push().getKey();
             reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).child("groupName").setValue(ApplicationClass.Groupname);
+            reference.child("groups").child(ApplicationClass.groupkey).child("members").push().setValue(FirebaseAuth.getInstance().getCurrentUser());
+
             for(int i=0;i<ApplicationClass.members.size();i++)
             {
                 reference.child("groups").child(ApplicationClass.groupkey).child("members").push().setValue(ApplicationClass.members.get(i));
