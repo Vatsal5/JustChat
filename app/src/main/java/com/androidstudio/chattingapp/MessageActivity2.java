@@ -69,7 +69,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     MessageAdapter adapter;
     ArrayList<MessageModel> chats;
     DBHandler Handler;
-    int x=0;
+    int x=0,y=0,z=0;
     String sender;
     ChildEventListener imagereceiver, videoreceiver, chreceiver;
 
@@ -82,8 +82,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         ApplicationClass.MessageActivity2Context = MessageActivity2.this;
         membernumber=new ArrayList<>();
 
-        groupKey = getIntent().getStringExtra("groupname");
-        groupname = getIntent().getStringExtra("groupkey");
+        groupname = getIntent().getStringExtra("groupname");
+        groupKey = getIntent().getStringExtra("groupkey");
         sender = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
         ivSend = findViewById(R.id.ivSend);
@@ -104,13 +104,15 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         adapter = new MessageAdapter(MessageActivity2.this, chats);
         Messages.setAdapter(adapter);
+
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(
                 new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                      //  Log.d("asdf","hi");
 
-                       // if(!(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())))
-                       membernumber.add(dataSnapshot.getKey());
+                        if(!(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())))
+                       membernumber.add(dataSnapshot.getValue(String.class));
                     }
 
                     @Override
@@ -216,7 +218,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 received.start();
 
-              //  dataSnapshot.getRef().removeValue();
+                dataSnapshot.getRef().removeValue();
         }
 
             @Override
@@ -240,7 +242,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         };
 
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").addChildEventListener(imagereceiver);
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).addChildEventListener(imagereceiver);
 
 
         videoreceiver = new ChildEventListener() {
@@ -292,7 +296,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 adapter.notifyItemInserted(chats.size()-1);
 
                     received.start();
-               // dataSnapshot.getRef().removeValue();
+                dataSnapshot.getRef().removeValue();
             }
 
             @Override
@@ -316,7 +320,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         };
 
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("videos").addChildEventListener(videoreceiver);
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("videos").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).addChildEventListener(videoreceiver);
 
 
         chreceiver = new ChildEventListener() {
@@ -929,34 +935,38 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             public void onSuccess(Uri uri) {
 
 
+                                for(int i=0;i<membernumber.size();i++) {
 
-                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").
+                                    FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(membernumber.get(i)).
 
-                                       push().setValue(message.getTime()+message.getDate()+   FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+uri.toString());
+                                            push().setValue(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + uri.toString());
 
-                                message.setDownloaded(1);
-                                Handler.UpdateMessage(message);
+                                    if(y==0) {
+                                        y=1;
+                                        message.setDownloaded(1);
+                                        Handler.UpdateMessage(message);
 
-                                if(!MessageActivity2.this.isDestroyed())
-                                {
-                                    chats.get(index).setDownloaded(1);
-                                    mp.start();
+                                        if (!MessageActivity2.this.isDestroyed()) {
+                                            chats.get(index).setDownloaded(1);
+                                            mp.start();
 
-                                    if(!Messages.isComputingLayout())
-                                    {
-                                        adapter.notifyDataSetChanged();
+                                            if (!Messages.isComputingLayout()) {
+                                                adapter.notifyDataSetChanged();
+                                            }
+                                        }
+
+                                        if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
+                                            Intent intent = getIntent();
+                                            ((Activity) ApplicationClass.MessageActivityContext).finish();
+                                            startActivity(intent);
+
+                                            mp.start();
+
+                                            overridePendingTransition(0, 0);
+                                        }
                                     }
                                 }
-
-                                if(MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
-                                    Intent intent = getIntent();
-                                    ((Activity) ApplicationClass.MessageActivityContext).finish();
-                                    startActivity(intent);
-
-                                    mp.start();
-
-                                    overridePendingTransition(0, 0);
-                                }
+                                y=0;
                             }
                        });
 
@@ -984,33 +994,39 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             @Override
                             public void onSuccess(Uri uri) {
 
-                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).
-                                        child("videos").
-                                        push().setValue(message.getTime()+message.getDate()+   FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+uri.toString());
-                                Toast.makeText(getApplicationContext(),"Ghaint",Toast.LENGTH_LONG).show();
+                                for(int i=0;i<membernumber.size();i++) {
 
-                                message.setDownloaded(102);
-                                Handler.UpdateMessage(message);
+                                    FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).
+                                            child("videos").child(membernumber.get(i)).
+                                            push().setValue(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + uri.toString());
+                                    Toast.makeText(getApplicationContext(), "Ghaint", Toast.LENGTH_LONG).show();
+
+                                    if (z == 0) {
+                                        z = 1;
+
+                                        message.setDownloaded(102);
+                                        Handler.UpdateMessage(message);
 
 
-                                if(!MessageActivity2.this.isDestroyed())
-                                {
-                                    chats.get(index).setDownloaded(102);
+                                        if (!MessageActivity2.this.isDestroyed()) {
+                                            chats.get(index).setDownloaded(102);
 
-                                    if(!Messages.isComputingLayout())
-                                    {
-                                        adapter.notifyDataSetChanged();
+                                            if (!Messages.isComputingLayout()) {
+                                                adapter.notifyDataSetChanged();
+                                            }
+                                        }
+
+                                        if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
+                                            Intent intent = getIntent();
+                                            ((Activity) ApplicationClass.MessageActivityContext).finish();
+                                            startActivity(intent);
+
+
+                                            overridePendingTransition(0, 0);
+                                        }
                                     }
                                 }
-
-                                if(MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
-                                    Intent intent = getIntent();
-                                    ((Activity) ApplicationClass.MessageActivityContext).finish();
-                                    startActivity(intent);
-
-
-                                    overridePendingTransition(0, 0);
-                                }
+                                z=0;
                             }
                         });
 
