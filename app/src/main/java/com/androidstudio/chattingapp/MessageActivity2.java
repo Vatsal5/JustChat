@@ -363,7 +363,7 @@ public class MessageActivity2 extends AppCompatActivity {
                                     java.sql.Date date1=new java.sql.Date(millis);
                                     FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages")
                                             .child(dataSnapshot.getValue().toString()).push().setValue(
-                                                 simpleDateFormat.toString().substring(0,5)+date1.toString()+   FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+etMessage.getText().toString().trim());
+                                                 simpleDateFormat.toString()+date1.toString()+   FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+etMessage.getText().toString().trim());
                                 }
 
                                 @Override
@@ -578,7 +578,7 @@ public class MessageActivity2 extends AppCompatActivity {
 
                                 FirebaseDatabase.getInstance().getReference().child("groups").child("images").child(groupKey).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
 
-                                       push().setValue(simpleDateFormat.toString().substring(0,5)+date1.toString()+   FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+message.getTime()+message.getDate()+uri.toString());
+                                       push().setValue(simpleDateFormat.toString()+date1.toString()+   FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+message.getTime()+message.getDate()+uri.toString());
 
 //                                message.setDownloaded(1);
 //                                Handler.UpdateMessage(message);
@@ -632,7 +632,7 @@ public class MessageActivity2 extends AppCompatActivity {
 
                                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).
                                         child("videos").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                        push().setValue(simpleDateFormat.toString().substring(0,5)+date1.toString()+   FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+message.getTime()+message.getDate()+uri.toString());
+                                        push().setValue(simpleDateFormat.toString()+date1.toString()+   FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+message.getTime()+message.getDate()+uri.toString());
                                 Toast.makeText(getApplicationContext(),"Ghaint",Toast.LENGTH_LONG).show();
 
 //                                message.setDownloaded(102);
