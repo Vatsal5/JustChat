@@ -62,12 +62,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     String groupKey, groupname;
     ImageView ivSend;
     RecyclerView Messages;
+    ArrayList<String> membernumber;
     EditText etMessage;
     StorageReference rf;
     RecyclerView.LayoutManager manager;
     MessageAdapter adapter;
     ArrayList<MessageModel> chats;
     DBHandler Handler;
+    int x=0;
     String sender;
     ChildEventListener imagereceiver, videoreceiver, chreceiver;
 
@@ -78,6 +80,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         setContentView(R.layout.activity_message2);
 
         ApplicationClass.MessageActivity2Context = MessageActivity2.this;
+        membernumber=new ArrayList<>();
 
         groupKey = getIntent().getStringExtra("groupname");
         groupname = getIntent().getStringExtra("groupkey");
@@ -101,6 +104,36 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         adapter = new MessageAdapter(MessageActivity2.this, chats);
         Messages.setAdapter(adapter);
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(
+                new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        if(!(dataSnapshot.getKey().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())))
+                       membernumber.add(dataSnapshot.getKey());
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                }
+        );
 
         etMessage.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -547,65 +580,42 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             if(!Messages.isComputingLayout())
                 adapter.notifyDataSetChanged();
 
-            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(
-                    new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                            Log.d("sendmessage","running");
 
-                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages")
-                                    .child(dataSnapshot.getValue().toString()).push().setValue(
-                                    model.getTime()+model.getDate()+   FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+model.getMessage())
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            model.setDownloaded(-1);
-                                            Handler.UpdateMessage(model);
+            for(int i=0;i<membernumber.size();i++) {
+                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages")
+                        .child(membernumber.get(i)).push().setValue(
+                        model.getTime() + model.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + model.getMessage())
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                               if(x==0)
+                               {
+                                x=1;
+                                model.setDownloaded(-1);
+                                Handler.UpdateMessage(model);
 
-                                            if(!MessageActivity2.this.isDestroyed())
-                                            {
-                                                chats.get(index).setDownloaded(-1);
-                                                mp.start();
+                                if (!MessageActivity2.this.isDestroyed()) {
+                                    chats.get(index).setDownloaded(-1);
+                                    mp.start();
 
-                                                if(!Messages.isComputingLayout())
-                                                    adapter.notifyDataSetChanged();
-                                            }
+                                    if (!Messages.isComputingLayout())
+                                        adapter.notifyDataSetChanged();
+                                }
 
-                                            if(MessageActivity2.this.isDestroyed()  && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed())
-                                            {
-                                                Intent intent = getIntent();
-                                                ((Activity) ApplicationClass.MessageActivity2Context).finish();
-                                                startActivity(intent);
-                                                mp.start();
+                                if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
+                                    Intent intent = getIntent();
+                                    ((Activity) ApplicationClass.MessageActivity2Context).finish();
+                                    startActivity(intent);
+                                    mp.start();
 
-                                                overridePendingTransition(0, 0);
-                                            }
-                                        }
-                                    });
-                        }
+                                    overridePendingTransition(0, 0);
+                                }
+                            }}
+                        });
+            }
+            x=0;
 
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    }
-            );
         }
 
 
