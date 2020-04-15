@@ -46,6 +46,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int MSG_VIDEO_RIGHT = 5;
     public static final int DATE = 4;
     public static final int TYPING = 7;
+    public static final int GRP_MSG_LEFT = 8;
+    public static final int GRP_VIDEO_LEFT = 9;
+    public static final int GRP_IMAGE_LEFT = 10;
 
     FirebaseUser user;
     Context context;
@@ -73,7 +76,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTime,tvDate;
+        TextView tvTime,tvDate,tvSender;
         EmojiTextView tvMessage;
         ImageView ivImage,ivPlay,ivProfile,ivTyping;
         ProgressBar progress;
@@ -91,6 +94,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             tvDate = itemView.findViewById(R.id.tvDate);
             ivPlay = itemView.findViewById(R.id.ivPlay);
             ivTyping = itemView.findViewById(R.id.ivTyping);
+            tvSender = itemView.findViewById(R.id.tvSender);
         }
     }
 
@@ -123,6 +127,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             View v = LayoutInflater.from(context).inflate(R.layout.typing_layout, parent, false);
             return new ViewHolder(v);
         }
+        else if (viewType == GRP_IMAGE_LEFT) {
+            View v = LayoutInflater.from(context).inflate(R.layout.image_left2, parent, false);
+            return new ViewHolder(v);
+        }
+        else if (viewType == GRP_MSG_LEFT) {
+            View v = LayoutInflater.from(context).inflate(R.layout.message_left2, parent, false);
+            return new ViewHolder(v);
+        }
+        else if (viewType == GRP_VIDEO_LEFT) {
+            View v = LayoutInflater.from(context).inflate(R.layout.video_left2, parent, false);
+            return new ViewHolder(v);
+        }
         else {
             View v = LayoutInflater.from(context).inflate(R.layout.message_right, parent, false);
             return new ViewHolder(v);
@@ -131,6 +147,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull final MessageAdapter.ViewHolder holder, final int position) {
+
+        if(holder.tvSender!=null)
+        {
+            holder.tvSender.setText(messages.get(position).getSender());
+        }
 
        if( holder.ivImage!=null) {
            holder.ivImage.setOnLongClickListener(new View.OnLongClickListener() {
@@ -321,6 +342,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             return TYPING;
         }
 
+        if(messages.get(position).getType().equals("Date"))
+        {
+            return DATE;
+        }
+
         if(messages.get(position).getSender().equals(user.getPhoneNumber())) {
             if (messages.get(position).getType().equals("image")) {
                 return MSG_IMG_RIGHT;
@@ -330,19 +356,29 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 return MSG_VIDEO_RIGHT;
             }
         }
-        if(!messages.get(position).getSender().equals(user.getPhoneNumber()) && !messages.get(position).getSender().equals("null"))
-        {
-            if (messages.get(position).getType().equals("image")) {
-                return MSG_IMG_LEFT;
-            } else if (messages.get(position).getType().equals("text")) {
-                return MSG_TXT_LEFT;
-            }else if(messages.get(position).getType().equals("video")) {
-                return MSG_VIDEO_LEFT;
+
+        if(messages.get(position).getGroupName().equals("null")) {
+            if (!messages.get(position).getSender().equals(user.getPhoneNumber()) && !messages.get(position).getSender().equals("null")) {
+                if (messages.get(position).getType().equals("image")) {
+                    return MSG_IMG_LEFT;
+                } else if (messages.get(position).getType().equals("text")) {
+                    return MSG_TXT_LEFT;
+                } else if (messages.get(position).getType().equals("video")) {
+                    return MSG_VIDEO_LEFT;
+                }
             }
         }
-        if(messages.get(position).getType().equals("Date"))
+        else
         {
-            return DATE;
+            if (!messages.get(position).getSender().equals(user.getPhoneNumber()) && !messages.get(position).getSender().equals("null")) {
+                if (messages.get(position).getType().equals("image")) {
+                    return GRP_IMAGE_LEFT;
+                } else if (messages.get(position).getType().equals("text")) {
+                    return GRP_MSG_LEFT;
+                } else if (messages.get(position).getType().equals("video")) {
+                    return GRP_VIDEO_LEFT;
+                }
+            }
         }
         return -1;
     }

@@ -133,7 +133,6 @@ public class Verification extends AppCompatActivity {
 
                             dialog.dismiss();
                             FirebaseUser user = task.getResult().getUser();
-                            (reference.child("users").child(phone).child("groups")).setValue("null");
                             (reference.child("users").child(phone).child("name")).setValue("Enter Your Name");
 
                             (reference.child("users").child(phone).child("status")).setValue("What's Your Status");

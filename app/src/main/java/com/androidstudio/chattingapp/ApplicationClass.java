@@ -26,6 +26,7 @@ import java.util.logging.Handler;
 public class ApplicationClass extends Application
 {
     public static Context MessageActivityContext;
+    public static Context MessageActivity2Context;
     public static DBHandler handler;
     public static String url;
     public static ArrayList<Long>DownloadIds;
@@ -62,17 +63,17 @@ public class ApplicationClass extends Application
                 handler.UpdateMessage(model);
             }
 
-            if(messages.get(i).getDownloaded() ==-3)
-            {
-                FirebaseDatabase.getInstance().getReference("users").child(messages.get(i).getSender()).child(messages.get(i).getReciever()).push().setValue(messages.get(i)
-                        .getTime()+messages.get(i).getDate() +messages.get(i).getMessage().trim()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        model.setDownloaded(-1);
-                        handler.UpdateMessage(model);
-                    }
-                });
-            }
+            if(messages.get(i).getGroupName().equals("null"))
+                if(messages.get(i).getDownloaded() ==-3) {
+                    FirebaseDatabase.getInstance().getReference("users").child(messages.get(i).getSender()).child(messages.get(i).getReciever()).push().setValue(messages.get(i)
+                            .getTime()+messages.get(i).getDate() +messages.get(i).getMessage().trim()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            model.setDownloaded(-1);
+                            handler.UpdateMessage(model);
+                        }
+                    });
+                }
             if(messages.get(i).getDownloaded()==103)
             {
                 model.setDownloaded(100);

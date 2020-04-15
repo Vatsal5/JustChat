@@ -12,6 +12,7 @@ public class MessageModel
     private int isDownloaded;
     private String time;
     private String date;
+    private String groupName;
 
     public MessageModel(){
         this.id = -1;
@@ -22,9 +23,10 @@ public class MessageModel
         this.isDownloaded = -1;
         this.time = null;
         this.date = null;
+        this.groupName = null;
     };
 
-    public MessageModel(int id,String sender, String reciever, String message,String type,int isDownloaded,String time,String date) {
+    public MessageModel(int id,String sender, String reciever, String message,String type,int isDownloaded,String time,String date,String groupName) {
         this.id = id;
         this.sender = sender;
         this.reciever = reciever;
@@ -33,6 +35,7 @@ public class MessageModel
         this.isDownloaded = isDownloaded;
         this.time = time;
         this.date=date;
+        this.groupName = groupName;
     }
 
     public String getDate() {
@@ -97,5 +100,13 @@ public class MessageModel
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }

@@ -16,8 +16,9 @@
         app:layout_constraintTop_toTopOf="parent"
         android:background="@drawable/white"
         android:layout_marginRight="8dp"/>
+
     <TextView
-        android:id="@+id/tvsender"
+        android:id="@+id/tvSender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="9814843588"

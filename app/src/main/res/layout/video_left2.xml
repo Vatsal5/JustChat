@@ -28,10 +28,10 @@
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/ivProfile"
-        app:layout_constraintTop_toTopOf="@id/tvsender" />
+        app:layout_constraintTop_toTopOf="@id/tvSender" />
 
     <TextView
-        android:id="@+id/tvsender"
+        android:id="@+id/tvSender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="9814843588"

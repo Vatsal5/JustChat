@@ -724,7 +724,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     @Override
     public void onItemSelected(int index) {
         flag=true;
-        if(contacts1.get(index).getGroupname().equals(null))
+        if(contacts1.get(index).getGroupname() == null)
         {
         Intent intent = new Intent(MainActivity.this,MessageActivity.class);
 
