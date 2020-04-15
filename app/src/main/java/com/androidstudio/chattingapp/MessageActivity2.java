@@ -109,7 +109,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                        if(!(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())))
+                       // if(!(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())))
                        membernumber.add(dataSnapshot.getKey());
                     }
 
@@ -240,9 +240,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         };
 
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
-                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
-        ).addChildEventListener(imagereceiver);
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").addChildEventListener(imagereceiver);
 
 
         videoreceiver = new ChildEventListener() {
@@ -318,9 +316,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         };
 
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("videos").child(
-                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
-        ).addChildEventListener(videoreceiver);
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("videos").addChildEventListener(videoreceiver);
 
 
         chreceiver = new ChildEventListener() {
@@ -932,7 +928,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             @Override
                             public void onSuccess(Uri uri) {
 
-                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+
+
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").
 
                                        push().setValue(message.getTime()+message.getDate()+   FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+uri.toString());
 
@@ -987,7 +985,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             public void onSuccess(Uri uri) {
 
                                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).
-                                        child("videos").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                        child("videos").
                                         push().setValue(message.getTime()+message.getDate()+   FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+uri.toString());
                                 Toast.makeText(getApplicationContext(),"Ghaint",Toast.LENGTH_LONG).show();
 
