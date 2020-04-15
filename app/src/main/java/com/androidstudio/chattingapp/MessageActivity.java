@@ -651,11 +651,11 @@ if(getIntent().getIntExtra("path",1)==2) {
                     int id = Handler.addMessage(messageModel);
                     messageModel.setId(id);
 
-                    if(flag1==true) {
+
 
                         dataSnapshot.getRef().removeValue();
 
-                    chats.add(messageModel);}
+                    chats.add(messageModel);
 
 //                adapter.notifyDataSetChanged();
                     adapter.notifyItemInserted(chats.size() - 1);
