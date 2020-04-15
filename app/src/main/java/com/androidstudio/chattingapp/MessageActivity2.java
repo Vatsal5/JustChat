@@ -109,7 +109,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                        if(!(dataSnapshot.getKey().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())))
+                        if(!(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())))
                        membernumber.add(dataSnapshot.getKey());
                     }
 
@@ -216,7 +216,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 received.start();
 
-                dataSnapshot.getRef().removeValue();
+              //  dataSnapshot.getRef().removeValue();
         }
 
             @Override
@@ -286,7 +286,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     int id = Handler.addMessage(messageModel);
                     messageModel.setId(id);
 
-                    dataSnapshot.getRef().removeValue();
+                   // dataSnapshot.getRef().removeValue();
 
                     chats.add(messageModel);
 
@@ -294,7 +294,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 adapter.notifyItemInserted(chats.size()-1);
 
                     received.start();
-                dataSnapshot.getRef().removeValue();
+               // dataSnapshot.getRef().removeValue();
             }
 
             @Override
@@ -581,7 +581,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 adapter.notifyDataSetChanged();
 
 
-
+                Log.d("asdf",membernumber.size()+"");
             for(int i=0;i<membernumber.size();i++) {
                 Log.d("asdf","hi");
                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages")
@@ -858,7 +858,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                         StorageReference file1;
                         file1=FirebaseStorage.getInstance().getReferenceFromUrl(message.getMessage());
-                        file1.delete();
+                      //  file1.delete();
 
                         return Uri.fromFile(file);
                     } catch (Exception e) {
