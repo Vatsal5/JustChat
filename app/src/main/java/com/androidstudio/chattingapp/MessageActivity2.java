@@ -6,16 +6,21 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -27,6 +32,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -57,11 +63,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+
 public class MessageActivity2 extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
     String groupKey, groupname;
-    ImageView ivSend;
+    ImageView ivSend,ivBack;
     RecyclerView Messages;
+    TextView tvTitle;
     ArrayList<String> membernumber;
     EditText etMessage;
     StorageReference rf;
@@ -69,7 +78,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     MessageAdapter adapter;
     ArrayList<MessageModel> chats;
     DBHandler Handler;
-    int x=0,y=0,z=0;
+    int y=0,z=0;
     String sender;
     ChildEventListener imagereceiver, videoreceiver, chreceiver;
 
@@ -89,6 +98,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         ivSend = findViewById(R.id.ivSend);
         rf = FirebaseStorage.getInstance().getReference("docs/");
         etMessage = findViewById(R.id.etMessage);
+        tvTitle = findViewById(R.id.title);
+        ivBack = findViewById(R.id.ivBack);
+
+        tvTitle.setText(groupname);
 
         Messages = findViewById(R.id.Messages);
         Messages.setHasFixedSize(true);
@@ -100,10 +113,29 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         Handler.Open();
 
         chats = new ArrayList<>();
-        chats.addAll(Handler.getGroupMessages(groupname));
 
         adapter = new MessageAdapter(MessageActivity2.this, chats);
         Messages.setAdapter(adapter);
+
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+
+                manager.scrollToPosition(chats.size()-1);
+            }
+        });
+
+        chats.addAll(Handler.getGroupMessages(groupname));
+        if(chats.size()>0)
+            adapter.notifyItemInserted(chats.size()-1);
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MessageActivity2.this.finish();
+            }
+        });
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(
                 new ChildEventListener() {
@@ -177,6 +209,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 return false;
             }
         });
+
 
         imagereceiver = new ChildEventListener() {
             @Override
@@ -347,7 +380,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 //
 //                        reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 //
-                        MessageModel messageModel = new MessageModel(435, "null", sender, dataSnapshot.getValue().toString().substring(28), "text", -1,time,date,groupname);
+                        MessageModel messageModel = new MessageModel(435, sender, "null", dataSnapshot.getValue().toString().substring(28), "text", -1,time,date,groupname);
 
                         if(chats.size()!=0) {
                             if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
@@ -442,7 +475,84 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 }
             }
         });
+
+        ItemTouchHelper itemTouchHelper= new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(Messages);
     }
+
+    ItemTouchHelper.SimpleCallback simpleCallback= new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            int pos = viewHolder.getAdapterPosition();
+            MessageModel model = chats.get(pos);
+
+
+            if (pos < chats.size() - 1) {
+                if (chats.get(pos - 1).getSender().equals("null") && chats.get(pos + 1).getSender().equals("null")) {
+                    chats.remove(model);
+                    Handler.DeleteMessage(model);
+                    model = chats.get(pos - 1);
+                    chats.remove(model);
+                    Handler.DeleteMessage(model);
+                } else {
+                    chats.remove(model);
+                    Handler.DeleteMessage(model);
+                }
+            } else {
+                if (chats.get(pos - 1).getSender().equals("null")) {
+                    chats.remove(model);
+                    Handler.DeleteMessage(model);
+                    model = chats.get(pos - 1);
+                    chats.remove(model);
+                    Handler.DeleteMessage(model);
+                } else {
+                    chats.remove(model);
+                    Handler.DeleteMessage(model);
+                }
+
+            }
+            adapter.notifyDataSetChanged();
+
+        }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .create()
+                    .decorate();
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+
+            int swipeFlags;
+            if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3)){
+
+                if(!chats.get(viewHolder.getAdapterPosition()).getSender().equals(sender)) {
+                    swipeFlags = ItemTouchHelper.END;
+                }
+                else
+                {
+                    swipeFlags = ItemTouchHelper.START;
+                }
+            }
+            else
+            {
+                swipeFlags =0;
+            }
+
+            return makeMovementFlags(0, swipeFlags);
+        }
+    };
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -533,7 +643,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     @Override
     public void showImage(int index) {
+        Intent intent = new Intent(MessageActivity2.this,ShowImage.class);
 
+        intent.putExtra("source",chats.get(index).getMessage());
+
+        startActivity(intent);
     }
 
     @Override
@@ -563,15 +677,72 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     @Override
     public void showVideo(int index) {
-
+        Intent intent= new Intent(MessageActivity2.this,VideoActivity.class);
+        intent.putExtra("uri",chats.get(index).getMessage());
+        startActivity(intent);
     }
 
     @Override
-    public void Onlongclick(int index) {
+    public void Onlongclick(final int index) {
+
+        if(!(chats.get(index).getType().equals("video") || chats.get(index).getType().equals("image"))) {
+            String[] choices = {"Copy", "Forward"};
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
+
+            builder.setTitle("Choose")
+                    .setItems(choices, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            switch (i) {
+                                case 0:
+                                    ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                    ClipData clip = ClipData.newPlainText("copy", chats.get(index).getMessage());
+                                    clipboard.setPrimaryClip(clip);
+                                    break;
+                                case 1:
+                                    Intent intent = new Intent(MessageActivity2.this, FriendsActivity.class);
+                                    intent.putExtra("type", chats.get(index).getType());
+                                    intent.putExtra("path", 1);
+                                    intent.putExtra("message", chats.get(index).getMessage());
+
+                                    startActivity(intent);
+                                    break;
+                            }
+                        }
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+        else
+        {
+            String [] choices = {"Forward"};
+            AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
+
+            builder.setItems(choices, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    switch (i) {
+                        case 0:
+                            Intent intent = new Intent(MessageActivity2.this, FriendsActivity.class);
+                            intent.putExtra("type", chats.get(index).getType());
+                            intent.putExtra("path", 1);
+                            intent.putExtra("message", chats.get(index).getMessage());
+
+                            startActivity(intent);
+                            break;
+                    }
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+
 
     }
             public void SendMessage(final int index, final MessageModel model)
             {
+                final int[] x = {0};
             final MediaPlayer mp = MediaPlayer.create(MessageActivity2.this, R.raw.sharp);
 
             model.setDownloaded(-3);
@@ -585,39 +756,38 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 Log.d("asdf",membernumber.size()+"");
             for(int i=0;i<membernumber.size();i++) {
-                Log.d("asdf","hi");
+                Log.d("asdf", "hi");
                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages")
                         .child(membernumber.get(i)).push().setValue(
                         model.getTime() + model.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + model.getMessage())
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                               if(x==0)
-                               {
-                                x=1;
-                                model.setDownloaded(-1);
-                                Handler.UpdateMessage(model);
+                                if (x[0] == 0) {
+                                    x[0] = 1;
+                                    model.setDownloaded(-1);
+                                    Handler.UpdateMessage(model);
 
-                                if (!MessageActivity2.this.isDestroyed()) {
-                                    chats.get(index).setDownloaded(-1);
-                                    mp.start();
+                                    if (!MessageActivity2.this.isDestroyed()) {
+                                        chats.get(index).setDownloaded(-1);
+                                        mp.start();
 
-                                    if (!Messages.isComputingLayout())
-                                        adapter.notifyDataSetChanged();
+                                        if (!Messages.isComputingLayout())
+                                            adapter.notifyDataSetChanged();
+                                    }
+
+                                    if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
+                                        Intent intent = getIntent();
+                                        ((Activity) ApplicationClass.MessageActivity2Context).finish();
+                                        startActivity(intent);
+                                        mp.start();
+
+                                        overridePendingTransition(0, 0);
+                                    }
                                 }
-
-                                if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
-                                    Intent intent = getIntent();
-                                    ((Activity) ApplicationClass.MessageActivity2Context).finish();
-                                    startActivity(intent);
-                                    mp.start();
-
-                                    overridePendingTransition(0, 0);
-                                }
-                            }}
+                            }
                         });
             }
-            x=0;
 
         }
 
@@ -804,7 +974,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
                     Intent intent = getIntent();
-                    ((Activity) ApplicationClass.MessageActivityContext).finish();
+                    ((Activity) ApplicationClass.MessageActivity2Context).finish();
                     startActivity(intent);
 
                     overridePendingTransition(0, 0);
@@ -903,7 +1073,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
                     Intent intent = getIntent();
-                    ((Activity) ApplicationClass.MessageActivityContext).finish();
+                    ((Activity) ApplicationClass.MessageActivity2Context).finish();
                     startActivity(intent);
 
                     overridePendingTransition(0, 0);
@@ -957,7 +1127,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                         if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
                                             Intent intent = getIntent();
-                                            ((Activity) ApplicationClass.MessageActivityContext).finish();
+                                            ((Activity) ApplicationClass.MessageActivity2Context).finish();
                                             startActivity(intent);
 
                                             mp.start();
@@ -1018,7 +1188,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                         if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
                                             Intent intent = getIntent();
-                                            ((Activity) ApplicationClass.MessageActivityContext).finish();
+                                            ((Activity) ApplicationClass.MessageActivity2Context).finish();
                                             startActivity(intent);
 
 
@@ -1032,6 +1202,23 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).removeEventListener(imagereceiver);
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("videos").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).removeEventListener(videoreceiver);
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).removeEventListener(chreceiver);
     }
 
     protected URL stringToURL(String urlString){

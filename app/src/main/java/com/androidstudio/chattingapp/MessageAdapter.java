@@ -180,16 +180,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 }
             });
         }
-//        if(holder.ivProfile!=null) {
-//            if (!(ApplicationClass.url.equals("null"))) {
-//                // holder.ivProfile.setVisibility(View.VISIBLE);
-//
-//                Glide.with(context.getApplicationContext()).load(ApplicationClass.url).into(holder.ivProfile);
-//            }
-//            else{
-//                holder.ivProfile.setImageResource(R.drawable.person);
-//            }
-//        }
+        if(holder.ivProfile!=null) {
+            if ((messages.get(position).getGroupName().equals("null")) && !(ApplicationClass.url.equals("null"))  ) {
+                // holder.ivProfile.setVisibility(View.VISIBLE);
+
+                Glide.with(context.getApplicationContext()).load(ApplicationClass.url).into(holder.ivProfile);
+            }
+            else{
+                holder.ivProfile.setImageResource(R.drawable.person);
+            }
+        }
 
         if(holder.ivTyping!=null)
         {
