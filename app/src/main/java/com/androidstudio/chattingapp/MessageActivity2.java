@@ -53,6 +53,7 @@ public class MessageActivity2 extends AppCompatActivity {
     ImageView ivSend;
     EditText etMessage;
     StorageReference rf;
+    ChildEventListener imagereceiver,videoreceiver, chreceiver ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +63,285 @@ public class MessageActivity2 extends AppCompatActivity {
         etMessage=findViewById(R.id.etMessage);
         groupKey=getIntent().getStringExtra("groupname");
         groupname=getIntent().getStringExtra("groupkey");
+
+        imagereceiver = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                String time,date;
+                MediaPlayer received = MediaPlayer.create(MessageActivity2.this, R.raw.received);
+
+                time=dataSnapshot.getValue(String.class).substring(0,5);
+                date=dataSnapshot.getValue(String.class).substring(5,15);
+
+                Log.d("Received","Image");
+
+
+//                MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(15), "image", 0,time,date);
+//                //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
+//
+//                if(chats.size()!=0) {
+//                    if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
+//                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
+//                        int id = Handler.addMessage(message);
+//                        message.setId(id);
+//                        chats.add(message);
+//                    }
+//                }
+//                else {
+//                    if(!(defaultvalue.equals("private")))
+//                    {
+//                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
+//                        int id = Handler.addMessage(message);
+//                        message.setId(id);
+//                        chats.add(message);
+//                    }
+//                }
+//
+//                if(chats.get(chats.size()-1).getType().equals("typing")) {
+//
+//
+//                    int id = Handler.addMessage(messageModel);
+//                    messageModel.setId(id);
+//
+//                    dataSnapshot.getRef().removeValue();
+//
+//                    chats.add(chats.size()-1,messageModel);
+//
+////                adapter.notifyDataSetChanged();
+//                    adapter.notifyItemInserted(chats.size() - 1);
+//                }
+//                else
+//                {
+//                    int id = Handler.addMessage(messageModel);
+//                    messageModel.setId(id);
+//
+//                    if(flag1==true) {
+//
+//                        dataSnapshot.getRef().removeValue();
+//
+//                        chats.add(messageModel);}
+//
+////                adapter.notifyDataSetChanged();
+//                    adapter.notifyItemInserted(chats.size() - 1);
+//                }
+//                if(messagecount==2)
+//                    received.start();
+//                else messagecount--;
+                dataSnapshot.getRef().removeValue();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).addChildEventListener(imagereceiver);
+
+
+        videoreceiver = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                String time,date;
+                String uri;
+
+                MediaPlayer received = MediaPlayer.create(MessageActivity2.this, R.raw.received);
+
+                Toast.makeText(MessageActivity2.this, "Video", Toast.LENGTH_SHORT).show();
+
+                Log.d("Received","Video");
+
+                time=dataSnapshot.getValue(String.class).substring(0,5);
+                date=dataSnapshot.getValue(String.class).substring(5,15);
+                uri=dataSnapshot.getValue(String.class).substring(15);
+
+//                MessageModel messageModel = new MessageModel(-1,RecieverPhone,sender,uri,"video",101,time,date);
+//                Log.d("video",messageModel.getMessage());
+//
+//                Toast.makeText(getApplicationContext(),"galbaat",Toast.LENGTH_LONG).show();
+//
+//                //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
+//
+//                if(chats.size()!=0) {
+//                    if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
+//                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
+//                        int id = Handler.addMessage(message);
+//                        message.setId(id);
+//                        chats.add(message);
+//                    }
+//                }
+//                else {
+//                    if (!(defaultvalue.equals("private"))) {
+//                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
+//                        int id = Handler.addMessage(message);
+//                        message.setId(id);
+//                        chats.add(message);
+//                    }
+//                }
+//                if(chats.get(chats.size()-1).getType().equals("typing")) {
+//
+//                    int id = Handler.addMessage(messageModel);
+//                    messageModel.setId(id);
+//
+//                    if(flag1==true) {
+//
+//                        dataSnapshot.getRef().removeValue();
+//
+//                        chats.add(chats.size()-1,messageModel);}
+//                }
+//                else
+//                {
+//                    int id = Handler.addMessage(messageModel);
+//                    messageModel.setId(id);
+//
+//                    dataSnapshot.getRef().removeValue();
+//
+//                    chats.add(messageModel);
+//                }
+//
+////                adapter.notifyDataSetChanged();
+//                adapter.notifyItemInserted(chats.size()-1);
+//                if(messagecount==2)
+//                    received.start();
+//                else messagecount--;
+                dataSnapshot.getRef().removeValue();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("videos").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).addChildEventListener(videoreceiver);
+
+
+
+        chreceiver = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+
+                String time, date;
+
+                MediaPlayer received = MediaPlayer.create(MessageActivity2.this, R.raw.received);
+
+//                if (!(dataSnapshot.getKey().equals("message"))) {
+//                    if (dataSnapshot.getKey().equals("info")) {
+//                        if (!(dataSnapshot.child("friend").exists())) {
+//                            reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
+//                        }
+//                    } else if (!(dataSnapshot.getKey().equals("info"))) {
+//
+//                        time=dataSnapshot.getValue().toString().substring(0,5);
+//                        date=dataSnapshot.getValue().toString().substring(5,15);
+//
+//                        reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
+//
+//                        MessageModel messageModel = new MessageModel(435, RecieverPhone, sender, dataSnapshot.getValue().toString().substring(15), "text", -1,time,date);
+//
+//                        if(chats.size()!=0) {
+//                            if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
+//                                MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
+//                                int id = Handler.addMessage(message);
+//                                message.setId(id);
+//                                chats.add(message);
+//                            }
+//                        }
+//                        else {
+//                            if(!(defaultvalue.equals("private")))
+//                            {
+//                                MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date);
+//                                int id = Handler.addMessage(message);
+//                                message.setId(id);
+//                                chats.add(message);
+//                            }
+//                        }
+//
+//                        if(chats.get(chats.size()-1).getType().equals("typing")) {
+//                            int id = Handler.addMessage(messageModel);
+//                            messageModel.setId(id);
+//                            if(flag1==true) {
+//                                chats.add(chats.size()-1,messageModel);
+//                                dataSnapshot.getRef().removeValue();
+//                            }
+//                        }
+//                        else{
+//                            int id = Handler.addMessage(messageModel);
+//                            messageModel.setId(id);
+//
+//                            chats.add(messageModel);
+//                            dataSnapshot.getRef().removeValue();
+//                        }
+//
+//
+//                        adapter.notifyItemInserted(chats.size()-1);
+//                        // adapter.notifyItemRangeInserted(chats.size()-1,1);
+//                        if(messagecount==2)
+//                            received.start();
+//                        else messagecount--;
+//                    }
+//                }
+                dataSnapshot.getRef().removeValue();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).addChildEventListener(chreceiver);
 
         ivSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,8 +356,14 @@ public class MessageActivity2 extends AppCompatActivity {
                             new ChildEventListener() {
                                 @Override
                                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                    Date date=new Date();
+                                    SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
+
+                                    long millis=System.currentTimeMillis();
+                                    java.sql.Date date1=new java.sql.Date(millis);
                                     FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages")
-                                            .child(dataSnapshot.getValue().toString()).setValue(etMessage.getText().toString().trim());
+                                            .child(dataSnapshot.getValue().toString()).push().setValue(
+                                                 simpleDateFormat.toString().substring(0,5)+date1.toString()+   FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+etMessage.getText().toString().trim());
                                 }
 
                                 @Override
@@ -284,9 +570,15 @@ public class MessageActivity2 extends AppCompatActivity {
                             @Override
                             public void onSuccess(Uri uri) {
 
+                                Date date=new Date();
+                                SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
+
+                                long millis=System.currentTimeMillis();
+                                java.sql.Date date1=new java.sql.Date(millis);
+
                                 FirebaseDatabase.getInstance().getReference().child("groups").child("images").child(groupKey).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
 
-                                       setValue(message.getTime()+message.getDate()+uri.toString());
+                                       push().setValue(simpleDateFormat.toString().substring(0,5)+date1.toString()+   FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+message.getTime()+message.getDate()+uri.toString());
 
 //                                message.setDownloaded(1);
 //                                Handler.UpdateMessage(message);
@@ -332,9 +624,15 @@ public class MessageActivity2 extends AppCompatActivity {
                             @Override
                             public void onSuccess(Uri uri) {
 
+                                Date date=new Date();
+                                SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
+
+                                long millis=System.currentTimeMillis();
+                                java.sql.Date date1=new java.sql.Date(millis);
+
                                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).
                                         child("videos").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                        setValue(message.getTime()+message.getDate()+uri.toString());
+                                        push().setValue(simpleDateFormat.toString().substring(0,5)+date1.toString()+   FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+message.getTime()+message.getDate()+uri.toString());
                                 Toast.makeText(getApplicationContext(),"Ghaint",Toast.LENGTH_LONG).show();
 
 //                                message.setDownloaded(102);
