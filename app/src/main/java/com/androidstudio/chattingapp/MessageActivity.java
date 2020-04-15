@@ -971,6 +971,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         //Handler.close();
 
         FirebaseDatabase.getInstance().getReference("UserStatus").child(RecieverPhone).removeEventListener(Status);
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").removeEventListener(imagereceiver);
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("videos").removeEventListener(videoreceiver);
         FirebaseDatabase.getInstance().getReference("users").child(sender).child("profile").removeEventListener(dp);
     }
