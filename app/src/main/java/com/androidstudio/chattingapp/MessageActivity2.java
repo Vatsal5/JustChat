@@ -240,7 +240,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         };
 
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).addChildEventListener(imagereceiver);
 
@@ -396,7 +396,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         };
 
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).addChildEventListener(chreceiver);
 
@@ -583,6 +583,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
 
             for(int i=0;i<membernumber.size();i++) {
+                Log.d("asdf","hi");
                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages")
                         .child(membernumber.get(i)).push().setValue(
                         model.getTime() + model.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + model.getMessage())
@@ -931,7 +932,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             @Override
                             public void onSuccess(Uri uri) {
 
-                                FirebaseDatabase.getInstance().getReference().child("groups").child("images").child(groupKey).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
 
                                        push().setValue(message.getTime()+message.getDate()+   FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+uri.toString());
 
