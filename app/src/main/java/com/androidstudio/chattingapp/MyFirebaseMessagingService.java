@@ -32,11 +32,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
     SharedPreferences pref;
     private final String ADMIN_CHANNEL_ID ="admin_channel";
     Bitmap largeIcon;
+    Boolean condition = false;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        if(ApplicationClass.MessageActivityContext==null)
+            condition = true;
+        else
+            if(((Activity)ApplicationClass.MessageActivityContext).isDestroyed())
+                condition = true;
 
-        if(ApplicationClass.MessageActivityContext==null &&((Activity)ApplicationClass.MessageActivityContext).isDestroyed()) {
+            if(condition){
 
             final Intent intent = new Intent(this, Registration.class);
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
