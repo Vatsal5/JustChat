@@ -38,7 +38,10 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,7 +51,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -198,6 +204,18 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
             }
         },3000);
+        final android.os.Handler handler1= new Handler();
+        handler1.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < contacts1.size(); i++) {
+                    if (!(contacts1.get(i).getGroupname() == null)) {
+                        (new GroupDp(i)).ProfileListener();
+                    }
+                }
+
+            }
+        },2000);
 
         ItemTouchHelper itemTouchHelper= new ItemTouchHelper(simpleCallback);
 
@@ -816,8 +834,78 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             }
             reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).setValue(ApplicationClass.Groupname);
 
-            reference.child("groups").child(ApplicationClass.groupkey).child("profile").setValue(ApplicationClass.GroupDp);
+            Uri uri=Uri.parse(ApplicationClass.GroupDp);
+            File from= new File(uri.getLastPathSegment(),"old");
+            File to= new File("dp");
+            from.renameTo(to);
+            UploadTask uploadTask= FirebaseStorage.getInstance().getReference(ApplicationClass.groupkey).child("dp").
+                    putFile(uri);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    FirebaseStorage.getInstance().getReference(ApplicationClass.groupkey).child("dp").getDownloadUrl().
+                            addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+
+                                    FirebaseDatabase.getInstance().getReference().child("groups").child(ApplicationClass.groupkey).
+                                            child("profile").setValue(uri.toString());
+                                    // progress.setVisibility(View.GONE);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //progress.setVisibility(View.GONE);
+                        }
+                    });
+                }
+            });
             reference.child("groups").child(ApplicationClass.groupkey).child("admin").setValue(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+        }
+
+        if(getIntent().getIntExtra("create",1)==0) {
+            final android.os.Handler handler= new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < contacts1.size(); i++) {
+                        if (!(contacts1.get(i).getGroupname() == null)) {
+                            (new GroupDp(i)).ProfileListener();
+                        }
+                    }
+
+                }
+            },1000);
+
+        }
+
+    }
+
+    public class GroupDp
+    {
+        int index;
+        GroupDp(int index)
+        {
+            this.index=index;
+        }
+
+        public void ProfileListener()
+        {
+            FirebaseDatabase.getInstance().getReference().child("groups").child(contacts1.get(index).getGroupkey()).child("profile").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        contacts1.get(index).setUrl(dataSnapshot.getValue(String.class));
+                        userAdapter.notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 
@@ -845,6 +933,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             contacts1.get(l).setMessagenum(2);
         }
         getcontact();
+
     }
     public void makecall()
     {

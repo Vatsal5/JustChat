@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -99,9 +100,14 @@ public class CreateGroup extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
 
-                progress.setVisibility(View.VISIBLE);
+
                 Uri uri = result.getUri();
                 ApplicationClass.GroupDp=uri.toString();
+
+                Glide.with(CreateGroup.this)
+                        .load(uri.toString())
+                        .into(ivGroupDP);
+
 
 
             }

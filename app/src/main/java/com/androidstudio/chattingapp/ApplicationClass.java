@@ -38,7 +38,7 @@ public class ApplicationClass extends Application
         super.onCreate();
         members=new ArrayList<>();
         Groupname=null;
-        GroupDp=null;
+        GroupDp="null";
         groupkey=null;
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
