@@ -727,6 +727,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         if(contacts1.get(index).getGroupname() == null)
         {
             flag=true;
+            l=index;
+
+
         Intent intent = new Intent(MainActivity.this,MessageActivity.class);
 
         intent.putExtra("type"," ");
@@ -738,9 +741,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         }
         else {
             intent.putExtra("title", contacts1.get(index).getuID());
-        }contacts1.get(index).setMessagenum(2);
+        }
 
-        l=index;
+
 
         if( contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
             intent.putExtra("phone", contacts1.get(index).getPh_number());
@@ -856,6 +859,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     @Override
     protected void onPause() {
         super.onPause();
+        if(flag==true) {
+            contacts1.get(l).setMessagenum(2);
+            userAdapter.notifyDataSetChanged();
+        }
 
         Log.d("Destroy","onPause");
 
