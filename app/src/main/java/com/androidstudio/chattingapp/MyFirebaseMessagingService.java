@@ -36,7 +36,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        if(((Activity)ApplicationClass.MessageActivityContext).isDestroyed()) {
+        if(ApplicationClass.MessageActivityContext==null &&((Activity)ApplicationClass.MessageActivityContext).isDestroyed()) {
 
             final Intent intent = new Intent(this, Registration.class);
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
