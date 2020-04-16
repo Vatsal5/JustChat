@@ -114,7 +114,7 @@ public class DBHandler
 
         for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
         {
-            if((c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver)))
+            if(c.getString(iGroup).equals("null") && (c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver)))
                 messages.add(new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate),c.getString(iGroup)));
         }
         c.close();
@@ -161,7 +161,7 @@ public class DBHandler
 
         for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
         {
-            if((c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver))) {
+            if(c.getString(iGroup).equals("null") && (c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver))) {
                 model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate),c.getString(iGroup));
             }
         }

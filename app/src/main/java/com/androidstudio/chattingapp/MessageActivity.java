@@ -403,7 +403,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                             chats.add(messageModel);
                         }
                     }
-                    if(chats.get(chats.size()-1).getType().equals("typing"))
+                    if(chats.size()>0 && chats.get(chats.size()-1).getType().equals("typing"))
                     {
                         int id = Handler.addMessage(model);
                         model.setId(id);
@@ -633,7 +633,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                     }
                 }
 
-                if(chats.get(chats.size()-1).getType().equals("typing")) {
+                if(chats.size()>0 && chats.get(chats.size()-1).getType().equals("typing")) {
 
 
                     int id = Handler.addMessage(messageModel);
@@ -727,7 +727,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                         chats.add(message);
                     }
                 }
-                if(chats.get(chats.size()-1).getType().equals("typing")) {
+                if(chats.size()>0 && chats.get(chats.size()-1).getType().equals("typing")) {
 
                     int id = Handler.addMessage(messageModel);
                     messageModel.setId(id);
@@ -822,7 +822,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                             }
                         }
 
-                        if(chats.get(chats.size()-1).getType().equals("typing")) {
+                        if(chats.size()>0 && chats.get(chats.size()-1).getType().equals("typing")) {
                             int id = Handler.addMessage(messageModel);
                             messageModel.setId(id);
                             if(flag1==true) {
@@ -1254,7 +1254,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                 int id = Handler.addMessage(model);
                 model.setId(id);
-                if(chats.get(chats.size()-1).getType().equals("typing")) {
+                if(chats.size()>0 && chats.get(chats.size()-1).getType().equals("typing")) {
                     if(flag1==true)
                         chats.add(chats.size() - 1, model);
                 }
@@ -1371,9 +1371,8 @@ if(getIntent().getIntExtra("path",1)==2) {
                     chats.add(message);
                 }}
 
-            Log.d("type",chats.get(chats.size()-1).getType());
 
-            if(chats.get(chats.size()-1).getType().equals("typing")) {
+            if(chats.size()>0 && chats.get(chats.size()-1).getType().equals("typing")) {
 
                 int id = Handler.addMessage(messageModel);
                 messageModel.setId(id);
