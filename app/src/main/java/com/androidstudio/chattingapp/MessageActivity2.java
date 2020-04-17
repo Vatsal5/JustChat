@@ -179,7 +179,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             public void onChildAdded(@NonNull  DataSnapshot dataSnapshot, @Nullable String s) {
                 if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
                 {
-                    
+
                     StorageReference file1;
                     file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
                     file1.delete();
@@ -1021,7 +1021,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         fos.flush();
                         fos.close();
                         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").child(message.getTime()+message.getDate()
-                                +message.getSender()+message.getMessage())
+                                +message.getSender())
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -1134,7 +1134,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         fos.flush();
                         fos.close();
                         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").child(message.getTime()+message.getDate()
-                        +message.getSender()+message.getMessage())
+                        +message.getSender())
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -1226,7 +1226,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             public void onSuccess(Uri uri) {
                                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").
 
-                                        child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + uri.toString()).setValue(numberOfMembers+  uri.toString());
+                                        child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(numberOfMembers+""+  uri.toString());
 
 
                                 for(int i=0;i<membernumber.size();i++) {
@@ -1290,7 +1290,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").
 
-                                        child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + uri.toString()).setValue(numberOfMembers+  uri.toString());
+                                        child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() ).setValue(numberOfMembers+  uri.toString());
 
                                 for(int i=0;i<membernumber.size();i++) {
 
