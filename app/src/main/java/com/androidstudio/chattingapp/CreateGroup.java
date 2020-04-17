@@ -54,7 +54,7 @@ public class CreateGroup extends AppCompatActivity {
                 {
                     Intent intent=new Intent(CreateGroup.this, MainActivity.class);
                     CreateGroup.this.finish();
-                    intent.putExtra("create",0);
+                    ApplicationClass.create=1;
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }

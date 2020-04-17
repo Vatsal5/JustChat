@@ -843,7 +843,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onResume() {
         super.onResume();
         Status("online");
-        if(getIntent().getIntExtra("create",1)==0)
+
+        if(ApplicationClass.create==1)
         {
             ApplicationClass.groupkey=reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").push().getKey();
             reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).child("groupName").setValue(ApplicationClass.Groupname);
@@ -883,9 +884,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 }
             });
             reference.child("groups").child(ApplicationClass.groupkey).child("admin").setValue(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
-        }
-
-        if(getIntent().getIntExtra("create",1)==0) {
             final android.os.Handler handler= new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -898,8 +896,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                 }
             },1000);
-
         }
+
+            
+
+
 
     }
 
