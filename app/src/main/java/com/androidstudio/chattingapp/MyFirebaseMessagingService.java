@@ -36,6 +36,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
         if(ApplicationClass.MessageActivityContext==null)
             condition = true;
         else
@@ -122,4 +123,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
             return null;
         }
     }
+
+
 }
