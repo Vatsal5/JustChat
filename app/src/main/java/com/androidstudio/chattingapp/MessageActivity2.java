@@ -26,6 +26,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -41,6 +42,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -74,6 +76,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     ArrayList<String> membernumber;
     EditText etMessage;
     StorageReference rf;
+    int numberOfMembers=-1;
     RecyclerView.LayoutManager manager;
     MessageAdapter adapter;
     ArrayList<MessageModel> chats;
@@ -90,6 +93,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         ApplicationClass.MessageActivity2Context = MessageActivity2.this;
         membernumber=new ArrayList<>();
+
 
         groupname = getIntent().getStringExtra("groupname");
         groupKey = getIntent().getStringExtra("groupkey");
@@ -130,6 +134,107 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         if(chats.size()>0)
             adapter.notifyItemInserted(chats.size()-1);
 
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+                if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
+                {
+                    Handler handler=new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                    StorageReference file1;
+                    file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
+                    file1.delete();
+                        }
+                    },60000);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+
+                if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
+                { Handler handler=new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                    StorageReference file1;
+                    file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
+                    file1.delete();
+                        }
+                    },60000);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+                if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
+                {
+                    Handler handler=new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                    StorageReference file1;
+                    file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
+                    file1.delete();
+                        }
+                    },120000);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+
+                if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
+                {
+                    Handler handler=new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            StorageReference file1;
+                            file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
+                            file1.delete();
+                        }
+                    },120000);
+
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,6 +250,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                         if(!(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())))
                        membernumber.add(dataSnapshot.getValue(String.class));
+                        numberOfMembers++;
                     }
 
                     @Override
@@ -252,6 +358,19 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 received.start();
 
                 dataSnapshot.getRef().removeValue();
+                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").child(dataSnapshot.getValue(String.class))
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").child(dataSnapshot.getValue(String.class))
+                                        .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))-1)+dataSnapshot.getValue().toString().substring(1));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
         }
 
             @Override
@@ -330,6 +449,19 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                     received.start();
                 dataSnapshot.getRef().removeValue();
+                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").child(dataSnapshot.getValue(String.class))
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").child(dataSnapshot.getValue(String.class))
+                                        .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))-1)+dataSnapshot.getValue().toString().substring(1));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
             }
 
             @Override
@@ -1028,6 +1160,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         fos.flush();
                         fos.close();
 
+
                         StorageReference file1;
                         file1=FirebaseStorage.getInstance().getReferenceFromUrl(message.getMessage());
                       //  file1.delete();
@@ -1103,6 +1236,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         .addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").
+
+                                        child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + uri.toString()).setValue(numberOfMembers+  uri.toString());
 
 
                                 for(int i=0;i<membernumber.size();i++) {
@@ -1163,6 +1299,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         .addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
+
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").
+
+                                        child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + uri.toString()).setValue(numberOfMembers+  uri.toString());
 
                                 for(int i=0;i<membernumber.size();i++) {
 
