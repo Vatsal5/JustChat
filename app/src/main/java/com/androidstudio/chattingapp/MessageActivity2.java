@@ -747,6 +747,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     @Override
     public void downloadImage(int index) {
+        Log.d("imagereceived","downloadImage");
         new DownloadTask(index,chats.get(index)).execute(stringToURL(chats.get(index).getMessage()));
     }
 
@@ -1000,6 +1001,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             URLConnection urlConnection;
 
+            File directory = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+            if(!directory.exists())
+                directory.mkdirs();
+
             File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".mp4");
 
             try{
@@ -1109,9 +1114,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         }
 
         protected Uri doInBackground(URL...urls){
+            Log.d("imagereceived","background");
             InputStream urlInputStream = null;
 
             URLConnection urlConnection;
+
+            File directory = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+            if(!directory.exists())
+                directory.mkdirs();
 
             File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".jpg");
 
@@ -1178,6 +1188,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         // When all async task done
         protected void onPostExecute(Uri result) {
+            Log.d("imagereceived","postexecute");
             if (result != null) {
 
                 message.setDownloaded(1);
