@@ -81,6 +81,16 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                 @Override
                 public void onClick(View v) {
 
+                    for(int index=0; index<contacts1.size();index++) {
+                        if(contacts1.get(index).getSelected()==1) {
+                            if (contacts1.get(index).getPh_number().substring(0, 3).equals("+91")) {
+                                ApplicationClass.members.add(contacts1.get(index).getPh_number());
+                            } else {
+                                ApplicationClass.members.add("+91" + contacts1.get(index).getPh_number());
+                            }
+                        }
+                    }
+
                     FriendsActivity.this.finish();
                     startActivity(new Intent(FriendsActivity.this,CreateGroup.class));
                 }
@@ -258,15 +268,12 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             tvCreateGroup.setVisibility(View.VISIBLE);
 
 
+            if(contacts1.get(index).getSelected()==0)
             contacts1.get(index).setSelected(1);
-            userAdapter.notifyDataSetChanged();
-            if(contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
-                ApplicationClass.members.add(contacts1.get(index).getPh_number());
-            }
             else
-            {
-                ApplicationClass.members.add("+91"+contacts1.get(index).getPh_number());
-            }
+                contacts1.get(index).setSelected(0);
+            userAdapter.notifyDataSetChanged();
+
 
         } else {
             Intent intent = new Intent(FriendsActivity.this, MessageActivity.class);
