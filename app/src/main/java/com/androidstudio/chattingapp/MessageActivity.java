@@ -1667,6 +1667,10 @@ if(getIntent().getIntExtra("path",1)==2) {
                         fos.write(buffer);
                         fos.flush();
                         fos.close();
+                        StorageReference file1;
+                        file1=FirebaseStorage.getInstance().getReferenceFromUrl(message.getMessage());
+                        file1.delete();
+
                         return Uri.fromFile(file);
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
