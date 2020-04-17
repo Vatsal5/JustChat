@@ -136,34 +136,25 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onChildAdded(@NonNull  DataSnapshot dataSnapshot, @Nullable String s) {
                 if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
                 {
-                    Handler handler=new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
+
                     StorageReference file1;
                     file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
                     file1.delete();
-                        }
-                    },60000);
                 }
             }
 
             @Override
-            public void onChildChanged(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onChildChanged(@NonNull  DataSnapshot dataSnapshot, @Nullable String s) {
 
                 if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
-                { Handler handler=new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
+                {
                     StorageReference file1;
                     file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
                     file1.delete();
-                        }
-                    },60000);
+
                 }
             }
 
@@ -185,35 +176,27 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onChildAdded(@NonNull  DataSnapshot dataSnapshot, @Nullable String s) {
                 if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
                 {
-                    Handler handler=new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
+                    
                     StorageReference file1;
                     file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
                     file1.delete();
-                        }
-                    },120000);
+
                 }
             }
 
             @Override
-            public void onChildChanged(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onChildChanged(@NonNull  DataSnapshot dataSnapshot, @Nullable String s) {
 
                 if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
                 {
-                    Handler handler=new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
+
                             StorageReference file1;
                             file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
                             file1.delete();
-                        }
-                    },120000);
+
 
                 }
             }
@@ -358,19 +341,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 received.start();
 
                 dataSnapshot.getRef().removeValue();
-                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").child(dataSnapshot.getValue(String.class))
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").child(dataSnapshot.getValue(String.class))
-                                        .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))-1)+dataSnapshot.getValue().toString().substring(1));
-                            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
         }
 
             @Override
@@ -449,19 +420,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                     received.start();
                 dataSnapshot.getRef().removeValue();
-                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").child(dataSnapshot.getValue(String.class))
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").child(dataSnapshot.getValue(String.class))
-                                        .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))-1)+dataSnapshot.getValue().toString().substring(1));
-                            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
             }
 
             @Override
@@ -1061,6 +1020,21 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         fos.write(buffer);
                         fos.flush();
                         fos.close();
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").child(message.getTime()+message.getDate()
+                                +message.getSender()+message.getMessage())
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").child(dataSnapshot.getValue(String.class))
+                                                .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))-1)+dataSnapshot.getValue().toString().substring(1));
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
                         return Uri.fromFile(file);
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
@@ -1159,6 +1133,20 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         fos.write(buffer);
                         fos.flush();
                         fos.close();
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").child(message.getTime()+message.getDate()
+                        +message.getSender()+message.getMessage())
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").child(dataSnapshot.getValue(String.class))
+                                                .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))-1)+dataSnapshot.getValue().toString().substring(1));
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
 
 
                         StorageReference file1;
