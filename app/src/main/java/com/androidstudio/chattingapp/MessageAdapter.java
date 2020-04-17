@@ -309,6 +309,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     Activity.showVideo(position);
                 }
             });
+
+            if (messages.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
+                holder.ivImage.setBackgroundResource(R.drawable.background_right);
+            }
         }
 
 
