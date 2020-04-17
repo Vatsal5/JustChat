@@ -190,11 +190,9 @@ public class CreateGroup extends AppCompatActivity {
             uri = Uri.fromFile(file);
             ApplicationClass.GroupDp = uri.toString();
 
-            File from= new File(uri.getLastPathSegment(),"old");
-            File to= new File("dp");
-            from.renameTo(to);
+
             UploadTask uploadTask= FirebaseStorage.getInstance().getReference(ApplicationClass.groupkey).child("dp").
-                    putFile(uri);
+                    putFile(Uri.parse(ApplicationClass.GroupDp));
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
