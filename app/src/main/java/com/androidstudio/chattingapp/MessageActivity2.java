@@ -143,6 +143,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     StorageReference file1;
                     file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
                     file1.delete();
+                    dataSnapshot.getRef().removeValue();
                 }
             }
 
@@ -154,6 +155,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     StorageReference file1;
                     file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
                     file1.delete();
+                    dataSnapshot.getRef().removeValue();
 
                 }
             }
@@ -183,6 +185,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     StorageReference file1;
                     file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
                     file1.delete();
+                    dataSnapshot.getRef().removeValue();
 
                 }
             }
@@ -196,6 +199,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             StorageReference file1;
                             file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
                             file1.delete();
+                    dataSnapshot.getRef().removeValue();
 
 
                 }
