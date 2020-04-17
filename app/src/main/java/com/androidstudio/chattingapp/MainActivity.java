@@ -902,6 +902,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             },1000);
         }
 
+        else
+        {
+            ApplicationClass.members.clear();
+        }
+
 
 
 
