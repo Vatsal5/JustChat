@@ -486,8 +486,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
            final String name= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
            final String number= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-           contacts.add(new UserDetail(number, name));
-           number1.add(number);
+           if(IsValid(number)==0) {
+               contacts.add(new UserDetail(number, name));
+               number1.add(number);
+           }
 
         }
         dataCreater=new ValueEventListener() {
@@ -815,6 +817,25 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public int IsValid(String number)
+    {int c=0;
+        for(int i=0; i<number.length();i++)
+        {
+            if(number.charAt(i)=='#' || number.charAt(i)=='$' || number.charAt(i)=='.' || number.charAt(i)=='[' || number.charAt(i)==']')
+            {
+                c=1;
+                break;
+            }
+
+        }
+        if(c==1)
+        {
+            return 1;
+        }
+        else
+            return 0;
     }
 
 

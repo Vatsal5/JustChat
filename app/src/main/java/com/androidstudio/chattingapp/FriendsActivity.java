@@ -110,18 +110,19 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
             final String name= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             final String number= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            if(number.substring(0,3).equals("+91")) {
-                if (!(number.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
-                    contacts.add(new UserDetail(number, name));
-                    number1.add(number);
-                }
-            }
-            else {
+            if(IsValid(number)==0) {
+                if (number.substring(0, 3).equals("+91")) {
+                    if (!(number.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
+                        contacts.add(new UserDetail(number, name));
+                        number1.add(number);
+                    }
+                } else {
 
-                if (!(("+91" + number).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
+                    if (!(("+91" + number).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
 
-                    contacts.add(new UserDetail(number, name));
-                    number1.add(number);
+                        contacts.add(new UserDetail(number, name));
+                        number1.add(number);
+                    }
                 }
             }
 
@@ -228,6 +229,24 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
             }
         });
+    }
+    public int IsValid(String number)
+    {int c=0;
+        for(int i=0; i<number.length();i++)
+        {
+            if(number.charAt(i)=='#' || number.charAt(i)=='$' || number.charAt(i)=='.' || number.charAt(i)=='[' || number.charAt(i)==']')
+            {
+                c=1;
+                break;
+            }
+
+        }
+        if(c==1)
+        {
+            return 1;
+        }
+        else
+            return 0;
     }
 
     @Override
