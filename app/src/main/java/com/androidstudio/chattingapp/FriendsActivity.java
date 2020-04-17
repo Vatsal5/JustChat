@@ -80,6 +80,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             tvCreateGroup.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     FriendsActivity.this.finish();
                     startActivity(new Intent(FriendsActivity.this,CreateGroup.class));
                 }
@@ -317,4 +318,9 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        ApplicationClass.members.clear();
+    }
 }

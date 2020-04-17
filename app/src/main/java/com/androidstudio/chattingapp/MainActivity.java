@@ -857,6 +857,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 reference.child("users").child(ApplicationClass.members.get(i)).child("groups").child(ApplicationClass.groupkey).setValue(ApplicationClass.Groupname);
 
             }
+            ApplicationClass.members.clear();
             reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).setValue(ApplicationClass.Groupname);
 
             Uri uri=Uri.parse(ApplicationClass.GroupDp);
