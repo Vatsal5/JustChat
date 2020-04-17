@@ -36,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -69,8 +70,8 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 public class MessageActivity2 extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
-    String groupKey, groupname;
-    ImageView ivSend,ivBack;
+    String groupKey, groupname,profile;
+    ImageView ivSend,ivBack,ivProfile;
     RecyclerView Messages;
     TextView tvTitle;
     ArrayList<String> membernumber;
@@ -90,9 +91,16 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message2);
+        ivProfile=findViewById(R.id.ivProfile);
 
         ApplicationClass.MessageActivity2Context = MessageActivity2.this;
         membernumber=new ArrayList<>();
+        profile=getIntent().getStringExtra("profile");
+        if(profile.equals("null"))
+            ivProfile.setImageResource(R.drawable.person);
+        else
+        Glide.with(MessageActivity2.this).load(Uri.parse(profile)).into(ivProfile);
+
 
 
         groupname = getIntent().getStringExtra("groupname");

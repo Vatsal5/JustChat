@@ -782,6 +782,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             Intent intent = new Intent(MainActivity.this,MessageActivity2.class);
             intent.putExtra("groupname",contacts1.get(index).getGroupname());
             intent.putExtra("groupkey",contacts1.get(index).getGroupkey());
+            intent.putExtra("profile",contacts1.get(index).getUrl());
             startActivity(intent);
         }
     }
@@ -860,33 +861,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             ApplicationClass.members.clear();
             reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).setValue(ApplicationClass.Groupname);
 
-            Uri uri=Uri.parse(ApplicationClass.GroupDp);
-            File from= new File(uri.getLastPathSegment(),"old");
-            File to= new File("dp");
-            from.renameTo(to);
-            UploadTask uploadTask= FirebaseStorage.getInstance().getReference(ApplicationClass.groupkey).child("dp").
-                    putFile(uri);
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    FirebaseStorage.getInstance().getReference(ApplicationClass.groupkey).child("dp").getDownloadUrl().
-                            addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-
-                                    FirebaseDatabase.getInstance().getReference().child("groups").child(ApplicationClass.groupkey).
-                                            child("profile").setValue(uri.toString());
-                                    // progress.setVisibility(View.GONE);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            //progress.setVisibility(View.GONE);
-                        }
-                    });
-                }
-            });
             reference.child("groups").child(ApplicationClass.groupkey).child("admin").setValue(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
             final android.os.Handler handler= new Handler();
             handler.postDelayed(new Runnable() {
