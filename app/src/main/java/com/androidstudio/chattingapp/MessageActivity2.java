@@ -166,26 +166,37 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull  DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
                 if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
                 {
 
                     StorageReference file1;
                     file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
-                    file1.delete();
-                    dataSnapshot.getRef().removeValue();
+                    file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            dataSnapshot.getRef().removeValue();
+
+                        }
+                    });
                 }
             }
 
             @Override
-            public void onChildChanged(@NonNull  DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onChildChanged(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
 
                 if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
                 {
                     StorageReference file1;
                     file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
-                    file1.delete();
-                    dataSnapshot.getRef().removeValue();
+                    file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            dataSnapshot.getRef().removeValue();
+
+                        }
+                    });
+
 
                 }
             }
@@ -208,28 +219,38 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull  DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
                 if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
                 {
 
                     StorageReference file1;
                     file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
-                    file1.delete();
-                    dataSnapshot.getRef().removeValue();
+                    file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            dataSnapshot.getRef().removeValue();
+
+                        }
+                    });
 
                 }
             }
 
             @Override
-            public void onChildChanged(@NonNull  DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onChildChanged(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
 
                 if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
                 {
 
                             StorageReference file1;
                             file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
-                            file1.delete();
-                    dataSnapshot.getRef().removeValue();
+                            file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    dataSnapshot.getRef().removeValue();
+
+                                }
+                            });
 
 
                 }
