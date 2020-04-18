@@ -699,6 +699,21 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                         , "", "", dataSnapshot.getKey(),dataSnapshot.getValue().toString()));
                                 userAdapter.notifyDataSetChanged();
                                 num++;
+                                reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
+                                        new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                if(dataSnapshot.exists())
+                                                    contacts1.get(contacts1.size()-1).setUrl(dataSnapshot.getValue(String.class));
+                                                userAdapter.notifyDataSetChanged();
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        }
+                                );
 
                         }
 
