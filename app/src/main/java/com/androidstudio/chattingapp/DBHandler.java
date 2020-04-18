@@ -327,4 +327,36 @@ public class DBHandler
 
     }
 
+    public String getLastGroupMessageTime(String grpName)
+    {
+        MessageModel model=null;
+        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPNAME};
+        Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
+
+        int iId = c.getColumnIndex(KEY_ID);
+        int iSender = c.getColumnIndex(KEY_SENDER);
+        int iReceiver = c.getColumnIndex(KEY_RECEIVER);
+        int iMessage = c.getColumnIndex(KEY_MESSAGE);
+        int iType = c.getColumnIndex(KEY_TYPE);
+        int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
+        int iTime = c.getColumnIndex(KEY_TIME);
+        int iDate = c.getColumnIndex(KEY_TIME);
+        int iGroup = c.getColumnIndex(KEY_GROUPNAME);
+
+        for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
+        {
+            if(c.getString(iGroup).equals(grpName)) {
+                model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate),c.getString(iGroup));
+            }
+        }
+
+        if(model !=null) {
+            return model.getTime();
+        }
+        else
+        {
+            return "null";
+        }
+    }
+
 }

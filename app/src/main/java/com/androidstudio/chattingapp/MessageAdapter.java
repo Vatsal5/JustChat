@@ -2,6 +2,7 @@ package com.androidstudio.chattingapp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -58,6 +59,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     FirebaseUser user;
     Context context;
     ArrayList<MessageModel> messages;
+    SharedPreferences pref;
 
     public interface ImageSelected
     {
@@ -77,6 +79,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         this.context = context;
         this.messages = messages;
         Activity = (ImageSelected) context;
+        pref = context.getSharedPreferences("Names",0);
     }
 
 
@@ -155,7 +158,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         if(holder.tvSender!=null)
         {
-            holder.tvSender.setText(messages.get(position).getSender());
+            if(pref.getString(messages.get(position).getSender(),"null").equals("null"))
+                holder.tvSender.setText(messages.get(position).getSender());
+            else
+                holder.tvSender.setText(pref.getString(messages.get(position).getSender(),"null"));
         }
 
        if( holder.ivImage!=null) {

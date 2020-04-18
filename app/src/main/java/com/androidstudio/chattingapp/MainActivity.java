@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     SharedPreferences.Editor editor;
 
     ChildEventListener Group;
+    ChildEventListener childEvent;
 
     int l, pos;
     boolean flag=false,flag2=false;
@@ -737,8 +738,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 // both the arraylists got clone
                 //Toast.makeText(MainActivity.this,contacts2.size()+"",Toast.LENGTH_LONG).show();
 
-
-                reference.child("users").child(currentUserNumber).addChildEventListener(new ChildEventListener() {
+                childEvent = new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         if (!(dataSnapshot.getKey().equals("name") || dataSnapshot.getKey().equals("contact") || dataSnapshot.getKey().equals("profile") ||
@@ -795,8 +795,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                         contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
                                         contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
                                     }
-                                } else
+                                } else {
                                     contacts1.get(i).setLastmessage(Handler.getLastMessageGroup(contacts1.get(i).getGroupname()));
+                                    contacts1.get(i).setTime(Handler.getLastGroupMessageTime(contacts1.get(i).getGroupname()));
+                                }
                             }
 
                             userAdapter = new UserAdapter(MainActivity.this, contacts1);
@@ -825,7 +827,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
-                });
+                };
+
+                reference.child("users").child(currentUserNumber).addChildEventListener(childEvent);
 
                 Group = new ChildEventListener() {
                     @Override
@@ -833,7 +837,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
                                 contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
-                                        , Handler.getLastMessageGroup(dataSnapshot.getValue().toString()), "", dataSnapshot.getKey(),dataSnapshot.getValue().toString()));
+                                        , Handler.getLastMessageGroup(dataSnapshot.getValue().toString()), Handler.getLastGroupMessageTime(dataSnapshot.getValue().toString()), dataSnapshot.getKey(),dataSnapshot.getValue().toString()));
                                 userAdapter.notifyDataSetChanged();
                                 num++;
                                 reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
@@ -1068,28 +1072,25 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onRestart() {
         super.onRestart();
 
+        reference.removeEventListener(dataCreater);
+        reference.child("users").child(currentUserNumber).removeEventListener(childEvent);
+
+        getcontact();
+
         for (int i = 0; i < contacts1.size(); i++) {
             if(contacts1.get(i).getGroupname()==null) {
                 if (!contacts1.get(i).getPh_number().substring(0, 3).equals("+91")) {
-                    String name = pref.getString("+91" + contacts1.get(i).getPh_number(), "null");
-                    if (name.equals("null")) {
-                        editor.putString("+91" + contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
-                        editor.apply();
-                    }
                     contacts1.get(i).setLastmessage(Handler.getLastMessage("+91" + contacts1.get(i).getPh_number()));
                     contacts1.get(i).setTime(Handler.getLastMessageTime("+91" + contacts1.get(i).getPh_number()));
                 } else {
-                    String name = pref.getString(contacts1.get(i).getPh_number(), "null");
-                    if (name.equals("null")) {
-                        editor.putString(contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
-                        editor.apply();
-                    }
                     contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
                     contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
                 }
             }
-            else
+            else {
                 contacts1.get(i).setLastmessage(Handler.getLastMessageGroup(contacts1.get(i).getGroupname()));
+                contacts1.get(i).setTime(Handler.getLastGroupMessageTime(contacts1.get(i).getGroupname()));
+            }
         }
         userAdapter.notifyDataSetChanged();
 
