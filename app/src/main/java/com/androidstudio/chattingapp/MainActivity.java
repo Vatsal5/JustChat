@@ -704,8 +704,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                 if(dataSnapshot.exists())
+                                                {
                                                     contacts1.get(contacts1.size()-1).setUrl(dataSnapshot.getValue(String.class));
-                                                userAdapter.notifyDataSetChanged();
+                                                userAdapter.notifyDataSetChanged();}
                                             }
 
                                             @Override
