@@ -777,7 +777,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         chats.add(messageModel);
                     }
                 }
-                
+
                 int id = Handler.addMessage(model);
                 model.setId(id);
 
