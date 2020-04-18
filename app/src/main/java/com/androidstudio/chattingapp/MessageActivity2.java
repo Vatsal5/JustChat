@@ -17,6 +17,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -73,7 +74,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     String groupKey, groupname,profile;
     ImageView ivSend,ivBack,ivProfile;
     RecyclerView Messages;
-    TextView tvTitle;
+    TextView tvTitle,tvMode;
     ArrayList<String> membernumber;
     EditText etMessage;
     StorageReference rf;
@@ -85,6 +86,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     int y=0,z=0;
     String sender;
     ChildEventListener imagereceiver, videoreceiver, chreceiver;
+    String defaultvalue;
+    SharedPreferences pref;
 
 
     @Override
@@ -96,12 +99,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         ApplicationClass.MessageActivity2Context = MessageActivity2.this;
         membernumber=new ArrayList<>();
         profile=getIntent().getStringExtra("profile");
+
         if(profile.equals("null"))
             ivProfile.setImageResource(R.drawable.person);
         else
         Glide.with(MessageActivity2.this).load(Uri.parse(profile)).into(ivProfile);
-
-
 
         groupname = getIntent().getStringExtra("groupname");
         groupKey = getIntent().getStringExtra("groupkey");
@@ -112,8 +114,27 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         etMessage = findViewById(R.id.etMessage);
         tvTitle = findViewById(R.id.title);
         ivBack = findViewById(R.id.ivBack);
+        tvMode = findViewById(R.id.tvMode);
 
         tvTitle.setText(groupname);
+
+        tvMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MessageActivity2.this,Mode.class);
+                intent.putExtra("number",groupKey);
+                startActivity(intent);
+            }
+        });
+
+        pref= getApplicationContext().getSharedPreferences("Mode"+groupKey,0);
+        defaultvalue = pref.getString("mode"+groupKey,"null");
+
+        if((defaultvalue.equals("null"))){
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("mode"+groupKey, "public");
+            editor.apply();
+        }
 
         Messages = findViewById(R.id.Messages);
         Messages.setHasFixedSize(true);
@@ -337,10 +358,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         chats.add(message);
                     }
                 } else {
-                    MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date, groupname);
-                    int id = Handler.addMessage(message);
-                    message.setId(id);
-                    chats.add(message);
+                    if(!(defaultvalue.equals("private"))) {
+                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date, groupname);
+                        int id = Handler.addMessage(message);
+                        message.setId(id);
+                        chats.add(message);
+                    }
                 }
 
                 int id = Handler.addMessage(messageModel);
@@ -415,10 +438,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     }
                 }
                 else {
-                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date,groupname);
+                    if(!(defaultvalue.equals("private"))) {
+                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date, groupname);
                         int id = Handler.addMessage(message);
                         message.setId(id);
                         chats.add(message);
+                    }
                 }
                     int id = Handler.addMessage(messageModel);
                     messageModel.setId(id);
@@ -494,10 +519,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             }
                         }
                         else {
-                                MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date,groupname);
+                            if(!(defaultvalue.equals("private"))) {
+                                MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date, groupname);
                                 int id = Handler.addMessage(message);
                                 message.setId(id);
                                 chats.add(message);
+                            }
                         }
 
                             int id = Handler.addMessage(messageModel);
@@ -563,10 +590,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             chats.add(messageModel);
                         }
                     } else {
-                        MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
-                        int id = Handler.addMessage(messageModel);
-                        messageModel.setId(id);
-                        chats.add(messageModel);
+                        if((!(defaultvalue.equals("private")))) {
+                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
                     }
 
                     int id = Handler.addMessage(model);
@@ -733,6 +762,22 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 MessageModel model = new MessageModel(1190,sender,"null",selectedImageUri.toString(),"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString(),groupname);
 
+                if (chats.size() != 0) {
+                    if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                        MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                        int id = Handler.addMessage(messageModel);
+                        messageModel.setId(id);
+                        chats.add(messageModel);
+                    }
+                } else {
+                    if((!(defaultvalue.equals("private")))) {
+                        MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                        int id = Handler.addMessage(messageModel);
+                        messageModel.setId(id);
+                        chats.add(messageModel);
+                    }
+                }
+                
                 int id = Handler.addMessage(model);
                 model.setId(id);
 
@@ -977,10 +1022,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 }
             }
             else {
-                    MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
+                if(!(defaultvalue.equals("private"))) {
+                    MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
                     int id = Handler.addMessage(message);
                     message.setId(id);
                     chats.add(message);
+                }
             }
 
                 int id = Handler.addMessage(messageModel);
@@ -1382,5 +1429,34 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         return null;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode"+groupKey,0);
+        defaultvalue = pref.getString("mode"+groupKey,"null");
+        Log.d("mode",defaultvalue);
+
+        if(defaultvalue.equals("private"))
+        {
+            tvMode.setText("Private");
+            if(chats.size()!=0)
+            {
+                chats.clear();
+                if(!Messages.isComputingLayout())
+                    adapter.notifyDataSetChanged();
+            }
+        }
+        else
+        {
+            tvMode.setText("Public");
+            if(chats.size()!=0) {
+                chats.clear();
+                adapter.notifyDataSetChanged();
+            }
+            chats.addAll(Handler.getGroupMessages(groupname));
+            if(!Messages.isComputingLayout())
+                adapter.notifyItemInserted(chats.size()-1);
+        }
+    }
 }
