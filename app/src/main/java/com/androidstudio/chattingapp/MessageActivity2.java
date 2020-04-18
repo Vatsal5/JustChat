@@ -795,6 +795,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     if (data.getClipData().getItemCount() <= 5) {
 
                         for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+
                             ClipData.Item videoItem = data.getClipData().getItemAt(i);
                             Uri videoURI = videoItem.getUri();
 
@@ -804,7 +805,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             long millis = System.currentTimeMillis();
                             java.sql.Date date1 = new java.sql.Date(millis);
 
-                            MessageModel model = new MessageModel(1190, sender, "null", videoURI.toString(), "video", 100, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), "null");
+                            MessageModel model = new MessageModel(1190, sender, "null", videoURI.toString(), "video", 100, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
 
                             if (chats.size() != 0) {
                                 if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
@@ -824,7 +825,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             int id = Handler.addMessage(model);
                             model.setId(id);
                             chats.add(model);
-
+                            adapter.notifyItemInserted(chats.size()-1);
                         }
                     }
                     else
@@ -841,7 +842,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     long millis = System.currentTimeMillis();
                     java.sql.Date date1 = new java.sql.Date(millis);
 
-                    MessageModel model = new MessageModel(1190, sender, "null", uri.toString(), "video", 100, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), "null");
+                    MessageModel model = new MessageModel(1190, sender, "null", uri.toString(), "video", 100, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
 
                     if (chats.size() != 0) {
                         if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
@@ -861,9 +862,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     int id = Handler.addMessage(model);
                     model.setId(id);
                     chats.add(model);
-
+                    adapter.notifyItemInserted(chats.size()-1);
                 }
-                adapter.notifyItemInserted(chats.size()-1);
             }
         }
 
