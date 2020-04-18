@@ -51,7 +51,7 @@ public class Mode extends AppCompatActivity {
 
         final String number = getIntent().getStringExtra("number");
 
-         pref= getApplicationContext().getSharedPreferences("Mode"+number,0);
+         pref= getApplicationContext().getSharedPreferences("Mode",0);
         String defaultvalue=pref.getString("mode"+number,"null");
         final String defaultpassword=pref.getString("password","null");
         final String username=pref.getString("username","null");

@@ -345,7 +345,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
         if (holder.tvTime != null)
-            holder.tvTime.setText(messages.get(position).getTime());
+            holder.tvTime.setText(messages.get(position).getTime().substring(0,5));
 
         if (holder.tvDate != null) {
 

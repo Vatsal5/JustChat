@@ -837,7 +837,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
                                 contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
-                                        , Handler.getLastMessageGroup(dataSnapshot.getValue().toString()), Handler.getLastGroupMessageTime(dataSnapshot.getValue().toString()), dataSnapshot.getKey(),dataSnapshot.getValue().toString()));
+                                        , Handler.getLastMessageGroup(dataSnapshot.getValue().toString()), Handler.getLastGroupMessageTime(dataSnapshot.getValue().toString()).substring(0,5), dataSnapshot.getKey(),dataSnapshot.getValue().toString()));
                                 userAdapter.notifyDataSetChanged();
                                 num++;
                                 reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
@@ -1089,7 +1089,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             }
             else {
                 contacts1.get(i).setLastmessage(Handler.getLastMessageGroup(contacts1.get(i).getGroupname()));
-                contacts1.get(i).setTime(Handler.getLastGroupMessageTime(contacts1.get(i).getGroupname()));
+                contacts1.get(i).setTime(Handler.getLastGroupMessageTime(contacts1.get(i).getGroupname()).substring(0,5));
             }
         }
         userAdapter.notifyDataSetChanged();

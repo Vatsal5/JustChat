@@ -25,6 +25,7 @@ import android.graphics.Canvas;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -313,13 +314,28 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                             case 0:
                                                 if (ContextCompat.checkSelfPermission(MessageActivity2.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                                     ActivityCompat.requestPermissions(MessageActivity2.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 5);
-                                                } else
-                                                    CropImage.startPickImageActivity(MessageActivity2.this);
+                                                } else{
+                                                    Intent intent = new Intent();
+                                                    intent.setType("image/*");
+                                                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                                                    startActivityForResult(Intent.createChooser(intent,"Select Picture"), 10);
+                                                }
                                                 break;
                                             case 1:
-                                                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-                                                intent.setType("video/*");
-                                                startActivityForResult(intent, 100);
+                                                if (Build.VERSION.SDK_INT <19){
+                                                    Intent intent = new Intent();
+                                                    intent.setType("video/mp4");
+                                                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                                                    startActivityForResult(Intent.createChooser(intent, "Select videos"),100);
+                                                } else {
+                                                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                                                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                                                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                                    intent.setType("video/mp4");
+                                                    startActivityForResult(intent, 100);
+                                                }
                                                 break;
                                         }
                                     }
@@ -339,15 +355,15 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 String time, date, sender;
                 MediaPlayer received = MediaPlayer.create(MessageActivity2.this, R.raw.received);
 
-                time = dataSnapshot.getValue(String.class).substring(0, 12);
-                date = dataSnapshot.getValue(String.class).substring(12, 22);
+                time = dataSnapshot.getValue(String.class).substring(0, 11);
+                date = dataSnapshot.getValue(String.class).substring(11, 21);
 
-                sender = dataSnapshot.getValue(String.class).substring(22, 35);
+                sender = dataSnapshot.getValue(String.class).substring(21, 34);
 
                 Log.d("Received", "Image");
 
 
-                MessageModel messageModel = new MessageModel(-1, sender, "null", dataSnapshot.getValue(String.class).substring(35), "image", 0, time, date, groupname);
+                MessageModel messageModel = new MessageModel(-1, sender, "null", dataSnapshot.getValue(String.class).substring(34), "image", 0, time, date, groupname);
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 
                 if (chats.size() != 0) {
@@ -417,10 +433,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 Log.d("Received", "Video");
 
-                time = dataSnapshot.getValue(String.class).substring(0, 12);
-                date = dataSnapshot.getValue(String.class).substring(12, 22);
-                uri = dataSnapshot.getValue(String.class).substring(35);
-                sender = dataSnapshot.getValue(String.class).substring(22,35);
+                time = dataSnapshot.getValue(String.class).substring(0, 11);
+                date = dataSnapshot.getValue(String.class).substring(11, 21);
+                uri = dataSnapshot.getValue(String.class).substring(34);
+                sender = dataSnapshot.getValue(String.class).substring(21,34);
 
                 MessageModel messageModel = new MessageModel(-1,sender,"null",uri,"video",101,time,date,groupname);
                 Log.d("video",messageModel.getMessage());
@@ -502,13 +518,13 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 //                        }
 //                    } else if (!(dataSnapshot.getKey().equals("info"))) {
 //
-                        time=dataSnapshot.getValue().toString().substring(0,12);
-                        date=dataSnapshot.getValue().toString().substring(12,22);
-                        sender = dataSnapshot.getValue(String.class).substring(22,35);
+                        time=dataSnapshot.getValue().toString().substring(0,11);
+                        date=dataSnapshot.getValue().toString().substring(11,21);
+                        sender = dataSnapshot.getValue(String.class).substring(21,34);
 //
 //                        reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 //
-                        MessageModel messageModel = new MessageModel(435, sender, "null", dataSnapshot.getValue().toString().substring(35), "text", -1,time,date,groupname);
+                        MessageModel messageModel = new MessageModel(435, sender, "null", dataSnapshot.getValue().toString().substring(34), "text", -1,time,date,groupname);
 
                         if(chats.size()!=0) {
                             if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
@@ -579,7 +595,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     long millis = System.currentTimeMillis();
                     java.sql.Date date1 = new java.sql.Date(millis);
 
-                    MessageModel model = new MessageModel(-1, sender, "null", etMessage.getText().toString(), "text", -2, simpleDateFormat.format(date), date1.toString(), groupname);
+                    MessageModel model = new MessageModel(-1, sender, "null", etMessage.getText().toString(), "text", -2, simpleDateFormat.format(date).substring(0,9)+simpleDateFormat.format(date).substring(10), date1.toString(), groupname);
                     etMessage.setText(null);
 
                     if (chats.size() != 0) {
@@ -712,7 +728,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
             else
             {
-                CropImage.startPickImageActivity(MessageActivity2.this);
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,"Select Picture"), 10);
             }
         }
 
@@ -744,45 +764,105 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK) {
-            Uri imageuri = CropImage.getPickImageResultUri(this, data);
+        if (requestCode == 10 && resultCode == RESULT_OK)
+        {
+            if(data.getClipData()!=null)
+            {
+                if(data.getClipData().getItemCount()<=15) {
+                    for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                        ClipData.Item imageItem = data.getClipData().getItemAt(i);
+                        Uri uri = imageItem.getUri();
 
-            new CompressImage().execute(imageuri);
+                        new MessageActivity2.CompressImage().execute(uri);
+                    }
+                }
+                else
+                    Toast.makeText(this, "You Cannot send more than 15 images at a time", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Uri uri = data.getData();
+                new MessageActivity2.CompressImage().execute(uri);
+            }
+
         }
 
         if(requestCode==100) {
             if (resultCode == RESULT_OK) {
-                Uri selectedImageUri = data.getData();
 
-                Date date=new Date();
-                SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm:ss.SSS");
+                if (data.getClipData() != null) {
 
-                long millis=System.currentTimeMillis();
-                java.sql.Date date1=new java.sql.Date(millis);
+                    if (data.getClipData().getItemCount() <= 5) {
 
-                MessageModel model = new MessageModel(1190,sender,"null",selectedImageUri.toString(),"video",100,simpleDateFormat.format(date),date1.toString(),groupname);
+                        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                            ClipData.Item videoItem = data.getClipData().getItemAt(i);
+                            Uri videoURI = videoItem.getUri();
 
-                if (chats.size() != 0) {
-                    if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                        MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
-                        int id = Handler.addMessage(messageModel);
-                        messageModel.setId(id);
-                        chats.add(messageModel);
+                            Date date = new Date();
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+
+                            long millis = System.currentTimeMillis();
+                            java.sql.Date date1 = new java.sql.Date(millis);
+
+                            MessageModel model = new MessageModel(1190, sender, "null", videoURI.toString(), "video", 100, simpleDateFormat.format(date).substring(0,9)+simpleDateFormat.format(date).substring(10), date1.toString(), "null");
+
+                            if (chats.size() != 0) {
+                                if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                                    MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                                    int id = Handler.addMessage(messageModel);
+                                    messageModel.setId(id);
+                                    chats.add(messageModel);
+                                }
+                            } else {
+                                if ((!(defaultvalue.equals("private")))) {
+                                    MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                                    int id = Handler.addMessage(messageModel);
+                                    messageModel.setId(id);
+                                    chats.add(messageModel);
+                                }
+                            }
+                            int id = Handler.addMessage(model);
+                            model.setId(id);
+                            chats.add(model);
+
+                        }
                     }
-                } else {
-                    if((!(defaultvalue.equals("private")))) {
-                        MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
-                        int id = Handler.addMessage(messageModel);
-                        messageModel.setId(id);
-                        chats.add(messageModel);
+                    else
+                    {
+                        Toast.makeText(this, "You cannot send more than 5 videos at a time", Toast.LENGTH_SHORT).show();
                     }
                 }
+                else
+                {
+                    Uri uri = data.getData();
+                    Date date = new Date();
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 
-                int id = Handler.addMessage(model);
-                model.setId(id);
+                    long millis = System.currentTimeMillis();
+                    java.sql.Date date1 = new java.sql.Date(millis);
 
-                chats.add(model);
+                    MessageModel model = new MessageModel(1190, sender, "null", uri.toString(), "video", 100, simpleDateFormat.format(date), date1.toString(), "null");
 
+                    if (chats.size() != 0) {
+                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    } else {
+                        if ((!(defaultvalue.equals("private")))) {
+                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    }
+                    int id = Handler.addMessage(model);
+                    model.setId(id);
+                    chats.add(model);
+
+                }
                 adapter.notifyItemInserted(chats.size()-1);
             }
         }
@@ -1011,7 +1091,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             long millis=System.currentTimeMillis();
             java.sql.Date date1=new java.sql.Date(millis);
 
-            MessageModel messageModel = new MessageModel(-1, sender, "nul", uri.toString(), "image", 2,simpleDateFormat.format(date),date1.toString(),groupname);
+            MessageModel messageModel = new MessageModel(-1, sender, "nul", uri.toString(), "image", 2,simpleDateFormat.format(date).substring(0,9)+simpleDateFormat.format(date).substring(10),date1.toString(),groupname);
 
             if(chats.size()!=0) {
                 if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate()) || chats.size() == 0) {
@@ -1276,6 +1356,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     public void UploadImage(final int index, final MessageModel message)
     {
+        final int[] y = {0};
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
 
         message.setDownloaded(3);
@@ -1305,8 +1386,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                             push().setValue(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + uri.toString());
 
-                                    if(y==0) {
-                                        y=1;
+                                    if(y[0] ==0) {
+                                        y[0] =1;
                                         message.setDownloaded(1);
                                         Handler.UpdateMessage(message);
 
@@ -1330,7 +1411,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                         }
                                     }
                                 }
-                                y=0;
                             }
                        });
 
@@ -1341,6 +1421,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     public void uploadVideo(final int index, final MessageModel message)
     {
+        final int[] z = {0};
         message.setDownloaded(103);
         Handler.UpdateMessage(message);
 
@@ -1369,8 +1450,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                             push().setValue(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + uri.toString());
                                     Toast.makeText(getApplicationContext(), "Ghaint", Toast.LENGTH_LONG).show();
 
-                                    if (z == 0) {
-                                        z = 1;
+                                    if (z[0] == 0) {
+                                        z[0] = 1;
 
                                         message.setDownloaded(102);
                                         Handler.UpdateMessage(message);
@@ -1394,7 +1475,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                         }
                                     }
                                 }
-                                z=0;
                             }
                         });
 

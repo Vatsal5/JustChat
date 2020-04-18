@@ -191,7 +191,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         FirebaseDatabase.getInstance().getReference("users").child(sender).child("profile").addListenerForSingleValueEvent(dp);
 
 
-        pref= getApplicationContext().getSharedPreferences("Mode"+RecieverPhone,0);
+        pref= getApplicationContext().getSharedPreferences("Mode",0);
         defaultvalue = pref.getString("mode"+RecieverPhone,"null");
         etMessage = findViewById(R.id.etMessage);
         ivSend = findViewById(R.id.ivSend);
@@ -1179,7 +1179,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         long millis = System.currentTimeMillis();
         java.sql.Date date1 = new java.sql.Date(millis);
 
-        SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode"+RecieverPhone,0);
+        SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode",0);
         defaultvalue = pref.getString("mode"+RecieverPhone,"null");
         Log.d("mode",defaultvalue);
 
