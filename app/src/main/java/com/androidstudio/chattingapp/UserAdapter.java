@@ -142,14 +142,26 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
         }
 
-        if(list.get(position).getMessagenum() > 2)
+        if(list.get(position).getGroupname()==null)
         {
-            holder.tvMessageNum.setText(list.get(position).getMessagenum()-2+"");
-            holder.tvMessageNum.setVisibility(View.VISIBLE);
+            if(list.get(position).getMessagenum() > 2)
+            {
+                holder.tvMessageNum.setText(list.get(position).getMessagenum()-2+"");
+                holder.tvMessageNum.setVisibility(View.VISIBLE);
+            }
+            else{
+                // holder.tvMessageNum.setText(list.get(position).getMessagenum()-2+"");
+                holder.tvMessageNum.setVisibility(View.GONE);
+            }
         }
-        else{
-           // holder.tvMessageNum.setText(list.get(position).getMessagenum()-2+"");
-            holder.tvMessageNum.setVisibility(View.GONE);
+        else {
+            if (list.get(position).getMessagenum() > 2) {
+                holder.tvMessageNum.setText(list.get(position).getMessagenum()-2 + "");
+                holder.tvMessageNum.setVisibility(View.VISIBLE);
+            } else {
+                // holder.tvMessageNum.setText(list.get(position).getMessagenum()-2+"");
+                holder.tvMessageNum.setVisibility(View.GONE);
+            }
         }
 
         holder.innerConstraintLayout.setOnClickListener(new View.OnClickListener() {

@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     ChildEventListener Group;
 
     int l, pos;
-    boolean flag=false;
+    boolean flag=false,flag2=false;
 
     UserAdapter userAdapter;
     int c=0;
@@ -195,9 +195,16 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 if(contacts1.size()>0) {
                     for ( int q = 0; q < contacts1.size(); ) {
 
+                        if(contacts1.get(q).getGroupname()==null) {
                             new listener(q).piclistener();
                             new listener(q).VideoListener();
                             new listener(q).child();
+                        }
+                        else{
+                            new grouplistener(q).piclistener();
+                            new grouplistener(q).VideoListener();
+                            new grouplistener(q).child();
+                        }
 
                             q++;
 
@@ -283,11 +290,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                  public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                      //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
-                     if(contacts1.get(index).getGroupname()==null) {
+
                          contacts1.get(index).setLastmessage("  ");
                          contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                          userAdapter.notifyDataSetChanged();
-                     }
+
 
 
 //                     if (contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
@@ -345,11 +352,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                      if (!(dataSnapshot.getKey().equals("message"))) {
 
                          if (!(dataSnapshot.getKey().equals("info"))) {
-                             if(contacts1.get(index).getGroupname()==null) {
+
                                  contacts1.get(index).setLastmessage(dataSnapshot.getValue(String.class).substring(15));
                                  contacts1.get(index).setTime(dataSnapshot.getValue(String.class).substring(0, 5));
                                  contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
-                             }
+
 
 //                             MessageModel model;
 //
@@ -410,11 +417,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                  public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                      //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
-                     if(contacts1.get(index).getGroupname()==null) {
+
                          contacts1.get(index).setLastmessage(" ");
                          contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                          userAdapter.notifyDataSetChanged();
-                     }
+
+
 
 //                     MessageModel model;
 //
@@ -461,6 +469,123 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
              }
          }
     }
+
+
+    public class grouplistener
+    {
+        int index;
+        grouplistener(int index)
+        {
+            this.index=index;
+        }
+
+        public void VideoListener()
+        {
+            reference.child("groups").child(contacts1.get(index).getGroupkey()).child("videos")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                    .addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            contacts1.get(index).setLastmessage("  ");
+                            contacts1.get(index).setTime(dataSnapshot.getValue(String.class).substring(0, 5));
+                            contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                            userAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+
+
+        public void child()
+        {
+            reference.child("groups").child(contacts1.get(index).getGroupkey()).child("messages")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                    .addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            contacts1.get(index).setLastmessage(dataSnapshot.getValue(String.class).substring(28));
+                            contacts1.get(index).setTime(dataSnapshot.getValue(String.class).substring(0, 5));
+                            contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                            userAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+
+        public void piclistener()
+        {
+            reference.child("groups").child(contacts1.get(index).getGroupkey()).child("images")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                    .addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            contacts1.get(index).setLastmessage(" ");
+                            contacts1.get(index).setTime(dataSnapshot.getValue(String.class).substring(0, 5));
+                            contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                            userAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+    }
+
 
 
 
@@ -803,6 +928,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         startActivity(intent);}
         else
         {
+            l=index;
+            flag2=true;
             Intent intent = new Intent(MainActivity.this,MessageActivity2.class);
             intent.putExtra("groupname",contacts1.get(index).getGroupname());
             intent.putExtra("groupkey",contacts1.get(index).getGroupkey());
@@ -942,6 +1069,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             flag=false;
             contacts1.get(l).setMessagenum(2);
         }
+
         getcontact();
 
     }
@@ -962,6 +1090,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             contacts1.get(l).setMessagenum(2);
             userAdapter.notifyDataSetChanged();
         }
+        if(flag2==true)
+        {
+            flag2=false;
+            contacts1.get(l).setMessagenum(2);
+            userAdapter.notifyDataSetChanged();
+        }
 
         Log.d("Destroy","onPause");
 
@@ -971,6 +1105,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     @Override
     protected void onStop() {
         super.onStop();
+
 
         Log.d("Destroy","onStop");
     }
