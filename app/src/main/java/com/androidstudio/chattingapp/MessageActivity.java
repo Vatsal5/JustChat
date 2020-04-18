@@ -1235,13 +1235,16 @@ if(getIntent().getIntExtra("path",1)==2) {
         {
             if(data.getClipData()!=null)
             {
-                for(int i=0;i<data.getClipData().getItemCount();i++)
-                {
-                    ClipData.Item imageItem = data.getClipData().getItemAt(i);
-                    Uri uri = imageItem.getUri();
+                if(data.getClipData().getItemCount()<=20) {
+                    for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                        ClipData.Item imageItem = data.getClipData().getItemAt(i);
+                        Uri uri = imageItem.getUri();
 
-                    new CompressImage().execute(uri);
+                        new CompressImage().execute(uri);
+                    }
                 }
+                else
+                    Toast.makeText(this, "You Cannot send more than 15 images at a time", Toast.LENGTH_SHORT).show();
             }
             else
             {
@@ -1258,27 +1261,33 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                 if(data.getClipData() != null) {
 
-                    for(int i=0;i<data.getClipData().getItemCount();i++) {
-                        ClipData.Item videoItem = data.getClipData().getItemAt(i);
-                        Uri videoURI = videoItem.getUri();
+                    if(data.getClipData().getItemCount()<=5) {
 
-                        Date date=new Date();
-                        SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
+                        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                            ClipData.Item videoItem = data.getClipData().getItemAt(i);
+                            Uri videoURI = videoItem.getUri();
 
-                        long millis=System.currentTimeMillis();
-                        java.sql.Date date1=new java.sql.Date(millis);
+                            Date date = new Date();
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
 
-                        MessageModel model = new MessageModel(1190,sender,RecieverPhone,videoURI.toString(),"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString(),"null");
+                            long millis = System.currentTimeMillis();
+                            java.sql.Date date1 = new java.sql.Date(millis);
 
-                        int id = Handler.addMessage(model);
-                        model.setId(id);
-                        if(chats.size()>0 && chats.get(chats.size()-1).getType().equals("typing")) {
-                            if(flag1==true)
-                                chats.add(chats.size() - 1, model);
+                            MessageModel model = new MessageModel(1190, sender, RecieverPhone, videoURI.toString(), "video", 100, simpleDateFormat.format(date).substring(0, 5), date1.toString(), "null");
+
+                            int id = Handler.addMessage(model);
+                            model.setId(id);
+                            if (chats.size() > 0 && chats.get(chats.size() - 1).getType().equals("typing")) {
+                                if (flag1 == true)
+                                    chats.add(chats.size() - 1, model);
+                            } else
+                                chats.add(model);
+
                         }
-                        else
-                            chats.add(model);
-
+                    }
+                    else
+                    {
+                        Toast.makeText(this, "You cannot send more than 5 videos at a time", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else {

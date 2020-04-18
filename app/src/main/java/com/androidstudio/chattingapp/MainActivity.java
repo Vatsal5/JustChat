@@ -777,24 +777,28 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             }
 
                             for (int i = 0; i < contacts1.size(); i++) {
-                                if (!contacts1.get(i).getPh_number().substring(0, 3).equals("+91")) {
-                                    String name = pref.getString("+91" + contacts1.get(i).getPh_number(), "null");
-                                    if (name.equals("null")) {
-                                        editor.putString("+91" + contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
-                                        editor.apply();
+                                if (contacts1.get(i).getGroupname() == null) {
+                                    if (!contacts1.get(i).getPh_number().substring(0, 3).equals("+91")) {
+                                        String name = pref.getString("+91" + contacts1.get(i).getPh_number(), "null");
+                                        if (name.equals("null")) {
+                                            editor.putString("+91" + contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
+                                            editor.apply();
+                                        }
+                                        contacts1.get(i).setLastmessage(Handler.getLastMessage("+91" + contacts1.get(i).getPh_number()));
+                                        contacts1.get(i).setTime(Handler.getLastMessageTime("+91" + contacts1.get(i).getPh_number()));
+                                    } else {
+                                        String name = pref.getString(contacts1.get(i).getPh_number(), "null");
+                                        if (name.equals("null")) {
+                                            editor.putString(contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
+                                            editor.apply();
+                                        }
+                                        contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
+                                        contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
                                     }
-                                    contacts1.get(i).setLastmessage(Handler.getLastMessage("+91" + contacts1.get(i).getPh_number()));
-                                    contacts1.get(i).setTime(Handler.getLastMessageTime("+91" + contacts1.get(i).getPh_number()));
-                                } else {
-                                    String name = pref.getString(contacts1.get(i).getPh_number(), "null");
-                                    if (name.equals("null")) {
-                                        editor.putString(contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
-                                        editor.apply();
-                                    }
-                                    contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
-                                    contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
-                                }
+                                } else
+                                    contacts1.get(i).setLastmessage(Handler.getLastMessageGroup(contacts1.get(i).getGroupname()));
                             }
+
                             userAdapter = new UserAdapter(MainActivity.this, contacts1);
                             lv.setAdapter(userAdapter);
 
@@ -829,7 +833,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
                                 contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
-                                        , "", "", dataSnapshot.getKey(),dataSnapshot.getValue().toString()));
+                                        , Handler.getLastMessageGroup(dataSnapshot.getValue().toString()), "", dataSnapshot.getKey(),dataSnapshot.getValue().toString()));
                                 userAdapter.notifyDataSetChanged();
                                 num++;
                                 reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
@@ -1064,13 +1068,36 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onRestart() {
         super.onRestart();
 
+        for (int i = 0; i < contacts1.size(); i++) {
+            if(contacts1.get(i).getGroupname()==null) {
+                if (!contacts1.get(i).getPh_number().substring(0, 3).equals("+91")) {
+                    String name = pref.getString("+91" + contacts1.get(i).getPh_number(), "null");
+                    if (name.equals("null")) {
+                        editor.putString("+91" + contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
+                        editor.apply();
+                    }
+                    contacts1.get(i).setLastmessage(Handler.getLastMessage("+91" + contacts1.get(i).getPh_number()));
+                    contacts1.get(i).setTime(Handler.getLastMessageTime("+91" + contacts1.get(i).getPh_number()));
+                } else {
+                    String name = pref.getString(contacts1.get(i).getPh_number(), "null");
+                    if (name.equals("null")) {
+                        editor.putString(contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
+                        editor.apply();
+                    }
+                    contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
+                    contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
+                }
+            }
+            else
+                contacts1.get(i).setLastmessage(Handler.getLastMessageGroup(contacts1.get(i).getGroupname()));
+        }
+        userAdapter.notifyDataSetChanged();
+
         if(flag==true)
         {
             flag=false;
             contacts1.get(l).setMessagenum(2);
         }
-
-        getcontact();
 
     }
     public void makecall()
