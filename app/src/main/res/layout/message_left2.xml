@@ -33,9 +33,9 @@
             android:id="@+id/tvSender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="9sp"
             android:layout_marginTop="1dp"
-            android:layout_marginLeft="9dp"
+            android:layout_marginLeft="8dp"
             android:textColor="#FFFFFF"/>
 
 
@@ -51,7 +51,6 @@
             android:minHeight="38dp"
             android:maxWidth="250dp"
             android:minWidth="32dp"
-            android:text="Hello"
             android:textColor="#ffffff"
             android:textSize="14sp" />
         </LinearLayout>
@@ -64,7 +63,6 @@
             android:textColor="#ffffff"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="1dp"
-            android:text="10:10"
             android:textSize="10sp" />
     </LinearLayout>
 
