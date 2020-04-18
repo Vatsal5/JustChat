@@ -26,6 +26,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
@@ -49,7 +51,7 @@ public class CreateGroup extends AppCompatActivity {
     ProgressBar progress;
     TextView tvInstruct;
     EditText etGroupName;
-    Button btnCreate;
+    Button btnCreate,btnSkip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,22 @@ public class CreateGroup extends AppCompatActivity {
 
         etGroupName = findViewById(R.id.etGroupName);
         btnCreate = findViewById(R.id.btnCreate);
+        btnSkip = findViewById(R.id.btnSkip);
+
+        final DatabaseReference[] reference = new DatabaseReference[1];
+
+        btnSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent=new Intent(CreateGroup.this, MainActivity.class);
+                CreateGroup.this.finish();
+                ApplicationClass.create=1;
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+
+            }
+        });
 
 
         btnCreate.setOnClickListener(new View.OnClickListener() {
@@ -72,13 +90,40 @@ public class CreateGroup extends AppCompatActivity {
 
                 ApplicationClass.Groupname=etGroupName.getText().toString();
 
+                reference[0] = FirebaseDatabase.getInstance().getReference();
+
                 if(etGroupName.getText().toString().trim().length()>0)
                 {
-                    Intent intent=new Intent(CreateGroup.this, MainActivity.class);
-                    CreateGroup.this.finish();
-                    ApplicationClass.create=1;
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+
+                    ApplicationClass.groupkey=FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").push().getKey();
+
+                    ApplicationClass.create=0;
+                    reference[0].child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).child("groupName").setValue(ApplicationClass.Groupname);
+                    reference[0].child("groups").child(ApplicationClass.groupkey).child("members").push().setValue(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+
+                    for(int i=0;i<ApplicationClass.members.size();i++)
+                    {
+                        reference[0].child("groups").child(ApplicationClass.groupkey).child("members").push().setValue(ApplicationClass.members.get(i));
+                        reference[0].child("users").child(ApplicationClass.members.get(i)).child("groups").child(ApplicationClass.groupkey).setValue(ApplicationClass.Groupname);
+
+                    }
+                    ApplicationClass.members.clear();
+                    reference[0].child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).setValue(ApplicationClass.Groupname);
+
+
+                    reference[0].child("groups").child(ApplicationClass.groupkey).child("admin").setValue(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            btnCreate.setVisibility(View.GONE);
+                            etGroupName.setVisibility(View.GONE);
+                            tvInstruct.setVisibility(View.GONE);
+
+                            ivGroupDP.setVisibility(View.VISIBLE);
+                            ivClick.setVisibility(View.VISIBLE);
+                            btnSkip.setVisibility(View.VISIBLE);
+                        }
+                    });
+
                 }
                 else
                 {
@@ -181,52 +226,61 @@ public class CreateGroup extends AppCompatActivity {
                 }
                 out.close();
                 in.close();
+
+                uri = Uri.fromFile(file);
+                return uri;
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            uri = Uri.fromFile(file);
-            ApplicationClass.GroupDp = uri.toString();
-
-
-            UploadTask uploadTask= FirebaseStorage.getInstance().getReference(ApplicationClass.groupkey).child("dp").
-                    putFile(Uri.parse(ApplicationClass.GroupDp));
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                    FirebaseStorage.getInstance().getReference(ApplicationClass.groupkey).child("dp").getDownloadUrl().
-                            addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-
-                                    FirebaseDatabase.getInstance().getReference().child("groups").child(ApplicationClass.groupkey).
-                                            child("profile").setValue(uri.toString());
-                                     progress.setVisibility(View.GONE);
-                                    Glide.with(CreateGroup.this)
-                                            .load(uri.toString())
-                                            .into(ivGroupDP);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            //progress.setVisibility(View.GONE);
-                        }
-                    });
-                }
-            });
-
-
-
-            return uri;
+            return null;
         }
 
         @Override
         protected void onPostExecute(Uri uri) {
             super.onPostExecute(uri);
 
+            if(uri!=null) {
+
+                ApplicationClass.GroupDp = uri.toString();
+
+                UploadTask uploadTask = FirebaseStorage.getInstance().getReference(ApplicationClass.groupkey).child("dp").
+                        putFile(Uri.parse(ApplicationClass.GroupDp));
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                        FirebaseStorage.getInstance().getReference(ApplicationClass.groupkey).child("dp").getDownloadUrl().
+                                addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+
+                                        FirebaseDatabase.getInstance().getReference().child("groups").child(ApplicationClass.groupkey).
+                                                child("profile").setValue(uri.toString());
+                                        progress.setVisibility(View.GONE);
+                                        Glide.with(CreateGroup.this)
+                                                .load(uri.toString())
+                                                .into(ivGroupDP);
+
+                                        Intent intent=new Intent(CreateGroup.this, MainActivity.class);
+                                        CreateGroup.this.finish();
+                                        ApplicationClass.create=1;
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                //progress.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+                });
+            }
 
         }
     }

@@ -847,22 +847,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         if(ApplicationClass.create==1)
         {
-            ApplicationClass.create=0;
-            ApplicationClass.groupkey=reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").push().getKey();
-            reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).child("groupName").setValue(ApplicationClass.Groupname);
-            reference.child("groups").child(ApplicationClass.groupkey).child("members").push().setValue(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
 
-            for(int i=0;i<ApplicationClass.members.size();i++)
-            {
-                reference.child("groups").child(ApplicationClass.groupkey).child("members").push().setValue(ApplicationClass.members.get(i));
-                reference.child("users").child(ApplicationClass.members.get(i)).child("groups").child(ApplicationClass.groupkey).setValue(ApplicationClass.Groupname);
-
-            }
-            ApplicationClass.members.clear();
-            reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).setValue(ApplicationClass.Groupname);
-
-
-            reference.child("groups").child(ApplicationClass.groupkey).child("admin").setValue(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
             final android.os.Handler handler= new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -872,19 +857,14 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             (new GroupDp(i)).ProfileListener();
                         }
                     }
+                    ApplicationClass.groupkey = null;
 
                 }
             },1000);
         }
 
         else
-        {
             ApplicationClass.members.clear();
-        }
-
-
-
-
 
     }
 
