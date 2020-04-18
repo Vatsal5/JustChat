@@ -339,15 +339,15 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 String time, date, sender;
                 MediaPlayer received = MediaPlayer.create(MessageActivity2.this, R.raw.received);
 
-                time = dataSnapshot.getValue(String.class).substring(0, 5);
-                date = dataSnapshot.getValue(String.class).substring(5, 15);
+                time = dataSnapshot.getValue(String.class).substring(0, 12);
+                date = dataSnapshot.getValue(String.class).substring(12, 22);
 
-                sender = dataSnapshot.getValue(String.class).substring(15, 28);
+                sender = dataSnapshot.getValue(String.class).substring(22, 35);
 
                 Log.d("Received", "Image");
 
 
-                MessageModel messageModel = new MessageModel(-1, sender, "null", dataSnapshot.getValue(String.class).substring(28), "image", 0, time, date, groupname);
+                MessageModel messageModel = new MessageModel(-1, sender, "null", dataSnapshot.getValue(String.class).substring(35), "image", 0, time, date, groupname);
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 
                 if (chats.size() != 0) {
@@ -417,10 +417,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 Log.d("Received", "Video");
 
-                time = dataSnapshot.getValue(String.class).substring(0, 5);
-                date = dataSnapshot.getValue(String.class).substring(5, 15);
-                uri = dataSnapshot.getValue(String.class).substring(28);
-                sender = dataSnapshot.getValue(String.class).substring(15,28);
+                time = dataSnapshot.getValue(String.class).substring(0, 12);
+                date = dataSnapshot.getValue(String.class).substring(12, 22);
+                uri = dataSnapshot.getValue(String.class).substring(35);
+                sender = dataSnapshot.getValue(String.class).substring(22,35);
 
                 MessageModel messageModel = new MessageModel(-1,sender,"null",uri,"video",101,time,date,groupname);
                 Log.d("video",messageModel.getMessage());
@@ -502,13 +502,13 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 //                        }
 //                    } else if (!(dataSnapshot.getKey().equals("info"))) {
 //
-                        time=dataSnapshot.getValue().toString().substring(0,5);
-                        date=dataSnapshot.getValue().toString().substring(5,15);
-                        sender = dataSnapshot.getValue(String.class).substring(15,28);
+                        time=dataSnapshot.getValue().toString().substring(0,12);
+                        date=dataSnapshot.getValue().toString().substring(12,22);
+                        sender = dataSnapshot.getValue(String.class).substring(22,35);
 //
 //                        reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 //
-                        MessageModel messageModel = new MessageModel(435, sender, "null", dataSnapshot.getValue().toString().substring(28), "text", -1,time,date,groupname);
+                        MessageModel messageModel = new MessageModel(435, sender, "null", dataSnapshot.getValue().toString().substring(35), "text", -1,time,date,groupname);
 
                         if(chats.size()!=0) {
                             if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
@@ -575,11 +575,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 } else {
 
                     Date date = new Date();
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
                     long millis = System.currentTimeMillis();
                     java.sql.Date date1 = new java.sql.Date(millis);
 
-                    MessageModel model = new MessageModel(-1, sender, "null", etMessage.getText().toString(), "text", -2, simpleDateFormat.format(date).substring(0, 5), date1.toString(), groupname);
+                    MessageModel model = new MessageModel(-1, sender, "null", etMessage.getText().toString(), "text", -2, simpleDateFormat.format(date), date1.toString(), groupname);
                     etMessage.setText(null);
 
                     if (chats.size() != 0) {
@@ -755,12 +755,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 Uri selectedImageUri = data.getData();
 
                 Date date=new Date();
-                SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
+                SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm:ss.SSS");
 
                 long millis=System.currentTimeMillis();
                 java.sql.Date date1=new java.sql.Date(millis);
 
-                MessageModel model = new MessageModel(1190,sender,"null",selectedImageUri.toString(),"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString(),groupname);
+                MessageModel model = new MessageModel(1190,sender,"null",selectedImageUri.toString(),"video",100,simpleDateFormat.format(date),date1.toString(),groupname);
 
                 if (chats.size() != 0) {
                     if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
@@ -1006,12 +1006,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             super.onPostExecute(uri);
 
             Date date=new Date();
-            SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
+            SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm:ss.SSS");
 
             long millis=System.currentTimeMillis();
             java.sql.Date date1=new java.sql.Date(millis);
 
-            MessageModel messageModel = new MessageModel(-1, sender, "nul", uri.toString(), "image", 2,simpleDateFormat.format(date).substring(0,5),date1.toString(),groupname);
+            MessageModel messageModel = new MessageModel(-1, sender, "nul", uri.toString(), "image", 2,simpleDateFormat.format(date),date1.toString(),groupname);
 
             if(chats.size()!=0) {
                 if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate()) || chats.size() == 0) {
