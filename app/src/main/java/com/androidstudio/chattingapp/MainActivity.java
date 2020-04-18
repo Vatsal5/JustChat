@@ -194,11 +194,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             public void run() {
                 if(contacts1.size()>0) {
                     for ( int q = 0; q < contacts1.size(); ) {
-                        new listener(q).piclistener();
-                        new listener(q).VideoListener();
-                        new listener(q).child();
+                        if(contacts1.get(q).getGroupname()==null) {
+                            new listener(q).piclistener();
+                            new listener(q).VideoListener();
+                            new listener(q).child();
 
-                        q++;
+                            q++;
+                        }
                     }
                 }
 
