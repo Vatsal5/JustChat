@@ -595,7 +595,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     long millis = System.currentTimeMillis();
                     java.sql.Date date1 = new java.sql.Date(millis);
 
-                    MessageModel model = new MessageModel(-1, sender, "null", etMessage.getText().toString(), "text", -2, simpleDateFormat.format(date).substring(0,9)+simpleDateFormat.format(date).substring(10), date1.toString(), groupname);
+                    MessageModel model = new MessageModel(-1, sender, "null", etMessage.getText().toString(), "text", -2, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
                     etMessage.setText(null);
 
                     if (chats.size() != 0) {
@@ -804,7 +804,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             long millis = System.currentTimeMillis();
                             java.sql.Date date1 = new java.sql.Date(millis);
 
-                            MessageModel model = new MessageModel(1190, sender, "null", videoURI.toString(), "video", 100, simpleDateFormat.format(date).substring(0,9)+simpleDateFormat.format(date).substring(10), date1.toString(), "null");
+                            MessageModel model = new MessageModel(1190, sender, "null", videoURI.toString(), "video", 100, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), "null");
 
                             if (chats.size() != 0) {
                                 if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
@@ -841,7 +841,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     long millis = System.currentTimeMillis();
                     java.sql.Date date1 = new java.sql.Date(millis);
 
-                    MessageModel model = new MessageModel(1190, sender, "null", uri.toString(), "video", 100, simpleDateFormat.format(date), date1.toString(), "null");
+                    MessageModel model = new MessageModel(1190, sender, "null", uri.toString(), "video", 100, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), "null");
 
                     if (chats.size() != 0) {
                         if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
@@ -1091,7 +1091,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             long millis=System.currentTimeMillis();
             java.sql.Date date1=new java.sql.Date(millis);
 
-            MessageModel messageModel = new MessageModel(-1, sender, "nul", uri.toString(), "image", 2,simpleDateFormat.format(date).substring(0,9)+simpleDateFormat.format(date).substring(10),date1.toString(),groupname);
+            MessageModel messageModel = new MessageModel(-1, sender, "nul", uri.toString(), "image", 2,simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9),date1.toString(),groupname);
 
             if(chats.size()!=0) {
                 if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate()) || chats.size() == 0) {
