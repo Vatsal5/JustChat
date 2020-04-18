@@ -20,6 +20,7 @@ import android.graphics.Canvas;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -316,13 +317,28 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                             case 0:
                                                 if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                                     ActivityCompat.requestPermissions(MessageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 5);
-                                                } else
-                                                    CropImage.startPickImageActivity(MessageActivity.this);
+                                                } else{
+                                                    Intent intent = new Intent();
+                                                    intent.setType("image/*");
+                                                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                                                    startActivityForResult(Intent.createChooser(intent,"Select Picture"), 10);
+                                                }
                                                 break;
                                             case 1:
-                                                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-                                                intent.setType("video/*");
-                                                startActivityForResult(intent, 100);
+                                                if (Build.VERSION.SDK_INT <19){
+                                                    Intent intent = new Intent();
+                                                    intent.setType("video/mp4");
+                                                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                                                    startActivityForResult(Intent.createChooser(intent, "Select videos"),100);
+                                                } else {
+                                                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                                                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                                                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                                    intent.setType("video/mp4");
+                                                    startActivityForResult(intent, 100);
+                                                }
                                                 break;
                                         }
                                     }
@@ -1105,7 +1121,11 @@ if(getIntent().getIntExtra("path",1)==2) {
             }
             else
             {
-                CropImage.startPickImageActivity(MessageActivity.this);
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,"Select Picture"), 10);
             }
         }
 
@@ -1211,18 +1231,80 @@ if(getIntent().getIntExtra("path",1)==2) {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK)
+        if (requestCode == 10 && resultCode == RESULT_OK)
         {
+            if(data.getClipData()!=null)
+            {
+                for(int i=0;i<data.getClipData().getItemCount();i++)
+                {
+                    ClipData.Item imageItem = data.getClipData().getItemAt(i);
+                    Uri uri = imageItem.getUri();
 
-            Uri uri = CropImage.getPickImageResultUri(this,data);
-            new CompressImage().execute(uri);
+                    new CompressImage().execute(uri);
+                }
+            }
+            else
+            {
+                Uri uri = data.getData();
+                new CompressImage().execute(uri);
+            }
+
         }
 
         if(requestCode==100)
         {
             if(resultCode==RESULT_OK)
             {
-                Uri selectedImageUri = data.getData();
+
+                if(data.getClipData() != null) {
+
+                    for(int i=0;i<data.getClipData().getItemCount();i++) {
+                        ClipData.Item videoItem = data.getClipData().getItemAt(i);
+                        Uri videoURI = videoItem.getUri();
+
+                        Date date=new Date();
+                        SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
+
+                        long millis=System.currentTimeMillis();
+                        java.sql.Date date1=new java.sql.Date(millis);
+
+                        MessageModel model = new MessageModel(1190,sender,RecieverPhone,videoURI.toString(),"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString(),"null");
+
+                        int id = Handler.addMessage(model);
+                        model.setId(id);
+                        if(chats.size()>0 && chats.get(chats.size()-1).getType().equals("typing")) {
+                            if(flag1==true)
+                                chats.add(chats.size() - 1, model);
+                        }
+                        else
+                            chats.add(model);
+
+                    }
+                }
+                else {
+                    Uri videoURI = data.getData();
+
+                    Date date=new Date();
+                    SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
+
+                    long millis=System.currentTimeMillis();
+                    java.sql.Date date1=new java.sql.Date(millis);
+
+                    MessageModel model = new MessageModel(1190,sender,RecieverPhone,videoURI.toString(),"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString(),"null");
+
+                    int id = Handler.addMessage(model);
+                    model.setId(id);
+                    if(chats.size()>0 && chats.get(chats.size()-1).getType().equals("typing")) {
+                        if(flag1==true)
+                            chats.add(chats.size() - 1, model);
+                    }
+                    else
+                        chats.add(model);
+
+                }
+
+                adapter.notifyItemInserted(chats.size()-1);
+
 
 //                File file = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent/"+new Timestamp(System.currentTimeMillis())+".mp4");
 //
@@ -1244,24 +1326,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 //
 //                selectedImageUri = Uri.fromFile(file);
 
-                Date date=new Date();
-                SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
 
-                long millis=System.currentTimeMillis();
-                java.sql.Date date1=new java.sql.Date(millis);
-
-                MessageModel model = new MessageModel(1190,sender,RecieverPhone,selectedImageUri.toString(),"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString(),"null");
-
-                int id = Handler.addMessage(model);
-                model.setId(id);
-                if(chats.size()>0 && chats.get(chats.size()-1).getType().equals("typing")) {
-                    if(flag1==true)
-                        chats.add(chats.size() - 1, model);
-                }
-                else
-                    chats.add(model);
-
-                adapter.notifyItemInserted(chats.size()-1);
 
 //                File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
 //                if(!imagesFolder.exists())
