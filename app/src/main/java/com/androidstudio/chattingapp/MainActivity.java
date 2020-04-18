@@ -194,13 +194,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             public void run() {
                 if(contacts1.size()>0) {
                     for ( int q = 0; q < contacts1.size(); ) {
-                        if(contacts1.get(q).getGroupname()==null) {
+
                             new listener(q).piclistener();
                             new listener(q).VideoListener();
                             new listener(q).child();
 
                             q++;
-                        }
+
                     }
                 }
 
@@ -283,9 +283,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                  public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                      //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
-                     contacts1.get(index).setLastmessage("  ");
-                     contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
-                     userAdapter.notifyDataSetChanged();
+                     if(contacts1.get(index).getGroupname()==null) {
+                         contacts1.get(index).setLastmessage("  ");
+                         contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                         userAdapter.notifyDataSetChanged();
+                     }
 
 
 //                     if (contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
@@ -343,9 +345,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                      if (!(dataSnapshot.getKey().equals("message"))) {
 
                          if (!(dataSnapshot.getKey().equals("info"))) {
-                             contacts1.get(index).setLastmessage(dataSnapshot.getValue(String.class).substring(15));
-                             contacts1.get(index).setTime(dataSnapshot.getValue(String.class).substring(0,5));
-                             contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                             if(contacts1.get(index).getGroupname()==null) {
+                                 contacts1.get(index).setLastmessage(dataSnapshot.getValue(String.class).substring(15));
+                                 contacts1.get(index).setTime(dataSnapshot.getValue(String.class).substring(0, 5));
+                                 contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                             }
 
 //                             MessageModel model;
 //
@@ -406,9 +410,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                  public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                      //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
-                     contacts1.get(index).setLastmessage(" ");
-                     contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
-                     userAdapter.notifyDataSetChanged();
+                     if(contacts1.get(index).getGroupname()==null) {
+                         contacts1.get(index).setLastmessage(" ");
+                         contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                         userAdapter.notifyDataSetChanged();
+                     }
 
 //                     MessageModel model;
 //
