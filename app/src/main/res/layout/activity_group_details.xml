@@ -28,8 +28,7 @@
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:textSize="28dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginBottom="2dp"/>
+            android:layout_marginLeft="20dp"/>
 
         <TextView
             android:id="@+id/tvCreatedBy"
@@ -38,7 +37,7 @@
             app:layout_constraintLeft_toLeftOf="@+id/ivGroupDP"
             app:layout_constraintBottom_toBottomOf="@id/ivGroupDP"
             android:layout_marginLeft="20dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:text="Created By You"
             android:textSize="13dp"
             android:textColor="#ffffff"/>

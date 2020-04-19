@@ -173,6 +173,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             public void onClick(View view) {
                 Intent intent = new Intent(MessageActivity2.this,GroupDetails.class);
                 intent.putExtra("groupname",groupname);
+                intent.putExtra("groupkey",groupKey);
                 intent.putExtra("profile",getIntent().getStringExtra("profile"));
                 startActivity(intent);
             }
