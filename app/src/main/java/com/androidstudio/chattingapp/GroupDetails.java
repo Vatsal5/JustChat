@@ -163,21 +163,33 @@ public class GroupDetails extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
 
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addListenerForSingleValueEvent(
-                                new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        FirebaseDatabase.getInstance().getReference().child("users").
-                                                child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).getRef().removeValue();
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                FirebaseDatabase.getInstance().getReference().child("users").
+                                        child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).getRef().removeValue();
+                            }
 
-                                    }
+                            @Override
+                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
 
-                                    }
-                                }
-                        );
+                            @Override
+                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                            }
+
+                            @Override
+                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                         Handler handler=new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override
