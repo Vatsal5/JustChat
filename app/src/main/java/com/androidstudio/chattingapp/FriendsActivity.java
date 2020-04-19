@@ -106,6 +106,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
                     if(tvCreateGroup.getText().equals("ADD"))
                     {
+                        ApplicationClass.addmembers=0;
                         for(int index=0; index<contacts1.size();index++) {
                             if(contacts1.get(index).getSelected()==1) {
                                 if (contacts1.get(index).getPh_number().substring(0, 3).equals("+91")) {
@@ -330,7 +331,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         }
         else if(ApplicationClass.addmembers==1)
         {
-            ApplicationClass.addmembers=0;
+
             tvCreateGroup.setVisibility(View.VISIBLE);
             int x=0;
     for(int i=0;i<members.size();i++)
@@ -372,6 +373,12 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             intent.putExtra("profile", contacts1.get(index).getUrl());
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ApplicationClass.addmembers=0;
     }
 
     @Override
