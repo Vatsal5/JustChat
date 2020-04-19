@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,7 +18,7 @@ public class GroupDetails extends AppCompatActivity {
 
     ImageView ivGroupDP;
     TextView tvCreatedBy,tvGroupTitle;
-    LinearLayout llAddMembers,llExitGroup;
+    LinearLayout llAddMembers,llExitGroup,llDeleteGroup;
     RecyclerView Participants;
     RecyclerView.LayoutManager manager;
     ParticipantsAdapter adapter;
@@ -34,6 +35,7 @@ public class GroupDetails extends AppCompatActivity {
         llAddMembers = findViewById(R.id.llAddMembers);
         llExitGroup = findViewById(R.id.llExitGroup);
         Participants = findViewById(R.id.Participants);
+        llDeleteGroup = findViewById(R.id.llDeleteGroup);
 
         Participants.setHasFixedSize(true);
 
@@ -48,6 +50,29 @@ public class GroupDetails extends AppCompatActivity {
 
         manager = new LinearLayoutManager(this);
         Participants.setLayoutManager(manager);
+
+
+
+        llAddMembers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        llDeleteGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        llExitGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                
+            }
+        });
 
     }
 }
