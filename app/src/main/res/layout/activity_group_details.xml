@@ -58,7 +58,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="12dp"
+                android:layout_marginLeft="15dp"
                 android:background="@drawable/green"
                 android:padding="8dp"
                 app:srcCompat="@drawable/addperson" />
@@ -74,14 +74,25 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tvParticipants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/llAddMembers"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="15dp"
+            android:textSize="16sp"
+            android:textColor="#d6514a"
+            android:layout_marginLeft="16dp"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/Participants"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/llAddMembers"
+            app:layout_constraintTop_toBottomOf="@id/tvParticipants"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="15dp"/>
+            android:layout_marginTop="5dp"/>
 
         <LinearLayout
             android:id="@+id/llExitGroup"
@@ -99,7 +110,7 @@
                 android:padding="6dp"
                 app:srcCompat="@drawable/exit"
                 android:layout_gravity="center"
-                android:layout_marginLeft="12dp"/>
+                android:layout_marginLeft="15dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -127,7 +138,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="12dp"
+                android:layout_marginLeft="15dp"
                 android:padding="6dp"
                 app:srcCompat="@drawable/delete" />
 

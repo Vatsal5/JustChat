@@ -2,41 +2,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="55dp"
+    android:layout_height="57dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="1dp"
     android:orientation="horizontal">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivProfile"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_gravity="center"
-        android:layout_marginLeft="12dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="15dp"
-        android:orientation="vertical">
+        android:layout_marginLeft="15dp" />
 
         <TextView
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#212121"
-            android:textSize="17sp"
+            android:textSize="18sp"
+            android:layout_marginLeft="16dp"
+            android:layout_gravity="center_vertical"
             android:textStyle="bold" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <TextView
-            android:id="@+id/tvStatus"
+            android:id="@+id/tvGroupAdmin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="350dp"
+            android:text="Group Admin"
+            android:padding="3dp"
+            android:background="@drawable/border"
+            app:layout_constraintRight_toRightOf="parent"
+            android:textSize="9sp"
+            android:visibility="gone"
             android:textColor="#d6514a"
-            android:textSize="14sp"
-            tools:visibility="gone" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginRight="10dp"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

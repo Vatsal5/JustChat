@@ -105,7 +105,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         profile=getIntent().getStringExtra("profile");
 
         if(profile.equals("null"))
-            ivProfile.setImageResource(R.drawable.person);
+            ivProfile.setImageResource(R.drawable.group);
         else
         Glide.with(MessageActivity2.this).load(Uri.parse(profile)).into(ivProfile);
 

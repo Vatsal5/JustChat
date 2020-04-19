@@ -29,14 +29,15 @@ import java.util.ArrayList;
 public class GroupDetails extends AppCompatActivity {
 
     ImageView ivGroupDP;
-    TextView tvCreatedBy,tvGroupTitle;
+    TextView tvCreatedBy,tvGroupTitle,tvParticipants;
     LinearLayout llAddMembers,llExitGroup,llDeleteGroup;
     RecyclerView Participants;
-    String groupKey;
+    String groupKey,admin;
     RecyclerView.LayoutManager manager;
     ParticipantsAdapter adapter;
     ArrayList <String> members;
     ArrayList<UserDetailWithStatus> users;
+    ChildEventListener DeleteGroup,exitGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +52,20 @@ public class GroupDetails extends AppCompatActivity {
         llExitGroup = findViewById(R.id.llExitGroup);
         Participants = findViewById(R.id.Participants);
         llDeleteGroup = findViewById(R.id.llDeleteGroup);
+        tvParticipants = findViewById(R.id.tvParticipants);
+
+
         members=new ArrayList<>();
-
-
         Participants.setHasFixedSize(true);
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("admin").addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.getValue(String.class).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+
+                        admin = dataSnapshot.getValue().toString();
+
+                        if(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
                         {
                             llAddMembers.setVisibility(View.VISIBLE);
                             llDeleteGroup.setVisibility(View.VISIBLE);
@@ -81,7 +86,7 @@ public class GroupDetails extends AppCompatActivity {
 
 
         if(getIntent().getStringExtra("profile").equals("null"))
-            ivGroupDP.setImageResource(R.drawable.person);
+            ivGroupDP.setImageResource(R.drawable.group);
         else
             Glide.with(this).load(getIntent().getStringExtra("profile")).into(ivGroupDP);
 
@@ -104,8 +109,13 @@ public class GroupDetails extends AppCompatActivity {
                                 new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        users.add(new UserDetailWithStatus(dataSnapshot1.getValue(String.class),null,dataSnapshot.getValue(String.class),null,0));
+                                        if(!dataSnapshot1.getValue(String.class).equals(admin))
+                                            users.add(new UserDetailWithStatus(dataSnapshot1.getValue(String.class),null,dataSnapshot.getValue(String.class),null,0));
+                                        else
+                                            users.add(new UserDetailWithStatus(dataSnapshot1.getValue(String.class),null,dataSnapshot.getValue(String.class),"admin",0));
+
                                         adapter.notifyDataSetChanged();
+                                        tvParticipants.setText(users.size()+" Participants");
                                     }
 
                                     @Override
@@ -162,12 +172,13 @@ public class GroupDetails extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(new ChildEventListener() {
+                        DeleteGroup = new ChildEventListener() {
                             @Override
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                                 FirebaseDatabase.getInstance().getReference().child("users").
                                         child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).getRef().removeValue();
+
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").removeEventListener(DeleteGroup);
                             }
 
                             @Override
@@ -189,7 +200,11 @@ public class GroupDetails extends AppCompatActivity {
                             public void onCancelled(@NonNull DatabaseError databaseError) {
 
                             }
-                        });
+                        };
+
+
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(DeleteGroup);
+
                         Handler handler=new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override
@@ -222,18 +237,20 @@ public class GroupDetails extends AppCompatActivity {
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey)
-                                .child("members").addChildEventListener(new ChildEventListener() {
+
+                        exitGroup = new ChildEventListener() {
                             @Override
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                                if(dataSnapshot.getValue(String.class).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
-                                {
+                                if (dataSnapshot.getValue(String.class).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                                     dataSnapshot.getRef().removeValue();
                                     FirebaseDatabase.getInstance().getReference().child("users")
                                             .child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
                                             .child("groups").child(groupKey).getRef().removeValue();
                                     GroupDetails.this.finish();
-                                    startActivity(new Intent(GroupDetails.this,MainActivity.class));
+                                    startActivity(new Intent(GroupDetails.this, MainActivity.class));
+
+                                    FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey)
+                                            .child("members").removeEventListener(exitGroup);
                                 }
                             }
 
@@ -256,7 +273,10 @@ public class GroupDetails extends AppCompatActivity {
                             public void onCancelled(@NonNull DatabaseError databaseError) {
 
                             }
-                        });
+                        };
+
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey)
+                                .child("members").addChildEventListener(exitGroup);
                     }
                 });
                 builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
