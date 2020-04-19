@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -37,6 +38,7 @@ public class GroupDetails extends AppCompatActivity {
     ParticipantsAdapter adapter;
     ArrayList <String> members;
     ArrayList<UserDetailWithStatus> users;
+    SharedPreferences pref;
     ChildEventListener DeleteGroup,exitGroup;
 
     @Override
@@ -54,6 +56,8 @@ public class GroupDetails extends AppCompatActivity {
         llDeleteGroup = findViewById(R.id.llDeleteGroup);
         tvParticipants = findViewById(R.id.tvParticipants);
 
+        pref= getApplicationContext().getSharedPreferences("Names",0);
+
 
         members=new ArrayList<>();
         Participants.setHasFixedSize(true);
@@ -64,6 +68,16 @@ public class GroupDetails extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                         admin = dataSnapshot.getValue().toString();
+
+                        if(admin.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                            tvCreatedBy.setText("Created By You");
+
+                        else {
+                            if (pref.getString(admin, "null").equals("null"))
+                                tvCreatedBy.setText("Created By " + admin);
+                            else
+                                tvCreatedBy.setText("Created By " + pref.getString(admin, "null"));
+                        }
 
                         if(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
                         {
@@ -91,8 +105,6 @@ public class GroupDetails extends AppCompatActivity {
             Glide.with(this).load(getIntent().getStringExtra("profile")).into(ivGroupDP);
 
         tvGroupTitle.setText(getIntent().getStringExtra("groupname"));
-
-        tvCreatedBy.setText("Created By You");
 
 
         manager = new LinearLayoutManager(this);
