@@ -15,12 +15,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,7 +37,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     FirebaseDatabase database;
     String currentUserNumber;
     TextView tvCreateGroup;
-
+    int x=0;
     DatabaseReference reference;
     ArrayList <String> members;
     FriendsAdapter userAdapter;
@@ -85,19 +87,33 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
             if(ApplicationClass.activity==1) {
                 ApplicationClass.activity=0;
-                FirebaseDatabase.getInstance().getReference().child("groups").child(groupkey).child("members").addListenerForSingleValueEvent(
-                        new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                members.add(dataSnapshot.getValue().toString());
-                            }
+                FirebaseDatabase.getInstance().getReference().child("groups").child(groupkey).child("members").addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        members.add(dataSnapshot.getValue().toString());
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
 
-                            }
-                        }
-                );
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             tvCreateGroup.setOnClickListener(new View.OnClickListener() {
@@ -333,12 +349,12 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         {
 
             tvCreateGroup.setVisibility(View.VISIBLE);
-            int x=0;
+
     for(int i=0;i<members.size();i++)
     {
 
 
-    if(members.get(i).equals(contacts1.get(index)) || members.get(i).equals("+91"+contacts1.get(index)))
+    if(members.get(i).equals(contacts1.get(index).getPh_number()) || members.get(i).equals("+91"+contacts1.get(index).getPh_number()))
     {
         x=1;
         break;
@@ -350,6 +366,9 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             contacts1.get(index).setSelected(0);
         userAdapter.notifyDataSetChanged();
         tvCreateGroup.setText("ADD");
+    }
+    else{
+        x=0;
     }
         }
 
