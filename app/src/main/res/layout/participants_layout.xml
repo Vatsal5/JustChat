@@ -38,7 +38,7 @@
             app:layout_constraintRight_toRightOf="parent"
             android:textSize="9sp"
             android:visibility="gone"
-            android:textColor="#d6514a"
+            android:textColor="#212121"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginRight="10dp"/>
