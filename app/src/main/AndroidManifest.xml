@@ -16,9 +16,11 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".MessageActivity2"></activity>
-        <activity android:name=".CreateGroup"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".GroupDetails"></activity>
+        <activity android:name=".MessageActivity2" />
+        <activity
+            android:name=".CreateGroup"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Mode"
             android:screenOrientation="portrait" />

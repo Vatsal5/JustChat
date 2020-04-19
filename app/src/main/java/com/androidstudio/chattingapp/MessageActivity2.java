@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -78,6 +79,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     TextView tvTitle,tvMode;
     ArrayList<String> membernumber;
     EditText etMessage;
+    ConstraintLayout rl;
     StorageReference rf;
     int numberOfMembers=-1;
     RecyclerView.LayoutManager manager;
@@ -99,6 +101,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         ApplicationClass.MessageActivity2Context = MessageActivity2.this;
         membernumber=new ArrayList<>();
+
         profile=getIntent().getStringExtra("profile");
 
         if(profile.equals("null"))
@@ -116,6 +119,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         tvTitle = findViewById(R.id.title);
         ivBack = findViewById(R.id.ivBack);
         tvMode = findViewById(R.id.tvMode);
+        rl = findViewById(R.id.rl);
 
         tvTitle.setText(groupname);
 
@@ -128,7 +132,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         });
 
-        pref= getApplicationContext().getSharedPreferences("Mode"+groupKey,0);
+        pref= getApplicationContext().getSharedPreferences("Mode",0);
         defaultvalue = pref.getString("mode"+groupKey,"null");
 
         if((defaultvalue.equals("null"))){
@@ -163,6 +167,16 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         chats.addAll(Handler.getGroupMessages(groupname));
         if(chats.size()>0)
             adapter.notifyItemInserted(chats.size()-1);
+
+        rl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MessageActivity2.this,GroupDetails.class);
+                intent.putExtra("groupname",groupname);
+                intent.putExtra("profile",getIntent().getStringExtra("profile"));
+                startActivity(intent);
+            }
+        });
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").addChildEventListener(new ChildEventListener() {
             @Override
@@ -704,7 +718,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
 
             int swipeFlags;
-            if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3)){
+            if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3 ||
+                    chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 60)){
 
                 if(!chats.get(viewHolder.getAdapterPosition()).getSender().equals(sender)) {
                     swipeFlags = ItemTouchHelper.END;
@@ -1534,7 +1549,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     protected void onResume() {
         super.onResume();
 
-        SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode"+groupKey,0);
+        SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode",0);
         defaultvalue = pref.getString("mode"+groupKey,"null");
         Log.d("mode",defaultvalue);
 

@@ -835,9 +835,15 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-
+                        if(Handler.getGroupMessages(dataSnapshot.getValue(String.class)).size()>0)
                                 contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
-                                        , "", "null", dataSnapshot.getKey(),dataSnapshot.getValue().toString()));
+                                        , Handler.getLastMessageGroup(dataSnapshot.getValue(String.class)),
+                                        Handler.getLastGroupMessageTime(dataSnapshot.getValue(String.class)).substring(0,5), dataSnapshot.getKey(),dataSnapshot.getValue().toString()));
+                        else
+                            contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
+                                    , "",
+                                    "", dataSnapshot.getKey(),dataSnapshot.getValue().toString()));
+
                                 userAdapter.notifyDataSetChanged();
                                 num++;
                                 reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
@@ -1088,8 +1094,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 }
             }
             else {
-                contacts1.get(i).setLastmessage(Handler.getLastMessageGroup(contacts1.get(i).getGroupname()));
-                contacts1.get(i).setTime(Handler.getLastGroupMessageTime(contacts1.get(i).getGroupname()).substring(0,5));
+                if(Handler.getGroupMessages(contacts1.get(i).getGroupname()).size()>0) {
+                    contacts1.get(i).setLastmessage(Handler.getLastMessageGroup(contacts1.get(i).getGroupname()));
+                    contacts1.get(i).setTime(Handler.getLastGroupMessageTime(contacts1.get(i).getGroupname()).substring(0, 5));
+                }
             }
         }
         userAdapter.notifyDataSetChanged();

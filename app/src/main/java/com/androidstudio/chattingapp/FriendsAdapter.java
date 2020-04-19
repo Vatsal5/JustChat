@@ -27,7 +27,7 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> {
 
         private final Context context;
         CircleImageView iv;
-    ImageView ivSelected;
+        ImageView ivSelected;
         FirebaseDatabase database;
         DatabaseReference reference;
         private ArrayList<UserDetailWithStatus> list;
