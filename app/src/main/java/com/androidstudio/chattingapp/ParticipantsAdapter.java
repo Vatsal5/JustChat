@@ -50,10 +50,10 @@ public class ParticipantsAdapter  extends RecyclerView.Adapter<ParticipantsAdapt
     @Override
     public void onBindViewHolder(@NonNull ParticipantsAdapter.ViewHolder holder, int position) {
 
-        holder.tvName.setText(users.get(position).getuID());
+        holder.tvName.setText(users.get(position).getPh_number());
         holder.tvStatus.setText(users.get(position).getStatus());
 
-        if(!users.get(position).getUrl().equals("null"))
+        if(!(users.get(position).getUrl()==null))
             Glide.with(context).load(users.get(position).getUrl()).into(holder.ivProfile);
         else
             Glide.with(context).load(R.drawable.person).into(holder.ivProfile);

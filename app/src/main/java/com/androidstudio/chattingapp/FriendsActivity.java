@@ -37,13 +37,15 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     TextView tvCreateGroup;
 
     DatabaseReference reference;
+    ArrayList <String> members;
     FriendsAdapter userAdapter;
     ArrayList<UserDetail> contacts;
     ArrayList<UserDetailWithStatus> contacts1;
-    ArrayList<String> number1;
+    ArrayList<String> number1,membersToadd;
     int yes=0;
     int c=0;
     int k=0;
+    String groupkey;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,14 +54,18 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         tvCreateGroup=findViewById(R.id.tvCreate);
+        members=new ArrayList<>();
+        groupkey=getIntent().getStringExtra("groupkey");
 
 
         setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             number1= new ArrayList<String>();
+        membersToadd= new ArrayList<String>();
             contacts = new ArrayList<>();
             contacts1 = new ArrayList<>();
+
 
             database=FirebaseDatabase.getInstance();
 
@@ -77,9 +83,46 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                 getcontact();
             }
 
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupkey).child("members").addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        members.add(dataSnapshot.getValue(String.class));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                }
+        );
+
             tvCreateGroup.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    if(tvCreateGroup.getText().equals("ADD"))
+                    {
+                        for(int index=0; index<contacts1.size();index++) {
+                            if(contacts1.get(index).getSelected()==1) {
+                                if (contacts1.get(index).getPh_number().substring(0, 3).equals("+91")) {
+                                   FirebaseDatabase.getInstance().getReference().child("groups").child(getIntent().getStringExtra("groupkey"))
+                                   .child("members").push().setValue(contacts1.get(index).getPh_number());
+                                } else {
+                                    FirebaseDatabase.getInstance().getReference().child("groups").child(getIntent().getStringExtra("groupkey"))
+                                            .child("members").push().setValue("+91"+contacts1.get(index).getPh_number());
+                                }
+                            }
+                        }
+                        Intent intent=new Intent(FriendsActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        FriendsActivity.this.finish();
+
+                        startActivity(intent);
+
+                    }
+                    else
+                    {
 
                     for(int index=0; index<contacts1.size();index++) {
                         if(contacts1.get(index).getSelected()==1) {
@@ -93,7 +136,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
                     FriendsActivity.this.finish();
                     startActivity(new Intent(FriendsActivity.this,CreateGroup.class));
-                }
+                }}
             });
 
         }
@@ -266,6 +309,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         if (getIntent().getIntExtra("createGroup", 2) == 1) {
             yes=1;
             tvCreateGroup.setVisibility(View.VISIBLE);
+            tvCreateGroup.setText("Create Group");
 
 
             if(contacts1.get(index).getSelected()==0)
@@ -275,7 +319,32 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             userAdapter.notifyDataSetChanged();
 
 
-        } else {
+        }
+        else if(ApplicationClass.addmembers==1)
+        {
+            ApplicationClass.addmembers=0;
+            tvCreateGroup.setVisibility(View.VISIBLE);
+            int x=0;
+    for(int i=0;i<members.size();i++)
+    {
+
+
+    if(members.get(i).equals(contacts1.get(index)) || members.get(i).equals("+91"+contacts1.get(index)))
+    {
+        x=1;
+        break;
+    }}
+    if(x==0) {
+        if (contacts1.get(index).getSelected() == 0)
+            contacts1.get(index).setSelected(1);
+        else
+            contacts1.get(index).setSelected(0);
+        userAdapter.notifyDataSetChanged();
+        tvCreateGroup.setText("ADD");
+    }
+        }
+
+        else {
             Intent intent = new Intent(FriendsActivity.this, MessageActivity.class);
             intent.putExtra("title", contacts1.get(index).getuID());
 
