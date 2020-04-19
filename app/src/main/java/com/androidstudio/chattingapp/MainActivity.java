@@ -835,10 +835,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                        if(Handler.getGroupMessages(dataSnapshot.getValue(String.class)).size()>0)
+                        if(Handler.getGroupMessages(dataSnapshot.getValue().toString()).size()>0)
                                 contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
-                                        , Handler.getLastMessageGroup(dataSnapshot.getValue(String.class)),
-                                        Handler.getLastGroupMessageTime(dataSnapshot.getValue(String.class)).substring(0,5), dataSnapshot.getKey(),dataSnapshot.getValue().toString()));
+                                        , Handler.getLastMessageGroup(dataSnapshot.getValue().toString()),
+                                        Handler.getLastGroupMessageTime(dataSnapshot.getValue().toString()).substring(0,5), dataSnapshot.getKey(),dataSnapshot.getValue().toString()));
                         else
                             contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
                                     , "",

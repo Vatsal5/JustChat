@@ -83,19 +83,22 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                 getcontact();
             }
 
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupkey).child("members").addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        members.add(dataSnapshot.getValue(String.class));
-                    }
+            if(ApplicationClass.activity==1) {
+                ApplicationClass.activity=0;
+                FirebaseDatabase.getInstance().getReference().child("groups").child(groupkey).child("members").addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                members.add(dataSnapshot.getValue().toString());
+                            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                }
-        );
+                            }
+                        }
+                );
+            }
 
             tvCreateGroup.setOnClickListener(new View.OnClickListener() {
                 @Override

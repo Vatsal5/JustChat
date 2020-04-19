@@ -80,7 +80,7 @@ public class GroupDetails extends AppCompatActivity {
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        members.add(dataSnapshot.getValue(String.class));
+                        members.add(dataSnapshot.getValue().toString());
                     }
 
                     @Override
@@ -155,6 +155,7 @@ public class GroupDetails extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ApplicationClass.addmembers=1;
+                ApplicationClass.activity=1;
                 Intent intent=new Intent(GroupDetails.this,FriendsActivity.class);
                 intent.putExtra("groupkey",groupKey);
                 startActivity(intent);

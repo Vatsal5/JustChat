@@ -32,7 +32,7 @@ public class ApplicationClass extends Application
     public static ArrayList<Long>DownloadIds;
     public static ArrayList<String>members;
     public static String Groupname,GroupDp,groupkey;
-    public  static  int create,addmembers;
+    public  static  int create,addmembers,activity;
 
     @Override
     public void onCreate() {
@@ -43,6 +43,7 @@ public class ApplicationClass extends Application
         groupkey=null;
         create=0;
         addmembers=0;
+        activity=0;
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         FirebaseDatabase.getInstance().getReference("users").keepSynced(true);
