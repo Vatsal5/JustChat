@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,7 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class GroupDetails extends AppCompatActivity {
+public class GroupDetails extends AppCompatActivity implements ParticipantsAdapter.itemSelected{
 
     ImageView ivGroupDP;
     TextView tvCreatedBy,tvGroupTitle,tvParticipants;
@@ -62,7 +63,7 @@ public class GroupDetails extends AppCompatActivity {
         members=new ArrayList<>();
         Participants.setHasFixedSize(true);
 
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("admin").addListenerForSingleValueEvent(
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("admin").addValueEventListener(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -302,4 +303,15 @@ public class GroupDetails extends AppCompatActivity {
         });
 
     }
-}
+    @Override
+    public void onItemSelected(int index) {
+        if(!(users.get(index).getPh_number().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                || ("+91"+users.get(index).getPh_number()).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
+            Intent intent = new Intent(GroupDetails.this, MessageActivity.class);
+            intent.putExtra("phone", users.get(index).getPh_number());
+            intent.putExtra("messagecount", 2);
+            intent.putExtra("title",users.get(index).getPh_number() );
+            ApplicationClass.groupusers=1;
+            startActivity(intent);
+        }
+}}

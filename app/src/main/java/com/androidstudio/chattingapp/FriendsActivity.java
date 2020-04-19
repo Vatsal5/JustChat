@@ -139,6 +139,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                 }
                             }
                         }
+                        tvCreateGroup.setText("Create Group");
                         Intent intent=new Intent(FriendsActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         FriendsActivity.this.finish();
@@ -397,6 +398,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        tvCreateGroup.setText("Create Group");
         ApplicationClass.addmembers=0;
     }
 
@@ -431,6 +433,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     @Override
     protected void onRestart() {
         super.onRestart();
+        tvCreateGroup.setText("Create Group");
         ApplicationClass.members.clear();
     }
 }

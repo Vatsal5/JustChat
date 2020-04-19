@@ -354,8 +354,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                          if (!(dataSnapshot.getKey().equals("info"))) {
 
-                                 contacts1.get(index).setLastmessage(dataSnapshot.getValue(String.class).substring(15));
-                                 contacts1.get(index).setTime(dataSnapshot.getValue(String.class).substring(0, 5));
+                                 contacts1.get(index).setLastmessage(dataSnapshot.getValue().toString().substring(15));
+                                 contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
                                  contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
 
 
@@ -488,7 +488,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                             contacts1.get(index).setLastmessage("  ");
-                            contacts1.get(index).setTime(dataSnapshot.getValue(String.class).substring(0, 5));
+                            contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
                             contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                             userAdapter.notifyDataSetChanged();
                         }
@@ -523,8 +523,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     .addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            contacts1.get(index).setLastmessage(dataSnapshot.getValue(String.class).substring(28));
-                            contacts1.get(index).setTime(dataSnapshot.getValue(String.class).substring(0, 5));
+                            contacts1.get(index).setLastmessage(dataSnapshot.getValue().toString().substring(34));
+                            contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
                             contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                             userAdapter.notifyDataSetChanged();
                         }
@@ -559,7 +559,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                             contacts1.get(index).setLastmessage(" ");
-                            contacts1.get(index).setTime(dataSnapshot.getValue(String.class).substring(0, 5));
+                            contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
                             contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                             userAdapter.notifyDataSetChanged();
                         }
@@ -852,7 +852,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                 if(dataSnapshot.exists())
                                                 {
-                                                    contacts1.get(contacts1.size()-1).setUrl(dataSnapshot.getValue(String.class));
+                                                    contacts1.get(contacts1.size()-1).setUrl(dataSnapshot.getValue().toString());
                                                 userAdapter.notifyDataSetChanged();}
                                             }
 
@@ -1047,7 +1047,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        contacts1.get(index).setUrl(dataSnapshot.getValue(String.class));
+                        contacts1.get(index).setUrl(dataSnapshot.getValue().toString());
                         userAdapter.notifyDataSetChanged();
                     }
                 }
