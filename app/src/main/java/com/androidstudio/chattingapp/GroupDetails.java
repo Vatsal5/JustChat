@@ -76,19 +76,7 @@ public class GroupDetails extends AppCompatActivity {
                     }
                 }
         );
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        members.add(dataSnapshot.getValue().toString());
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                }
-        );
 
 
 
@@ -158,6 +146,7 @@ public class GroupDetails extends AppCompatActivity {
                 ApplicationClass.activity=1;
                 Intent intent=new Intent(GroupDetails.this,FriendsActivity.class);
                 intent.putExtra("groupkey",groupKey);
+                intent.putExtra("groupname",getIntent().getStringExtra("groupname"));
                 startActivity(intent);
 
             }
@@ -172,15 +161,23 @@ public class GroupDetails extends AppCompatActivity {
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(members.size()>0)
-                        {
-                            for (int i=0; i<members.size();i++)
-                            {
-                                FirebaseDatabase.getInstance().getReference().child("users").
-                                        child(members.get(i)).child("groups").child(groupKey).getRef().removeValue();
 
-                            }
-                        }
+
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addListenerForSingleValueEvent(
+                                new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        FirebaseDatabase.getInstance().getReference().child("users").
+                                                child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).getRef().removeValue();
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                }
+                        );
                         Handler handler=new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override
@@ -191,7 +188,7 @@ public class GroupDetails extends AppCompatActivity {
                                 startActivity(new Intent(GroupDetails.this,MainActivity.class));
 
                             }
-                        },1000);
+                        },2000);
                     }
                 });
                 builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -220,6 +217,9 @@ public class GroupDetails extends AppCompatActivity {
                                 if(dataSnapshot.getValue(String.class).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
                                 {
                                     dataSnapshot.getRef().removeValue();
+                                    FirebaseDatabase.getInstance().getReference().child("users")
+                                            .child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                                            .child("groups").child(groupKey).getRef().removeValue();
                                     GroupDetails.this.finish();
                                     startActivity(new Intent(GroupDetails.this,MainActivity.class));
                                 }

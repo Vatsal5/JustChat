@@ -111,9 +111,14 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                 if (contacts1.get(index).getPh_number().substring(0, 3).equals("+91")) {
                                    FirebaseDatabase.getInstance().getReference().child("groups").child(getIntent().getStringExtra("groupkey"))
                                    .child("members").push().setValue(contacts1.get(index).getPh_number());
+                                    FirebaseDatabase.getInstance().getReference().child("users").child(contacts1.get(index).getPh_number()).child("groups").
+                                            child(groupkey).setValue(getIntent().getStringExtra("groupname"));
                                 } else {
                                     FirebaseDatabase.getInstance().getReference().child("groups").child(getIntent().getStringExtra("groupkey"))
                                             .child("members").push().setValue("+91"+contacts1.get(index).getPh_number());
+                                    FirebaseDatabase.getInstance().getReference().child("users").child("+91"+contacts1.get(index).getPh_number()).child("groups").
+                                            child(groupkey).setValue(getIntent().getStringExtra("groupname"));
+
                                 }
                             }
                         }
