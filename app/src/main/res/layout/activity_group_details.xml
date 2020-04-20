@@ -24,7 +24,7 @@
             android:id="@+id/ivEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/edit"
+            app:srcCompat="@drawable/edit"
             app:layout_constraintBottom_toBottomOf="@+id/ivGroupDP"
             app:layout_constraintRight_toRightOf="@id/ivGroupDP"
             android:layout_marginRight="20dp"

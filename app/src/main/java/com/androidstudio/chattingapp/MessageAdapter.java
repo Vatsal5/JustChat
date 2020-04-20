@@ -193,7 +193,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             });
         }
         if(holder.ivProfile!=null) {
-            if ((messages.get(position).getGroupName().equals("null")) && !(ApplicationClass.url.equals("null"))  ) {
+            if ((messages.get(position).getGroupName().equals("null"))  ) {
                 // holder.ivProfile.setVisibility(View.VISIBLE);
 
                 Glide.with(context.getApplicationContext()).load(ApplicationClass.url).into(holder.ivProfile);

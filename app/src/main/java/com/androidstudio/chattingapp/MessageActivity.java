@@ -226,7 +226,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 MessageActivity.this.finish();
             }
         });
-if(ApplicationClass.groupusers!=1) {
+
 
     if (getIntent().getStringExtra("profile") != null) {
         ApplicationClass.url = getIntent().getStringExtra("profile");
@@ -235,29 +235,11 @@ if(ApplicationClass.groupusers!=1) {
         ApplicationClass.url = "null";
         ivProfile.setImageResource(R.drawable.person);
     }
-}
-else
-{
-    ApplicationClass.groupusers=0;
-    reference.child("users").child(RecieverPhone).child("profile").addValueEventListener(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            if(dataSnapshot.getValue()!=null) {
-                ApplicationClass.url = dataSnapshot.getValue().toString();
-                Glide.with(MessageActivity.this).load(Uri.parse(dataSnapshot.getValue().toString())).into(ivProfile);
-            }
-            else {
-                ApplicationClass.url = "null";
-                ivProfile.setImageResource(R.drawable.person);
-            }
-        }
 
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        }
-    });
-}
+
+
+
 
 
         Glide.with(MessageActivity.this).load(R.drawable.typing).into(ivTyping);

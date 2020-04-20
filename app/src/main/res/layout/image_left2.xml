@@ -67,7 +67,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/ivImage"
         app:layout_constraintRight_toRightOf="@+id/ivImage"
         app:layout_constraintBottom_toBottomOf="@+id/ivImage"
-        android:src="@drawable/download"
+        app:srcCompat="@drawable/download"
         android:padding="7dp"
         android:visibility="gone"
         android:clickable="true"
