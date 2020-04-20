@@ -112,9 +112,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     FirebaseDatabase database;
     DatabaseReference reference;
     String lastpath;
+    SharedPreferences pref;
 
     StorageReference rf;
     int messagecount;
+
+    SharedPreferences pref1;
 
     TextView title,tvMode;
     String to = "";
@@ -128,7 +131,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     DBHandler Handler;
     int l;
     int flag=0;
-    SharedPreferences pref;
     ChildEventListener imagereceiver;
     ValueEventListener Status;
 
@@ -143,6 +145,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+
+        pref1 = getSharedPreferences("Names",0);
 
         ApplicationClass.MessageActivityContext = MessageActivity.this;
 
@@ -179,7 +183,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         //getSupportActionBar().setTitle(getIntent().getStringExtra("title"));
 
-        title.setText(String.valueOf(getIntent().getStringExtra("title")));
+        title.setText(pref1.getString(getIntent().getStringExtra("title"),getIntent().getStringExtra("title")));
 
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);

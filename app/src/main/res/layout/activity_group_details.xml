@@ -13,11 +13,23 @@
         <ImageView
             android:id="@+id/ivGroupDP"
             android:layout_width="match_parent"
-            android:layout_height="240dp"
+            android:layout_height="300dp"
             android:scaleType="fitXY"
+            android:clickable="true"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ivEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/edit"
+            app:layout_constraintBottom_toBottomOf="@+id/ivGroupDP"
+            app:layout_constraintRight_toRightOf="@id/ivGroupDP"
+            android:layout_marginRight="20dp"
+            android:clickable="true"
+            android:layout_marginBottom="20dp"/>
 
         <TextView
             android:id="@+id/tvGroupTitle"
@@ -59,7 +71,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="18dp"
-                android:background="@drawable/green"
+                android:background="@drawable/tvbackground"
                 android:padding="8dp"
                 app:srcCompat="@drawable/addperson" />
 
@@ -81,7 +93,6 @@
             android:layout_marginLeft="25dp"
             android:layout_marginTop="11dp"
             android:paddingTop="5dp"
-            android:paddingBottom="5dp"
             android:textColor="#d6514a"
             android:textSize="16sp"
             app:layout_constraintLeft_toLeftOf="parent"

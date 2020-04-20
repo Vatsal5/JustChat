@@ -59,6 +59,20 @@
         android:layout_marginBottom="9dp"
         android:textColor="#FFFFFF"/>
 
+    <ImageView
+        android:id="@+id/ivDownload"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintTop_toTopOf="@+id/ivImage"
+        app:layout_constraintLeft_toLeftOf="@+id/ivImage"
+        app:layout_constraintRight_toRightOf="@+id/ivImage"
+        app:layout_constraintBottom_toBottomOf="@+id/ivImage"
+        android:src="@drawable/download"
+        android:padding="7dp"
+        android:visibility="gone"
+        android:clickable="true"
+        android:background="@drawable/black"/>
+
     <ProgressBar
         android:id="@+id/progress"
         android:visibility="gone"

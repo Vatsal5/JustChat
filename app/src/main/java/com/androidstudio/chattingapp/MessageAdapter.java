@@ -86,7 +86,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTime,tvDate,tvSender;
         EmojiTextView tvMessage;
-        ImageView ivImage,ivPlay,ivProfile,ivTyping;
+        ImageView ivImage,ivPlay,ivProfile,ivTyping,ivDownload;
         ProgressBar progress;
         LinearLayout llMessageRight;
 
@@ -103,6 +103,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             ivPlay = itemView.findViewById(R.id.ivPlay);
             ivTyping = itemView.findViewById(R.id.ivTyping);
             tvSender = itemView.findViewById(R.id.tvSender);
+            ivDownload = itemView.findViewById(R.id.ivDownload);
         }
     }
 
@@ -226,15 +227,26 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         if (messages.get(position).getDownloaded() == 0)   //image is received but yet to be downloaded
         {
-            holder.progress.setVisibility(View.VISIBLE);
+            holder.progress.setVisibility(View.GONE);
             holder.ivImage.setImageResource(0);
             holder.ivImage.setClickable(false);
+            holder.ivDownload.setVisibility(View.VISIBLE);
 
-            Activity.downloadImage(position);
+            holder.ivDownload.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.progress.setVisibility(View.VISIBLE);
+                    holder.ivDownload.setVisibility(View.GONE);
+                    Activity.downloadImage(position);
+                }
+            });
 
         } else if (messages.get(position).getDownloaded() == 1) // image is sent or downloaded successfully
         {
             holder.progress.setVisibility(View.GONE);
+
+            if(holder.ivDownload!=null)
+                holder.ivDownload.setVisibility(View.GONE);
 
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.error(R.drawable.error);
@@ -305,7 +317,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         else if(messages.get(position).getDownloaded()==103) // when request has been sent
         {
-            holder.ivImage.setImageResource(0);
+            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
 
@@ -313,13 +325,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         else if(messages.get(position).getDownloaded()==101) // when video is received  and yet to be downloaded
         {
-
             holder.ivImage.setImageResource(0);
             holder.ivImage.setBackgroundResource(R.drawable.background_left);
-            holder.progress.setVisibility(View.VISIBLE);
+            holder.progress.setVisibility(View.GONE);
             holder.ivPlay.setVisibility(View.GONE);
+            holder.ivDownload.setVisibility(View.VISIBLE);
 
-            Activity.Downloadvideo(position);
+            holder.ivDownload.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.progress.setVisibility(View.VISIBLE);
+                    holder.ivDownload.setVisibility(View.GONE);
+                    Activity.Downloadvideo(position);
+                }
+            });
 
             holder.ivImage.setClickable(false);
         }
@@ -341,6 +360,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             if (messages.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                 holder.ivImage.setBackgroundResource(R.drawable.background_right);
             }
+
+            if(holder.ivDownload!=null)
+                holder.ivDownload.setVisibility(View.GONE);
         }
 
 

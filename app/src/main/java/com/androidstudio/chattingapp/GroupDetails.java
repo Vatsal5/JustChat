@@ -2,14 +2,21 @@ package com.androidstudio.chattingapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -25,12 +32,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
 
 public class GroupDetails extends AppCompatActivity implements ParticipantsAdapter.itemSelected{
 
-    ImageView ivGroupDP;
+    ImageView ivGroupDP,ivEdit;
     TextView tvCreatedBy,tvGroupTitle,tvParticipants;
     LinearLayout llAddMembers,llExitGroup,llDeleteGroup;
     RecyclerView Participants;
@@ -56,6 +65,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
         Participants = findViewById(R.id.Participants);
         llDeleteGroup = findViewById(R.id.llDeleteGroup);
         tvParticipants = findViewById(R.id.tvParticipants);
+        ivEdit = findViewById(R.id.ivEdit);
 
         pref= getApplicationContext().getSharedPreferences("Names",0);
 
@@ -98,6 +108,19 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
         );
 
 
+        ivGroupDP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CropImage.startPickImageActivity(GroupDetails.this);
+            }
+        });
+
+        ivEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
 
         if(getIntent().getStringExtra("profile").equals("null"))
@@ -304,14 +327,66 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
 
     }
     @Override
-    public void onItemSelected(int index) {
+    public void onItemSelected(final int index) {
         if(!(users.get(index).getPh_number().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
                 || ("+91"+users.get(index).getPh_number()).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
-            Intent intent = new Intent(GroupDetails.this, MessageActivity.class);
-            intent.putExtra("phone", users.get(index).getPh_number());
-            intent.putExtra("messagecount", 2);
-            intent.putExtra("title",users.get(index).getPh_number() );
-            ApplicationClass.groupusers=1;
-            startActivity(intent);
+            String[] choices = {"View","Remove"};
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(GroupDetails.this);
+
+            builder.setTitle("Choose")
+                    .setItems(choices, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            switch (i) {
+                                case 0:
+                                    Intent intent = new Intent(GroupDetails.this, MessageActivity.class);
+                                    intent.putExtra("phone", users.get(index).getPh_number());
+                                    intent.putExtra("messagecount", 2);
+                                    intent.putExtra("title",users.get(index).getPh_number() );
+                                    ApplicationClass.groupusers=1;
+                                    startActivity(intent);
+                                case 1:
+
+                            }
+                        }
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
-}}
+}
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK)
+        {
+            Uri imageuri = CropImage.getPickImageResultUri(this,data);
+            if(CropImage.isReadExternalStoragePermissionsRequired(this,imageuri))
+            {
+                requestPermissions(new String []{Manifest.permission.READ_EXTERNAL_STORAGE},0);
+            }else {
+                startCrop(imageuri);
+            }
+        }
+
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri uri = result.getUri();
+            }
+        }
+    }
+
+    private void startCrop(Uri imageuri)
+    {
+        CropImage.activity(imageuri)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setMultiTouchEnabled(true)
+                .setAllowRotation(true)
+                .setAspectRatio(25,25)
+                .start(this);
+    }
+}
