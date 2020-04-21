@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -69,7 +70,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
     ArrayList <String> members;
     ArrayList<UserDetailWithStatus> users;
     SharedPreferences pref;
-    ChildEventListener DeleteGroup,exitGroup;
+    ChildEventListener DeleteGroup,exitGroup,newname;
     ValueEventListener admin1;
 
     @Override
@@ -77,6 +78,8 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_details);
         groupKey=getIntent().getStringExtra("groupkey");
+
+
         users= new ArrayList<>();
         ivGroupDP = findViewById(R.id.ivGroupDP);
         tvCreatedBy = findViewById(R.id.tvCreatedBy);
@@ -154,7 +157,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                         builder.setIcon(R.drawable.title);
                         builder.setTitle("Title");
 
-                        EditText etGroupTitle = v.findViewById(R.id.etGroupTitle);
+                        final EditText etGroupTitle = v.findViewById(R.id.etGroupTitle);
                         etGroupTitle.setText(tvGroupTitle.getText());
                         etGroupTitle.setSelection(tvGroupTitle.getText().length());
 
@@ -163,6 +166,47 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                         builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                if(etGroupTitle.getText().toString().trim().length()>0) {
+                                    ApplicationClass.RenameGroup=etGroupTitle.getText().toString();
+                                    tvGroupTitle.setText(etGroupTitle.getText().toString());
+                                    newname = new ChildEventListener() {
+                                        @Override
+                                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                            FirebaseDatabase.getInstance().getReference().child("users").
+                                                    child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).setValue(etGroupTitle.getText().toString());
+
+                                        }
+
+
+                                        @Override
+                                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                                        }
+
+                                        @Override
+                                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                                        }
+
+                                        @Override
+                                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    };
+                                    FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(newname);
+                                }
+                                else
+                                {
+                                    Toast.makeText(getApplicationContext(),"Please anter a valid name",Toast.LENGTH_LONG).show();
+                                }
+
+
+
 
                             }
                         })
@@ -273,7 +317,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                 FirebaseDatabase.getInstance().getReference().child("users").
                                         child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).getRef().removeValue();
 
-                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").removeEventListener(DeleteGroup);
+                               // FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").removeEventListener(DeleteGroup);
                             }
 
 

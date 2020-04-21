@@ -31,8 +31,9 @@ public class ApplicationClass extends Application
     public static String url;
     public static ArrayList<Long>DownloadIds;
     public static ArrayList<String>members;
-    public static String Groupname,GroupDp,groupkey;
+    public static String Groupname,GroupDp,groupkey,RenameGroup;
     public  static  int create,addmembers,activity, groupusers;
+    public  static boolean splash;
 
     @Override
     public void onCreate() {
@@ -40,6 +41,8 @@ public class ApplicationClass extends Application
         members=new ArrayList<>();
         Groupname=null;
         GroupDp="null";
+        splash=false;
+        RenameGroup=null;
         groupkey=null;
         create=0;
         groupusers=0;

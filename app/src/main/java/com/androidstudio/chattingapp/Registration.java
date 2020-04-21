@@ -66,8 +66,13 @@ public class Registration extends AppCompatActivity {
         
         if(FirebaseAuth.getInstance().getCurrentUser() != null)
         {
+            ApplicationClass.splash=true;
+            Intent intent=new Intent(Registration.this,MainActivity.class);
+
+
             Registration.this.finish();
-            startActivity(new Intent(Registration.this,MainActivity.class));
+            overridePendingTransition(0,0);
+            startActivity(intent);
         }
 
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {

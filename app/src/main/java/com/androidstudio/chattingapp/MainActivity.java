@@ -20,6 +20,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -83,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     FloatingActionButton btnContacts;
     String currentUserNumber;
     DatabaseReference reference;
+    ConstraintLayout llSplash;
 
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -97,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     int c=0;
     int u;
     int messageno;
+
     int k=0;
 
     int num=0;
@@ -106,9 +111,25 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+llSplash=findViewById(R.id.llsplash);
 
         pref= getApplicationContext().getSharedPreferences("Names",0);
         editor = pref.edit();
+
+
+
+        if(ApplicationClass.splash==true)
+        {
+            Handler handler=new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                  llSplash.setVisibility(View.GONE);
+                }
+            },2000);
+        }
+        else
+            llSplash.setVisibility(View.GONE);
 
         Handler = new DBHandler(MainActivity.this);
         Handler.Open();
@@ -1009,6 +1030,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onResume() {
         super.onResume();
         Status("online");
+        if(ApplicationClass.RenameGroup!=null)
+        {
+
+            contacts1.get(l).setuID(ApplicationClass.RenameGroup);
+            userAdapter.notifyDataSetChanged();
+            ApplicationClass.RenameGroup=null;
+        }
 
         if(ApplicationClass.create==1)
         {

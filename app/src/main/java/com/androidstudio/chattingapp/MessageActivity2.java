@@ -172,7 +172,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MessageActivity2.this,GroupDetails.class);
-                intent.putExtra("groupname",groupname);
+                if(ApplicationClass.RenameGroup==null){
+                intent.putExtra("groupname",groupname);}
+                else
+                { intent.putExtra("groupname",ApplicationClass.RenameGroup);}
                 intent.putExtra("groupkey",groupKey);
                 intent.putExtra("profile",getIntent().getStringExtra("profile"));
                 startActivity(intent);
@@ -740,6 +743,15 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     };
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(ApplicationClass.RenameGroup!=null)
+        {
+            tvTitle.setText(ApplicationClass.RenameGroup);
+        }
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -795,6 +807,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         }
     }
+
 
 
     @Override
@@ -1522,6 +1535,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
