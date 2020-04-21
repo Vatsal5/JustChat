@@ -22,10 +22,12 @@ public class SplashActivity extends AppCompatActivity {
         if(preferences.getString("Number","null").equals("null"))
         {
             startActivity(new Intent(SplashActivity.this,Registration.class));
+            SplashActivity.this.finish();
         }
         else
         {
             startActivity(new Intent(SplashActivity.this,Registration.class));
+            SplashActivity.this.finish();
         }
 
     }
