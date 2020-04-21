@@ -42,6 +42,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     ArrayList <String> members;
     FriendsAdapter userAdapter;
     ArrayList<UserDetail> contacts;
+    ChildEventListener childEvent,Group;
     ArrayList<UserDetailWithStatus> contacts1;
     ArrayList<String> number1,membersToadd;
     int yes=0;
@@ -299,9 +300,131 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                         }
                     }
                 }
+
+                childEvent = new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        if (!(dataSnapshot.getKey().equals("name") || dataSnapshot.getKey().equals("groups") || dataSnapshot.getKey().equals("profile") ||
+                                dataSnapshot.getKey().equals("status"))) {
+                            //  Log.d("contacts",dataSnapshot.getKey());
+                            int tell = 0;
+
+
+                            for (int i = 0; i < contacts1.size(); i++) {
+
+                                // Log.d("contact",contacts1.get(i).getPh_number());
+
+
+                                if (contacts1.get(i).getPh_number().substring(0, 3).equals("+91")) {
+                                    if (contacts1.get(i).getPh_number().equals(dataSnapshot.getKey())) {
+                                        tell = 1;
+                                        break;
+                                    }
+                                } else {
+                                    String ph = "+91" + contacts1.get(i).getPh_number();
+                                    if (ph.equals(dataSnapshot.getKey())) {
+                                        tell = 1;
+                                        break;
+                                    }
+                                }
+
+                            }
+                            if (tell == 0) {
+                                if (dataSnapshot.child("info").child("friend").exists()) {
+                                    if (dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
+                                        contacts1.add(new UserDetailWithStatus(dataSnapshot.getKey(), "", "null",
+                                                "",0));
+                                    }
+                                }
+                            }
+
+
+
+                            userAdapter = new FriendsAdapter(FriendsActivity.this,contacts1 );
+                            lv.setAdapter(userAdapter);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                };
+
+                reference.child("users").child(currentUserNumber).addChildEventListener(childEvent);
+
+
+                if (getIntent().getIntExtra("path", 2) == 1) {
+
+                    Group = new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                            contacts1.add(new UserDetailWithStatus(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", ""
+                                    , 0));
+
+                            reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
+                                    new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if(dataSnapshot.exists())
+                                            {
+                                                contacts1.get(contacts1.size()-1).setUrl(dataSnapshot.getValue().toString());
+                                                userAdapter.notifyDataSetChanged();}
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    }
+                            );
+
+                        }
+
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    };
+
+                    reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(Group);
+
+                }
                // Log.d("tag",contacts1.get(0).getPh_number());
-                userAdapter=new FriendsAdapter(FriendsActivity.this,contacts1);
-                lv.setAdapter(userAdapter);
             }
 
             @Override
@@ -309,6 +432,9 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
             }
         });
+
+
+
     }
     public int IsValid(String number)
     {int c=0;

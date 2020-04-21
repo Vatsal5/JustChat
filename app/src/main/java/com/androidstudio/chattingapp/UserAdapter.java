@@ -76,6 +76,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         }
         else if(list.get(position).getLastmessage().equals(" "))
         {
+            holder.ivImage.setVisibility(View.VISIBLE);
             holder.ivImage.setImageResource(R.drawable.image);
 
             holder.tvlastmessage.setText("Image");
@@ -93,6 +94,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         }
         else{
             holder.tvlastmessage.setText("");
+            holder.ivImage.setVisibility(View.GONE);
+            holder.tvlastmessage.setVisibility(View.GONE);
+            holder.tvUserName.setPadding(0,13,0,0);
+
         }
 
         if(list.get(position).getUrl().equals("null")) {

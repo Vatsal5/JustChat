@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-llSplash=findViewById(R.id.llsplash);
+        llSplash=findViewById(R.id.llsplash);
 
         pref= getApplicationContext().getSharedPreferences("Names",0);
         editor = pref.edit();
@@ -762,7 +762,7 @@ llSplash=findViewById(R.id.llsplash);
                 childEvent = new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        if (!(dataSnapshot.getKey().equals("name") || dataSnapshot.getKey().equals("contact") || dataSnapshot.getKey().equals("profile") ||
+                        if (!(dataSnapshot.getKey().equals("name") || dataSnapshot.getKey().equals("groups") || dataSnapshot.getKey().equals("profile") ||
                                 dataSnapshot.getKey().equals("status"))) {
                             //  Log.d("contacts",dataSnapshot.getKey());
                             int tell = 0;

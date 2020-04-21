@@ -187,7 +187,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
                 if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
                 {
-
                     StorageReference file1;
                     file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
                     file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -984,6 +983,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                     intent.putExtra("type", chats.get(index).getType());
                                     intent.putExtra("path", 1);
                                     intent.putExtra("message", chats.get(index).getMessage());
+                                    MessageActivity2.this.finish();
 
                                     startActivity(intent);
                                     break;

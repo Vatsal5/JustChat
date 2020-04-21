@@ -76,7 +76,16 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> {
             TextView tvUserName= v.findViewById(R.id.tv_username);
             TextView tvStatus= v.findViewById(R.id.tvstatus);
 
-            tvUserName.setText(list.get(position).getuID());
+            if((list.get(position).getuID().equals("")))
+            tvUserName.setText(list.get(position).getPh_number());
+            else
+                tvUserName.setText(list.get(position).getuID());
+            if(list.get(position).getStatus().equals(""))
+            {
+                tvStatus.setVisibility(View.GONE);
+                tvUserName.setPadding(0,22,0,0);
+            }
+            else
             tvStatus.setText(list.get(position).getStatus());
 
             v.setOnClickListener(new View.OnClickListener() {
