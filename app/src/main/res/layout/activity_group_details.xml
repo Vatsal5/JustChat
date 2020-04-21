@@ -29,7 +29,8 @@
             app:layout_constraintRight_toRightOf="@id/ivGroupDP"
             android:layout_marginRight="20dp"
             android:clickable="true"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="20dp"
+            android:tint="#FFFFFF"/>
 
         <TextView
             android:id="@+id/tvGroupTitle"

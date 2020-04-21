@@ -36,7 +36,7 @@ public class ParticipantsAdapter  extends RecyclerView.Adapter<ParticipantsAdapt
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvName,tvGroupAdmin;
         ImageView ivProfile;
-        ConstraintLayout llUsers;
+        LinearLayout llParticipants;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -44,8 +44,7 @@ public class ParticipantsAdapter  extends RecyclerView.Adapter<ParticipantsAdapt
             tvName = itemView.findViewById(R.id.tvName);
             ivProfile = itemView.findViewById(R.id.ivProfile);
             tvGroupAdmin = itemView.findViewById(R.id.tvGroupAdmin);
-            llUsers=itemView.findViewById(R.id.llUsers);
-
+            llParticipants = itemView.findViewById(R.id.llParticipants);
         }
     }
 
@@ -79,7 +78,7 @@ public class ParticipantsAdapter  extends RecyclerView.Adapter<ParticipantsAdapt
         else
             holder.tvGroupAdmin.setVisibility(View.GONE);
 
-        holder.llUsers.setOnClickListener(new View.OnClickListener() {
+        holder.llParticipants.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Activity.onItemSelected(position);

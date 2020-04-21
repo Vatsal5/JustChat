@@ -25,7 +25,10 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -139,7 +142,42 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
         ivEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ivEdit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 
+                        LayoutInflater inflater = LayoutInflater.from(GroupDetails.this);
+                        View v = inflater.inflate(R.layout.edittext,null);
+
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(GroupDetails.this);
+                        final EditText edittext = new EditText(GroupDetails.this);
+                        builder.setIcon(R.drawable.title);
+                        builder.setTitle("Title");
+
+                        EditText etGroupTitle = v.findViewById(R.id.etGroupTitle);
+                        etGroupTitle.setText(tvGroupTitle.getText());
+                        etGroupTitle.setSelection(tvGroupTitle.getText().length());
+
+                        builder.setView(v);
+                        edittext.setText(tvGroupTitle.getText());
+                        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        })
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.cancel();
+                                    }
+                                });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+
+                    }
+                });
             }
         });
 

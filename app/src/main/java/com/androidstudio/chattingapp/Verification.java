@@ -2,6 +2,7 @@ package com.androidstudio.chattingapp;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -38,6 +39,8 @@ public class Verification extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference reference;
 
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
 
     PhoneAuthProvider.ForceResendingToken token;
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
@@ -47,6 +50,9 @@ public class Verification extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
+
+        preferences = getSharedPreferences("Numbers",0);
+        editor = preferences.edit();
 
         database=FirebaseDatabase.getInstance();
         reference=database.getReference();
@@ -131,13 +137,14 @@ public class Verification extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
 
+                            editor.putString("Number",phone);
+                            editor.apply();
+
                             dialog.dismiss();
                             FirebaseUser user = task.getResult().getUser();
                             (reference.child("users").child(phone).child("name")).setValue("Enter Your Name");
 
                             (reference.child("users").child(phone).child("status")).setValue("What's Your Status");
-
-
 
                             startActivity(new Intent(Verification.this,MainActivity.class));
                             Verification.this.finish();

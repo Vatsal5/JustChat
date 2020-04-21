@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +38,9 @@ public class Registration extends AppCompatActivity {
     PhoneAuthProvider.ForceResendingToken token;
     String VerificationId;
 
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
+
     ProgressDialog dialog;
 
     DatabaseReference reference;
@@ -45,6 +49,10 @@ public class Registration extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+        preferences = getSharedPreferences("Numbers",0);
+        editor = preferences.edit();
+
 
         etPhone = findViewById(R.id.etPhone);
         btnVerify = findViewById(R.id.btnSubmit);
@@ -66,6 +74,9 @@ public class Registration extends AppCompatActivity {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
                 Log.d("myapp","Verification Completed");
+
+                editor.putString("Number",etPhone.getText().toString());
+                editor.apply();
 
                 signInWithPhoneAuthCredential(phoneAuthCredential);
             }
