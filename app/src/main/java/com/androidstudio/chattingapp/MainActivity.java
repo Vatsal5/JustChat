@@ -112,9 +112,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        overridePendingTransition(0,0);
+//        if(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()==null)
+//            MainActivity.this.finish();
 
-llSplash=findViewById(R.id.llsplash);
+        llSplash=findViewById(R.id.llsplash);
 
         pref= getApplicationContext().getSharedPreferences("Names",0);
         editor = pref.edit();

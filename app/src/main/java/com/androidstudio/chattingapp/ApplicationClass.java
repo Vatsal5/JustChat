@@ -40,16 +40,16 @@ public class ApplicationClass extends Application
     public void onCreate() {
         super.onCreate();
 
-        if(FirebaseAuth.getInstance().getCurrentUser() == null)
-        {
-            Intent intent=new Intent(ApplicationClass.this,Registration.class);
-
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-        }
-        else
-            splash=true;
+//        if(FirebaseAuth.getInstance().getCurrentUser())
+//        {
+//            Intent intent=new Intent(ApplicationClass.this,Registration.class);
+//
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//            startActivity(intent);
+//        }
+//        else
+//            splash=true;
 
         members=new ArrayList<>();
         Groupname=null;
