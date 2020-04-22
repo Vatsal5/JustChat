@@ -111,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        overridePendingTransition(0,0);
+
 llSplash=findViewById(R.id.llsplash);
 
         pref= getApplicationContext().getSharedPreferences("Names",0);

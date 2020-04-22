@@ -2,6 +2,7 @@ package com.androidstudio.chattingapp;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.provider.FontRequest;
 import android.util.Log;
@@ -33,15 +34,26 @@ public class ApplicationClass extends Application
     public static ArrayList<String>members;
     public static String Groupname,GroupDp,groupkey,RenameGroup;
     public  static  int create,addmembers,activity, groupusers;
-    public  static boolean splash;
+    public  static boolean splash=false;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        if(FirebaseAuth.getInstance().getCurrentUser() == null)
+        {
+            Intent intent=new Intent(ApplicationClass.this,Registration.class);
+
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+        }
+        else
+            splash=true;
+
         members=new ArrayList<>();
         Groupname=null;
         GroupDp="null";
-        splash=false;
         RenameGroup=null;
         groupkey=null;
         create=0;
