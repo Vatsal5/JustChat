@@ -415,8 +415,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
         switch (id)
         {
-            case R.id.Profile:
-                startActivity(new Intent(FriendsActivity.this,Profile.class));
+            case R.id.Settings:
+                startActivity(new Intent(FriendsActivity.this,Settings.class));
                 break;
 
             case android.R.id.home:

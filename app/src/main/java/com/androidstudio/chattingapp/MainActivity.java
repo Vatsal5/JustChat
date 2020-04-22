@@ -993,8 +993,8 @@ llSplash=findViewById(R.id.llsplash);
 
         switch (id)
         {
-            case R.id.Profile:
-                startActivity(new Intent(MainActivity.this,Profile.class));
+            case R.id.Settings:
+                startActivity(new Intent(MainActivity.this,Settings.class));
                 break;
 
             case R.id.CreateGroup:

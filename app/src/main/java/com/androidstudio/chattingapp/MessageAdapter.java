@@ -286,7 +286,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
 
             Glide.with(context.getApplicationContext()).load(messages.get(position).getMessage()).into(holder.ivImage);
-        }else if (messages.get(position).getDownloaded() == -2) // when text message is being sent
+        }else if(messages.get(position).getDownloaded() == 4) // when request has been sent to download image
+        {
+            holder.progress.setVisibility(View.VISIBLE);
+            holder.ivDownload.setVisibility(View.GONE);
+            holder.ivImage.setImageResource(0);
+            holder.ivImage.setClickable(false);
+        }
+        else if (messages.get(position).getDownloaded() == -2) // when text message is being sent
         {
             holder.tvMessage.setText(messages.get(position).getMessage());
             holder.llMessageRight.setBackgroundResource(R.drawable.orange2);
@@ -325,7 +332,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         else if(messages.get(position).getDownloaded()==101) // when video is received  and yet to be downloaded
         {
-            holder.ivImage.setImageResource(0);
+            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
             holder.ivImage.setBackgroundResource(R.drawable.background_left);
             holder.progress.setVisibility(View.GONE);
             holder.ivPlay.setVisibility(View.GONE);
@@ -363,6 +370,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             if(holder.ivDownload!=null)
                 holder.ivDownload.setVisibility(View.GONE);
+        }
+        else if(messages.get(position).getDownloaded() == 104) // when request has been sent to download video
+        {
+            holder.progress.setVisibility(View.VISIBLE);
+            holder.ivDownload.setVisibility(View.GONE);
+            holder.ivPlay.setVisibility(View.GONE);
+            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
+            holder.ivImage.setClickable(false);
         }
 
 

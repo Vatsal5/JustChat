@@ -87,6 +87,17 @@ public class ApplicationClass extends Application
                 model.setDownloaded(100);
                 handler.UpdateMessage(model);
             }
+
+            if(messages.get(i).getDownloaded()==104)
+            {
+                model.setDownloaded(101);
+                handler.UpdateMessage(model);
+            }
+            if(messages.get(i).getDownloaded()==4)
+            {
+                model.setDownloaded(0);
+                handler.UpdateMessage(model);
+            }
         }
 
         EmojiCompat.Config config = new BundledEmojiCompatConfig(this);

@@ -23,6 +23,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -79,6 +80,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     TextView tvTitle,tvMode;
     ArrayList<String> membernumber;
     EditText etMessage;
+    ConstraintLayout llMessageActivity2;
     ConstraintLayout rl;
     StorageReference rf;
     int numberOfMembers=-1;
@@ -90,8 +92,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     String sender;
     ChildEventListener imagereceiver, videoreceiver, chreceiver;
     String defaultvalue;
-    SharedPreferences pref;
-
+    SharedPreferences pref,wallpaper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +121,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         ivBack = findViewById(R.id.ivBack);
         tvMode = findViewById(R.id.tvMode);
         rl = findViewById(R.id.rl);
+        llMessageActivity2 = findViewById(R.id.llMessageActivity2);
 
         tvTitle.setText(groupname);
 
@@ -132,6 +134,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         });
 
+        wallpaper = getSharedPreferences("Wallpaper",0);
+
         pref= getApplicationContext().getSharedPreferences("Mode",0);
         defaultvalue = pref.getString("mode"+groupKey,"null");
 
@@ -139,6 +143,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             SharedPreferences.Editor editor = pref.edit();
             editor.putString("mode"+groupKey, "public");
             editor.apply();
+        }
+
+
+        if(!wallpaper.getString("value","null").equals("null"))
+        {
+            llMessageActivity2.setBackground(getBackground(Uri.parse(wallpaper.getString("value","null"))));
         }
 
         Messages = findViewById(R.id.Messages);
@@ -1589,5 +1599,20 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             if(!Messages.isComputingLayout())
                 adapter.notifyItemInserted(chats.size()-1);
         }
+    }
+
+    public Drawable getBackground(Uri uri)
+    {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            return Drawable.createFromStream(inputStream, uri.toString() );
+        } catch (FileNotFoundException e) {
+            Toast.makeText(this, "Wallpaper set to default as file not found!", Toast.LENGTH_SHORT).show();
+            llMessageActivity2.setBackground(null);
+            SharedPreferences.Editor editor = wallpaper.edit();
+            editor.putString("value",null);
+            editor.apply();
+        }
+        return null;
     }
 }

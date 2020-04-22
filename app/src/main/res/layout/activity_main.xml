@@ -15,15 +15,31 @@
         android:orientation="vertical"
         tools:visibility="visible">
 
-        <ImageView
-            android:id="@+id/ivicon"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="70dp"
+            android:background="@drawable/image_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/icon"></ImageView>
+            android:src="@drawable/icon" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:fontFamily="@font/aclonica"
+            android:text="GossipBlock"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivLogo"
+            android:textColor="#212121"
+            android:textSize="35sp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
