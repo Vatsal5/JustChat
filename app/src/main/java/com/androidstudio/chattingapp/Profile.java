@@ -53,7 +53,7 @@ import java.util.ArrayList;
 
 public class Profile extends AppCompatActivity implements profile_listitem_adapter.itemSelected {
 
-    ImageView ivProfile,ivClick;
+    ImageView ivProfile,ivClick,ivBack;
     ListView list;
     profile_listitem_adapter adapter;
     ArrayList<String> data;
@@ -82,8 +82,17 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
         SharedPreferences preftheme;
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+        ivBack = findViewById(R.id.ivBack);
+
         preftheme=getSharedPreferences("theme",0);
         String theme=preftheme.getString("theme","red");
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Profile.this.finish();
+            }
+        });
 
 
 
@@ -159,9 +168,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                 toolbar.setBackgroundColor(getResources().getColor(R.color.red));
         }
 
-        setSupportActionBar(toolbar);
-        setTitle("Profile");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle(null);
 
         reference= FirebaseStorage.getInstance().getReference("docs/");
         firebaseDatabase=FirebaseDatabase.getInstance();
@@ -411,18 +418,5 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                 .setAllowRotation(true)
                 .setAspectRatio(25,25)
                 .start(this);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId())
-        {
-            case android.R.id.home:
-                Profile.this.finish();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

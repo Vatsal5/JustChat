@@ -17,6 +17,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="40dp"
+            android:layout_height="25dp"
+            android:src="@drawable/back"/>
+
         <TextView
             android:id="@+id/tvhead"
             android:layout_width="wrap_content"

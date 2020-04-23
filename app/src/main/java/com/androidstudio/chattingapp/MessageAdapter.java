@@ -3,6 +3,7 @@ package com.androidstudio.chattingapp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -59,7 +60,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     FirebaseUser user;
     Context context;
     ArrayList<MessageModel> messages;
-    SharedPreferences pref;
+    SharedPreferences pref,preftheme;
 
     public interface ImageSelected
     {
@@ -80,6 +81,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         this.messages = messages;
         Activity = (ImageSelected) context;
         pref = context.getSharedPreferences("Names",0);
+        preftheme=context.getSharedPreferences("theme",0);
     }
 
 
@@ -88,7 +90,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         EmojiTextView tvMessage;
         ImageView ivImage,ivPlay,ivProfile,ivTyping,ivDownload;
         ProgressBar progress;
-        LinearLayout llMessageRight;
+        LinearLayout llMessageRight,llMesageLeft;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -104,6 +106,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             ivTyping = itemView.findViewById(R.id.ivTyping);
             tvSender = itemView.findViewById(R.id.tvSender);
             ivDownload = itemView.findViewById(R.id.ivDownload);
+            llMesageLeft = itemView.findViewById(R.id.llMessageLeft);
         }
     }
 
@@ -229,6 +232,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         {
             holder.progress.setVisibility(View.GONE);
             holder.ivImage.setImageResource(0);
+            setBackground(holder.ivImage);
             holder.ivImage.setClickable(false);
             holder.ivDownload.setVisibility(View.VISIBLE);
 
@@ -268,6 +272,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 if (messages.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                     holder.ivImage.setBackgroundResource(R.drawable.background_right);
                 }
+                else
+                    setBackground(holder.ivImage);
             }
 
         } else if (messages.get(position).getDownloaded() == 2) // when sender sends the image
@@ -291,6 +297,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivDownload.setVisibility(View.GONE);
             holder.ivImage.setImageResource(0);
+            setBackground(holder.ivImage);
             holder.ivImage.setClickable(false);
         }
         else if (messages.get(position).getDownloaded() == -2) // when text message is being sent
@@ -310,6 +317,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             if (holder.llMessageRight != null)
                 holder.llMessageRight.setBackgroundResource(R.drawable.background_right);
+
+            if(holder.llMesageLeft!=null)
+                setBackground(holder.llMesageLeft);
         }
         else if(messages.get(position).getDownloaded()==100) // when sender sends video
         {
@@ -333,7 +343,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         else if(messages.get(position).getDownloaded()==101) // when video is received  and yet to be downloaded
         {
             Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
-            holder.ivImage.setBackgroundResource(R.drawable.background_left);
+            setBackground(holder.ivImage);
             holder.progress.setVisibility(View.GONE);
             holder.ivPlay.setVisibility(View.GONE);
             holder.ivDownload.setVisibility(View.VISIBLE);
@@ -368,6 +378,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 holder.ivImage.setBackgroundResource(R.drawable.background_right);
             }
 
+            else
+                setBackground(holder.ivImage);
+
             if(holder.ivDownload!=null)
                 holder.ivDownload.setVisibility(View.GONE);
         }
@@ -377,6 +390,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivDownload.setVisibility(View.GONE);
             holder.ivPlay.setVisibility(View.GONE);
             Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
+            setBackground(holder.ivImage);
             holder.ivImage.setClickable(false);
         }
 
@@ -531,6 +545,71 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         newDate = newDate+date.substring(0,4);
 
         return newDate;
+    }
+
+    public void setBackground(View view)
+    {
+        String theme=preftheme.getString("theme","red");
+
+        if(theme.equals("orange"))
+            view.setBackgroundResource(R.drawable.orange1);
+
+        else if(theme.equals("blue"))
+            view.setBackgroundResource(R.drawable.blue);
+
+
+        else if(theme.equals("bluish")) {
+            view.setBackgroundResource(R.drawable.bluish);
+        }
+
+        else if(theme.equals("deepred")) {
+            view.setBackgroundResource(R.drawable.deepred);
+        }
+
+        else if(theme.equals("faintpink")) {
+            view.setBackgroundResource(R.drawable.faintpink);
+        }
+
+        else if(theme.equals("darkblue")) {
+            view.setBackgroundResource(R.drawable.darkblue);
+        }
+
+        else if (theme.equals("green")) {
+            view.setBackgroundResource(R.drawable.green1);
+        }
+
+        else if (theme.equals("lightorange")) {
+            view.setBackgroundResource(R.drawable.lightorange);
+        }
+
+        else  if (theme.equals("lightred")) {
+            view.setBackgroundResource(R.drawable.lightred);
+        }
+
+        else if(theme.equals( "mustard")) {
+            view.setBackgroundResource(R.drawable.mustard);
+        }
+
+        else if (theme.equals("pink")) {
+            view.setBackgroundResource(R.drawable.pink1);
+        }
+
+        else if(theme.equals("pureorange")) {
+            view.setBackgroundResource(R.drawable.pureorange);
+        }
+
+        else if(theme.equals( "purepink")) {
+            view.setBackgroundResource(R.drawable.purepink);
+        }
+
+        else if(theme.equals( "purple")) {
+            view.setBackgroundResource(R.drawable.purple);
+        }
+
+        else {
+            view.setBackgroundResource(R.drawable.orange1);
+
+        }
     }
 
 }

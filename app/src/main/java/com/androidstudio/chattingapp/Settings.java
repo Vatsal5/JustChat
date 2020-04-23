@@ -75,7 +75,7 @@ public class Settings extends AppCompatActivity {
         cvfaintpink=findViewById(R.id.cvfaintpink);
         cvgreen=findViewById(R.id.cvgreen);
         cvlightorange=findViewById(R.id.cvlightorange);
-        cvlightred=findViewById(R.id.cvlightorange);
+        cvlightred=findViewById(R.id.cvlightred);
         cvmustard=findViewById(R.id.cvmustard);
         cvorange=findViewById(R.id.cvorange);
         cvpink=findViewById(R.id.cvpink);

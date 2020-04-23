@@ -48,6 +48,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     ArrayList<UserDetailWithStatus> contacts1;
     Toolbar toolbar;
     CardView cvCreate;
+    ImageView ivBack;
     ArrayList<String> number1,membersToadd;
     int yes=0;
     int c=0;
@@ -59,13 +60,20 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         setContentView(R.layout.activity_friends);
         tvtitle=findViewById(R.id.tvhead);
         cvCreate=findViewById(R.id.ivCreate);
+        ivBack=findViewById(R.id.ivBack);
 
          toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         SharedPreferences preftheme;
         preftheme=getSharedPreferences("theme",0);
 
         String theme=preftheme.getString("theme","red");
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FriendsActivity.this.finish();
+            }
+        });
 
         switch (theme)
         { case "orange":
@@ -158,13 +166,12 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
 
         setTitle(null);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             number1= new ArrayList<String>();
         membersToadd= new ArrayList<String>();
             contacts = new ArrayList<>();
             contacts1 = new ArrayList<>();
-
 
             database=FirebaseDatabase.getInstance();
 

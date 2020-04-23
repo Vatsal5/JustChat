@@ -14,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.icu.lang.UCharacter;
 import android.icu.util.MeasureUnit;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
@@ -225,6 +226,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            toolbar.setOverflowIcon(getDrawable(R.drawable.overflow));
+        }
+
         setTitle(null);
 
         number1= new ArrayList<String>();
@@ -351,14 +356,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
-            pos= viewHolder.getAdapterPosition();
+            pos = viewHolder.getAdapterPosition();
+            userAdapter.notifyDataSetChanged();
 
-            if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CALL_PHONE)!=PackageManager.PERMISSION_GRANTED)
-            {
-                ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CALL_PHONE},2);
-            }
-            else
-            {
+            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 2);
+            } else {
                 makecall();
             }
         }
@@ -376,6 +379,17 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
+
+        }
+
+        @Override
+        public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+
+            if (contacts1.get(viewHolder.getAdapterPosition()).getGroupname() != null)
+                return makeMovementFlags(0, 0);
+
+            else
+                return makeMovementFlags(0, ItemTouchHelper.END);
 
         }
     };
