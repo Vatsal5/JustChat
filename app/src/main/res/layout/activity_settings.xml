@@ -16,6 +16,7 @@
         android:background="#d6514a">
 
         <ImageView
+            android:id="@+id/ivBack"
             android:layout_width="40dp"
             android:layout_height="25dp"
             android:src="@drawable/back"/>
@@ -165,7 +166,8 @@
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:id="@+id/theme"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:visibility="gone">
 
     <LinearLayout
         android:layout_width="match_parent"

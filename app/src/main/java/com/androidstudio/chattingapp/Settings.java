@@ -18,6 +18,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,6 +46,7 @@ public class Settings extends AppCompatActivity {
     Toolbar ll;
 
     LinearLayout llProfile,llTheme,llWallpaper,llsettings;
+    Boolean flag=false;
 
     SharedPreferences wallpaper;
     SharedPreferences preftheme;
@@ -67,6 +69,7 @@ public class Settings extends AppCompatActivity {
         editor = wallpaper.edit();
         llsettings=findViewById(R.id.settings);
         tvtitle=findViewById(R.id.tvtitle);
+        ivBack=findViewById(R.id.ivBack);
 
         cvblue=findViewById(R.id.cvblue);
         cvbluish=findViewById(R.id.cvbluish);
@@ -98,6 +101,20 @@ public class Settings extends AppCompatActivity {
         setTitle(null);
 
 
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(flag)
+                {
+                    llsettings.setVisibility(View.VISIBLE);
+                    theme.setVisibility(View.GONE);
+                    tvtitle.setText("Settings");
+                    flag=false;
+                }
+                else
+                    Settings.this.finish();
+            }
+        });
 
 
         String theme1=preftheme.getString("theme","red");
@@ -217,6 +234,7 @@ public class Settings extends AppCompatActivity {
 llsettings.setVisibility(View.GONE);
 theme.setVisibility(View.VISIBLE);
 tvtitle.setText("Select Theme");
+flag=true;
 
             }
         });
@@ -363,10 +381,40 @@ tvtitle.setText("Select Theme");
 
                 }
                     else {
+                        if(wallpaper.getString("value","null").equals("null"))
+                        {
+                            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            intent.setType("image/*");
+                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 10);
+                        }
+                        else
+                        {
+                            String[] options = {"Remove Existing Wallpaper","Add Wallpaper"};
+                            AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
+                            builder.setTitle("Choose...")
+                                    .setItems(options, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            switch (i){
+                                                case 0:
+                                                    editor.putString("value","null");
+                                                    editor.apply();
+                                                    ivBackground.setImageResource(0);
+                                                    Toast.makeText(Settings.this, "Wallpaper set to default!", Toast.LENGTH_SHORT).show();
+                                                    break;
 
-                        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        intent.setType("image/*");
-                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 10);
+                                                case 1:
+                                                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                                    intent.setType("image/*");
+                                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), 10);
+                                                    break;
+                                            }
+                                        }
+                                    });
+
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+                        }
                     }
                 }
         });
@@ -449,4 +497,26 @@ tvtitle.setText("Select Theme");
         return null;
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // Check if the key event was the Back button
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+
+            if(flag)
+            {
+                llsettings.setVisibility(View.VISIBLE);
+                theme.setVisibility(View.GONE);
+                tvtitle.setText("Settings");
+                flag=false;
+            }
+            else
+                Settings.this.finish();
+
+            return true;
+        }
+
+        // If it wasn't the Back key, bubble up to the default
+        // system behavior
+        return super.onKeyDown(keyCode, event);
+    }
 }
