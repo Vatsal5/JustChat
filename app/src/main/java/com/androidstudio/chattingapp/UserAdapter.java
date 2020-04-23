@@ -1,6 +1,7 @@
 package com.androidstudio.chattingapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.emoji.widget.EmojiTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,6 +38,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
      Context context;
     itemSelected Activity;
     FirebaseDatabase database;
+
      final ArrayList<UserDetailwithUrl> list;
 
     @NonNull
@@ -48,6 +51,110 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
     @Override
     public void onBindViewHolder(@NonNull final viewholder holder, final int position) {
+        SharedPreferences preftheme;
+        preftheme=context.getSharedPreferences("theme",0);
+
+        String theme=preftheme.getString("theme","red");
+
+        switch (theme)
+        { case "orange":
+
+            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.Orange));
+
+            holder.time.setTextColor(context.getResources().getColor(R.color.Orange));
+            break;
+
+            case "blue":
+
+              holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.blue));
+
+                holder.time.setTextColor(context.getResources().getColor(R.color.blue));
+
+            break;
+
+
+            case "bluish":
+                holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.bluish));
+
+                holder.time.setTextColor(context.getResources().getColor(R.color.bluish));
+            break;
+
+
+        case "deepred":
+            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.deepred));
+
+            holder.time.setTextColor(context.getResources().getColor(R.color.deepred));
+        break;
+
+        case "faintpink":
+            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.faintpink));
+
+            holder.time.setTextColor(context.getResources().getColor(R.color.faintpink));
+
+        break;
+
+            case "darkblue":
+                holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.darkblue));
+
+                holder.time.setTextColor(context.getResources().getColor(R.color.darkblue));
+        break;
+
+
+        case "green":
+            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.green));
+
+            holder.time.setTextColor(context.getResources().getColor(R.color.green));
+        break;
+
+        case "lightorange":
+            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.lightorange));
+
+            holder.time.setTextColor(context.getResources().getColor(R.color.lightorange));
+        break;
+
+        case "lightred":
+            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.lightred));
+
+            holder.time.setTextColor(context.getResources().getColor(R.color.lightred));
+        break;
+
+
+        case "mustard":
+            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.mustard));
+
+            holder.time.setTextColor(context.getResources().getColor(R.color.mustard));
+        break;
+
+        case "pink":
+            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.pink));
+
+            holder.time.setTextColor(context.getResources().getColor(R.color.pink));
+        break;
+
+        case "pureorange":
+            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.pureorange));
+
+            holder.time.setTextColor(context.getResources().getColor(R.color.pureorange));
+        break;
+
+            case "purepink":
+                holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.purepink));
+
+                holder.time.setTextColor(context.getResources().getColor(R.color.purepink));
+        break;
+
+        case "purple":
+            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.purple));
+
+            holder.time.setTextColor(context.getResources().getColor(R.color.purple));
+        break;
+
+        default:
+            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.red));
+
+            holder.time.setTextColor(context.getResources().getColor(R.color.red));
+
+        }
 
         database=FirebaseDatabase.getInstance();
         DatabaseReference dbreference=database.getReference();
@@ -102,15 +209,89 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
         if(list.get(position).getUrl().equals("null")) {
             holder.iv.setImageResource(R.drawable.person);
+            Drawable person=context.getResources().getDrawable(R.drawable.person);
+            Drawable wrappedDrawable = DrawableCompat.wrap(person);
+
+            String theme1=preftheme.getString("theme","red");
+            switch (theme1) {
+                case "orange":
+
+                    holder.iv.setColorFilter(context.getResources().getColor(R.color.Orange));
+                    break;
+
+                case "blue":
+
+                    holder.iv.setColorFilter(context.getResources().getColor(R.color.blue));
+
+                    break;
+
+
+                case "bluish":
+                    holder.iv.setColorFilter(context.getResources().getColor(R.color.bluish));
+                    break;
+
+
+                case "deepred":
+                    holder.iv.setColorFilter(context.getResources().getColor(R.color.deepred));
+                    break;
+
+                case "faintpink":
+                    holder.iv.setColorFilter(context.getResources().getColor(R.color.faintpink));
+
+                    break;
+
+                case "darkblue":
+                    holder.iv.setColorFilter(context.getResources().getColor(R.color.darkblue));
+                    break;
+
+
+                case "green":
+                    holder.iv.setColorFilter(context.getResources().getColor(R.color.green));
+                    break;
+
+                case "lightorange":
+                    holder.iv.setColorFilter(context.getResources().getColor(R.color.lightorange));
+                    break;
+
+                case "lightred":
+                    holder.iv.setColorFilter(context.getResources().getColor(R.color.lightred));
+                    break;
+
+
+                case "mustard":
+                    DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.mustard));
+                    break;
+
+                case "pink":
+                    holder.iv.setColorFilter(context.getResources().getColor(R.color.pink));
+                    break;
+
+                case "pureorange":
+                    holder.iv.setColorFilter(context.getResources().getColor(R.color.pureorange));
+                    break;
+
+                case "purepink":
+                    holder.iv.setColorFilter(context.getResources().getColor(R.color.purepink));
+                    break;
+
+                case "purple":
+                    holder.iv.setColorFilter(context.getResources().getColor(R.color.purple));
+                    break;
+
+                default:
+                    holder.iv.setColorFilter(context.getResources().getColor(R.color.red));
+            }
             holder.iv.setClickable(false);
         }
 
         else
         {
+            holder.iv.setColorFilter(context.getResources().getColor(R.color.iOrange));
             Glide.with(context).load(list.get(position).getUrl()).into(holder.iv);
             holder.iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     Activity.onImageSelected(position);
                 }
             });
@@ -210,6 +391,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
             time=itemView.findViewById(R.id.time);
             iv=itemView.findViewById(R.id.imageView);
+
             ivStatus = itemView.findViewById(R.id.ivStatus);
             ivImage = itemView.findViewById(R.id.ivImage);
             ivBackground = itemView.findViewById(R.id.ivBackground);
@@ -235,4 +417,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
     }
 
-}
+    }
+
+

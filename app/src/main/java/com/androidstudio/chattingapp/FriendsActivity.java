@@ -2,6 +2,7 @@ package com.androidstudio.chattingapp;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -36,7 +38,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     ListView lv;
     FirebaseDatabase database;
     String currentUserNumber;
-    TextView tvCreateGroup;
+    TextView tvCreateGroup,tvtitle;
     int x=0;
     DatabaseReference reference;
     ArrayList <String> members;
@@ -44,6 +46,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     ArrayList<UserDetail> contacts;
     ChildEventListener childEvent,Group;
     ArrayList<UserDetailWithStatus> contacts1;
+    Toolbar toolbar;
+    CardView cvCreate;
     ArrayList<String> number1,membersToadd;
     int yes=0;
     int c=0;
@@ -53,9 +57,101 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
+        tvtitle=findViewById(R.id.tvhead);
+        cvCreate=findViewById(R.id.ivCreate);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        SharedPreferences preftheme;
+        preftheme=getSharedPreferences("theme",0);
+
+        String theme=preftheme.getString("theme","red");
+
+        switch (theme)
+        { case "orange":
+
+            toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
+            cvCreate.setBackgroundColor(getResources().getColor(R.color.Orange));
+            break;
+
+            case "blue":
+
+                toolbar.setBackgroundColor(getResources().getColor(R.color.blue));
+                cvCreate.setBackgroundColor(getResources().getColor(R.color.blue));
+
+                break;
+
+
+            case "bluish":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.bluish));
+                cvCreate.setBackgroundColor(getResources().getColor(R.color.bluish));
+                break;
+
+
+            case "deepred":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
+                cvCreate.setBackgroundColor(getResources().getColor(R.color.deepred));
+                break;
+
+            case "faintpink":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
+                cvCreate.setBackgroundColor(getResources().getColor(R.color.faintpink));
+
+                break;
+
+            case "darkblue":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.darkblue));
+                cvCreate.setBackgroundColor(getResources().getColor(R.color.darkblue));
+                break;
+
+
+            case "green":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.green));
+                cvCreate.setBackgroundColor(getResources().getColor(R.color.green));
+                break;
+
+            case "lightorange":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
+                cvCreate.setBackgroundColor(getResources().getColor(R.color.lightorange));
+                break;
+
+            case "lightred":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
+                cvCreate.setBackgroundColor(getResources().getColor(R.color.lightred));
+                break;
+
+
+            case "mustard":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
+                cvCreate.setBackgroundColor(getResources().getColor(R.color.mustard));
+                break;
+
+            case "pink":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
+                cvCreate.setBackgroundColor(getResources().getColor(R.color.pink));
+
+                break;
+
+            case "pureorange":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
+                cvCreate.setBackgroundColor(getResources().getColor(R.color.pureorange));
+                break;
+
+            case "purepink":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
+                cvCreate.setBackgroundColor(getResources().getColor(R.color.purepink));
+                break;
+
+            case "purple":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
+                cvCreate.setBackgroundColor(getResources().getColor(R.color.purple));
+                break;
+
+            default:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.red));
+                cvCreate.setBackgroundColor(getResources().getColor(R.color.red));
+
+        }
         tvCreateGroup=findViewById(R.id.tvCreate);
         members=new ArrayList<>();
         groupkey=getIntent().getStringExtra("groupkey");
@@ -117,7 +213,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                 });
             }
 
-            tvCreateGroup.setOnClickListener(new View.OnClickListener() {
+            cvCreate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -462,6 +558,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             yes=1;
             tvCreateGroup.setVisibility(View.VISIBLE);
             tvCreateGroup.setText("Create Group");
+            cvCreate.setVisibility(View.VISIBLE);
 
 
             if(contacts1.get(index).getSelected()==0)
@@ -500,6 +597,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         }
 
         else {
+            tvtitle.setText("Forward To");
             Intent intent = new Intent(FriendsActivity.this, MessageActivity.class);
             intent.putExtra("title", contacts1.get(index).getuID());
 
@@ -524,6 +622,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        tvtitle.setText("Contacts");
         tvCreateGroup.setText("Create Group");
         ApplicationClass.addmembers=0;
     }
@@ -541,8 +640,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
         switch (id)
         {
-            case R.id.Profile:
-                startActivity(new Intent(FriendsActivity.this,Profile.class));
+            case R.id.Settings:
+                startActivity(new Intent(FriendsActivity.this,Settings.class));
                 break;
 
             case android.R.id.home:
@@ -561,5 +660,6 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         super.onRestart();
         tvCreateGroup.setText("Create Group");
         ApplicationClass.members.clear();
+
     }
 }

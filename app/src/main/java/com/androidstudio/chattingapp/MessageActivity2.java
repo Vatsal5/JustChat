@@ -23,6 +23,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -36,6 +37,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,9 +81,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     TextView tvTitle,tvMode;
     ArrayList<String> membernumber;
     EditText etMessage;
+    ConstraintLayout llMessageActivity2;
     ConstraintLayout rl;
+    LinearLayout ll;
     StorageReference rf;
     int numberOfMembers=-1;
+    SharedPreferences preftheme;
     RecyclerView.LayoutManager manager;
     MessageAdapter adapter;
     ArrayList<MessageModel> chats;
@@ -90,17 +95,99 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     String sender;
     ChildEventListener imagereceiver, videoreceiver, chreceiver;
     String defaultvalue;
-    SharedPreferences pref;
-
+    SharedPreferences pref,wallpaper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message2);
         ivProfile=findViewById(R.id.ivProfile);
+        ll=findViewById(R.id.ll);
 
         ApplicationClass.MessageActivity2Context = MessageActivity2.this;
         membernumber=new ArrayList<>();
+        preftheme=getSharedPreferences("theme",0);
+
+
+
+        String theme=preftheme.getString("theme","red");
+
+        if(theme.equals("orange"))
+        {
+            ll.setBackgroundColor(getResources().getColor(R.color.Orange));
+        }
+
+        else if(theme.equals("blue"))
+        {
+            ll.setBackgroundColor(getResources().getColor(R.color.blue));
+        }
+
+
+        else if(theme.equals("bluish")) {
+            ll.setBackgroundColor(getResources().getColor(R.color.bluish));
+
+        }
+
+        else if(theme.equals("deepred")) {
+            ll.setBackgroundColor(getResources().getColor(R.color.deepred));
+
+        }
+
+        else if(theme.equals("faintpink")) {
+            ll.setBackgroundColor(getResources().getColor(R.color.faintpink));
+
+        }
+
+        else if(theme.equals("darkblue")) {
+            ll.setBackgroundColor(getResources().getColor(R.color.darkblue));
+
+        }
+
+        else if (theme.equals("green")) {
+            ll.setBackgroundColor(getResources().getColor(R.color.green));
+
+        }
+
+        else if (theme.equals("lightorange")) {
+            ll.setBackgroundColor(getResources().getColor(R.color.lightorange));
+
+        }
+
+        else  if (theme.equals("lightred")) {
+            ll.setBackgroundColor(getResources().getColor(R.color.lightred));
+
+        }
+
+        else if(theme.equals( "mustard")) {
+            ll.setBackgroundColor(getResources().getColor(R.color.mustard));
+
+        }
+
+        else if (theme.equals("pink")) {
+            ll.setBackgroundColor(getResources().getColor(R.color.pink));
+
+        }
+
+        else if(theme.equals("pureorange")) {
+            ll.setBackgroundColor(getResources().getColor(R.color.pureorange));
+
+        }
+
+        else if(theme.equals( "purepink")) {
+            ll.setBackgroundColor(getResources().getColor(R.color.purepink));
+
+        }
+
+        else if(theme.equals( "purple")) {
+            ll.setBackgroundColor(getResources().getColor(R.color.purple));
+
+        }
+
+        else {
+            ll.setBackgroundColor(getResources().getColor(R.color.red));
+
+
+        }
 
         profile=getIntent().getStringExtra("profile");
 
@@ -120,6 +207,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         ivBack = findViewById(R.id.ivBack);
         tvMode = findViewById(R.id.tvMode);
         rl = findViewById(R.id.rl);
+        llMessageActivity2 = findViewById(R.id.llMessageActivity2);
 
         tvTitle.setText(groupname);
 
@@ -132,6 +220,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         });
 
+        wallpaper = getSharedPreferences("Wallpaper",0);
+
         pref= getApplicationContext().getSharedPreferences("Mode",0);
         defaultvalue = pref.getString("mode"+groupKey,"null");
 
@@ -139,6 +229,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             SharedPreferences.Editor editor = pref.edit();
             editor.putString("mode"+groupKey, "public");
             editor.apply();
+        }
+
+
+        if(!wallpaper.getString("value","null").equals("null"))
+        {
+            llMessageActivity2.setBackground(getBackground(Uri.parse(wallpaper.getString("value","null"))));
         }
 
         Messages = findViewById(R.id.Messages);
@@ -1589,5 +1685,20 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             if(!Messages.isComputingLayout())
                 adapter.notifyItemInserted(chats.size()-1);
         }
+    }
+
+    public Drawable getBackground(Uri uri)
+    {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            return Drawable.createFromStream(inputStream, uri.toString() );
+        } catch (FileNotFoundException e) {
+            Toast.makeText(this, "Wallpaper set to default as file not found!", Toast.LENGTH_SHORT).show();
+            llMessageActivity2.setBackground(null);
+            SharedPreferences.Editor editor = wallpaper.edit();
+            editor.putString("value",null);
+            editor.apply();
+        }
+        return null;
     }
 }

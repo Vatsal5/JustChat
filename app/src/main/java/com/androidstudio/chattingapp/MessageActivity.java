@@ -17,6 +17,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -40,6 +41,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.emoji.widget.EmojiEditText;
@@ -92,6 +94,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
@@ -112,11 +115,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     FirebaseDatabase database;
     DatabaseReference reference;
     String lastpath;
-    SharedPreferences pref;
+    SharedPreferences pref,wallpaper;
+    SharedPreferences preftheme;
 
     StorageReference rf;
     int messagecount;
-
+    ConstraintLayout llMessageActivity;
+    LinearLayout ll;
     SharedPreferences pref1;
 
     TextView title,tvMode;
@@ -141,12 +146,95 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     String dpUrl ="null";
     ValueEventListener dp;
 
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+        ll=findViewById(R.id.ll);
+        ivSend = findViewById(R.id.ivSend);
+        preftheme=getSharedPreferences("theme",0);
 
         pref1 = getSharedPreferences("Names",0);
+        wallpaper = getSharedPreferences("Wallpaper",0);
+        String theme=preftheme.getString("theme","red");
+
+                if(theme.equals("orange"))
+        {
+                ll.setBackgroundColor(getResources().getColor(R.color.Orange));
+                }
+
+                else if(theme.equals("blue"))
+        {
+                ll.setBackgroundColor(getResources().getColor(R.color.blue));
+                }
+
+
+            else if(theme.equals("bluish")) {
+                    ll.setBackgroundColor(getResources().getColor(R.color.bluish));
+
+                }
+
+             else if(theme.equals("deepred")) {
+                 ll.setBackgroundColor(getResources().getColor(R.color.deepred));
+
+             }
+
+             else if(theme.equals("faintpink")) {
+                    ll.setBackgroundColor(getResources().getColor(R.color.faintpink));
+
+                }
+
+             else if(theme.equals("darkblue")) {
+                    ll.setBackgroundColor(getResources().getColor(R.color.darkblue));
+
+                }
+
+             else if (theme.equals("green")) {
+                    ll.setBackgroundColor(getResources().getColor(R.color.green));
+
+                }
+
+             else if (theme.equals("lightorange")) {
+                    ll.setBackgroundColor(getResources().getColor(R.color.lightorange));
+
+                }
+
+             else  if (theme.equals("lightred")) {
+                    ll.setBackgroundColor(getResources().getColor(R.color.lightred));
+
+                }
+
+            else if(theme.equals( "mustard")) {
+                    ll.setBackgroundColor(getResources().getColor(R.color.mustard));
+
+                }
+
+             else if (theme.equals("pink")) {
+                    ll.setBackgroundColor(getResources().getColor(R.color.pink));
+
+                }
+
+             else if(theme.equals("pureorange")) {
+                    ll.setBackgroundColor(getResources().getColor(R.color.pureorange));
+
+                }
+
+            else if(theme.equals( "purepink")) {
+                    ll.setBackgroundColor(getResources().getColor(R.color.purepink));
+
+                }
+
+            else if(theme.equals( "purple")) {
+                    ll.setBackgroundColor(getResources().getColor(R.color.purple));
+
+                }
+
+            else {
+                ll.setBackgroundColor(getResources().getColor(R.color.red));
+
+
+        }
 
         ApplicationClass.MessageActivityContext = MessageActivity.this;
 
@@ -198,12 +286,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         pref= getApplicationContext().getSharedPreferences("Mode",0);
         defaultvalue = pref.getString("mode"+RecieverPhone,"null");
         etMessage = findViewById(R.id.etMessage);
-        ivSend = findViewById(R.id.ivSend);
+
         ivProfile = findViewById(R.id.ivProfile);
         ivBack = findViewById(R.id.ivBack);
         ivStatus = findViewById(R.id.ivStatus);
         ivTyping = findViewById(R.id.ivTyping);
         tvMode = findViewById(R.id.tvMode);
+        llMessageActivity = findViewById(R.id.llMessageActivity);
 
 
         if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -464,6 +553,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         for (int i = 0; i < chats.size(); i++) {
             Log.d("messageme", chats.get(i).getMessage()+"");
         }
+
+        if(!wallpaper.getString("value","null").equals("null"))
+        {
+
+                llMessageActivity.setBackground(getBackground(Uri.parse(wallpaper.getString("value","null"))));
+        }
+
         //chats.add(new MessageModel(RecieverPhone,sender,"https://images.unsplash.com/photo-1579256308218-d162fd41c801?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjF9&auto=format&fit=crop&w=500&q=60","image",0));
 
         adapter = new MessageAdapter(MessageActivity.this, chats);
@@ -1183,9 +1279,11 @@ if(getIntent().getIntExtra("path",1)==2) {
 
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onResume() {
         super.onResume();
+
 
         long millis = System.currentTimeMillis();
         java.sql.Date date1 = new java.sql.Date(millis);
@@ -1723,6 +1821,19 @@ if(getIntent().getIntExtra("path",1)==2) {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            message.setDownloaded(104);
+            Handler.UpdateMessage(message);
+
+            chats.get(index).setDownloaded(104);
+            if(!Messages.isComputingLayout())
+                adapter.notifyDataSetChanged();
+
+        }
+
+        @Override
         protected Uri doInBackground(String... strings) {
             InputStream urlInputStream = null;
 
@@ -1822,7 +1933,14 @@ if(getIntent().getIntExtra("path",1)==2) {
             this.message = message;
         }
 
-        protected void onPreExecute(){
+        protected void onPreExecute()
+        {
+            message.setDownloaded(4);
+            Handler.UpdateMessage(message);
+
+            chats.get(index).setDownloaded(4);
+            if(!Messages.isComputingLayout())
+                adapter.notifyDataSetChanged();
         }
 
         protected Uri doInBackground(URL...urls){
@@ -2008,5 +2126,19 @@ if(getIntent().getIntExtra("path",1)==2) {
     }
 //**************************************************************************************************************************************
 
+    public Drawable getBackground(Uri uri)
+    {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+             return Drawable.createFromStream(inputStream, uri.toString() );
+        } catch (FileNotFoundException e) {
+            Toast.makeText(this, "Wallpaper set to default as file not found!", Toast.LENGTH_SHORT).show();
+            llMessageActivity.setBackground(null);
+            SharedPreferences.Editor editor = wallpaper.edit();
+            editor.putString("value",null);
+            editor.apply();
+        }
+        return null;
+    }
 
 }

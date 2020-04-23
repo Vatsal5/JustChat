@@ -8,7 +8,51 @@
     <color name="white">#E0DDDD</color>
     <color name="black">#000000</color>
     <color name="green">#6ebd52</color>
+    <color name="igreen">#996ebd52</color>
     <color name="Orange">#d6514a</color>
+    <color name="iOrange">#00d6514a</color>
     <color name="red">#d6514a</color>
+    <color name="ired">#99d6514a</color>
+
+    <color name="pureorange">#ff5722</color>
+    <color name="ipureorange">#99ff5722</color>
+
+    <color name="purepink">#f57268</color>
+    <color name="ipurepink">#99f57268</color>
+    <color name="blue">#283470</color>
+    <color name="iblue">#99283470</color>
+
+
+
+
+    <color name="pink">#e91e63</color>
+    <color name="ipink">#99e91e63</color>
+
+    <color name="lightorange">#f2a37a</color>
+    <color name="ilightorange">#99f2a37a</color>
+    <color name="deepred">#e24a3c</color>
+    <color name="ideepred">#99e24a3c</color>
+
+    <color name="purple">#49264e</color>
+    <color name="ipurple">#9949264e</color>
+    <color name="lightred">#e9776c</color>
+    <color name="ilightred">#99e9776c</color>
+
+
+    <color name="faintyellow">#f2e773</color>
+    <color name="ifaintyellow">#99f2e773</color>
+    <color name="mustard">#eba54d</color>
+    <color name="imustard">#99eba54d</color>
+    <color name="faintpink">#f25c65</color>
+    <color name="ifaintpink">#99f25c65</color>
+    <color name="darkblue">#2b3050</color>
+    <color name="idarkblue">#992b3050</color>
+
+
+
+    <color name="bluish">#292f3b</color>
+    <color name="ibluish">#99292f3b</color>
+
+
     <color name="RightBackground">#700F0F0F</color>
 </resources>

@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/Profile"
-        android:title="Profile"
-        app:showAsAction="never"/>
+        android:id="@+id/Settings"
+        android:title="Settings"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/settings"/>
 
     <item
         android:id="@+id/CreateGroup"
-        android:title="Create New Group"
+        android:title="New Group"
         app:showAsAction="never"/>
 
 </menu>

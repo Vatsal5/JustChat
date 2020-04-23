@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -78,8 +79,85 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        SharedPreferences preftheme;
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+        preftheme=getSharedPreferences("theme",0);
+        String theme=preftheme.getString("theme","red");
+
+
+
+
+        switch (theme) {
+            case "orange":
+
+                toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
+
+                break;
+
+            case "blue":
+
+                toolbar.setBackgroundColor(getResources().getColor(R.color.blue));
+
+                break;
+
+
+            case "bluish":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.bluish));
+                break;
+
+
+            case "deepred":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
+                break;
+
+            case "faintpink":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
+
+                break;
+
+            case "darkblue":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.darkblue));
+                break;
+
+
+            case "green":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.green));
+                break;
+
+            case "lightorange":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
+
+                break;
+
+            case "lightred":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
+                break;
+
+
+            case "mustard":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
+                break;
+
+            case "pink":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
+                break;
+
+            case "pureorange":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
+                break;
+
+            case "purepink":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
+                break;
+
+            case "purple":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
+                break;
+
+            default:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.red));
+        }
 
         setSupportActionBar(toolbar);
         setTitle("Profile");

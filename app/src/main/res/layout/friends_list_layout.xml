@@ -17,13 +17,24 @@
             android:id="@+id/imageView"
             android:layout_width="55dp"
             android:layout_height="55dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_weight="1"
-            android:background="#ffffff"
+            android:layout_marginRight="8dp"
 
+            android:layout_marginBottom="8dp"
+            android:background="#ffffff"
             app:srcCompat="@drawable/business" />
 
+
+        <ImageView
+            android:id="@+id/ivSelected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            app:srcCompat="@drawable/tick" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -49,27 +60,18 @@
 
                 <TextView
                     android:id="@+id/tvstatus"
-                    android:layout_width="wrap_content"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginBottom="10dp"
                     android:layout_weight="1"
                     android:scrollbars="vertical"
+                    android:singleLine="true"
                     android:text="One's Status"
                     android:textColor="#d6514a" />
             </LinearLayout>
 
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/ivSelected"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="20dp"
-            android:layout_weight="1"
-            android:visibility="gone"
-            app:srcCompat="@drawable/tick" />
 
     </LinearLayout>
 
