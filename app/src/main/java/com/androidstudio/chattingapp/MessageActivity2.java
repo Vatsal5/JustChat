@@ -315,7 +315,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
 
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+            public void onChildRemoved(@NonNull final DataSnapshot dataSnapshot) {
+                StorageReference file1;
+                file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
+                file1.delete();
+
 
             }
 
@@ -371,6 +375,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                StorageReference file1;
+                file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
+                file1.delete();
 
             }
 
@@ -1568,6 +1576,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").
 
                                         child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(numberOfMembers+""+  uri.toString());
+
 
 
                                 for(int i=0;i<membernumber.size();i++) {

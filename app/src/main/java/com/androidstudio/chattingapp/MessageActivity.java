@@ -95,6 +95,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
@@ -1400,7 +1401,44 @@ if(getIntent().getIntExtra("path",1)==2) {
                         for (int i = 0; i < data.getClipData().getItemCount(); i++) {
                             ClipData.Item videoItem = data.getClipData().getItemAt(i);
                             Uri videoURI = videoItem.getUri();
+                            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
+                if(!imagesFolder.exists())
+                {
+                    imagesFolder.mkdirs();
+                }
 
+                         //    Create a file to save the image
+                File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis())+".mp4");
+
+                try {
+                    InputStream in = getContentResolver().openInputStream(videoURI);
+                    OutputStream out = new FileOutputStream(file);
+                    byte[] buf = new byte[1024];
+                    int len;
+                    while ((len = in.read(buf)) > 0) {
+                        out.write(buf, 0, len);
+                    }
+                    out.close();
+                    in.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                            long fileSizeInBytes = file.length();
+                            long fileSizeInKB = fileSizeInBytes / 1024;
+                            long fileSizeInMB = fileSizeInKB / 1024;
+                            Toast.makeText(this,""+fileSizeInBytes,Toast.LENGTH_LONG).show();
+
+
+                            if (fileSizeInMB >= 15) {
+                                Toast.makeText(this,"Video files lesser than 15MB are allowed",Toast.LENGTH_LONG).show();
+
+                            }
+
+                            else{
                             Date date = new Date();
                             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
 
@@ -1433,7 +1471,11 @@ if(getIntent().getIntExtra("path",1)==2) {
                             } else
                                 chats.add(model);
 
-                        }
+                                adapter.notifyItemInserted(chats.size()-1);
+
+
+                          }
+                   }
                     }
                     else
                     {
@@ -1443,6 +1485,44 @@ if(getIntent().getIntExtra("path",1)==2) {
                 else {
                     Uri videoURI = data.getData();
 
+
+                    File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
+                    if(!imagesFolder.exists())
+                    {
+                        imagesFolder.mkdirs();
+                    }
+
+                    //    Create a file to save the image
+                    File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis())+".mp4");
+
+                    try {
+                        InputStream in = getContentResolver().openInputStream(videoURI);
+                        OutputStream out = new FileOutputStream(file);
+                        byte[] buf = new byte[1024];
+                        int len;
+                        while ((len = in.read(buf)) > 0) {
+                            out.write(buf, 0, len);
+                        }
+                        out.close();
+                        in.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    long fileSizeInBytes = file.length();
+                    long fileSizeInKB = fileSizeInBytes / 1024;
+                    long fileSizeInMB = fileSizeInKB / 1024;
+
+                    if (fileSizeInMB >= 15) {
+                        Toast.makeText(this,"Video files lesser than 15MB are allowed",Toast.LENGTH_LONG).show();
+
+                    }
+
+                    else
+                    {
                     Date date=new Date();
                     SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
 
@@ -1476,9 +1556,11 @@ if(getIntent().getIntExtra("path",1)==2) {
                     else
                         chats.add(model);
 
-                }
+                        adapter.notifyItemInserted(chats.size()-1);
 
-                adapter.notifyItemInserted(chats.size()-1);
+
+                    }}
+
 
 
 //                File file = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent/"+new Timestamp(System.currentTimeMillis())+".mp4");
@@ -1531,7 +1613,23 @@ if(getIntent().getIntExtra("path",1)==2) {
                 //selectedImageUri = Uri.fromFile(new File(filepath));
             }
         }
+    }private String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } catch (Exception e) {
+            return "";
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
+
 
     public class CompressImage extends AsyncTask<Uri,Void,Uri>
     {
