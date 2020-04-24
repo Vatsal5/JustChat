@@ -556,8 +556,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         if(!wallpaper.getString("value","null").equals("null"))
         {
-
-                llMessageActivity.setBackground(getBackground(Uri.parse(wallpaper.getString("value","null"))));
+            getWindow().setBackgroundDrawable(getBackground(Uri.parse(wallpaper.getString("value","null"))));
+                //llMessageActivity.setBackground(getBackground(Uri.parse(wallpaper.getString("value","null"))));
         }
 
         //chats.add(new MessageModel(RecieverPhone,sender,"https://images.unsplash.com/photo-1579256308218-d162fd41c801?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjF9&auto=format&fit=crop&w=500&q=60","image",0));

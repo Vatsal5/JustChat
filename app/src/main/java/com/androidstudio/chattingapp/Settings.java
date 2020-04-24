@@ -15,9 +15,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,8 +39,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.Timestamp;
 
 public class Settings extends AppCompatActivity {
 
@@ -427,12 +438,7 @@ flag=true;
         if(requestCode == 10 && resultCode == RESULT_OK) {
             Uri imageuri = data.getData();
 
-            editor.putString("value",imageuri.toString());
-            editor.apply();
-
-            ivBackground.setImageURI(imageuri);
-
-            Toast.makeText(this, "Wallpaper set", Toast.LENGTH_SHORT).show();
+            new CompressImage().execute(imageuri);
         }
 
     }
@@ -518,5 +524,64 @@ flag=true;
         // If it wasn't the Back key, bubble up to the default
         // system behavior
         return super.onKeyDown(keyCode, event);
+    }
+
+    public class CompressImage extends AsyncTask<Uri,Void,Uri> {
+        @Override
+        protected Uri doInBackground(Uri... uris) {
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(Settings.this.getContentResolver(), uris[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            byte[] bytes = null;
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            bytes = stream.toByteArray();
+            Bitmap bitmap1 = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            String path = MediaStore.Images.Media.insertImage(Settings.this.getContentResolver(), bitmap1, "Title", null);
+            Uri uri = Uri.parse(path);
+
+
+            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Wallpaper");
+            if (!imagesFolder.exists()) {
+                imagesFolder.mkdirs();
+            }
+
+            // Create a file to save the image
+            File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis()) + ".jpg");
+
+            try {
+                InputStream in = getContentResolver().openInputStream(uri);
+                OutputStream out = new FileOutputStream(file);
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+                out.close();
+                in.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            uri = Uri.fromFile(file);
+            return uri;
+        }
+
+        @Override
+        protected void onPostExecute(Uri uri) {
+            super.onPostExecute(uri);
+
+            editor.putString("value",uri.toString());
+            editor.apply();
+
+            ivBackground.setImageURI(uri);
+
+            Toast.makeText(Settings.this, "Wallpaper set", Toast.LENGTH_SHORT).show();
+        }
     }
 }

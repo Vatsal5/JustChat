@@ -234,7 +234,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         if(!wallpaper.getString("value","null").equals("null"))
         {
-            llMessageActivity2.setBackground(getBackground(Uri.parse(wallpaper.getString("value","null"))));
+            getWindow().setBackgroundDrawable(getBackground(Uri.parse(wallpaper.getString("value","null"))));
         }
 
         Messages = findViewById(R.id.Messages);
