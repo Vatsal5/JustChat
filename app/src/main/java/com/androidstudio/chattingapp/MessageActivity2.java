@@ -1303,6 +1303,18 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            message.setDownloaded(104);
+            Handler.UpdateMessage(message);
+
+            chats.get(index).setDownloaded(104);
+            if(!Messages.isComputingLayout())
+                adapter.notifyDataSetChanged();
+        }
+
+        @Override
         protected Uri doInBackground(String... strings) {
             InputStream urlInputStream = null;
 
@@ -1418,6 +1430,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         }
 
         protected void onPreExecute(){
+            message.setDownloaded(4);
+            Handler.UpdateMessage(message);
+
+            chats.get(index).setDownloaded(4);
+            if(!Messages.isComputingLayout())
+                adapter.notifyDataSetChanged();
         }
 
         protected Uri doInBackground(URL...urls){
