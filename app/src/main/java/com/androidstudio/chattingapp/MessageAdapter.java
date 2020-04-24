@@ -90,7 +90,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         EmojiTextView tvMessage;
         ImageView ivImage,ivPlay,ivProfile,ivTyping,ivDownload;
         ProgressBar progress;
-        LinearLayout llMessageRight,llMesageLeft;
+        LinearLayout llMessageRight,llMesageLeft,llTyping;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -107,6 +107,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             tvSender = itemView.findViewById(R.id.tvSender);
             ivDownload = itemView.findViewById(R.id.ivDownload);
             llMesageLeft = itemView.findViewById(R.id.llMessageLeft);
+            llTyping = itemView.findViewById(R.id.llTyping);
         }
     }
 
@@ -226,6 +227,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         if(holder.ivTyping!=null)
         {
             Glide.with(context).load(R.drawable.typing1).into(holder.ivTyping);
+            setBackground(holder.llTyping);
         }
 
         if (messages.get(position).getDownloaded() == 0)   //image is received but yet to be downloaded
