@@ -41,7 +41,7 @@
         app:layout_constraintBottom_toBottomOf="@id/ivImage"
         app:layout_constraintRight_toRightOf="@id/ivImage"
         android:layout_marginBottom="9dp"
-        android:textColor="#90000000"/>
+        android:textColor="#FFFFFF"/>
 
     <ImageView
         android:id="@+id/ivDownload"
