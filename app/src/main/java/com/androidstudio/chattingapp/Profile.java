@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,6 +34,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -83,6 +86,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         ivBack = findViewById(R.id.ivBack);
+        ivClick = findViewById(R.id.ivClick);
 
         preftheme=getSharedPreferences("theme",0);
         String theme=preftheme.getString("theme","red");
@@ -101,71 +105,86 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
             case "orange":
 
                 toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
+                ViewCompat.setBackgroundTintList(ivClick,ColorStateList.valueOf(Color.parseColor("#d6514a")));
 
                 break;
 
             case "blue":
 
                 toolbar.setBackgroundColor(getResources().getColor(R.color.blue));
+                ViewCompat.setBackgroundTintList(ivClick,ColorStateList.valueOf(Color.parseColor("#283470")));
 
                 break;
 
 
             case "bluish":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.bluish));
+                ViewCompat.setBackgroundTintList(ivClick,ColorStateList.valueOf(Color.parseColor("#292f3b")));
                 break;
 
 
             case "deepred":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
+                ViewCompat.setBackgroundTintList(ivClick,ColorStateList.valueOf(Color.parseColor("#e24a3c")));
                 break;
 
             case "faintpink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
+                ViewCompat.setBackgroundTintList(ivClick,ColorStateList.valueOf(Color.parseColor("#f25c65")));
 
                 break;
 
             case "darkblue":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.darkblue));
+                ViewCompat.setBackgroundTintList(ivClick,ColorStateList.valueOf(Color.parseColor("#2b3050")));
                 break;
 
 
             case "green":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.green));
+                ViewCompat.setBackgroundTintList(ivClick,ColorStateList.valueOf(Color.parseColor("#6ebd52")));
                 break;
 
             case "lightorange":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
+                ViewCompat.setBackgroundTintList(ivClick,ColorStateList.valueOf(Color.parseColor("#f2a37a")));
 
                 break;
 
             case "lightred":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
+                ViewCompat.setBackgroundTintList(ivClick,ColorStateList.valueOf(Color.parseColor("#e9776c")));
                 break;
 
 
             case "mustard":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
+                ViewCompat.setBackgroundTintList(ivClick,ColorStateList.valueOf(Color.parseColor("#eba54d")));
                 break;
 
             case "pink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
+                ViewCompat.setBackgroundTintList(ivClick,ColorStateList.valueOf(Color.parseColor("#e91e63")));
                 break;
 
             case "pureorange":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
+                ViewCompat.setBackgroundTintList(ivClick,ColorStateList.valueOf(Color.parseColor("#ff5722")));
                 break;
 
             case "purepink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
+                ViewCompat.setBackgroundTintList(ivClick,ColorStateList.valueOf(Color.parseColor("#f57268")));
                 break;
 
             case "purple":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
+                ViewCompat.setBackgroundTintList(ivClick,ColorStateList.valueOf(Color.parseColor("#49264e")));
                 break;
 
             default:
                 toolbar.setBackgroundColor(getResources().getColor(R.color.red));
+                ViewCompat.setBackgroundTintList(ivClick,ColorStateList.valueOf(Color.parseColor("#d6514a")));
         }
 
         setTitle(null);
@@ -177,7 +196,6 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
         data = new ArrayList<>();
 
         ivProfile = findViewById(R.id.ivProfile);
-        ivClick = findViewById(R.id.ivClick);
         progress = findViewById(R.id.progress);
 
         llProfile = findViewById(R.id.llProfile);

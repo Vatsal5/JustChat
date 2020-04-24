@@ -7,6 +7,7 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
 import androidx.emoji.widget.EmojiTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -553,64 +555,76 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     {
         String theme=preftheme.getString("theme","red");
 
-        if(theme.equals("orange"))
-            view.setBackgroundResource(R.drawable.orange1);
+        switch (theme)
+        {
+            case "orange":
 
-        else if(theme.equals("blue"))
-            view.setBackgroundResource(R.drawable.blue);
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#d6514a")));
+
+                break;
+
+            case "blue":
+
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#283470")));
+
+                break;
 
 
-        else if(theme.equals("bluish")) {
-            view.setBackgroundResource(R.drawable.bluish);
-        }
+            case "bluish":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#292f3b")));
+                break;
 
-        else if(theme.equals("deepred")) {
-            view.setBackgroundResource(R.drawable.deepred);
-        }
 
-        else if(theme.equals("faintpink")) {
-            view.setBackgroundResource(R.drawable.faintpink);
-        }
+            case "deepred":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#e24a3c")));
+                break;
 
-        else if(theme.equals("darkblue")) {
-            view.setBackgroundResource(R.drawable.darkblue);
-        }
+            case "faintpink":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#f25c65")));
 
-        else if (theme.equals("green")) {
-            view.setBackgroundResource(R.drawable.green1);
-        }
+                break;
 
-        else if (theme.equals("lightorange")) {
-            view.setBackgroundResource(R.drawable.lightorange);
-        }
+            case "darkblue":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#2b3050")));
+                break;
 
-        else  if (theme.equals("lightred")) {
-            view.setBackgroundResource(R.drawable.lightred);
-        }
 
-        else if(theme.equals( "mustard")) {
-            view.setBackgroundResource(R.drawable.mustard);
-        }
+            case "green":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#6ebd52")));
+                break;
 
-        else if (theme.equals("pink")) {
-            view.setBackgroundResource(R.drawable.pink1);
-        }
+            case "lightorange":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#f2a37a")));
 
-        else if(theme.equals("pureorange")) {
-            view.setBackgroundResource(R.drawable.pureorange);
-        }
+                break;
 
-        else if(theme.equals( "purepink")) {
-            view.setBackgroundResource(R.drawable.purepink);
-        }
+            case "lightred":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#e9776c")));
+                break;
 
-        else if(theme.equals( "purple")) {
-            view.setBackgroundResource(R.drawable.purple);
-        }
 
-        else {
-            view.setBackgroundResource(R.drawable.orange1);
+            case "mustard":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#eba54d")));
+                break;
 
+            case "pink":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#e91e63")));
+                break;
+
+            case "pureorange":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#ff5722")));
+                break;
+
+            case "purepink":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#f57268")));
+                break;
+
+            case "purple":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#49264e")));
+                break;
+
+            default:
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#d6514a")));
         }
     }
 
