@@ -1056,7 +1056,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
 
             int swipeFlags;
-            if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3)){
+            if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 60)){
 
                 if(chats.get(viewHolder.getAdapterPosition()).getSender().equals(RecieverPhone)) {
                     swipeFlags = ItemTouchHelper.END;
@@ -1409,6 +1409,22 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                             MessageModel model = new MessageModel(1190, sender, RecieverPhone, videoURI.toString(), "video", 100, simpleDateFormat.format(date).substring(0, 5), date1.toString(), "null");
 
+                            if (chats.size() != 0) {
+                                if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                                    MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null");
+                                    int id = Handler.addMessage(messageModel);
+                                    messageModel.setId(id);
+                                    chats.add(messageModel);
+                                }
+                            } else {
+                                if ((!(defaultvalue.equals("private")))) {
+                                    MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(), "null");
+                                    int id = Handler.addMessage(messageModel);
+                                    messageModel.setId(id);
+                                    chats.add(messageModel);
+                                }
+                            }
+
                             int id = Handler.addMessage(model);
                             model.setId(id);
                             if (chats.size() > 0 && chats.get(chats.size() - 1).getType().equals("typing")) {
@@ -1434,6 +1450,22 @@ if(getIntent().getIntExtra("path",1)==2) {
                     java.sql.Date date1=new java.sql.Date(millis);
 
                     MessageModel model = new MessageModel(1190,sender,RecieverPhone,videoURI.toString(),"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString(),"null");
+
+                    if (chats.size() != 0) {
+                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                            MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null");
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    } else {
+                        if ((!(defaultvalue.equals("private")))) {
+                            MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(), "null");
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    }
 
                     int id = Handler.addMessage(model);
                     model.setId(id);
