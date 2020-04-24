@@ -1326,12 +1326,37 @@ if(getIntent().getIntExtra("path",1)==2) {
         super.onPause();
 
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").removeEventListener(imagereceiver);
+        reference.child("users").child(RecieverPhone).child(sender).removeEventListener(chreceiver);
+        //reference.child("users").child(sender).removeEventListener(chsender);
+
+        //Handler.close();
+
+
+
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("videos").removeEventListener(videoreceiver);
+
         overridePendingTransition(0, 0);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").addChildEventListener(imagereceiver);
+        reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
+        //reference.child("users").child(sender).removeEventListener(chsender);
+
+        //Handler.close();
+
+
+
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("videos").addChildEventListener(videoreceiver);
+
 
     }
 

@@ -840,6 +840,15 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     @Override
     protected void onRestart() {
         super.onRestart();
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).addChildEventListener(imagereceiver);
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).addChildEventListener(chreceiver);
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("videos").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).addChildEventListener(videoreceiver);
         if(ApplicationClass.RenameGroup!=null)
         {
             tvTitle.setText(ApplicationClass.RenameGroup);
@@ -1021,6 +1030,23 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         intent.putExtra("source",chats.get(index).getMessage());
 
         startActivity(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).removeEventListener(imagereceiver);
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).removeEventListener(chreceiver);
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("videos").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).removeEventListener(videoreceiver);
+
+
+        overridePendingTransition(0, 0);
     }
 
     @Override
