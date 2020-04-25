@@ -284,7 +284,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
                 {
                     StorageReference file1;
-                    file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
+                    file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
                     file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -301,7 +301,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
                 {
                     StorageReference file1;
-                    file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
+                    file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
                     file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -317,7 +317,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             @Override
             public void onChildRemoved(@NonNull final DataSnapshot dataSnapshot) {
                 StorageReference file1;
-                file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
+                file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
                 file1.delete();
 
 
@@ -341,7 +341,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 {
 
                     StorageReference file1;
-                    file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
+                    file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
                     file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -360,7 +360,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 {
 
                             StorageReference file1;
-                            file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
+                            file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
                             file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -377,7 +377,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
                 StorageReference file1;
-                file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(1));
+                file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
                 file1.delete();
 
             }
@@ -1362,7 +1362,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").child(dataSnapshot.getKey())
-                                                .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))-1)+dataSnapshot.getValue().toString().substring(1));
+                                                .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("h")-10))-1)+dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
                                     }
 
                                     @Override
@@ -1486,7 +1486,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").child(dataSnapshot.getKey())
-                                                .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))-1)+dataSnapshot.getValue().toString().substring(1));
+                                                .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("h")-10))-1)+dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
                                     }
 
                                     @Override
@@ -1575,7 +1575,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             public void onSuccess(Uri uri) {
                                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").
 
-                                        child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(numberOfMembers+""+  uri.toString());
+                                        child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(numberOfMembers + message.getDate()+  uri.toString());
 
 
 
@@ -1640,7 +1640,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").
 
-                                        child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() ).setValue(numberOfMembers+  uri.toString());
+                                        child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() ).setValue(numberOfMembers+message.getDate() + uri.toString());
 
                                 for(int i=0;i<membernumber.size();i++) {
 
