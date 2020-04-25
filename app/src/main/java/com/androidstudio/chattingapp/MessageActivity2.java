@@ -189,6 +189,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         }
 
+        if (ContextCompat.checkSelfPermission(MessageActivity2.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MessageActivity2.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 150);
+        }
+
         profile=getIntent().getStringExtra("profile");
 
         if(profile.equals("null"))

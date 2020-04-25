@@ -239,7 +239,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             setBackground(holder.ivImage);
             holder.ivImage.setClickable(false);
             holder.ivDownload.setVisibility(View.VISIBLE);
-            setBackground(holder.ivDownload);
 
             holder.ivDownload.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -347,12 +346,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         else if(messages.get(position).getDownloaded()==101) // when video is received  and yet to be downloaded
         {
-            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
+            holder.ivImage.setImageResource(0);
             setBackground(holder.ivImage);
             holder.progress.setVisibility(View.GONE);
             holder.ivPlay.setVisibility(View.GONE);
             holder.ivDownload.setVisibility(View.VISIBLE);
-            setBackground(holder.ivDownload);
 
             holder.ivDownload.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -397,7 +395,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivDownload.setVisibility(View.GONE);
             holder.ivPlay.setVisibility(View.GONE);
-            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
+            holder.ivImage.setImageResource(0);
             setBackground(holder.ivImage);
             holder.ivImage.setClickable(false);
         }
