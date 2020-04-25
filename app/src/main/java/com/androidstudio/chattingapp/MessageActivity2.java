@@ -768,6 +768,98 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         ItemTouchHelper itemTouchHelper= new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(Messages);
+
+        if(getIntent().getIntExtra("path",1)==2) {
+            String type = getIntent().getStringExtra("type");
+            String message1 = getIntent().getStringExtra("message");
+
+            if (!(type.equals(" "))) {
+                Date date = new Date();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                long millis = System.currentTimeMillis();
+                java.sql.Date date1 = new java.sql.Date(millis);
+
+                if (type.equals("text")) {
+
+                    MessageModel model = new MessageModel(-1, sender, "null", etMessage.getText().toString(), "text", -2, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
+                    etMessage.setText(null);
+
+                    if (chats.size() != 0) {
+                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    } else {
+                        if ((!(defaultvalue.equals("private")))) {
+                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    }
+
+                    int id = Handler.addMessage(model);
+                    model.setId(id);
+                    chats.add(model);
+                    adapter.notifyItemInserted(chats.size() - 1);
+
+
+                } else if (type.equals("image")) {
+
+                    MessageModel messageModel = new MessageModel(-1, sender, "nul", message1, "image", 2,simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9),date1.toString(),groupname);
+
+                    if (chats.size() != 0) {
+                        if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate()) || chats.size() == 0) {
+                            MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
+                            int id = Handler.addMessage(message);
+                            message.setId(id);
+                            chats.add(message);
+                        }
+                    } else {
+                        if (!(defaultvalue.equals("private"))) {
+                            MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
+                            int id = Handler.addMessage(message);
+                            message.setId(id);
+                            chats.add(message);
+                        }
+                    }
+
+                    int id = Handler.addMessage(messageModel);
+                    messageModel.setId(id);
+
+                    chats.add(messageModel);
+
+                    adapter.notifyItemInserted(chats.size() - 1);
+                } else {
+                    MessageModel model = new MessageModel(1190, sender, "null", message1, "video", 100, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
+
+                    if (chats.size() != 0) {
+                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    } else {
+                        if ((!(defaultvalue.equals("private")))) {
+                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    }
+
+                    int id = Handler.addMessage(model);
+                    model.setId(id);
+                    chats.add(model);
+
+                    adapter.notifyItemInserted(chats.size() - 1);
+                }
+            }
+        }
+
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback= new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {

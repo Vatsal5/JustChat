@@ -239,6 +239,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             setBackground(holder.ivImage);
             holder.ivImage.setClickable(false);
             holder.ivDownload.setVisibility(View.VISIBLE);
+            setBackground(holder.ivDownload);
 
             holder.ivDownload.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -351,6 +352,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.progress.setVisibility(View.GONE);
             holder.ivPlay.setVisibility(View.GONE);
             holder.ivDownload.setVisibility(View.VISIBLE);
+            setBackground(holder.ivDownload);
 
             holder.ivDownload.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -382,8 +384,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 holder.ivImage.setBackgroundResource(R.drawable.background_right);
             }
 
-            else
+            else {
                 setBackground(holder.ivImage);
+                setBackground(holder.ivPlay);
+            }
 
             if(holder.ivDownload!=null)
                 holder.ivDownload.setVisibility(View.GONE);

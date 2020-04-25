@@ -34,7 +34,7 @@ public class ApplicationClass extends Application
     public static ArrayList<String>members;
     public static String Groupname,GroupDp,groupkey,RenameGroup;
     public  static  int create,addmembers,activity, groupusers;
-    public  static boolean splash=false;
+    public  static boolean splash=true;
 
     @Override
     public void onCreate() {

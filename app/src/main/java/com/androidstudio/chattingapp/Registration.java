@@ -63,17 +63,7 @@ public class Registration extends AppCompatActivity {
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
-        
-        if(FirebaseAuth.getInstance().getCurrentUser() != null)
-        {
-            ApplicationClass.splash=true;
-            Intent intent=new Intent(Registration.this,MainActivity.class);
 
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            Registration.this.finish();
-            overridePendingTransition(0,0);
-            startActivity(intent);
-        }
 
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override

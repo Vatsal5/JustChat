@@ -122,7 +122,21 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         llSplash=findViewById(R.id.llsplash);
+
+        if(FirebaseAuth.getInstance().getCurrentUser()==null)
+        {
+
+            Intent intent=new Intent(this,Registration.class);
+
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            finish();
+            startActivity(intent);
+            ApplicationClass.splash=false;
+            overridePendingTransition(0,0);
+        }
+
         if(ApplicationClass.splash==true)
         {
 
@@ -251,6 +265,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         reference=database.getReference();
 
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null)
         currentUserNumber= FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
         lv=findViewById(R.id.lv);
@@ -1467,7 +1482,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         Log.d("destroy","App is killed");
 
-        Status("offline");
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null)
+            Status("offline");
     }
     public void Status(String Status)
     {
