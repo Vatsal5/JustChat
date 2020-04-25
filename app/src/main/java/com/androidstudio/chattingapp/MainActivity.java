@@ -1031,8 +1031,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                             ));
 
                                             long milliSecondsElapsed = date1.getTime() - date.getTime();
-                                            Log.d("poiu",date1.getTime()+"");
-                                            Log.d("poiu",date.getTime()+"");
+                                          //  Log.d("poiu",date1.getTime()+"");
+                                           // Log.d("poiu",date.getTime()+"");
                                            // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
                                             if(milliSecondsElapsed/(24*60*60*1000) >=3)
                                             {
@@ -1093,20 +1093,50 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletevideos").addChildEventListener(new ChildEventListener() {
                             @Override
                             public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+
+
+                                long millis=System.currentTimeMillis();
+                                java.sql.Date date1=new java.sql.Date(millis);
+
+
+//                                    if(date1.toString().substring(0,4).equals(dataSnapshot.getValue().toString().substring(1,5))
+//                                     && date1.toString().substring(5,7).equals(dataSnapshot.getValue().toString().substring(6,8))
+//                                    && (Integer.parseInt(date1.toString().substring(8,10))-Integer.parseInt(dataSnapshot.getValue().toString().substring(9,11)))>=1)
+//                                    {
+//                                        dataSnapshot.getRef().removeValue();
+//                                    }
+//                                    else if(date1.toString().substring(0,4).equals(dataSnapshot.getValue().toString().substring(1,5))
+//                                            && (Integer.parseInt(date1.toString().substring(5,7))-Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8)))>=1
+//                                            && (Integer.parseInt(date1.toString().substring(0,4))-Integer.parseInt(dataSnapshot.getValue().toString().substring(9,11)))>=1)
+//                                    {
+//                                        if(Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==1 || Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==3 ||
+//                                        Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==5 || Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==7
+//                                        ||Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==8 || Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==10 ||
+//                                                Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==12)
+//                                        {
+//                                            if(Integer.parseInt(dataSnapshot.getValue().toString().substring(9,11)==29))
+//                                                dataSnapshot.getRef().removeValue();
+//                                    }
+//
+//                                    }
+
+
+
                                 try {
 
 
-                                    long millis = System.currentTimeMillis();
-                                    java.sql.Date date1 = new java.sql.Date(millis);
                                     // get difference between two dates in MINUTES
-                                    Date date=new SimpleDateFormat("yyyy-mm-dd").parse(dataSnapshot.getValue().toString().substring(
+                                    Date date=new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot.getValue().toString().substring(
                                             dataSnapshot.getValue().toString().indexOf("h")-10,dataSnapshot.getValue().toString().indexOf("h")
                                     ));
 
                                     long milliSecondsElapsed = date1.getTime() - date.getTime();
-                                   // long diff = TimeUnit.DAYS.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
+                                    //  Log.d("poiu",date1.getTime()+"");
+                                    // Log.d("poiu",date.getTime()+"");
+                                    // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
                                     if(milliSecondsElapsed/(24*60*60*1000) >=3)
                                     {
+                                        // Log.d("poiu",diff+"");
                                         dataSnapshot.getRef().removeValue();
                                     }
                                 }
@@ -1115,6 +1145,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 } catch (java.text.ParseException e) {
                                     e.printStackTrace();
                                 }
+
+
+
                             }
 
                             @Override
@@ -1122,7 +1155,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                                 if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
                                 {
-
                                     StorageReference file1;
                                     file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
                                     file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -1138,11 +1170,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             }
 
                             @Override
-                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                            public void onChildRemoved(@NonNull final DataSnapshot dataSnapshot) {
 
                                 StorageReference file1;
                                 file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
                                 file1.delete();
+
 
                             }
 
@@ -1156,6 +1189,73 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                             }
                         });
+
+//                        FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletevideos").addChildEventListener(new ChildEventListener() {
+//                            @Override
+//                            public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+//                                try {
+//
+//
+//                                    long millis = System.currentTimeMillis();
+//                                    java.sql.Date date1 = new java.sql.Date(millis);
+//                                    // get difference between two dates in MINUTES
+//                                    Date date=new SimpleDateFormat("yyyy-mm-dd").parse(dataSnapshot.getValue().toString().substring(
+//                                            dataSnapshot.getValue().toString().indexOf("h")-10,dataSnapshot.getValue().toString().indexOf("h")
+//                                    ));
+//
+//                                    long milliSecondsElapsed = date1.getTime() - date.getTime();
+//                                   // long diff = TimeUnit.DAYS.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
+//                                    if(milliSecondsElapsed/(24*60*60*1000) >=3)
+//                                    {
+//                                        dataSnapshot.getRef().removeValue();
+//                                    }
+//                                }
+//                                catch (ParseException e) {
+//                                    e.printStackTrace();
+//                                } catch (java.text.ParseException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onChildChanged(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                                if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
+//                                {
+//
+//                                    StorageReference file1;
+//                                    file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
+//                                    file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                        @Override
+//                                        public void onSuccess(Void aVoid) {
+//                                            dataSnapshot.getRef().removeValue();
+//
+//                                        }
+//                                    });
+//
+//
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//                                StorageReference file1;
+//                                file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
+//                                file1.delete();
+//
+//                            }
+//
+//                            @Override
+//                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                            }
+//                        });
 
                         }
 

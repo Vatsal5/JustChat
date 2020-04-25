@@ -93,7 +93,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     DBHandler Handler;
     int y=0,z=0;
     String sender;
-    ChildEventListener imagereceiver, videoreceiver, chreceiver;
+    ChildEventListener imagereceiver, videoreceiver, chreceiver; ValueEventListener deletevideo,deleteimage;
     String defaultvalue;
     SharedPreferences pref,wallpaper;
 
@@ -1356,20 +1356,30 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         fos.write(buffer);
                         fos.flush();
                         fos.close();
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").child(message.getTime()+message.getDate()
-                                +message.getSender())
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                      deletevideo=  new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").child(dataSnapshot.getKey())
-                                                .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("h")-10))-1)+dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
+                                                .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("h")-10))-1)+dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")))
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").child(message.getTime()+message.getDate()
+                                                        +message.getSender())
+                                                        .removeEventListener(deletevideo);
+
+                                            }
+                                        });
                                     }
 
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
                                     }
-                                });
+                                };
+                       FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").child(message.getTime()+message.getDate()
+                                 +message.getSender())
+                                .addListenerForSingleValueEvent(deletevideo);
 
                         return Uri.fromFile(file);
                     } catch (Exception e) {
