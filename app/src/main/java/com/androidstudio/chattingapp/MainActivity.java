@@ -1104,8 +1104,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                     ));
 
                                     long milliSecondsElapsed = date1.getTime() - date.getTime();
-                                    long diff = TimeUnit.DAYS.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
-                                    if(diff >=3)
+                                   // long diff = TimeUnit.DAYS.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
+                                    if(milliSecondsElapsed/(24*60*60*1000) >=3)
                                     {
                                         dataSnapshot.getRef().removeValue();
                                     }
