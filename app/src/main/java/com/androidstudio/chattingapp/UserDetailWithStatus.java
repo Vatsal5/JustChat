@@ -6,16 +6,26 @@ public class UserDetailWithStatus {
     String uID;
     String url;
     String status;
+    String key;
 
     int selected;
 
-    public UserDetailWithStatus(String ph_number, String uID,String url,String status, int selected) {
+    public UserDetailWithStatus(String ph_number, String uID,String url,String status, int selected,String key) {
         this.ph_number = ph_number;
         this.uID = uID;
         this.url=url;
         this.status=status;
         this.selected=selected;
+        this.key=key;
 
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getPh_number() {

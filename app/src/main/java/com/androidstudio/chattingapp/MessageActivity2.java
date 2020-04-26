@@ -779,7 +779,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             if (!(type.equals(" "))) {
                 Date date = new Date();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
                 long millis = System.currentTimeMillis();
                 java.sql.Date date1 = new java.sql.Date(millis);
 

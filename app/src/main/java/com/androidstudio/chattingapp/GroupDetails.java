@@ -249,9 +249,9 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         if(!dataSnapshot1.getValue(String.class).equals(admin))
-                                            users.add(new UserDetailWithStatus(dataSnapshot1.getValue(String.class),null,dataSnapshot.getValue(String.class),null,0));
+                                            users.add(new UserDetailWithStatus(dataSnapshot1.getValue(String.class),null,dataSnapshot.getValue(String.class),null,0,null));
                                         else
-                                            users.add(new UserDetailWithStatus(dataSnapshot1.getValue(String.class),null,dataSnapshot.getValue(String.class),"admin",0));
+                                            users.add(new UserDetailWithStatus(dataSnapshot1.getValue(String.class),null,dataSnapshot.getValue(String.class),"admin",0,null));
 
                                         adapter.notifyDataSetChanged();
                                         tvParticipants.setText(users.size()+" Participants");
