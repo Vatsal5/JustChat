@@ -184,6 +184,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         else if(list.get(position).getLastmessage().equals(" "))
         {
             holder.ivImage.setVisibility(View.VISIBLE);
+            holder.tvlastmessage.setVisibility(View.VISIBLE);
             holder.ivImage.setImageResource(R.drawable.image);
 
             holder.tvlastmessage.setText("Image");

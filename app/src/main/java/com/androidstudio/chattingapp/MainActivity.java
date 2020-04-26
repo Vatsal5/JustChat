@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     DatabaseReference reference1;
     DatabaseReference UserStatus;
     ChildEventListener chreceiver;
-    ValueEventListener dataCreater;
+    ValueEventListener dataCreater,deleteimage,deletevideo,deleteGroupimages,deleteGroupvideos;
     DBHandler Handler;
     LinearLayoutManager linearLayoutManager;
 
@@ -889,10 +889,59 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                             // to delete a 3 days old image in one
 
-                            reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
-                                    .getPhoneNumber()).child("info").child("images").addChildEventListener(new ChildEventListener() {
+                            deleteimage=new ValueEventListener() {
                                 @Override
-                                public void onChildAdded(@NonNull final DataSnapshot dataSnapshot1, @Nullable String s) {
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                    for( final DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                                        long millis=System.currentTimeMillis();
+                                        java.sql.Date date1=new java.sql.Date(millis);
+                                        Date date= null;
+                                        try {
+                                            date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot1.getValue().toString().substring(
+                                                    5,15
+                                            ));
+                                        } catch (java.text.ParseException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        long milliSecondsElapsed = date1.getTime() - date.getTime();
+                                        //  Log.d("poiu",date1.getTime()+"");
+                                        // Log.d("poiu",date.getTime()+"");
+                                        // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
+                                        if(milliSecondsElapsed/(24*60*60*1000) >=3)
+                                        {
+                                            // Log.d("poiu",diff+"");
+                                            StorageReference file1;
+                                            file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot1.getValue().toString().substring(15));
+                                            file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    dataSnapshot1.getRef().removeValue();
+
+                                                }
+                                            });
+                                        }}
+
+
+                                    reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
+                                            .getPhoneNumber()).child("info").child("images").removeEventListener(deletevideo);
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            };
+                            reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
+                                    .getPhoneNumber()).child("info").child("images").addListenerForSingleValueEvent(deleteimage);
+
+                        deletevideo=new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                    for( final DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
                                     long millis=System.currentTimeMillis();
                                     java.sql.Date date1=new java.sql.Date(millis);
                                     Date date= null;
@@ -920,21 +969,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                                             }
                                         });
-                                    }
-                                }
+                                    }}
 
-                                @Override
-                                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                                }
-
-                                @Override
-                                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                                }
-
-                                @Override
-                                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                    reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
+                                            .getPhoneNumber()).child("info").child("videos").removeEventListener(deletevideo);
 
                                 }
 
@@ -942,62 +981,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                                 }
-                            });
-
+                            };
                             reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
-                                    .getPhoneNumber()).child("info").child("videos").addChildEventListener(new ChildEventListener() {
-                                @Override
-                                public void onChildAdded(@NonNull final DataSnapshot dataSnapshot1, @Nullable String s) {
-                                    long millis=System.currentTimeMillis();
-                                    java.sql.Date date1=new java.sql.Date(millis);
-                                    Date date= null;
-                                    try {
-                                        date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot1.getValue().toString().substring(
-                                                5,15
-                                        ));
-                                    } catch (java.text.ParseException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    long milliSecondsElapsed = date1.getTime() - date.getTime();
-                                    //  Log.d("poiu",date1.getTime()+"");
-                                    // Log.d("poiu",date.getTime()+"");
-                                    // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
-                                    if(milliSecondsElapsed/(24*60*60*1000) >=3)
-                                    {
-                                        // Log.d("poiu",diff+"");
-                                        StorageReference file1;
-                                        file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot1.getValue().toString().substring(15));
-                                        file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                dataSnapshot1.getRef().removeValue();
-
-                                            }
-                                        });
-                                    }
-                                }
-
-                                @Override
-                                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                                }
-
-                                @Override
-                                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                                }
-
-                                @Override
-                                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
+                                    .getPhoneNumber()).child("info").child("videos").addListenerForSingleValueEvent(deletevideo);
 
 
                             //  Log.d("contacts",dataSnapshot.getKey());
@@ -1121,13 +1107,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                             }
                                         }
                                 );
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deleteimages").addChildEventListener(new ChildEventListener() {
+                        deleteGroupimages=new ValueEventListener() {
                             @Override
-                            public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-
-                                long millis=System.currentTimeMillis();
-                                java.sql.Date date1=new java.sql.Date(millis);
+                                for ( final DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                    long millis = System.currentTimeMillis();
+                                    java.sql.Date date1 = new java.sql.Date(millis);
 
 
 //                                    if(date1.toString().substring(0,4).equals(dataSnapshot.getValue().toString().substring(1,5))
@@ -1152,174 +1138,136 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                                    }
 
 
+                                    try {
 
-                                        try {
 
+                                        // get difference between two dates in MINUTES
+                                        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot.getValue().toString().substring(
+                                                dataSnapshot.getValue().toString().indexOf("h") - 10, dataSnapshot.getValue().toString().indexOf("h")
+                                        ));
 
-                                            // get difference between two dates in MINUTES
-                                            Date date=new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot.getValue().toString().substring(
-                                                    dataSnapshot.getValue().toString().indexOf("h")-10,dataSnapshot.getValue().toString().indexOf("h")
-                                            ));
+                                        long milliSecondsElapsed = date1.getTime() - date.getTime();
+                                        //  Log.d("poiu",date1.getTime()+"");
+                                        // Log.d("poiu",date.getTime()+"");
+                                        // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
+                                        if (milliSecondsElapsed / (24 * 60 * 60 * 1000) >= 3) {
+                                            // Log.d("poiu",diff+"");
 
-                                            long milliSecondsElapsed = date1.getTime() - date.getTime();
-                                          //  Log.d("poiu",date1.getTime()+"");
-                                           // Log.d("poiu",date.getTime()+"");
-                                           // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
-                                            if(milliSecondsElapsed/(24*60*60*1000) >=3)
-                                            {
-                                               // Log.d("poiu",diff+"");
-                                                dataSnapshot.getRef().removeValue();
-                                            }
+                                            StorageReference file1;
+                                            file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot1.getValue().toString().substring(dataSnapshot1
+                                            .getValue().toString().indexOf("h")));
+                                            file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    dataSnapshot1.getRef().removeValue();
+                                                }});
                                         }
-                                        catch (ParseException e) {
-                                            e.printStackTrace();
-                                        } catch (java.text.ParseException e) {
-                                            e.printStackTrace();
-                                        }
-
-
-
-                            }
-
-                            @Override
-                            public void onChildChanged(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
-
-                                if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
-                                {
-                                    StorageReference file1;
-                                    file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
-                                    file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            dataSnapshot.getRef().removeValue();
-
-                                        }
-                                    });
-
-
-                                }
-                            }
-
-                            @Override
-                            public void onChildRemoved(@NonNull final DataSnapshot dataSnapshot) {
-
-                                StorageReference file1;
-                                file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
-                                file1.delete();
-
-
-                            }
-
-                            @Override
-                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletevideos").addChildEventListener(new ChildEventListener() {
-                            @Override
-                            public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
-
-
-                                long millis=System.currentTimeMillis();
-                                java.sql.Date date1=new java.sql.Date(millis);
-
-
-//                                    if(date1.toString().substring(0,4).equals(dataSnapshot.getValue().toString().substring(1,5))
-//                                     && date1.toString().substring(5,7).equals(dataSnapshot.getValue().toString().substring(6,8))
-//                                    && (Integer.parseInt(date1.toString().substring(8,10))-Integer.parseInt(dataSnapshot.getValue().toString().substring(9,11)))>=1)
-//                                    {
-//                                        dataSnapshot.getRef().removeValue();
-//                                    }
-//                                    else if(date1.toString().substring(0,4).equals(dataSnapshot.getValue().toString().substring(1,5))
-//                                            && (Integer.parseInt(date1.toString().substring(5,7))-Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8)))>=1
-//                                            && (Integer.parseInt(date1.toString().substring(0,4))-Integer.parseInt(dataSnapshot.getValue().toString().substring(9,11)))>=1)
-//                                    {
-//                                        if(Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==1 || Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==3 ||
-//                                        Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==5 || Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==7
-//                                        ||Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==8 || Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==10 ||
-//                                                Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==12)
-//                                        {
-//                                            if(Integer.parseInt(dataSnapshot.getValue().toString().substring(9,11)==29))
-//                                                dataSnapshot.getRef().removeValue();
-//                                    }
-//
-//                                    }
-
-
-
-                                try {
-
-
-                                    // get difference between two dates in MINUTES
-                                    Date date=new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot.getValue().toString().substring(
-                                            dataSnapshot.getValue().toString().indexOf("h")-10,dataSnapshot.getValue().toString().indexOf("h")
-                                    ));
-
-                                    long milliSecondsElapsed = date1.getTime() - date.getTime();
-                                    //  Log.d("poiu",date1.getTime()+"");
-                                    // Log.d("poiu",date.getTime()+"");
-                                    // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
-                                    if(milliSecondsElapsed/(24*60*60*1000) >=3)
-                                    {
-                                        // Log.d("poiu",diff+"");
-                                        dataSnapshot.getRef().removeValue();
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    } catch (java.text.ParseException e) {
+                                        e.printStackTrace();
                                     }
-                                }
-                                catch (ParseException e) {
-                                    e.printStackTrace();
-                                } catch (java.text.ParseException e) {
-                                    e.printStackTrace();
-                                }
-
-
-
-                            }
-
-                            @Override
-                            public void onChildChanged(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
-
-                                if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
-                                {
-                                    StorageReference file1;
-                                    file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
-                                    file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            dataSnapshot.getRef().removeValue();
-
-                                        }
-                                    });
 
 
                                 }
-                            }
-
-                            @Override
-                            public void onChildRemoved(@NonNull final DataSnapshot dataSnapshot) {
-
-                                StorageReference file1;
-                                file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
-                                file1.delete();
-
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deleteimages").removeEventListener(deleteGroupimages);
 
                             }
 
-                            @Override
-                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                            }
+
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
 
                             }
-                        });
+                        };
+
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deleteimages").addListenerForSingleValueEvent(deleteGroupimages);
+
+
+
+                        deleteGroupvideos=new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                        for ( final DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                            long millis = System.currentTimeMillis();
+                                            java.sql.Date date1 = new java.sql.Date(millis);
+
+
+//                                    if(date1.toString().substring(0,4).equals(dataSnapshot.getValue().toString().substring(1,5))
+//                                     && date1.toString().substring(5,7).equals(dataSnapshot.getValue().toString().substring(6,8))
+//                                    && (Integer.parseInt(date1.toString().substring(8,10))-Integer.parseInt(dataSnapshot.getValue().toString().substring(9,11)))>=1)
+//                                    {
+//                                        dataSnapshot.getRef().removeValue();
+//                                    }
+//                                    else if(date1.toString().substring(0,4).equals(dataSnapshot.getValue().toString().substring(1,5))
+//                                            && (Integer.parseInt(date1.toString().substring(5,7))-Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8)))>=1
+//                                            && (Integer.parseInt(date1.toString().substring(0,4))-Integer.parseInt(dataSnapshot.getValue().toString().substring(9,11)))>=1)
+//                                    {
+//                                        if(Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==1 || Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==3 ||
+//                                        Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==5 || Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==7
+//                                        ||Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==8 || Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==10 ||
+//                                                Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==12)
+//                                        {
+//                                            if(Integer.parseInt(dataSnapshot.getValue().toString().substring(9,11)==29))
+//                                                dataSnapshot.getRef().removeValue();
+//                                    }
+//
+//                                    }
+
+
+                                            try {
+
+
+                                                // get difference between two dates in MINUTES
+                                                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot.getValue().toString().substring(
+                                                        dataSnapshot.getValue().toString().indexOf("h") - 10, dataSnapshot.getValue().toString().indexOf("h")
+                                                ));
+
+                                                long milliSecondsElapsed = date1.getTime() - date.getTime();
+                                                //  Log.d("poiu",date1.getTime()+"");
+                                                // Log.d("poiu",date.getTime()+"");
+                                                // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
+                                                if (milliSecondsElapsed / (24 * 60 * 60 * 1000) >= 3) {
+                                                    // Log.d("poiu",diff+"");
+
+                                                    StorageReference file1;
+                                                    file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot1.getValue().toString().substring(dataSnapshot1
+                                                            .getValue().toString().indexOf("h")));
+                                                    file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            dataSnapshot1.getRef().removeValue();
+                                                        }});
+                                                }
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            } catch (java.text.ParseException e) {
+                                                e.printStackTrace();
+                                            }
+
+
+                                        }
+                                        FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletevideos").removeEventListener(deleteGroupvideos);
+
+
+
+                            }
+
+
+
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        };
+
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletevideos").addListenerForSingleValueEvent(deleteGroupvideos);
+
+
 
 //                        FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletevideos").addChildEventListener(new ChildEventListener() {
 //                            @Override
