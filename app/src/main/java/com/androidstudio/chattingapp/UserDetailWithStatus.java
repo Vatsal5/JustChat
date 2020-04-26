@@ -6,6 +6,7 @@ public class UserDetailWithStatus {
     String uID;
     String url;
     String status;
+
     int selected;
 
     public UserDetailWithStatus(String ph_number, String uID,String url,String status, int selected) {

@@ -604,7 +604,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         }
 
         else {
-            tvtitle.setText("Forward To");
+            // tvtitle.setText("Forward To");
             Intent intent = new Intent(FriendsActivity.this, MessageActivity.class);
             intent.putExtra("title", contacts1.get(index).getuID());
 
@@ -615,11 +615,26 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
             }
             if (getIntent().getIntExtra("path", 2) == 1) {
-                intent.putExtra("path", 2);
-                intent.putExtra("type", getIntent().getStringExtra("type"));
-                intent.putExtra("message", getIntent().getStringExtra("message"));
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                this.finish();
+                if(contacts1.get(index).getPh_number().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()) ||
+                        ("+91"+contacts1.get(index).getPh_number()).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                {
+                    Intent intent1=new Intent(FriendsActivity.this,MessageActivity2.class);
+                    intent1.putExtra("groupname", contacts1.get(index).getuID());
+
+                    intent1.putExtra("type", getIntent().getStringExtra("type"));
+                    intent1.putExtra("path", 2);
+                    intent1.putExtra("message", getIntent().getStringExtra("message"));
+                    this.finish();
+                    startActivity(intent1);
+
+                }
+                else {
+                    intent.putExtra("path", 2);
+                    intent.putExtra("type", getIntent().getStringExtra("type"));
+                    intent.putExtra("message", getIntent().getStringExtra("message"));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    this.finish();
+                }
             }
             intent.putExtra("profile", contacts1.get(index).getUrl());
             startActivity(intent);

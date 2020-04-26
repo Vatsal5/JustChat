@@ -886,6 +886,120 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         if (!(dataSnapshot.getKey().equals("name") || dataSnapshot.getKey().equals("groups") || dataSnapshot.getKey().equals("profile") ||
                                 dataSnapshot.getKey().equals("status"))) {
+
+                            // to delete a 3 days old image in one
+
+                            reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
+                                    .getPhoneNumber()).child("info").child("images").addChildEventListener(new ChildEventListener() {
+                                @Override
+                                public void onChildAdded(@NonNull final DataSnapshot dataSnapshot1, @Nullable String s) {
+                                    long millis=System.currentTimeMillis();
+                                    java.sql.Date date1=new java.sql.Date(millis);
+                                    Date date= null;
+                                    try {
+                                        date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot1.getValue().toString().substring(
+                                                5,15
+                                        ));
+                                    } catch (java.text.ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    long milliSecondsElapsed = date1.getTime() - date.getTime();
+                                    //  Log.d("poiu",date1.getTime()+"");
+                                    // Log.d("poiu",date.getTime()+"");
+                                    // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
+                                    if(milliSecondsElapsed/(24*60*60*1000) >=3)
+                                    {
+                                        // Log.d("poiu",diff+"");
+                                        StorageReference file1;
+                                        file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot1.getValue().toString().substring(15));
+                                        file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                dataSnapshot1.getRef().removeValue();
+
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                                }
+
+                                @Override
+                                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                                }
+
+                                @Override
+                                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+                            reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
+                                    .getPhoneNumber()).child("info").child("videos").addChildEventListener(new ChildEventListener() {
+                                @Override
+                                public void onChildAdded(@NonNull final DataSnapshot dataSnapshot1, @Nullable String s) {
+                                    long millis=System.currentTimeMillis();
+                                    java.sql.Date date1=new java.sql.Date(millis);
+                                    Date date= null;
+                                    try {
+                                        date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot1.getValue().toString().substring(
+                                                5,15
+                                        ));
+                                    } catch (java.text.ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    long milliSecondsElapsed = date1.getTime() - date.getTime();
+                                    //  Log.d("poiu",date1.getTime()+"");
+                                    // Log.d("poiu",date.getTime()+"");
+                                    // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
+                                    if(milliSecondsElapsed/(24*60*60*1000) >=3)
+                                    {
+                                        // Log.d("poiu",diff+"");
+                                        StorageReference file1;
+                                        file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot1.getValue().toString().substring(15));
+                                        file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                dataSnapshot1.getRef().removeValue();
+
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                                }
+
+                                @Override
+                                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                                }
+
+                                @Override
+                                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+
                             //  Log.d("contacts",dataSnapshot.getKey());
                             int tell = 0;
 
@@ -915,6 +1029,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                                         contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), "", "null", 2
                                                 , "", "",null,null));
+
+
                                     }
                                 }
                             }
