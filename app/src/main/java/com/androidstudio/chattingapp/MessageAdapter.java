@@ -166,6 +166,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull final MessageAdapter.ViewHolder holder, final int position) {
 
+        if(holder.tvError!=null)
+            holder.tvError.setVisibility(View.GONE);
+
         if(holder.tvSender!=null)
         {
             if(pref.getString(messages.get(position).getSender(),"null").equals("null"))
@@ -258,40 +261,43 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             if(holder.llDownload!=null)
                 holder.llDownload.setVisibility(View.GONE);
 
-            RequestOptions options = new RequestOptions();
-            options.diskCacheStrategy(DiskCacheStrategy.NONE);
-            options.skipMemoryCache(true);
+//            RequestOptions options = new RequestOptions();
+//            options.diskCacheStrategy(DiskCacheStrategy.NONE);
+//            options.skipMemoryCache(true);
+//
+//            if (isValidContextForGlide(context.getApplicationContext())) {
+//                Glide.with(context).setDefaultRequestOptions(options).load(messages.get(position).getMessage()).addListener(new RequestListener<Drawable>() {
+//                    @Override
+//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                        holder.ivImage.setClickable(false);
+//                        holder.tvError.setVisibility(View.VISIBLE);
+//
+//                        if(!messages.get(position).getMessage().equals("null"))
+//                            Activity.OnFileDeleted(position);
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                        return false;
+//                    }
+//                }).into(holder.ivImage);
 
-            if (isValidContextForGlide(context.getApplicationContext())) {
-                Glide.with(context).setDefaultRequestOptions(options).load(messages.get(position).getMessage()).addListener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        holder.ivImage.setClickable(false);
-                        holder.tvError.setVisibility(View.VISIBLE);
+            holder.ivImage.setImageURI(Uri.parse(messages.get(position).getMessage()));
+            if(holder.ivImage.getDrawable() == null)
+            {
+                holder.ivImage.setClickable(false);
+                holder.tvError.setVisibility(View.VISIBLE);
 
-                        if(!messages.get(position).getMessage().equals("null"))
-                            Activity.OnFileDeleted(position);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        holder.ivImage.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Activity.showImage(position);
-                            }
-                        });
-                        return false;
-                    }
-                }).into(holder.ivImage);
+                if(!messages.get(position).getMessage().equals("null"))
+                    Activity.OnFileDeleted(position);
+            }
 
                 if (messages.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                     holder.ivImage.setBackgroundResource(R.drawable.background_right);
                 }
                 else
                     setBackground(holder.ivImage);
-            }
 
         } else if (messages.get(position).getDownloaded() == 2) // when sender sends the image
         {
@@ -300,12 +306,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
             holder.tvError.setVisibility(View.GONE);
 
-            holder.ivImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Activity.showImage(position);
-                }
-            });
 
             Glide.with(context.getApplicationContext()).load(messages.get(position).getMessage()).into(holder.ivImage);
              Activity.sendImage(position);
@@ -316,13 +316,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
             holder.tvError.setVisibility(View.GONE);
-
-            holder.ivImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Activity.showImage(position);
-                }
-            });
 
             Glide.with(context.getApplicationContext()).load(messages.get(position).getMessage()).into(holder.ivImage);
         }else if(messages.get(position).getDownloaded() == 4) // when request has been sent to download image
@@ -457,6 +450,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivImage.setClickable(false);
             holder.tvError.setVisibility(View.GONE);
         }
+
+        if(!messages.get(position).getType().equals("video") && !messages.get(position).getMessage().equals("null") && !messages.get(position).getMessage().substring(0,4).equals("http"))
+            holder.ivImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Activity.showImage(position);
+                }
+            });
 
 
         if (holder.tvTime != null)
