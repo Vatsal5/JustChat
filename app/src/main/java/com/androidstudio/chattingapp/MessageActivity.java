@@ -60,6 +60,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -1861,11 +1865,16 @@ if(getIntent().getIntExtra("path",1)==2) {
     //***********************************************************************************************************************************************
     @Override
     public void showImage(int index) {
-        Intent intent = new Intent(MessageActivity.this,ShowImage.class);
 
-        intent.putExtra("source",chats.get(index).getMessage());
+        if(!chats.get(index).getMessage().equals("null")) {
+            Log.d("URIURI",chats.get(index).getMessage());
 
-        startActivity(intent);
+            Intent intent = new Intent(MessageActivity.this, ShowImage.class);
+
+            intent.putExtra("source", chats.get(index).getMessage());
+
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -1904,61 +1913,79 @@ if(getIntent().getIntExtra("path",1)==2) {
         startActivity(intent);
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void Onlongclick(final int index) {
 
-        if(!(chats.get(index).getType().equals("video") || chats.get(index).getType().equals("image"))) {
-            String[] choices = {"Copy", "Forward"};
+        if (!(chats.get(index).getMessage().equals("null") || chats.get(index).getMessage().substring(0, 4).equals("http"))) {
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+            if (!(chats.get(index).getType().equals("video") || chats.get(index).getType().equals("image"))) {
+                String[] choices = {"Copy", "Forward"};
 
-            builder.setTitle("Choose")
-                    .setItems(choices, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            switch (i) {
-                                case 0:
-                                    ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                    ClipData clip = ClipData.newPlainText("copy", chats.get(index).getMessage());
-                                    clipboard.setPrimaryClip(clip);
-                                    break;
-                                case 1:
-                                    Intent intent = new Intent(MessageActivity.this, FriendsActivity.class);
-                                    intent.putExtra("type", chats.get(index).getType());
-                                    intent.putExtra("path", 1);
-                                    intent.putExtra("message", chats.get(index).getMessage());
+                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
 
-                                    startActivity(intent);
-                                    break;
+                builder.setTitle("Choose")
+                        .setItems(choices, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                switch (i) {
+                                    case 0:
+                                        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                        ClipData clip = ClipData.newPlainText("copy", chats.get(index).getMessage());
+                                        clipboard.setPrimaryClip(clip);
+                                        break;
+                                    case 1:
+                                        Intent intent = new Intent(MessageActivity.this, FriendsActivity.class);
+                                        intent.putExtra("type", chats.get(index).getType());
+                                        intent.putExtra("path", 1);
+                                        intent.putExtra("message", chats.get(index).getMessage());
+
+                                        startActivity(intent);
+                                        break;
+                                }
                             }
-                        }
-                    });
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        }
-        else
-        {
-            String [] choices = {"Forward"};
-            AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
 
-            builder.setItems(choices, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            switch (i) {
-                                case 0:
-                                    Intent intent = new Intent(MessageActivity.this, FriendsActivity.class);
-                                    intent.putExtra("type", chats.get(index).getType());
-                                    intent.putExtra("path", 1);
-                                    intent.putExtra("message", chats.get(index).getMessage());
 
-                                    startActivity(intent);
-                                    break;
-                            }
+
+                String[] choices = {"Forward"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+
+                builder.setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case 0:
+                                Intent intent = new Intent(MessageActivity.this, FriendsActivity.class);
+                                intent.putExtra("type", chats.get(index).getType());
+                                intent.putExtra("path", 1);
+                                intent.putExtra("message", chats.get(index).getMessage());
+
+                                startActivity(intent);
+                                break;
                         }
-                    });
-            AlertDialog dialog = builder.create();
-            dialog.show();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+            }
+
         }
+    }
+
+    @Override
+    public void OnFileDeleted(int index) {
+
+        chats.get(index).setMessage("null");
+
+        Handler.UpdateMessage(chats.get(index));
+
+        if(!Messages.isComputingLayout())
+            adapter.notifyDataSetChanged();
 
     }
 
@@ -1993,6 +2020,11 @@ if(getIntent().getIntExtra("path",1)==2) {
             InputStream urlInputStream = null;
 
             URLConnection urlConnection;
+
+            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+
+            if(!imagesfolder.exists())
+                imagesfolder.mkdirs();
 
             File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".mp4");
 
@@ -2033,7 +2065,11 @@ if(getIntent().getIntExtra("path",1)==2) {
                     Log.e("8ERROR", "Buffer size is zero ! & returning 'false'.......");
 
                 }
-            } catch (MalformedURLException e) {
+            }catch (FileNotFoundException e){
+
+                return null;
+            }
+            catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -2074,6 +2110,30 @@ if(getIntent().getIntExtra("path",1)==2) {
                 }
 
             }
+            else
+            {
+                message.setDownloaded(101);
+                Handler.UpdateMessage(message);
+
+                if(!MessageActivity.this.isDestroyed())
+                {
+                    chats.get(index).setDownloaded(101);
+                    adapter.notifyDataSetChanged();
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+                builder.setTitle("Could not download Video");
+                builder.setMessage("Please ask "+pref1.getString(getIntent().getStringExtra("title"),getIntent().getStringExtra("title"))+
+                        " to resend the video")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
         }
     }
 
@@ -2102,6 +2162,11 @@ if(getIntent().getIntExtra("path",1)==2) {
             InputStream urlInputStream = null;
 
             URLConnection urlConnection;
+
+            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+
+            if(!imagesfolder.exists())
+                imagesfolder.mkdirs();
 
             File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".jpg");
 
@@ -2143,7 +2208,11 @@ if(getIntent().getIntExtra("path",1)==2) {
                     Log.e("8ERROR", "Buffer size is zero ! & returning 'false'.......");
 
                 }
-            } catch (MalformedURLException e) {
+            }
+            catch (FileNotFoundException e){
+                return null;
+            }
+            catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -2179,6 +2248,29 @@ if(getIntent().getIntExtra("path",1)==2) {
                     overridePendingTransition(0, 0);
                 }
 
+            }
+            else{
+                message.setDownloaded(0);
+                Handler.UpdateMessage(message);
+
+                if(!MessageActivity.this.isDestroyed())
+                {
+                    chats.get(index).setDownloaded(0);
+                    adapter.notifyDataSetChanged();
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+                builder.setTitle("Could not download Image");
+                builder.setMessage("Please ask "+pref1.getString(getIntent().getStringExtra("title"),getIntent().getStringExtra("title"))+
+                        " to resend the image")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         }
     }

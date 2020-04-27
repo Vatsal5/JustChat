@@ -23,6 +23,7 @@
         android:layout_marginLeft="8dp"
         android:background="@drawable/background_left"
         android:cropToPadding="true"
+        android:clickable="false"
         android:paddingTop="23dp"
         android:paddingLeft="6dp"
         android:paddingRight="6dp"
@@ -68,19 +69,51 @@
         app:layout_constraintRight_toRightOf="@+id/ivImage"
         app:layout_constraintBottom_toBottomOf="@+id/ivImage" />
 
-    <ImageView
-        android:id="@+id/ivDownload"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+    <LinearLayout
+        android:id="@+id/llDownload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:clickable="true"
         app:layout_constraintTop_toTopOf="@+id/ivImage"
         app:layout_constraintLeft_toLeftOf="@+id/ivImage"
         app:layout_constraintRight_toRightOf="@+id/ivImage"
         app:layout_constraintBottom_toBottomOf="@+id/ivImage"
-        app:srcCompat="@drawable/download"
-        android:padding="7dp"
-        android:clickable="true"
+        android:paddingRight="10dp"
+        android:background="@drawable/black1">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/download"
+            android:padding="7dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="VIDEO"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:textColor="#FFFFFF"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvError"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Sorry,this video does not exist on your phone anymore"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="@+id/ivImage"
+        app:layout_constraintLeft_toLeftOf="@+id/ivImage"
+        app:layout_constraintRight_toRightOf="@+id/ivImage"
+        app:layout_constraintBottom_toBottomOf="@+id/ivImage"
+        android:paddingLeft="10dp"
         android:visibility="gone"
-        android:background="@drawable/black"/>
+        android:paddingRight="10dp"/>
 
     <ProgressBar
         android:id="@+id/progress"

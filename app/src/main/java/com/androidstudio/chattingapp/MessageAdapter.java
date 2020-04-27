@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
@@ -74,6 +75,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public void Downloadvideo(int index);
         public void showVideo(int index);
         public void Onlongclick(int index);
+        public void OnFileDeleted(int index);
     }
 
     static ImageSelected Activity;
@@ -88,11 +90,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTime,tvDate,tvSender;
+        TextView tvTime,tvDate,tvSender,tvError;
         EmojiTextView tvMessage;
-        ImageView ivImage,ivPlay,ivProfile,ivTyping,ivDownload;
+        ImageView ivImage,ivPlay,ivProfile,ivTyping;
         ProgressBar progress;
-        LinearLayout llMessageRight,llMesageLeft,llTyping;
+        LinearLayout llMessageRight,llMesageLeft,llTyping,llDownload;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -107,9 +109,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             ivPlay = itemView.findViewById(R.id.ivPlay);
             ivTyping = itemView.findViewById(R.id.ivTyping);
             tvSender = itemView.findViewById(R.id.tvSender);
-            ivDownload = itemView.findViewById(R.id.ivDownload);
+            llDownload = itemView.findViewById(R.id.llDownload);
             llMesageLeft = itemView.findViewById(R.id.llMessageLeft);
             llTyping = itemView.findViewById(R.id.llTyping);
+            tvError = itemView.findViewById(R.id.tvError);
         }
     }
 
@@ -180,6 +183,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                }
            });
        }
+
+
         if( holder.tvMessage!=null) {
             holder.tvMessage.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -190,14 +195,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             });
         }
 
-        if (holder.ivImage != null  &&  !messages.get(position).getType().equals("video")) {
-            holder.ivImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Activity.showImage(position);
-                }
-            });
-        }
         if(holder.ivProfile!=null) {
             if ((messages.get(position).getGroupName().equals("null"))  ) {
                 // holder.ivProfile.setVisibility(View.VISIBLE);
@@ -237,38 +234,54 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.progress.setVisibility(View.GONE);
             holder.ivImage.setImageResource(0);
             setBackground(holder.ivImage);
-            holder.ivImage.setClickable(false);
-            holder.ivDownload.setVisibility(View.VISIBLE);
+            holder.tvError.setVisibility(View.GONE);
+            holder.llDownload.setVisibility(View.VISIBLE);
 
-            holder.ivDownload.setOnClickListener(new View.OnClickListener() {
+            holder.llDownload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     holder.progress.setVisibility(View.VISIBLE);
-                    holder.ivDownload.setVisibility(View.GONE);
+                    holder.llDownload.setVisibility(View.GONE);
                     Activity.downloadImage(position);
                 }
             });
 
+            holder.ivImage.setClickable(false);
+
         } else if (messages.get(position).getDownloaded() == 1) // image is sent or downloaded successfully
         {
             holder.progress.setVisibility(View.GONE);
+            holder.ivImage.setClickable(false);
 
-            if(holder.ivDownload!=null)
-                holder.ivDownload.setVisibility(View.GONE);
+            holder.tvError.setVisibility(View.GONE);
 
-            RequestOptions requestOptions = new RequestOptions();
-            requestOptions.error(R.drawable.error);
+            if(holder.llDownload!=null)
+                holder.llDownload.setVisibility(View.GONE);
+
+            RequestOptions options = new RequestOptions();
+            options.diskCacheStrategy(DiskCacheStrategy.NONE);
+            options.skipMemoryCache(true);
 
             if (isValidContextForGlide(context.getApplicationContext())) {
-                Glide.with(context).setDefaultRequestOptions(requestOptions).load(messages.get(position).getMessage()).addListener(new RequestListener<Drawable>() {
+                Glide.with(context).setDefaultRequestOptions(options).load(messages.get(position).getMessage()).addListener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         holder.ivImage.setClickable(false);
+                        holder.tvError.setVisibility(View.VISIBLE);
+
+                        if(!messages.get(position).getMessage().equals("null"))
+                            Activity.OnFileDeleted(position);
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        holder.ivImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Activity.showImage(position);
+                            }
+                        });
                         return false;
                     }
                 }).into(holder.ivImage);
@@ -285,6 +298,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
+            holder.tvError.setVisibility(View.GONE);
+
+            holder.ivImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Activity.showImage(position);
+                }
+            });
 
             Glide.with(context.getApplicationContext()).load(messages.get(position).getMessage()).into(holder.ivImage);
              Activity.sendImage(position);
@@ -294,15 +315,24 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
+            holder.tvError.setVisibility(View.GONE);
+
+            holder.ivImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Activity.showImage(position);
+                }
+            });
 
             Glide.with(context.getApplicationContext()).load(messages.get(position).getMessage()).into(holder.ivImage);
         }else if(messages.get(position).getDownloaded() == 4) // when request has been sent to download image
         {
             holder.progress.setVisibility(View.VISIBLE);
-            holder.ivDownload.setVisibility(View.GONE);
+            holder.llDownload.setVisibility(View.GONE);
             holder.ivImage.setImageResource(0);
             setBackground(holder.ivImage);
             holder.ivImage.setClickable(false);
+            holder.tvError.setVisibility(View.GONE);
         }
         else if (messages.get(position).getDownloaded() == -2) // when text message is being sent
         {
@@ -331,6 +361,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivPlay.setVisibility(View.GONE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
+            holder.tvError.setVisibility(View.GONE);
 
             holder.ivImage.setClickable(false);
 
@@ -341,6 +372,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
+            holder.tvError.setVisibility(View.GONE);
 
             holder.ivImage.setClickable(false);
         }
@@ -350,13 +382,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             setBackground(holder.ivImage);
             holder.progress.setVisibility(View.GONE);
             holder.ivPlay.setVisibility(View.GONE);
-            holder.ivDownload.setVisibility(View.VISIBLE);
+            holder.llDownload.setVisibility(View.VISIBLE);
+            holder.tvError.setVisibility(View.GONE);
 
-            holder.ivDownload.setOnClickListener(new View.OnClickListener() {
+            holder.llDownload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     holder.progress.setVisibility(View.VISIBLE);
-                    holder.ivDownload.setVisibility(View.GONE);
+                    holder.llDownload.setVisibility(View.GONE);
                     Activity.Downloadvideo(position);
                 }
             });
@@ -365,18 +398,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         else if(messages.get(position).getDownloaded()==102) // when video is sent or downloaded successfully
         {
-            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
             holder.progress.setVisibility(View.GONE);
-            holder.ivPlay.setVisibility(View.VISIBLE);
-
             holder.ivImage.setClickable(false);
 
-            holder.ivPlay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Activity.showVideo(position);
-                }
-            });
+            if(holder.llDownload!=null)
+                holder.llDownload.setVisibility(View.GONE);
 
             if (messages.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                 holder.ivImage.setBackgroundResource(R.drawable.background_right);
@@ -387,17 +413,49 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 setBackground(holder.ivPlay);
             }
 
-            if(holder.ivDownload!=null)
-                holder.ivDownload.setVisibility(View.GONE);
+            RequestOptions options = new RequestOptions();
+            options.diskCacheStrategy(DiskCacheStrategy.NONE);
+            options.skipMemoryCache(true);
+
+            Glide.with(context).setDefaultRequestOptions(options).load(messages.get(position).getMessage()).addListener(new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                    holder.ivPlay.setVisibility(View.GONE);
+                    holder.tvError.setVisibility(View.VISIBLE);
+
+                    if(!messages.get(position).getMessage().equals("null"))
+                        Activity.OnFileDeleted(position);
+
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    holder.ivPlay.setVisibility(View.VISIBLE);
+                    holder.tvError.setVisibility(View.GONE);
+
+                    holder.ivPlay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Activity.showVideo(position);
+                        }
+                    });
+                    return false;
+                }
+            }).into(holder.ivImage);
+
+
         }
         else if(messages.get(position).getDownloaded() == 104) // when request has been sent to download video
         {
             holder.progress.setVisibility(View.VISIBLE);
-            holder.ivDownload.setVisibility(View.GONE);
+            holder.llDownload.setVisibility(View.GONE);
             holder.ivPlay.setVisibility(View.GONE);
             holder.ivImage.setImageResource(0);
             setBackground(holder.ivImage);
             holder.ivImage.setClickable(false);
+            holder.tvError.setVisibility(View.GONE);
         }
 
 

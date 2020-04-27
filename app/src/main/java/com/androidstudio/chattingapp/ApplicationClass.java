@@ -94,6 +94,10 @@ public class ApplicationClass extends Application
                         }
                     });
                 }
+
+            else
+
+
             if(messages.get(i).getDownloaded()==103)
             {
                 model.setDownloaded(100);

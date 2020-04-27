@@ -108,6 +108,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         membernumber=new ArrayList<>();
         preftheme=getSharedPreferences("theme",0);
 
+        pref  = getSharedPreferences("Names",0);
+
 
 
         String theme=preftheme.getString("theme","red");
@@ -1189,63 +1191,77 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     @Override
     public void Onlongclick(final int index) {
 
-        if(!(chats.get(index).getType().equals("video") || chats.get(index).getType().equals("image"))) {
-            String[] choices = {"Copy", "Forward"};
+        if(!(chats.get(index).getMessage().equals("null") || chats.get(index).getMessage().substring(0,4).equals("http"))) {
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
+            if (!(chats.get(index).getType().equals("video") || chats.get(index).getType().equals("image"))) {
+                String[] choices = {"Copy", "Forward"};
 
-            builder.setTitle("Choose")
-                    .setItems(choices, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            switch (i) {
-                                case 0:
-                                    ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                    ClipData clip = ClipData.newPlainText("copy", chats.get(index).getMessage());
-                                    clipboard.setPrimaryClip(clip);
-                                    break;
-                                case 1:
-                                    Intent intent = new Intent(MessageActivity2.this, FriendsActivity.class);
-                                    intent.putExtra("type", chats.get(index).getType());
-                                    intent.putExtra("path", 1);
-                                    intent.putExtra("message", chats.get(index).getMessage());
-                                    MessageActivity2.this.finish();
+                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
 
-                                    startActivity(intent);
-                                    break;
+                builder.setTitle("Choose")
+                        .setItems(choices, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                switch (i) {
+                                    case 0:
+                                        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                        ClipData clip = ClipData.newPlainText("copy", chats.get(index).getMessage());
+                                        clipboard.setPrimaryClip(clip);
+                                        break;
+                                    case 1:
+                                        Intent intent = new Intent(MessageActivity2.this, FriendsActivity.class);
+                                        intent.putExtra("type", chats.get(index).getType());
+                                        intent.putExtra("path", 1);
+                                        intent.putExtra("message", chats.get(index).getMessage());
+                                        MessageActivity2.this.finish();
+
+                                        startActivity(intent);
+                                        break;
+                                }
                             }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                String[] choices = {"Forward"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
+
+                builder.setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case 0:
+                                Intent intent = new Intent(MessageActivity2.this, FriendsActivity.class);
+                                intent.putExtra("type", chats.get(index).getType());
+                                intent.putExtra("path", 1);
+                                intent.putExtra("message", chats.get(index).getMessage());
+
+                                startActivity(intent);
+                                break;
                         }
-                    });
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        }
-        else
-        {
-            String [] choices = {"Forward"};
-            AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
-
-            builder.setItems(choices, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    switch (i) {
-                        case 0:
-                            Intent intent = new Intent(MessageActivity2.this, FriendsActivity.class);
-                            intent.putExtra("type", chats.get(index).getType());
-                            intent.putExtra("path", 1);
-                            intent.putExtra("message", chats.get(index).getMessage());
-
-                            startActivity(intent);
-                            break;
                     }
-                }
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
         }
 
 
     }
-            public void SendMessage(final int index, final MessageModel model)
+
+    @Override
+    public void OnFileDeleted(int index) {
+
+        chats.get(index).setMessage("null");
+
+        Handler.UpdateMessage(chats.get(index));
+
+        if(!Messages.isComputingLayout())
+            adapter.notifyDataSetChanged();
+
+    }
+
+    public void SendMessage(final int index, final MessageModel model)
             {
                 final int[] x = {0};
             final MediaPlayer mp = MediaPlayer.create(MessageActivity2.this, R.raw.sharp);
@@ -1478,7 +1494,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                 .addListenerForSingleValueEvent(deletevideo);
 
                         return Uri.fromFile(file);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                         /*Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();*/
@@ -1488,7 +1505,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     Log.e("8ERROR", "Buffer size is zero ! & returning 'false'.......");
 
                 }
-            } catch (MalformedURLException e) {
+            }catch (FileNotFoundException e) {
+                return null;
+            }
+            catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -1529,8 +1549,31 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 }
 
             }
+            else{
+                message.setDownloaded(101);
+                Handler.UpdateMessage(message);
+
+                if(!MessageActivity2.this.isDestroyed())
+                {
+                    chats.get(index).setDownloaded(101);
+                    adapter.notifyDataSetChanged();
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
+                builder.setTitle("Could not download Video");
+                builder.setMessage("Please ask "+pref.getString(message.getSender(),message.getSender())+
+                        " to resend the video")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+            }
         }
-    }
 
     private class DownloadTask extends AsyncTask<URL,Void,Uri>
     {
@@ -1617,7 +1660,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     Log.e("8ERROR", "Buffer size is zero ! & returning 'false'.......");
 
                 }
-            } catch (MalformedURLException e) {
+            }catch (FileNotFoundException e)
+            {
+                return null;
+            }
+            catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -1654,6 +1701,30 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     overridePendingTransition(0, 0);
                 }
 
+            }
+            else
+            {
+                message.setDownloaded(0);
+                Handler.UpdateMessage(message);
+
+                if(!MessageActivity2.this.isDestroyed())
+                {
+                    chats.get(index).setDownloaded(0);
+                    adapter.notifyDataSetChanged();
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
+                builder.setTitle("Could not download Image");
+                builder.setMessage("Please ask "+pref.getString(message.getSender(),message.getSender())+
+                        " to resend the image")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         }
     }

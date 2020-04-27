@@ -267,6 +267,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         if(FirebaseAuth.getInstance().getCurrentUser()!=null)
         currentUserNumber= FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+        else
+            currentUserNumber = "null";
 
         lv=findViewById(R.id.lv);
         lv.setLayoutManager(linearLayoutManager);
@@ -1360,6 +1362,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     }
                 };
 
+                if(FirebaseAuth.getInstance().getCurrentUser()!=null)
                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(Group);
             }
 
