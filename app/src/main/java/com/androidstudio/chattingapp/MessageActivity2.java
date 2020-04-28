@@ -1131,11 +1131,15 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     @Override
     public void showImage(int index) {
-        Intent intent = new Intent(MessageActivity2.this,ShowImage.class);
 
-        intent.putExtra("source",chats.get(index).getMessage());
+        if(chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4 && !chats.get(index).getType().equals("video")) {
 
-        startActivity(intent);
+            Intent intent = new Intent(MessageActivity2.this, ShowImage.class);
+
+            intent.putExtra("source", chats.get(index).getMessage());
+
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -1191,7 +1195,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     @Override
     public void Onlongclick(final int index) {
 
-        if(!(chats.get(index).getMessage().equals("null") || chats.get(index).getMessage().substring(0,4).equals("http"))) {
+        if (!chats.get(index).getMessage().equals("null") && chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4) {
 
             if (!(chats.get(index).getType().equals("video") || chats.get(index).getType().equals("image"))) {
                 String[] choices = {"Copy", "Forward"};

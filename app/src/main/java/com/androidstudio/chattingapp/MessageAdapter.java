@@ -171,17 +171,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         if(holder.tvSender!=null)
         {
-            if(pref.getString(messages.get(position).getSender(),"null").equals("null"))
-                holder.tvSender.setText(messages.get(position).getSender());
+            if(pref.getString(messages.get(holder.getAdapterPosition()).getSender(),"null").equals("null"))
+                holder.tvSender.setText(messages.get(holder.getAdapterPosition()).getSender());
             else
-                holder.tvSender.setText(pref.getString(messages.get(position).getSender(),"null"));
+                holder.tvSender.setText(pref.getString(messages.get(holder.getAdapterPosition()).getSender(),"null"));
         }
 
        if( holder.ivImage!=null) {
            holder.ivImage.setOnLongClickListener(new View.OnLongClickListener() {
                @Override
                public boolean onLongClick(View v) {
-                   Activity.Onlongclick(position);
+                   Activity.Onlongclick(holder.getAdapterPosition());
                    return false;
                }
            });
@@ -192,20 +192,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.tvMessage.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    Activity.Onlongclick(position);
+                    Activity.Onlongclick(holder.getAdapterPosition());
                     return false;
                 }
             });
         }
 
         if(holder.ivProfile!=null) {
-            if ((messages.get(position).getGroupName().equals("null"))  ) {
+            if ((messages.get(holder.getAdapterPosition()).getGroupName().equals("null"))  ) {
                 // holder.ivProfile.setVisibility(View.VISIBLE);
 
                 Glide.with(context.getApplicationContext()).load(ApplicationClass.url).into(holder.ivProfile);
             }
             else{
-                FirebaseDatabase.getInstance().getReference("users").child(messages.get(position).getSender()).child("profile")
+                FirebaseDatabase.getInstance().getReference("users").child(messages.get(holder.getAdapterPosition()).getSender()).child("profile")
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -232,7 +232,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             setBackground(holder.llTyping);
         }
 
-        if (messages.get(position).getDownloaded() == 0)   //image is received but yet to be downloaded
+        if (messages.get(holder.getAdapterPosition()).getDownloaded() == 0)   //image is received but yet to be downloaded
         {
             holder.progress.setVisibility(View.GONE);
             holder.ivImage.setImageResource(0);
@@ -245,13 +245,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 public void onClick(View view) {
                     holder.progress.setVisibility(View.VISIBLE);
                     holder.llDownload.setVisibility(View.GONE);
-                    Activity.downloadImage(position);
+                    Activity.downloadImage(holder.getAdapterPosition());
                 }
             });
 
             holder.ivImage.setClickable(false);
 
-        } else if (messages.get(position).getDownloaded() == 1) // image is sent or downloaded successfully
+        } else if (messages.get(holder.getAdapterPosition()).getDownloaded() == 1) // image is sent or downloaded successfully
         {
             holder.progress.setVisibility(View.GONE);
             holder.ivImage.setClickable(false);
@@ -283,23 +283,23 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 //                    }
 //                }).into(holder.ivImage);
 
-            holder.ivImage.setImageURI(Uri.parse(messages.get(position).getMessage()));
+            holder.ivImage.setImageURI(Uri.parse(messages.get(holder.getAdapterPosition()).getMessage()));
             if(holder.ivImage.getDrawable() == null)
             {
                 holder.ivImage.setClickable(false);
                 holder.tvError.setVisibility(View.VISIBLE);
 
-                if(!messages.get(position).getMessage().equals("null"))
-                    Activity.OnFileDeleted(position);
+                if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null"))
+                    Activity.OnFileDeleted(holder.getAdapterPosition());
             }
 
-                if (messages.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
+                if (messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                     holder.ivImage.setBackgroundResource(R.drawable.background_right);
                 }
                 else
                     setBackground(holder.ivImage);
 
-        } else if (messages.get(position).getDownloaded() == 2) // when sender sends the image
+        } else if (messages.get(holder.getAdapterPosition()).getDownloaded() == 2) // when sender sends the image
         {
 
             holder.progress.setVisibility(View.VISIBLE);
@@ -307,18 +307,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.tvError.setVisibility(View.GONE);
 
 
-            Glide.with(context.getApplicationContext()).load(messages.get(position).getMessage()).into(holder.ivImage);
-             Activity.sendImage(position);
+            Glide.with(context.getApplicationContext()).load(messages.get(holder.getAdapterPosition()).getMessage()).into(holder.ivImage);
+             Activity.sendImage(holder.getAdapterPosition());
         }
-        else if (messages.get(position).getDownloaded() == 3) // when request has been sent to upload image
+        else if (messages.get(holder.getAdapterPosition()).getDownloaded() == 3) // when request has been sent to upload image
         {
 
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
             holder.tvError.setVisibility(View.GONE);
 
-            Glide.with(context.getApplicationContext()).load(messages.get(position).getMessage()).into(holder.ivImage);
-        }else if(messages.get(position).getDownloaded() == 4) // when request has been sent to download image
+            Glide.with(context.getApplicationContext()).load(messages.get(holder.getAdapterPosition()).getMessage()).into(holder.ivImage);
+        }else if(messages.get(holder.getAdapterPosition()).getDownloaded() == 4) // when request has been sent to download image
         {
             holder.progress.setVisibility(View.VISIBLE);
             holder.llDownload.setVisibility(View.GONE);
@@ -327,20 +327,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivImage.setClickable(false);
             holder.tvError.setVisibility(View.GONE);
         }
-        else if (messages.get(position).getDownloaded() == -2) // when text message is being sent
+        else if (messages.get(holder.getAdapterPosition()).getDownloaded() == -2) // when text message is being sent
         {
-            holder.tvMessage.setText(messages.get(position).getMessage());
+            holder.tvMessage.setText(messages.get(holder.getAdapterPosition()).getMessage());
             holder.llMessageRight.setBackgroundResource(R.drawable.orange2);
-            Activity.sentTextMessage(position);
-        } else if (messages.get(position).getDownloaded() == -3) // when request has been sent to listener
+            Activity.sentTextMessage(holder.getAdapterPosition());
+        } else if (messages.get(holder.getAdapterPosition()).getDownloaded() == -3) // when request has been sent to listener
         {
-            holder.tvMessage.setText(messages.get(position).getMessage());
+            holder.tvMessage.setText(messages.get(holder.getAdapterPosition()).getMessage());
 
             if (holder.llMessageRight != null)
                 holder.llMessageRight.setBackgroundResource(R.drawable.orange2);
-        } else if (messages.get(position).getDownloaded() == -1) // if text message is sent or received successfully
+        } else if (messages.get(holder.getAdapterPosition()).getDownloaded() == -1) // if text message is sent or received successfully
         {
-            holder.tvMessage.setText(messages.get(position).getMessage());
+            holder.tvMessage.setText(messages.get(holder.getAdapterPosition()).getMessage());
 
             if (holder.llMessageRight != null)
                 holder.llMessageRight.setBackgroundResource(R.drawable.background_right);
@@ -348,9 +348,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             if(holder.llMesageLeft!=null)
                 setBackground(holder.llMesageLeft);
         }
-        else if(messages.get(position).getDownloaded()==100) // when sender sends video
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==100) // when sender sends video
         {
-            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
+            Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).into(holder.ivImage);
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivPlay.setVisibility(View.GONE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
@@ -358,18 +358,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             holder.ivImage.setClickable(false);
 
-            Activity.SendVideo(position);
+            Activity.SendVideo(holder.getAdapterPosition());
         }
-        else if(messages.get(position).getDownloaded()==103) // when request has been sent
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==103) // when request has been sent
         {
-            Glide.with(context).load(messages.get(position).getMessage()).into(holder.ivImage);
+            Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).into(holder.ivImage);
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
             holder.tvError.setVisibility(View.GONE);
 
             holder.ivImage.setClickable(false);
         }
-        else if(messages.get(position).getDownloaded()==101) // when video is received  and yet to be downloaded
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==101) // when video is received  and yet to be downloaded
         {
             holder.ivImage.setImageResource(0);
             setBackground(holder.ivImage);
@@ -383,13 +383,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 public void onClick(View view) {
                     holder.progress.setVisibility(View.VISIBLE);
                     holder.llDownload.setVisibility(View.GONE);
-                    Activity.Downloadvideo(position);
+                    Activity.Downloadvideo(holder.getAdapterPosition());
                 }
             });
 
             holder.ivImage.setClickable(false);
         }
-        else if(messages.get(position).getDownloaded()==102) // when video is sent or downloaded successfully
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==102) // when video is sent or downloaded successfully
         {
             holder.progress.setVisibility(View.GONE);
             holder.ivImage.setClickable(false);
@@ -397,7 +397,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             if(holder.llDownload!=null)
                 holder.llDownload.setVisibility(View.GONE);
 
-            if (messages.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
+            if (messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                 holder.ivImage.setBackgroundResource(R.drawable.background_right);
             }
 
@@ -410,15 +410,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             options.diskCacheStrategy(DiskCacheStrategy.NONE);
             options.skipMemoryCache(true);
 
-            Glide.with(context).setDefaultRequestOptions(options).load(messages.get(position).getMessage()).addListener(new RequestListener<Drawable>() {
+            Glide.with(context).setDefaultRequestOptions(options).load(messages.get(holder.getAdapterPosition()).getMessage()).addListener(new RequestListener<Drawable>() {
                 @Override
                 public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
                     holder.ivPlay.setVisibility(View.GONE);
                     holder.tvError.setVisibility(View.VISIBLE);
 
-                    if(!messages.get(position).getMessage().equals("null"))
-                        Activity.OnFileDeleted(position);
+                    if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null"))
+                        Activity.OnFileDeleted(holder.getAdapterPosition());
 
                     return false;
                 }
@@ -431,7 +431,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     holder.ivPlay.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Activity.showVideo(position);
+                            Activity.showVideo(holder.getAdapterPosition());
                         }
                     });
                     return false;
@@ -440,7 +440,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
         }
-        else if(messages.get(position).getDownloaded() == 104) // when request has been sent to download video
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded() == 104) // when request has been sent to download video
         {
             holder.progress.setVisibility(View.VISIBLE);
             holder.llDownload.setVisibility(View.GONE);
@@ -451,27 +451,27 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.tvError.setVisibility(View.GONE);
         }
 
-        if(!messages.get(position).getType().equals("video") && !messages.get(position).getMessage().equals("null") && !messages.get(position).getMessage().substring(0,4).equals("http"))
+        if(holder.ivImage!=null)
             holder.ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Activity.showImage(position);
+                    Activity.showImage(holder.getAdapterPosition());
                 }
             });
 
 
         if (holder.tvTime != null)
-            holder.tvTime.setText(messages.get(position).getTime().substring(0,5));
+            holder.tvTime.setText(messages.get(holder.getAdapterPosition()).getTime().substring(0,5));
 
         if (holder.tvDate != null) {
 
             long millis = System.currentTimeMillis();
             java.sql.Date date = new java.sql.Date(millis);
 
-            if(messages.get(position).getDate().equals(date.toString()))
+            if(messages.get(holder.getAdapterPosition()).getDate().equals(date.toString()))
                 holder.tvDate.setText("Today");
             else
-                holder.tvDate.setText(newDate(messages.get(position).getDate()));
+                holder.tvDate.setText(newDate(messages.get(holder.getAdapterPosition()).getDate()));
         }
     }
 

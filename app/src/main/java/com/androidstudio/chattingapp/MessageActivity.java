@@ -1866,8 +1866,8 @@ if(getIntent().getIntExtra("path",1)==2) {
     @Override
     public void showImage(int index) {
 
-        if(!chats.get(index).getMessage().equals("null")) {
-            Log.d("URIURI",chats.get(index).getMessage());
+        if(chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4 && !chats.get(index).getType().equals("video")) {
+            Log.d("URIURI",index +" "+ chats.get(index).getMessage());
 
             Intent intent = new Intent(MessageActivity.this, ShowImage.class);
 
@@ -1917,7 +1917,13 @@ if(getIntent().getIntExtra("path",1)==2) {
     @Override
     public void Onlongclick(final int index) {
 
-        if (!(chats.get(index).getMessage().equals("null") || chats.get(index).getMessage().substring(0, 4).equals("http"))) {
+        Log.d("LONGCLICK",index+"");
+        Log.d("LONGCLICK",chats.get(index).getMessage()+"");
+        Log.d("LONGCLICK",chats.get(index).getDownloaded()+"");
+
+        if (!chats.get(index).getMessage().equals("null") && chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4) {
+
+            Log.d("LONGCLICK","INSIDE");
 
             if (!(chats.get(index).getType().equals("video") || chats.get(index).getType().equals("image"))) {
                 String[] choices = {"Copy", "Forward"};
