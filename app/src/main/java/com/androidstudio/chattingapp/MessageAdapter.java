@@ -202,7 +202,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             if ((messages.get(holder.getAdapterPosition()).getGroupName().equals("null"))  ) {
                 // holder.ivProfile.setVisibility(View.VISIBLE);
 
-                Glide.with(context.getApplicationContext()).load(ApplicationClass.url).into(holder.ivProfile);
+                if(!ApplicationClass.url.equals("null"))
+                    Glide.with(context.getApplicationContext()).load(ApplicationClass.url).into(holder.ivProfile);
+                else
+                    Glide.with(context.getApplicationContext()).load(R.drawable.person).into(holder.ivProfile);
             }
             else{
                 FirebaseDatabase.getInstance().getReference("users").child(messages.get(holder.getAdapterPosition()).getSender()).child("profile")
