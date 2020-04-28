@@ -253,6 +253,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                         else
                                             users.add(new UserDetailWithStatus(dataSnapshot1.getValue(String.class),null,dataSnapshot.getValue(String.class),"admin",0,null));
 
+                                        Log.d("USERSS",dataSnapshot1.getValue(String.class));
                                         adapter.notifyDataSetChanged();
                                         tvParticipants.setText(users.size()+" Participants");
                                     }
@@ -263,6 +264,12 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                     }
                                 }
                         );
+
+                        for(int i=0;i<users.size();i++)
+                        {
+
+                        }
+
                     }
 
                     @Override

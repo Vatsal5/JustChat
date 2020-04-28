@@ -1028,16 +1028,29 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                     if (!contacts1.get(i).getPh_number().substring(0, 3).equals("+91")) {
                                         String name = pref.getString("+91" + contacts1.get(i).getPh_number(), "null");
                                         if (name.equals("null")) {
-                                            editor.putString("+91" + contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
-                                            editor.apply();
+
+                                            if(!contacts1.get(i).getuID().equals("")) {
+                                                editor.putString("+91" + contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
+                                                editor.apply();
+                                            }
+                                            else{
+                                                editor.putString("+91" + contacts1.get(i).getPh_number(), contacts1.get(i).getPh_number());
+                                                editor.apply();
+                                            }
                                         }
                                         contacts1.get(i).setLastmessage(Handler.getLastMessage("+91" + contacts1.get(i).getPh_number()));
                                         contacts1.get(i).setTime(Handler.getLastMessageTime("+91" + contacts1.get(i).getPh_number()));
                                     } else {
                                         String name = pref.getString(contacts1.get(i).getPh_number(), "null");
                                         if (name.equals("null")) {
-                                            editor.putString(contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
-                                            editor.apply();
+                                            if(!contacts1.get(i).getuID().equals("")) {
+                                                editor.putString(contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
+                                                editor.apply();
+                                            }
+                                            else{
+                                                editor.putString(contacts1.get(i).getPh_number(), contacts1.get(i).getPh_number());
+                                                editor.apply();
+                                            }
                                         }
                                         contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
                                         contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));

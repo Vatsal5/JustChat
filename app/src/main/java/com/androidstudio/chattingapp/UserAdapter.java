@@ -209,80 +209,88 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         }
 
         if(list.get(position).getUrl().equals("null")) {
-            holder.iv.setImageResource(R.drawable.person);
-            Drawable person=context.getResources().getDrawable(R.drawable.person);
-            Drawable wrappedDrawable = DrawableCompat.wrap(person);
 
-            String theme1=preftheme.getString("theme","red");
-            switch (theme1) {
-                case "orange":
+            if(list.get(position).getGroupname()==null) {
+                holder.iv.setImageResource(R.drawable.person);
 
-                    holder.iv.setColorFilter(context.getResources().getColor(R.color.Orange));
-                    break;
+                Drawable person=context.getResources().getDrawable(R.drawable.person);
+                Drawable wrappedDrawable = DrawableCompat.wrap(person);
 
-                case "blue":
+                String theme1=preftheme.getString("theme","red");
+                switch (theme1) {
+                    case "orange":
 
-                    holder.iv.setColorFilter(context.getResources().getColor(R.color.blue));
+                        holder.iv.setColorFilter(context.getResources().getColor(R.color.Orange));
+                        break;
 
-                    break;
+                    case "blue":
 
+                        holder.iv.setColorFilter(context.getResources().getColor(R.color.blue));
 
-                case "bluish":
-                    holder.iv.setColorFilter(context.getResources().getColor(R.color.bluish));
-                    break;
+                        break;
 
 
-                case "deepred":
-                    holder.iv.setColorFilter(context.getResources().getColor(R.color.deepred));
-                    break;
-
-                case "faintpink":
-                    holder.iv.setColorFilter(context.getResources().getColor(R.color.faintpink));
-
-                    break;
-
-                case "darkblue":
-                    holder.iv.setColorFilter(context.getResources().getColor(R.color.darkblue));
-                    break;
+                    case "bluish":
+                        holder.iv.setColorFilter(context.getResources().getColor(R.color.bluish));
+                        break;
 
 
-                case "green":
-                    holder.iv.setColorFilter(context.getResources().getColor(R.color.green));
-                    break;
+                    case "deepred":
+                        holder.iv.setColorFilter(context.getResources().getColor(R.color.deepred));
+                        break;
 
-                case "lightorange":
-                    holder.iv.setColorFilter(context.getResources().getColor(R.color.lightorange));
-                    break;
+                    case "faintpink":
+                        holder.iv.setColorFilter(context.getResources().getColor(R.color.faintpink));
 
-                case "lightred":
-                    holder.iv.setColorFilter(context.getResources().getColor(R.color.lightred));
-                    break;
+                        break;
+
+                    case "darkblue":
+                        holder.iv.setColorFilter(context.getResources().getColor(R.color.darkblue));
+                        break;
 
 
-                case "mustard":
-                    DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.mustard));
-                    break;
+                    case "green":
+                        holder.iv.setColorFilter(context.getResources().getColor(R.color.green));
+                        break;
 
-                case "pink":
-                    holder.iv.setColorFilter(context.getResources().getColor(R.color.pink));
-                    break;
+                    case "lightorange":
+                        holder.iv.setColorFilter(context.getResources().getColor(R.color.lightorange));
+                        break;
 
-                case "pureorange":
-                    holder.iv.setColorFilter(context.getResources().getColor(R.color.pureorange));
-                    break;
+                    case "lightred":
+                        holder.iv.setColorFilter(context.getResources().getColor(R.color.lightred));
+                        break;
 
-                case "purepink":
-                    holder.iv.setColorFilter(context.getResources().getColor(R.color.purepink));
-                    break;
 
-                case "purple":
-                    holder.iv.setColorFilter(context.getResources().getColor(R.color.purple));
-                    break;
+                    case "mustard":
+                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.mustard));
+                        break;
 
-                default:
-                    holder.iv.setColorFilter(context.getResources().getColor(R.color.red));
+                    case "pink":
+                        holder.iv.setColorFilter(context.getResources().getColor(R.color.pink));
+                        break;
+
+                    case "pureorange":
+                        holder.iv.setColorFilter(context.getResources().getColor(R.color.pureorange));
+                        break;
+
+                    case "purepink":
+                        holder.iv.setColorFilter(context.getResources().getColor(R.color.purepink));
+                        break;
+
+                    case "purple":
+                        holder.iv.setColorFilter(context.getResources().getColor(R.color.purple));
+                        break;
+
+                    default:
+                        holder.iv.setColorFilter(context.getResources().getColor(R.color.red));
+                }
+                holder.iv.setClickable(false);
+
             }
-            holder.iv.setClickable(false);
+            else
+                holder.iv.setImageResource(R.drawable.group);
+
         }
 
         else
