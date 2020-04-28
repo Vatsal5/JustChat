@@ -15,7 +15,7 @@ import android.widget.TextView;
 public class Mode extends AppCompatActivity {
 
     EditText etEnterPassword, etAcceptPassword, etEnterUsername,etConfirm;
-    TextView tvForgot,tvShowPassword,tvIncompleteDetails;
+    TextView tvForgot,tvShowPassword,tvIncompleteDetails,tvdescription,tvmode;
     Button btnCreate, btnConfirm, btnConfirmUsername,btnWrongUderId, btnWrongPassword;
     Switch mode;
     SharedPreferences pref;
@@ -28,8 +28,11 @@ public class Mode extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mode);
         etAcceptPassword= findViewById(R.id.etAcceptPassword);
+        tvdescription=findViewById(R.id.tvdescription);
+        tvmode=findViewById(R.id.tvmode);
 
         btnWrongUderId = findViewById(R.id.btnWrongUserId);
+
         btnWrongPassword=findViewById(R.id.btnWrongPassword);
         etEnterPassword= findViewById(R.id.etEnterPassword);
         etEnterUsername= findViewById(R.id.etEnterUsername);
@@ -64,6 +67,10 @@ public class Mode extends AppCompatActivity {
         if(defaultvalue.equals("private"))
         {
             mode.setChecked(true);
+            llSelectMode.setBackgroundColor(getResources().getColor(R.color.black));
+            tvdescription.setTextColor(getResources().getColor(R.color.white));
+            tvmode.setTextColor(getResources().getColor(R.color.white));
+
         }
 
 
@@ -82,6 +89,9 @@ public class Mode extends AppCompatActivity {
                   else{
                       editor.putString("mode"+number,"private");
                       editor.apply();
+                      llSelectMode.setBackgroundColor(getResources().getColor(R.color.black));
+                      tvdescription.setTextColor(getResources().getColor(R.color.white));
+                      tvmode.setTextColor(getResources().getColor(R.color.white));
                   }
                 }
                 else
@@ -120,9 +130,15 @@ public class Mode extends AppCompatActivity {
                    if(pref.getString("mode"+number,"null").equals("public") ||
                            pref.getString("mode"+number,"null").equals("null")) {
                        editor.putString("mode" + number, "private");
+                       llSelectMode.setBackgroundColor(getResources().getColor(R.color.black));
+                       tvdescription.setTextColor(getResources().getColor(R.color.white));
+                       tvmode.setTextColor(getResources().getColor(R.color.white));
                    }
                    editor.putString("mode"+number,"public");
                    editor.apply();
+                    llSelectMode.setBackgroundColor(getResources().getColor(R.color.white));
+                    tvdescription.setTextColor(getResources().getColor(R.color.black));
+                    tvmode.setTextColor(getResources().getColor(R.color.black));
 
                 }
 
@@ -154,6 +170,9 @@ public class Mode extends AppCompatActivity {
                     llcreatePassword.setVisibility(View.GONE);
                     editor.putString("mode" + number, "private");
                     editor.apply();
+                    llSelectMode.setBackgroundColor(getResources().getColor(R.color.black));
+                    tvdescription.setTextColor(getResources().getColor(R.color.white));
+                    tvmode.setTextColor(getResources().getColor(R.color.white));
                 }
                 else
                 {

@@ -45,7 +45,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
 
             if(condition){
 
-            final Intent intent = new Intent(this, Registration.class);
+            final Intent intent = new Intent(this,
+
+                    MainActivity.class);
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             int notificationID = new Random().nextInt(3000);
 

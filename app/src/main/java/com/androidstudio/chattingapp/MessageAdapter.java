@@ -213,7 +213,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                                 if(dataSnapshot.getValue(String.class)!=null)
                                     Glide.with(context).load(dataSnapshot.getValue(String.class)).into(holder.ivProfile);
                                 else
-                                    Glide.with(context).load(R.drawable.person).into(holder.ivProfile);
+                                    holder.ivProfile.setImageResource(R.drawable.person);
 
                             }
 
