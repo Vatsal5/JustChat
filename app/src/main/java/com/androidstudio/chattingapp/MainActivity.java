@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         {
 
             llSplash.setVisibility(View.VISIBLE);
+            ApplicationClass.splash=false;
 
         }
         else
