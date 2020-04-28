@@ -441,103 +441,131 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
     public void onItemSelected(final int index) {
         if(!(users.get(index).getPh_number().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
                 || ("+91"+users.get(index).getPh_number()).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
-            String[] choices = {"View","Remove"};
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(GroupDetails.this);
+            if (admin.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
+                String[] choices = {"View", "Remove"};
 
-            builder.setTitle("Choose")
-                    .setItems(choices, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            switch (i) {
-                                case 0:
-                                    Intent intent = new Intent(GroupDetails.this, MessageActivity.class);
-                                    intent.putExtra("phone", users.get(index).getPh_number());
-                                    intent.putExtra("messagecount", 2);
-                                    intent.putExtra("profile",users.get(index).getUrl());
-                                    intent.putExtra("title",users.get(index).getPh_number() );
-                                    ApplicationClass.groupusers=1;
-                                    startActivity(intent);
-                                case 1:
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(GroupDetails.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(GroupDetails.this);
 
-                                    builder.setTitle("Are you sure you want to remove this member ");
-                                    builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
+                builder.setTitle("Choose")
+                        .setItems(choices, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                switch (i) {
+                                    case 0:
+                                        Intent intent = new Intent(GroupDetails.this, MessageActivity.class);
+                                        intent.putExtra("phone", users.get(index).getPh_number());
+                                        intent.putExtra("messagecount", 2);
+                                        intent.putExtra("profile", users.get(index).getUrl());
+                                        intent.putExtra("title", users.get(index).getPh_number());
+                                        ApplicationClass.groupusers = 1;
+                                        startActivity(intent);
+                                        break;
+                                    case 1:
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(GroupDetails.this);
 
-                                            adapter.notifyDataSetChanged();
+                                        builder.setTitle("Are you sure you want to remove this member ");
+                                        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
 
-                                      FirebaseDatabase.getInstance().getReference().child("groups")
-                                              .child(groupKey).child("members").addChildEventListener(
-                                              new ChildEventListener() {
-                                                  @Override
-                                                  public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                                                      if(dataSnapshot.getValue().toString().equals(users.get(index).getPh_number()))
-                                                      {
-                                                          dataSnapshot.getRef().removeValue().addOnSuccessListener(
-                                                                  new OnSuccessListener<Void>() {
-                                                                      @Override
-                                                                      public void onSuccess(Void aVoid) {
-                                                                          FirebaseDatabase.getInstance().getReference().child("users")
-                                                                                  .child(users.get(index).getPh_number())
-                                                                                  .child("groups").child(groupKey).getRef().removeValue().addOnSuccessListener(
-                                                                                  new OnSuccessListener<Void>() {
-                                                                                      @Override
-                                                                                      public void onSuccess(Void aVoid) {
-                                                                                          users.remove(index);
-                                                                                          adapter.notifyDataSetChanged();
-                                                                                      }
-                                                                                  }
-                                                                          );
-                                                                      }
-                                                                  }
-                                                          );
+                                                adapter.notifyDataSetChanged();
 
-
-                                                      }
-
-                                                  }
-
-                                                  @Override
-                                                  public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                                                  }
-
-                                                  @Override
-                                                  public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                                                  }
-
-                                                  @Override
-                                                  public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                                                  }
-
-                                                  @Override
-                                                  public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                  }
-                                              }
-                                      );
+                                                FirebaseDatabase.getInstance().getReference().child("groups")
+                                                        .child(groupKey).child("members").addChildEventListener(
+                                                        new ChildEventListener() {
+                                                            @Override
+                                                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                                                if (dataSnapshot.getValue().toString().equals(users.get(index).getPh_number())) {
+                                                                    dataSnapshot.getRef().removeValue().addOnSuccessListener(
+                                                                            new OnSuccessListener<Void>() {
+                                                                                @Override
+                                                                                public void onSuccess(Void aVoid) {
+                                                                                    FirebaseDatabase.getInstance().getReference().child("users")
+                                                                                            .child(users.get(index).getPh_number())
+                                                                                            .child("groups").child(groupKey).getRef().removeValue().addOnSuccessListener(
+                                                                                            new OnSuccessListener<Void>() {
+                                                                                                @Override
+                                                                                                public void onSuccess(Void aVoid) {
+                                                                                                    users.remove(index);
+                                                                                                    adapter.notifyDataSetChanged();
+                                                                                                }
+                                                                                            }
+                                                                                    );
+                                                                                }
+                                                                            }
+                                                                    );
 
 
-                                        }
-                                    });
-                                    builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
+                                                                }
 
-                                        }
-                                    });
-                                    builder.show();
+                                                            }
+
+                                                            @Override
+                                                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                                                            }
+
+                                                            @Override
+                                                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                                                            }
+
+                                                            @Override
+                                                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                            }
+                                                        }
+                                                );
 
 
+                                            }
+                                        });
+                                        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        });
+                                        builder.show();
+
+
+                                }
                             }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+            else{
+                String []choices ={"View"};
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(GroupDetails.this);
+                builder.setItems(choices, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i){
+                            case 0:
+                                Intent intent = new Intent(GroupDetails.this, MessageActivity.class);
+                                intent.putExtra("phone", users.get(index).getPh_number());
+                                intent.putExtra("messagecount", 2);
+                                intent.putExtra("profile", users.get(index).getUrl());
+                                intent.putExtra("title", users.get(index).getPh_number());
+                                ApplicationClass.groupusers = 1;
+                                startActivity(intent);
+                                break;
                         }
-                    });
-            AlertDialog dialog = builder.create();
-            dialog.show();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+
         }
 }
 
