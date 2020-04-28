@@ -60,10 +60,11 @@ public class ParticipantsAdapter  extends RecyclerView.Adapter<ParticipantsAdapt
     public void onBindViewHolder(@NonNull ParticipantsAdapter.ViewHolder holder,final int position) {
 
         if(!users.get(position).getPh_number().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
-            if (pref.getString(users.get(position).getPh_number(), "null").equals("null"))
-                holder.tvName.setText(users.get(position).getPh_number());
-            else
-                holder.tvName.setText(pref.getString(users.get(position).getPh_number(), "null"));
+//            if (pref.getString(users.get(position).getPh_number(), "null").equals("null"))
+//                holder.tvName.setText(users.get(position).getPh_number());
+//            else
+//                holder.tvName.setText(pref.getString(users.get(position).getPh_number(), "null"));
+            holder.tvName.setText(pref.getString(users.get(position).getPh_number(),users.get(position).getPh_number()));
         }else
             holder.tvName.setText("You");
 

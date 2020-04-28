@@ -474,59 +474,59 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                 reference.child("users").child(currentUserNumber).addChildEventListener(childEvent);
 
 
-                if (getIntent().getIntExtra("path", 2) == 1) {
-
-                    Group = new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                            contacts1.add(new UserDetailWithStatus(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", ""
-                                    , 0,dataSnapshot.getKey()));
-
-                            reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
-                                    new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            if(dataSnapshot.exists())
-                                            {
-                                                contacts1.get(contacts1.size()-1).setUrl(dataSnapshot.getValue().toString());
-                                                userAdapter.notifyDataSetChanged();}
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    }
-                            );
-
-                        }
-
-
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    };
-
-                    reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(Group);
-
-                }
+//                if (getIntent().getIntExtra("path", 2) == 1) {
+//
+//                    Group = new ChildEventListener() {
+//                        @Override
+//                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                            contacts1.add(new UserDetailWithStatus(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", ""
+//                                    , 0,dataSnapshot.getKey()));
+//
+//                            reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
+//                                    new ValueEventListener() {
+//                                        @Override
+//                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                            if(dataSnapshot.exists())
+//                                            {
+//                                                contacts1.get(contacts1.size()-1).setUrl(dataSnapshot.getValue().toString());
+//                                                userAdapter.notifyDataSetChanged();}
+//                                        }
+//
+//                                        @Override
+//                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                                        }
+//                                    }
+//                            );
+//
+//                        }
+//
+//
+//                        @Override
+//                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                        }
+//                    };
+//
+//                    reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(Group);
+//
+//                }
                // Log.d("tag",contacts1.get(0).getPh_number());
             }
 
@@ -580,6 +580,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         {
 
             tvCreateGroup.setVisibility(View.VISIBLE);
+            cvCreate.setVisibility(View.VISIBLE);
 
     for(int i=0;i<members.size();i++)
     {

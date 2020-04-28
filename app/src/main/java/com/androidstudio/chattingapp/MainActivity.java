@@ -1101,6 +1101,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                                 {
                                                     contacts1.get(contacts1.size()-1).setUrl(dataSnapshot.getValue().toString());
                                                 userAdapter.notifyDataSetChanged();}
+                                                else
+                                                {
+                                                    contacts1.get(contacts1.size()-1).setUrl("null");
+                                                    userAdapter.notifyDataSetChanged();
+                                                }
                                             }
 
                                             @Override
@@ -1533,6 +1538,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         contacts1.get(index).setUrl(dataSnapshot.getValue().toString());
                         userAdapter.notifyDataSetChanged();
                     }
+
+
                 }
 
                 @Override
