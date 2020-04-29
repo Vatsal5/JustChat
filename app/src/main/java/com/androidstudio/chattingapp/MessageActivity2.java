@@ -84,6 +84,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     ConstraintLayout llMessageActivity2;
     ConstraintLayout rl;
     LinearLayout ll;
+    static MessageActivity2 messageActivity2;
     StorageReference rf;
     int numberOfMembers=-1;
     SharedPreferences preftheme;
@@ -97,12 +98,17 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     String defaultvalue;
     SharedPreferences pref,wallpaper;
 
+    public static MessageActivity2 getInstance(){
+        return messageActivity2;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message2);
         ivProfile=findViewById(R.id.ivProfile);
         ll=findViewById(R.id.ll);
+        messageActivity2=this;
 
         ApplicationClass.MessageActivity2Context = MessageActivity2.this;
         membernumber=new ArrayList<>();

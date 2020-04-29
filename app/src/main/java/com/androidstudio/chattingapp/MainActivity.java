@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
     ArrayList<String> number1;
     SharedPreferences preftheme;
-
     FirebaseDatabase database1;
     DatabaseReference reference1;
     DatabaseReference UserStatus;
@@ -350,7 +349,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 }
 
             }
-        },3000);
+        },2000);
         final android.os.Handler handler1= new Handler();
         handler1.postDelayed(new Runnable() {
             @Override
@@ -362,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 }
 
             }
-        },2000);
+        },3000);
 
         ItemTouchHelper itemTouchHelper= new ItemTouchHelper(simpleCallback);
 
@@ -477,14 +476,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                  }
              };
-             if (contacts1.get(index).getPh_number().substring(0,3).equals("+91") ) {
                  reference.child("users").child(contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("info").child("videos").addChildEventListener(chreceiver);
-             }
-             else
-             {
-                 reference.child("users").child("+91"+contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("info").child("videos").addChildEventListener(chreceiver);
 
-             }
+
          }
 
 
@@ -548,13 +542,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                  }
              };
-             if (contacts1.get(index).getPh_number().substring(0,3).equals("+91") ) {
                  reference.child("users").child(contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addChildEventListener(chreceiver);
-             }
-             else
-             {
-                 reference.child("users").child("+91"+contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addChildEventListener(chreceiver);
-             }
+
+
          }
 
          public void piclistener()
@@ -606,14 +596,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                  }
              };
-             if (contacts1.get(index).getPh_number().substring(0,3).equals("+91") ) {
                  reference.child("users").child(contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("info").child("images").addChildEventListener(chreceiver);
-             }
-             else
-             {
-                 reference.child("users").child("+91"+contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("info").child("images").addChildEventListener(chreceiver);
 
-             }
+
          }
     }
 
@@ -767,8 +752,15 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
            final String name= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
            final String number= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
            if(IsValid(number)==0) {
-               contacts.add(new UserDetail(number, name));
-               number1.add(number);
+               if(number.substring(0,3).equals("+91")) {
+                   contacts.add(new UserDetail(number, name));
+                   number1.add(number);
+               }
+               else
+               {
+                   contacts.add(new UserDetail("+91"+number, name));
+                   number1.add("+91"+number);
+               }
            }
 
         }
@@ -779,7 +771,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 for (int i = 0; i < contacts.size(); i++) {
 
 
-                    if ((number1.get(i)).substring(0, 3).equals("+91")) {
                         if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).exists()) {
 
 
@@ -832,54 +823,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             k = 0;
                         }
 
-                    } else {
-                        if (dataSnapshot.child("users").child("+91" + contacts.get(i).getPh_number()).exists()) {
-                            if (i == 0) {
-                                if ((dataSnapshot.child("users").child(currentUserNumber).child("+91" + contacts.get(i).getPh_number()).child("info").child("friend").exists())) {
-                                    if (dataSnapshot.child("users").child("+91" + contacts.get(i).getPh_number()).child("profile").exists()) {
-                                        contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91" + contacts.get(i).getPh_number()).child("profile").getValue(String.class), 2
-                                                , "", "",null,null));
-                                    } else {
-                                        contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null", 2
-                                                , "", "",null,null));
-                                    }
 
-                                    (reference.child("users").child(currentUserNumber).child("+91" + contacts.get(i).getPh_number()).child("message")).setValue("/null");
-                                    //  (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("info").child("friend")).setValue("no");
-
-                                    c = 1;
-                                }
-                            } else {
-                                for (int j = 0; j < c; j++) {
-                                    if (contacts.get(i).getPh_number().equals(contacts1.get(j).getPh_number())) {
-                                        k = 1;
-                                        break;
-                                    }
-                                }
-                                if (k == 0) {
-                                    if ((dataSnapshot.child("users").child(currentUserNumber).child("+91" + contacts.get(i).getPh_number()).child("info").child("friend").exists())) {
-                                        if (dataSnapshot.child("users").child("+91" + contacts.get(i).getPh_number()).child("profile").exists()) {
-                                            contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91" + contacts.get(i).getPh_number()).child("profile").getValue(String.class), 2
-                                                    , "", "",null,null));
-                                        } else {
-                                            contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null", 2
-                                                    , "", "",null,null));
-                                        }
-
-
-                                        (reference.child("users").child(currentUserNumber).child(("+91" + contacts.get(i).getPh_number())).child("message")).setValue("/null");
-                                        //  (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("info").child("friend")).setValue("no");
-
-                                        //  (reference.child("users").child(currentUserNumber).child(("+91"+contacts.get(i).getPh_number())).child("activeStatus")).setValue("online");
-
-
-                                        c++;
-                                    }
-                                }
-                            }
-                            k = 0;
-                        }
-                    }
                 }
                 // both the arraylists got clone
                 //Toast.makeText(MainActivity.this,contacts2.size()+"",Toast.LENGTH_LONG).show();
@@ -998,50 +942,27 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 // Log.d("contact",contacts1.get(i).getPh_number());
 
 
-                                if (contacts1.get(i).getPh_number().substring(0, 3).equals("+91")) {
                                     if (contacts1.get(i).getPh_number().equals(dataSnapshot.getKey())) {
                                         tell = 1;
                                         break;
                                     }
-                                } else {
-                                    String ph = "+91" + contacts1.get(i).getPh_number();
-                                    if (ph.equals(dataSnapshot.getKey())) {
-                                        tell = 1;
-                                        break;
-                                    }
-                                }
+
 
                             }
                             if (tell == 0) {
-                                if (dataSnapshot.child("info").child("friend").exists()) {
-                                    if (dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
+                                if (dataSnapshot.child("info").child("friend").exists() && dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
 
                                         contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), "", "null", 2
                                                 , "", "",null,null));
 
 
                                     }
-                                }
+
                             }
 
                             for (int i = 0; i < contacts1.size(); i++) {
                                 if (contacts1.get(i).getGroupname() == null) {
-                                    if (!contacts1.get(i).getPh_number().substring(0, 3).equals("+91")) {
-                                        String name = pref.getString("+91" + contacts1.get(i).getPh_number(), "null");
-                                        if (name.equals("null")) {
 
-                                            if(!contacts1.get(i).getuID().equals("")) {
-                                                editor.putString("+91" + contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
-                                                editor.apply();
-                                            }
-                                            else{
-                                                editor.putString("+91" + contacts1.get(i).getPh_number(), contacts1.get(i).getPh_number());
-                                                editor.apply();
-                                            }
-                                        }
-                                        contacts1.get(i).setLastmessage(Handler.getLastMessage("+91" + contacts1.get(i).getPh_number()));
-                                        contacts1.get(i).setTime(Handler.getLastMessageTime("+91" + contacts1.get(i).getPh_number()));
-                                    } else {
                                         String name = pref.getString(contacts1.get(i).getPh_number(), "null");
                                         if (name.equals("null")) {
                                             if(!contacts1.get(i).getuID().equals("")) {
@@ -1055,7 +976,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                         }
                                         contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
                                         contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
-                                    }
+
                                 } else {
                                     contacts1.get(i).setLastmessage(Handler.getLastMessageGroup(contacts1.get(i).getGroupname()));
                                     contacts1.get(i).setTime(Handler.getLastGroupMessageTime(contacts1.get(i).getGroupname()));
@@ -1423,15 +1344,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
 
-        if( contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
             intent.putExtra("phone", contacts1.get(index).getPh_number());
 
-        }
-        else{
-            intent.putExtra("phone", "+91" + contacts1.get(index).getPh_number());
 
-
-        }
         if(!contacts1.get(index).getUrl().equals("null"))
             intent.putExtra("profile",contacts1.get(index).getUrl());
         startActivity(intent);}
@@ -1670,13 +1585,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         for (int i = 0; i < contacts1.size(); i++) {
             if(contacts1.get(i).getGroupname()==null) {
-                if (!contacts1.get(i).getPh_number().substring(0, 3).equals("+91")) {
-                    contacts1.get(i).setLastmessage(Handler.getLastMessage("+91" + contacts1.get(i).getPh_number()));
-                    contacts1.get(i).setTime(Handler.getLastMessageTime("+91" + contacts1.get(i).getPh_number()));
-                } else {
+
+
                     contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
                     contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
-                }
+
             }
             else {
                 if(Handler.getGroupMessages(contacts1.get(i).getGroupname()).size()>0) {

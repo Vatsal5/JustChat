@@ -322,10 +322,17 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         });
 
 
-    if (getIntent().getStringExtra("profile") != null) {
+    if (getIntent().getStringExtra("profile") != null && !getIntent().getStringExtra("profile").equals("null") ) {
+
         ApplicationClass.url = getIntent().getStringExtra("profile");
         Glide.with(MessageActivity.this).load(getIntent().getStringExtra("profile")).into(ivProfile);
-    } else {
+    }
+    else if(getIntent().getStringExtra("profile")==null)
+    {
+        ApplicationClass.url = "null";
+        ivProfile.setImageResource(R.drawable.person);
+    }
+    else {
         ApplicationClass.url = "null";
         ivProfile.setImageResource(R.drawable.person);
     }

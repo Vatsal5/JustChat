@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -13,15 +13,15 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:background="#d6514a"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/ivBack"
             android:layout_width="40dp"
             android:layout_height="25dp"
-            android:src="@drawable/back"/>
+            android:src="@drawable/back" />
 
         <TextView
             android:id="@+id/tvhead"
@@ -35,19 +35,19 @@
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="13dp" />
 
-<!--        <TextView-->
-<!--            android:id="@+id/tvCreate"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginLeft="100dp"-->
-<!--            android:clickable="true"-->
-<!--            -->
-<!--            android:gravity="center_vertical"-->
-<!--            android:text="Create Group"-->
-<!--            android:textColor="#ffffff"-->
-<!--            android:textSize="14sp"-->
-<!--            android:textStyle="bold"-->
-<!--            android:visibility="gone" />-->
+        <!--        <TextView-->
+        <!--            android:id="@+id/tvCreate"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginLeft="100dp"-->
+        <!--            android:clickable="true"-->
+        <!--            -->
+        <!--            android:gravity="center_vertical"-->
+        <!--            android:text="Create Group"-->
+        <!--            android:textColor="#ffffff"-->
+        <!--            android:textSize="14sp"-->
+        <!--            android:textStyle="bold"-->
+        <!--            android:visibility="gone" />-->
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -57,9 +57,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
     </ListView>
 
@@ -67,33 +67,33 @@
         android:id="@+id/tvCreate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/ivCreate"
+        android:background="#00ffffff"
+        android:elevation="16dp"
+        android:gravity="center_horizontal"
+        android:text="Create Group"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/ivCreate"
         app:layout_constraintLeft_toLeftOf="@id/ivCreate"
         app:layout_constraintRight_toRightOf="@id/ivCreate"
-        android:gravity="center_horizontal"
-        android:text="Create Group"
-        android:background="#00ffffff"
-        android:visibility="gone"
-        android:elevation="16dp"
-        android:textSize="18sp"
-        android:textColor="#ffffff"/>
+        app:layout_constraintTop_toTopOf="@id/ivCreate" />
 
     <androidx.cardview.widget.CardView
-android:clickable="true"
-
         android:id="@+id/ivCreate"
-        android:visibility="gone"
 
         android:layout_width="120dp"
         android:layout_height="35dp"
+
+        android:layout_marginBottom="30dp"
+        android:clickable="true"
         android:elevation="10dp"
+        android:visibility="gone"
         app:cardBackgroundColor="@color/red"
+        app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:cardCornerRadius="20dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginBottom="30dp" />
+        app:layout_constraintRight_toRightOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -229,18 +230,10 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                         ApplicationClass.addmembers=0;
                         for(int index=0; index<contacts1.size();index++) {
                             if(contacts1.get(index).getSelected()==1) {
-                                if (contacts1.get(index).getPh_number().substring(0, 3).equals("+91")) {
                                    FirebaseDatabase.getInstance().getReference().child("groups").child(getIntent().getStringExtra("groupkey"))
                                    .child("members").push().setValue(contacts1.get(index).getPh_number());
                                     FirebaseDatabase.getInstance().getReference().child("users").child(contacts1.get(index).getPh_number()).child("groups").
                                             child(groupkey).setValue(getIntent().getStringExtra("groupname"));
-                                } else {
-                                    FirebaseDatabase.getInstance().getReference().child("groups").child(getIntent().getStringExtra("groupkey"))
-                                            .child("members").push().setValue("+91"+contacts1.get(index).getPh_number());
-                                    FirebaseDatabase.getInstance().getReference().child("users").child("+91"+contacts1.get(index).getPh_number()).child("groups").
-                                            child(groupkey).setValue(getIntent().getStringExtra("groupname"));
-
-                                }
                             }
                         }
                         tvCreateGroup.setText("Create Group");
@@ -256,11 +249,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
                     for(int index=0; index<contacts1.size();index++) {
                         if(contacts1.get(index).getSelected()==1) {
-                            if (contacts1.get(index).getPh_number().substring(0, 3).equals("+91")) {
                                 ApplicationClass.members.add(contacts1.get(index).getPh_number());
-                            } else {
-                                ApplicationClass.members.add("+91" + contacts1.get(index).getPh_number());
-                            }
+
                         }
                     }
 
@@ -304,8 +294,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
                     if (!(("+91" + number).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
 
-                        contacts.add(new UserDetail(number, name));
-                        number1.add(number);
+                        contacts.add(new UserDetail("+91"+number, name));
+                        number1.add("+91"+number);
                     }
                 }
             }
@@ -317,7 +307,6 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
                 for(int i=0;i<contacts.size();i++) {
 
-                    if ((number1.get(i)).substring(0, 3).equals("+91")) {
 
                             if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).exists()) {
 
@@ -358,50 +347,9 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                 k = 0;
                             }
 
-                    }
-
-                    else
-                    {
 
 
-                            if (dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).exists()) {
-                            if (i == 0) {
-                                if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
-                                    contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").getValue(String.class),
-                                            dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("status").getValue(String.class),0,null));
-                                }
-                                else{
-                                    contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",
-                                            dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("status").getValue(String.class),0,null));
-                                }                                 (reference.child("users").child(currentUserNumber).child("+91"+contacts.get(i).getPh_number()).child("message")).setValue("/null");
-                                c = 1;
-                            } else {
-                                for (int j = 0; j < c; j++) {
-                                    if (contacts.get(i).getPh_number().equals(contacts1.get(j).getPh_number())) {
-                                        k = 1;
-                                        break;
-                                    }
-                                }
-                                if (k == 0) {
-                                    if(dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").exists()) {
-                                        contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("profile").getValue(String.class),
-                                                dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("status").getValue(String.class),0,null));
-                                    }
-                                    else{
-                                        contacts1.add(new UserDetailWithStatus(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null",
-                                                dataSnapshot.child("users").child("+91"+contacts.get(i).getPh_number()).child("status").getValue(String.class),0,null));
-                                    }
-                                    (reference.child("users").child(currentUserNumber).child(("+91"+contacts.get(i).getPh_number())).child("message")).setValue("/null");
 
-                                    //  (reference.child("users").child(currentUserNumber).child(("+91"+contacts.get(i).getPh_number())).child("activeStatus")).setValue("online");
-
-
-                                    c++;
-                                }
-                            }
-                            k = 0;
-                        }
-                    }
                 }
 
                 childEvent = new ChildEventListener() {
@@ -418,27 +366,20 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                 // Log.d("contact",contacts1.get(i).getPh_number());
 
 
-                                if (contacts1.get(i).getPh_number().substring(0, 3).equals("+91")) {
                                     if (contacts1.get(i).getPh_number().equals(dataSnapshot.getKey())) {
                                         tell = 1;
                                         break;
                                     }
-                                } else {
-                                    String ph = "+91" + contacts1.get(i).getPh_number();
-                                    if (ph.equals(dataSnapshot.getKey())) {
-                                        tell = 1;
-                                        break;
-                                    }
-                                }
+
+
 
                             }
                             if (tell == 0) {
-                                if (dataSnapshot.child("info").child("friend").exists()) {
-                                    if (dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
+                                if (dataSnapshot.child("info").child("friend").exists() && dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
                                         contacts1.add(new UserDetailWithStatus(dataSnapshot.getKey(), "", "null",
                                                 "",0,null));
                                     }
-                                }
+
                             }
 
 
@@ -586,7 +527,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     {
 
 
-    if(members.get(i).equals(contacts1.get(index).getPh_number()) || members.get(i).equals("+91"+contacts1.get(index).getPh_number()))
+    if(members.get(i).equals(contacts1.get(index).getPh_number()) )
     {
         x=1;
         break;
@@ -607,36 +548,38 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         else {
             // tvtitle.setText("Forward To");
             Intent intent = new Intent(FriendsActivity.this, MessageActivity.class);
-            intent.putExtra("title", contacts1.get(index).getuID());
+                intent.putExtra("title", contacts1.get(index).getPh_number());
 
-            if (contacts1.get(index).getPh_number().substring(0, 3).equals("+91")) {
+          //  intent.putExtra("title","+91"+contacts1.get(index).getPh_number());
+           // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+
+            //else
+            //intent.putExtra("title", contacts1.get(index).getuID());
+
                 intent.putExtra("phone", contacts1.get(index).getPh_number());
-            } else {
-                intent.putExtra("phone", "+91" + contacts1.get(index).getPh_number());
 
-            }
             if (getIntent().getIntExtra("path", 2) == 1) {
-                if(contacts1.get(index).getPh_number().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()) ||
-                        ("+91"+contacts1.get(index).getPh_number()).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
-                {
-                    Intent intent1=new Intent(FriendsActivity.this,MessageActivity2.class);
-                    intent1.putExtra("groupname", contacts1.get(index).getuID());
+//                if(contacts1.get(index).getPh_number().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()) ||
+//                        ("+91"+contacts1.get(index).getPh_number()).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+//                {
+//                    Intent intent1=new Intent(FriendsActivity.this,MessageActivity2.class);
+//                    intent1.putExtra("groupname", contacts1.get(index).getuID());
+//
+//                    intent1.putExtra("groupkey",contacts1.get(index).getKey());
+//                    intent1.putExtra("type", getIntent().getStringExtra("type"));
+//                    intent1.putExtra("path", 2);
+//                    intent1.putExtra("message", getIntent().getStringExtra("message"));
+//                    this.finish();
+//                    startActivity(intent1);
+//
+//                }
 
-                    intent1.putExtra("groupkey",contacts1.get(index).getKey());
-                    intent1.putExtra("type", getIntent().getStringExtra("type"));
-                    intent1.putExtra("path", 2);
-                    intent1.putExtra("message", getIntent().getStringExtra("message"));
-                    this.finish();
-                    startActivity(intent1);
-
-                }
-                else {
                     intent.putExtra("path", 2);
                     intent.putExtra("type", getIntent().getStringExtra("type"));
                     intent.putExtra("message", getIntent().getStringExtra("message"));
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     this.finish();
-                }
+
             }
             intent.putExtra("profile", contacts1.get(index).getUrl());
             startActivity(intent);

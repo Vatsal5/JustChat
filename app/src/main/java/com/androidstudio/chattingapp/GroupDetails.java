@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -31,6 +32,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -116,6 +118,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
 
                         if(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
                         {
+                            llExitGroup.setVisibility(View.GONE);
                             llAddMembers.setVisibility(View.VISIBLE);
                             llDeleteGroup.setVisibility(View.VISIBLE);
                         }
@@ -253,7 +256,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                         else
                                             users.add(new UserDetailWithStatus(dataSnapshot1.getValue(String.class),null,dataSnapshot.getValue(String.class),"admin",0,null));
 
-                                        Log.d("USERSS",dataSnapshot1.getValue(String.class));
+                                      //  Log.d("USERSS",dataSnapshot1.getValue(String.class));
                                         adapter.notifyDataSetChanged();
                                         tvParticipants.setText(users.size()+" Participants");
                                     }
@@ -317,12 +320,16 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        final ProgressDialog progressDialog=new ProgressDialog(GroupDetails.this);
+                        progressDialog.setMessage("Please Wait");
+                        progressDialog.show();
 
                         DeleteGroup = new ChildEventListener() {
                             @Override
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                                 FirebaseDatabase.getInstance().getReference().child("users").
                                         child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).getRef().removeValue();
+                                MessageActivity2.getInstance().finish();
 
                                // FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").removeEventListener(DeleteGroup);
                             }
@@ -352,17 +359,20 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
 
                         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(DeleteGroup);
 
-                        Handler handler=new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                FirebaseDatabase.getInstance().getReference().child("groups").
-                                        child(groupKey).getRef().removeValue();
-                                GroupDetails.this.finish();
-                                startActivity(new Intent(GroupDetails.this,MainActivity.class));
 
-                            }
-                        },2000);
+                                FirebaseDatabase.getInstance().getReference().child("groups").
+                                        child(groupKey).getRef().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Intent intent=new Intent(GroupDetails.this,MainActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        progressDialog.cancel();
+                                        GroupDetails.this.finish();
+                                        startActivity(intent);
+                                    }
+                                });
+
+
                     }
                 });
                 builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -393,11 +403,15 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                     FirebaseDatabase.getInstance().getReference().child("users")
                                             .child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
                                             .child("groups").child(groupKey).getRef().removeValue();
+                                    Intent intent=new Intent(GroupDetails.this,MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     GroupDetails.this.finish();
-                                    startActivity(new Intent(GroupDetails.this, MainActivity.class));
+                                    MessageActivity2.getInstance().finish();
 
                                     FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey)
                                             .child("members").removeEventListener(exitGroup);
+                                    startActivity(intent);
+
                                 }
                             }
 
@@ -439,8 +453,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
     }
     @Override
     public void onItemSelected(final int index) {
-        if(!(users.get(index).getPh_number().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
-                || ("+91"+users.get(index).getPh_number()).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
+        if(!(users.get(index).getPh_number().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
 
             if (admin.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                 String[] choices = {"View", "Remove"};
