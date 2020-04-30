@@ -115,7 +115,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 public class MessageActivity extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
     EmojiEditText etMessage;
-    ImageView ivSend,ivProfile,ivBack,ivStatus,ivTyping;
+    ImageView ivSend,ivProfile,ivBack,ivStatus;
     String RecieverPhone;
     FirebaseDatabase database;
     DatabaseReference reference;
@@ -295,7 +295,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ivProfile = findViewById(R.id.ivProfile);
         ivBack = findViewById(R.id.ivBack);
         ivStatus = findViewById(R.id.ivStatus);
-        ivTyping = findViewById(R.id.ivTyping);
         tvMode = findViewById(R.id.tvMode);
         llMessageActivity = findViewById(R.id.llMessageActivity);
 
@@ -339,12 +338,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
 
 
-
-
-
-
-        Glide.with(MessageActivity.this).load(R.drawable.typing).into(ivTyping);
-
         Status = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -352,7 +345,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 java.sql.Date date1 = new java.sql.Date(millis);
                 if(dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
-                    ivTyping.setVisibility(View.VISIBLE);
 
                     if(!flag1) {
                         chats.add(new MessageModel(-678, "null  ", "null  ", "jgvjhv", "typing", 45, "null  ", date1.toString(),"null"));
@@ -365,8 +357,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 else if(dataSnapshot.getValue().equals("online") || (dataSnapshot.getValue(String.class).substring(0,6).equals("typing") && !dataSnapshot.getValue(String.class).substring(7).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
                     ivStatus.setBackgroundResource(R.drawable.orange);
-
-                    ivTyping.setVisibility(View.GONE);
 
                     if(chats.size()!=0) {
 
@@ -383,8 +373,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 else {
                     ivStatus.setBackground(null);
-
-                    ivTyping.setVisibility(View.GONE);
 
                     if(chats.size()!=0) {
 
@@ -1291,46 +1279,62 @@ if(getIntent().getIntExtra("path",1)==2) {
 
     }
 
+    class getMessages extends AsyncTask<Void,Void,String>
+    {
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode",0);
+            defaultvalue = pref.getString("mode"+RecieverPhone,"null");
+            Log.d("mode",defaultvalue);
+
+            if(defaultvalue.equals("private"))
+            {
+//                tvMode.setText("Private");
+                if(chats.size()!=0)
+                {
+                    chats.clear();
+                }
+                return "Private";
+            }
+            else
+            {
+//                tvMode.setText("Public");
+                if(chats.size()!=0) {
+                    chats.clear();
+                }
+                chats.addAll(Handler.getMessages(RecieverPhone));
+
+                return "Public";
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String Status) {
+            super.onPostExecute(Status);
+
+            tvMode.setText(Status);
+
+            if(!Messages.isComputingLayout())
+                adapter.notifyDataSetChanged();
+
+            if(flag1) {
+                chats.add(new MessageModel(-678, "null  ", "null  ", "jgvjhv", "typing", 45, "null  ", "null","null"));
+                if(!Messages.isComputingLayout())
+                    adapter.notifyItemInserted(chats.size()-1);
+            }
+
+        }
+    }
+
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onResume() {
         super.onResume();
 
+        new getMessages().execute();
 
-        long millis = System.currentTimeMillis();
-        java.sql.Date date1 = new java.sql.Date(millis);
-
-        SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode",0);
-        defaultvalue = pref.getString("mode"+RecieverPhone,"null");
-        Log.d("mode",defaultvalue);
-
-        if(defaultvalue.equals("private"))
-        {
-            tvMode.setText("Private");
-            if(chats.size()!=0)
-            {
-                chats.clear();
-                if(!Messages.isComputingLayout())
-                    adapter.notifyDataSetChanged();
-            }
-        }
-        else
-        {
-            tvMode.setText("Public");
-            if(chats.size()!=0) {
-                chats.clear();
-                adapter.notifyDataSetChanged();
-            }
-                chats.addAll(Handler.getMessages(RecieverPhone));
-                if(!Messages.isComputingLayout())
-                    adapter.notifyItemInserted(chats.size()-1);
-        }
-
-        if(flag1) {
-            chats.add(new MessageModel(-678, "null  ", "null  ", "jgvjhv", "typing", 45, "null  ", date1.toString(),"null"));
-            if(!Messages.isComputingLayout())
-                adapter.notifyItemInserted(chats.size()-1);
-        }
     }
 
     @Override

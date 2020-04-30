@@ -272,10 +272,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         });
 
-        chats.addAll(Handler.getGroupMessages(groupname));
-        if(chats.size()>0)
-            adapter.notifyItemInserted(chats.size()-1);
-
         rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1896,35 +1892,55 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         return null;
     }
 
+    class getMessages extends AsyncTask<Void,Void,String>
+    {
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode",0);
+            defaultvalue = pref.getString("mode"+groupKey,"null");
+            Log.d("mode",defaultvalue);
+
+            if(defaultvalue.equals("private"))
+            {
+//                tvMode.setText("Private");
+                if(chats.size()!=0)
+                {
+                    chats.clear();
+                }
+                return "Private";
+            }
+            else
+            {
+//                tvMode.setText("Public");
+                if(chats.size()!=0) {
+                    chats.clear();
+                }
+                chats.addAll(Handler.getGroupMessages(groupname));
+
+                return "Public";
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String Status) {
+            super.onPostExecute(Status);
+
+            tvMode.setText(Status);
+
+            if(!Messages.isComputingLayout())
+                adapter.notifyDataSetChanged();
+
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
-        SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode",0);
-        defaultvalue = pref.getString("mode"+groupKey,"null");
-        Log.d("mode",defaultvalue);
+        new getMessages().execute();
 
-        if(defaultvalue.equals("private"))
-        {
-            tvMode.setText("Private");
-            if(chats.size()!=0)
-            {
-                chats.clear();
-                if(!Messages.isComputingLayout())
-                    adapter.notifyDataSetChanged();
-            }
-        }
-        else
-        {
-            tvMode.setText("Public");
-            if(chats.size()!=0) {
-                chats.clear();
-                adapter.notifyDataSetChanged();
-            }
-            chats.addAll(Handler.getGroupMessages(groupname));
-            if(!Messages.isComputingLayout())
-                adapter.notifyItemInserted(chats.size()-1);
-        }
     }
 
     public Drawable getBackground(Uri uri)

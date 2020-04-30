@@ -15,6 +15,7 @@ import android.icu.lang.UCharacter;
 import android.icu.util.MeasureUnit;
 import android.net.ParseException;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -115,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     int k=0;
 
     int num=0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -1583,21 +1585,19 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         getcontact();
 
-        for (int i = 0; i < contacts1.size(); i++) {
-            if(contacts1.get(i).getGroupname()==null) {
+            if(contacts1.get(l).getGroupname()==null) {
 
 
-                    contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
-                    contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
+                    contacts1.get(l).setLastmessage(Handler.getLastMessage(contacts1.get(l).getPh_number()));
+                    contacts1.get(l).setTime(Handler.getLastMessageTime(contacts1.get(l).getPh_number()));
 
             }
             else {
-                if(Handler.getGroupMessages(contacts1.get(i).getGroupname()).size()>0) {
-                    contacts1.get(i).setLastmessage(Handler.getLastMessageGroup(contacts1.get(i).getGroupname()));
-                    contacts1.get(i).setTime(Handler.getLastGroupMessageTime(contacts1.get(i).getGroupname()).substring(0, 5));
+                if(Handler.getGroupMessages(contacts1.get(l).getGroupname()).size()>0) {
+                    contacts1.get(l).setLastmessage(Handler.getLastMessageGroup(contacts1.get(l).getGroupname()));
+                    contacts1.get(l).setTime(Handler.getLastGroupMessageTime(contacts1.get(l).getGroupname()).substring(0, 5));
                 }
             }
-        }
         userAdapter.notifyDataSetChanged();
 
         if(flag==true)
