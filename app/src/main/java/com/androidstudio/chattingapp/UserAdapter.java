@@ -207,6 +207,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             holder.tvUserName.setPadding(0,13,0,0);
 
         }
+       // Log.d("asdf",list.get(position).getUrl());
 
         if(list.get(position).getUrl().equals("null")) {
 
@@ -295,6 +296,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
         else
         {
+
             holder.iv.setColorFilter(context.getResources().getColor(R.color.iOrange));
             Glide.with(context).load(list.get(position).getUrl()).into(holder.iv);
             holder.iv.setOnClickListener(new View.OnClickListener() {

@@ -126,7 +126,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                } else {
                                    llAddMembers.setVisibility(View.GONE);
                                }
-                           
+
                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).removeEventListener(admin1);
                        }
                    }

@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
     ArrayList<String> number1;
     SharedPreferences preftheme;
+    ValueEventListener profile;
     FirebaseDatabase database1;
     DatabaseReference reference1;
     DatabaseReference UserStatus;
@@ -812,7 +813,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 if (k == 0) {
                                     if ((dataSnapshot.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("info").child("friend").exists())) {
                                         if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
-                                            Log.d("myapp", dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class));
+                                           // Log.d("myapp", dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class));
                                             contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class), 2
                                                     , "", "",null,null));
                                         } else {
@@ -966,11 +967,45 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             if (tell == 0) {
                                 if (dataSnapshot.child("info").child("friend").exists() && dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
 
-                                        contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), "", "null", 2
-                                                , "", "",null,null));
-                                    new listener(contacts1.size()-1).piclistener();
-                                    new listener(contacts1.size()-1).VideoListener();
-                                    new listener(contacts1.size()-1).child();
+                                    final String key=dataSnapshot.getKey();
+                                    profile=new ValueEventListener(){
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if(dataSnapshot.getValue()!=null) {
+                                                contacts1.add(new UserDetailwithUrl(key, "", dataSnapshot.getValue().toString(), 2
+                                                        , "", "",null,null));
+                                                userAdapter.notifyItemInserted(contacts1.size()-1);
+
+                                                new listener(contacts1.size()-1).piclistener();
+                                                new listener(contacts1.size()-1).VideoListener();
+                                                new listener(contacts1.size()-1).child();
+                                                userAdapter.notifyDataSetChanged();
+
+
+                                                //   Log.d("asdf",contacts1.get(contacts1.size()-1).getUrl());
+                                            }
+                                            else
+                                            {
+                                                contacts1.add(new UserDetailwithUrl(key, "", "null", 2
+                                                        , "", "",null,null));
+                                                new listener(contacts1.size()-1).piclistener();
+                                                new listener(contacts1.size()-1).VideoListener();
+                                                new listener(contacts1.size()-1).child();
+                                                userAdapter.notifyDataSetChanged();
+
+                                            }
+                                         //   userAdapter.notifyDataSetChanged();
+                                                reference.child("users").child(key).child("profile").removeEventListener(profile);
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    };
+                                    reference.child("users").child(dataSnapshot.getKey()).child("profile").addListenerForSingleValueEvent(profile);
                                     userAdapter.notifyDataSetChanged();
 
 
@@ -1001,8 +1036,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 }
                             }
 
-                            userAdapter = new UserAdapter(MainActivity.this, contacts1);
-                            lv.setAdapter(userAdapter);
+//                            userAdapter = new UserAdapter(MainActivity.this, contacts1);
+//                            lv.setAdapter(userAdapter);
+                            userAdapter.notifyDataSetChanged();
 
                         }
 
