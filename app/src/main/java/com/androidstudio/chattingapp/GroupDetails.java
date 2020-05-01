@@ -46,6 +46,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -72,8 +73,8 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
     ArrayList <String> members;
     ArrayList<UserDetailWithStatus> users;
     SharedPreferences pref;
-    ChildEventListener DeleteGroup,exitGroup,newname;
-    ValueEventListener admin1;
+    ChildEventListener DeleteGroup,exitGroup,newname,deletegroupdp;
+    ChildEventListener admin1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,40 +101,57 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
         Participants.setHasFixedSize(true);
 
 
-               admin1= new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               admin1= new ChildEventListener(){
+                   @Override
+                   public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                       if(dataSnapshot.getKey().equals("admin")) {
 
-                        admin = dataSnapshot.getValue().toString();
+                               admin = dataSnapshot.getValue().toString();
 
-                        if(admin.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
-                            tvCreatedBy.setText("Created By You");
+                               if (admin.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                                   tvCreatedBy.setText("Created By You");
 
-                        else {
-                            if (pref.getString(admin, "null").equals("null"))
-                                tvCreatedBy.setText("Created By " + admin);
-                            else
-                                tvCreatedBy.setText("Created By " + pref.getString(admin, "null"));
-                        }
+                               else {
+                                   if (pref.getString(admin, "null").equals("null"))
+                                       tvCreatedBy.setText("Created By " + admin);
+                                   else
+                                       tvCreatedBy.setText("Created By " + pref.getString(admin, "null"));
+                               }
 
-                        if(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
-                        {
-                            llExitGroup.setVisibility(View.GONE);
-                            llAddMembers.setVisibility(View.VISIBLE);
-                            llDeleteGroup.setVisibility(View.VISIBLE);
-                        }
-                        else{
-                            llAddMembers.setVisibility(View.GONE);
-                        }
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("admin").removeEventListener(admin1);
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                               if (dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
+                                   llExitGroup.setVisibility(View.GONE);
+                                   llAddMembers.setVisibility(View.VISIBLE);
+                                   llDeleteGroup.setVisibility(View.VISIBLE);
+                               } else {
+                                   llAddMembers.setVisibility(View.GONE);
+                               }
+                           
+                           FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).removeEventListener(admin1);
+                       }
+                   }
 
-                    }
-                };
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("admin").addValueEventListener(admin1);
+                   @Override
+                   public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                   }
+
+                   @Override
+                   public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                   }
+
+                   @Override
+                   public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                   }
+
+                   @Override
+                   public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                   }
+               };
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).addChildEventListener(admin1);
 
 
 
@@ -295,6 +313,42 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
 
                     }
                 });
+       deletegroupdp= new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull final DataSnapshot dataSnapshot1, @Nullable String s) {
+
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                StorageReference file1;
+                        file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString());
+                        file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("profile").removeEventListener(deletegroupdp);
+                            }
+                        });
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("profile").addChildEventListener(deletegroupdp);
 
 
 
@@ -359,7 +413,9 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
 
                         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(DeleteGroup);
 
-
+//                        StorageReference file1;
+//                        file1=FirebaseStorage.getInstance().getReferenceFromUrl(FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members"));
+//                        file1.delete();
                                 FirebaseDatabase.getInstance().getReference().child("groups").
                                         child(groupKey).getRef().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
