@@ -57,10 +57,11 @@
             android:layout_width="67dp"
             android:layout_height="67dp"
             android:layout_gravity="center"
-app:civ_circle_background_color="#00ffffff"            android:layout_marginLeft="15dp"
+            app:civ_circle_background_color="#00ffffff"
+            android:layout_marginLeft="15dp"
             app:civ_border_color="#FFFFFF"
             app:civ_border_width="1dp"
-            android:backgroundTint="@android:color/transparent"/>
+            android:background="#FFFFFF"/>
 
         <LinearLayout
             android:layout_width="match_parent"

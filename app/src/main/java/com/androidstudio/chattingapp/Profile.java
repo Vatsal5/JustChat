@@ -67,9 +67,6 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
-    TextView tvHeading,tvSave,tvCancel;
-    EditText etData;
-    PopupWindow window;
     StorageReference reference;
 
     ProgressBar progress;
@@ -200,19 +197,9 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
         llProfile = findViewById(R.id.llProfile);
         inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view = inflater.inflate(R.layout.popup_layout,null,false);
-
-        tvHeading = view.findViewById(R.id.tvHeading);
-        tvSave = view.findViewById(R.id.tvSave);
-        tvCancel = view.findViewById(R.id.tvCancel);
-        etData = view.findViewById(R.id.etData);
-
 
         list = findViewById(R.id.list);
 
-
-        window = new PopupWindow(view, ActionBar.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        window.setFocusable(true);
         ivClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -293,45 +280,76 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
     @Override
     public void onItemSelected(final int index) {
-        switch (index)
-        {
+        switch (index) {
             case 0:
-                tvHeading.setText("Enter Your Name");
-                window.showAtLocation(llProfile,Gravity.BOTTOM,0,0);
+//                tvHeading.setText("Enter Your Name");
+//                window.showAtLocation(llProfile,Gravity.BOTTOM,0,0);
+//                break;
+
+                LayoutInflater inflater = LayoutInflater.from(Profile.this);
+                View v = inflater.inflate(R.layout.edittext, null);
+
+                final androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(Profile.this);
+                builder.setTitle("Enter Your Name");
+
+                final EditText etTitle = v.findViewById(R.id.etGroupTitle);
+                etTitle.setText(data.get(index));
+                etTitle.setSelection(data.get(index).length());
+
+                builder.setView(v);
+                builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        data.remove(index);
+                        databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("name").setValue(etTitle.getText().toString().trim());
+                        data.add(index, etTitle.getText().toString().trim());
+                        adapter.notifyDataSetChanged();
+                    }
+                })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        });
+
+                androidx.appcompat.app.AlertDialog dialog = builder.create();
+                dialog.show();
                 break;
+
             case 1:
-                tvHeading.setText("Enter your status");
-                window.showAtLocation(llProfile,Gravity.BOTTOM,0,0);
+                LayoutInflater inflater1 = LayoutInflater.from(Profile.this);
+                View v1 = inflater1.inflate(R.layout.edittext, null);
+
+                final androidx.appcompat.app.AlertDialog.Builder builder1 = new androidx.appcompat.app.AlertDialog.Builder(Profile.this);
+                builder1.setTitle("Enter Your Status");
+
+                final EditText etStatus = v1.findViewById(R.id.etGroupTitle);
+                etStatus.setText(data.get(index));
+                etStatus.setSelection(data.get(index).length());
+
+                builder1.setView(v1);
+                builder1.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        data.remove(index);
+                        databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("status").setValue(etStatus.getText().toString().trim());
+                        data.add(index, etStatus.getText().toString().trim());
+                        adapter.notifyDataSetChanged();
+                    }
+                })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        });
+
+                androidx.appcompat.app.AlertDialog dialog1 = builder1.create();
+                dialog1.show();
                 break;
+
         }
-        tvSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                data.remove(index);
-                if(index==0)
-                {
-                    databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("name").setValue(etData.getText().toString().trim());
-                }
-                else if(index==1)
-                {
-                    databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("status").setValue(etData.getText().toString().trim());
-
-                }
-                data.add(index,etData.getText().toString().trim());
-                adapter.notifyDataSetChanged();
-                window.dismiss();
-            }
-        });
-
-        tvCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                window.dismiss();
-            }
-        });
-
-        etData.setText(data.get(index));
-        etData.setSelection(data.get(index).length());
     }
 
     @Override

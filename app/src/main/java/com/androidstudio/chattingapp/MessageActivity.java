@@ -151,6 +151,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     String dpUrl ="null";
     ValueEventListener dp;
 
+    RecyclerView.AdapterDataObserver observer;
+
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -298,10 +300,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         tvMode = findViewById(R.id.tvMode);
         llMessageActivity = findViewById(R.id.llMessageActivity);
 
-
-        if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MessageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 150);
-        }
 
         tvMode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -556,8 +554,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         if(!wallpaper.getString("value","null").equals("null"))
         {
-            getWindow().setBackgroundDrawable(getBackground(Uri.parse(wallpaper.getString("value","null"))));
-                //llMessageActivity.setBackground(getBackground(Uri.parse(wallpaper.getString("value","null"))));
+            if(getBackground(Uri.parse(wallpaper.getString("value","null")))!=null)
+                getWindow().setBackgroundDrawable(getBackground(Uri.parse(wallpaper.getString("value","null"))));
         }
 
         //chats.add(new MessageModel(RecieverPhone,sender,"https://images.unsplash.com/photo-1579256308218-d162fd41c801?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjF9&auto=format&fit=crop&w=500&q=60","image",0));
@@ -574,7 +572,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         Log.d("mode",defaultvalue);
 
-        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        observer = new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
                 super.onChanged();
@@ -612,7 +610,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
                 super.onItemRangeMoved(fromPosition, toPosition, itemCount);
             }
-        });
+        };
+
+        adapter.registerAdapterDataObserver(observer);
 
         Messages.setAdapter(adapter);
 
@@ -995,6 +995,10 @@ if(getIntent().getIntExtra("path",1)==2) {
         ItemTouchHelper itemTouchHelper= new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(Messages);
 
+        if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MessageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 150);
+        }
+
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback= new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
@@ -1010,34 +1014,37 @@ if(getIntent().getIntExtra("path",1)==2) {
             MessageModel model = chats.get(pos);
 
 
+            if(pos!=0) {
+                if (pos < chats.size() - 1) {
+                    if (chats.get(pos - 1).getSender().equals("null") && chats.get(pos + 1).getSender().equals("null")) {
+                        chats.remove(model);
+                        Handler.DeleteMessage(model);
+                        model = chats.get(pos - 1);
+                        chats.remove(model);
+                        Handler.DeleteMessage(model);
+                    } else {
+                        chats.remove(model);
+                        Handler.DeleteMessage(model);
+                    }
+                } else {
+                    if (chats.get(pos - 1).getSender().equals("null")) {
+                        chats.remove(model);
+                        Handler.DeleteMessage(model);
+                        model = chats.get(pos - 1);
+                        chats.remove(model);
+                        Handler.DeleteMessage(model);
+                    } else {
+                        chats.remove(model);
+                        Handler.DeleteMessage(model);
+                    }
 
-            if(pos<chats.size()-1) {
-                if (chats.get(pos - 1).getSender().equals("null") && chats.get(pos + 1).getSender().equals("null")) {
-                    chats.remove(model);
-                    Handler.DeleteMessage(model);
-                    model = chats.get(pos - 1);
-                    chats.remove(model);
-                    Handler.DeleteMessage(model);
-                }
-                else{
-                    chats.remove(model);
-                    Handler.DeleteMessage(model);
                 }
             }
-            else{
-                if (chats.get(pos - 1).getSender().equals("null") ) {
-                    chats.remove(model);
-                    Handler.DeleteMessage(model);
-                    model = chats.get(pos - 1);
-                    chats.remove(model);
-                    Handler.DeleteMessage(model);
-                }
-                else{
-                    chats.remove(model);
-                    Handler.DeleteMessage(model);
-                }
-
+            else {
+                chats.remove(model);
+                Handler.DeleteMessage(model);
             }
+
             adapter.notifyDataSetChanged();
 
         }
@@ -1091,12 +1098,17 @@ if(getIntent().getIntExtra("path",1)==2) {
         reference.child("users").child(RecieverPhone).child(sender).removeEventListener(chreceiver);
         //reference.child("users").child(sender).removeEventListener(chsender);
         chats.clear();
+
+        adapter.unregisterAdapterDataObserver(observer);
+
         //Handler.close();
 
         FirebaseDatabase.getInstance().getReference("UserStatus").child(RecieverPhone).removeEventListener(Status);
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").removeEventListener(imagereceiver);
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("videos").removeEventListener(videoreceiver);
         FirebaseDatabase.getInstance().getReference("users").child(sender).child("profile").removeEventListener(dp);
+
+        Handler.close();
     }
 
     @Override

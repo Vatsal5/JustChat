@@ -24,7 +24,8 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".Settings"></activity>
         <activity android:name=".GroupDetails" />
-        <activity android:name=".MessageActivity2" />
+        <activity android:name=".MessageActivity2"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".CreateGroup"
             android:screenOrientation="portrait" />

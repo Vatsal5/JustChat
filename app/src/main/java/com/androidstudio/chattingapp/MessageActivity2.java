@@ -97,6 +97,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     ChildEventListener imagereceiver, videoreceiver, chreceiver; ValueEventListener deletevideo,deleteimage;
     String defaultvalue;
     SharedPreferences pref,wallpaper;
+    RecyclerView.AdapterDataObserver observer;
 
     public static MessageActivity2 getInstance(){
         return messageActivity2;
@@ -197,10 +198,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         }
 
-        if (ContextCompat.checkSelfPermission(MessageActivity2.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MessageActivity2.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 150);
-        }
-
         profile=getIntent().getStringExtra("profile");
 
         if(profile.equals("null"))
@@ -246,7 +243,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         if(!wallpaper.getString("value","null").equals("null"))
         {
-            getWindow().setBackgroundDrawable(getBackground(Uri.parse(wallpaper.getString("value","null"))));
+            if(getBackground(Uri.parse(wallpaper.getString("value","null")))!=null)
+                getWindow().setBackgroundDrawable(getBackground(Uri.parse(wallpaper.getString("value","null"))));
         }
 
         Messages = findViewById(R.id.Messages);
@@ -263,14 +261,16 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         adapter = new MessageAdapter(MessageActivity2.this, chats);
         Messages.setAdapter(adapter);
 
-        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        observer = new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
 
                 manager.scrollToPosition(chats.size()-1);
             }
-        });
+        };
+
+        adapter.registerAdapterDataObserver(observer);
 
         rl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -868,6 +868,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         }
 
+        if (ContextCompat.checkSelfPermission(MessageActivity2.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MessageActivity2.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 150);
+        }
+
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback= new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
@@ -880,32 +884,39 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
             int pos = viewHolder.getAdapterPosition();
+
             MessageModel model = chats.get(pos);
 
-
-            if (pos < chats.size() - 1) {
-                if (chats.get(pos - 1).getSender().equals("null") && chats.get(pos + 1).getSender().equals("null")) {
-                    chats.remove(model);
-                    Handler.DeleteMessage(model);
-                    model = chats.get(pos - 1);
-                    chats.remove(model);
-                    Handler.DeleteMessage(model);
+            if(pos!=0) {
+                if (pos < chats.size() - 1) {
+                    if (chats.get(pos - 1).getSender().equals("null") && chats.get(pos + 1).getSender().equals("null")) {
+                        chats.remove(model);
+                        Handler.DeleteMessage(model);
+                        model = chats.get(pos - 1);
+                        chats.remove(model);
+                        Handler.DeleteMessage(model);
+                    } else {
+                        chats.remove(model);
+                        Handler.DeleteMessage(model);
+                    }
                 } else {
-                    chats.remove(model);
-                    Handler.DeleteMessage(model);
-                }
-            } else {
-                if (chats.get(pos - 1).getSender().equals("null")) {
-                    chats.remove(model);
-                    Handler.DeleteMessage(model);
-                    model = chats.get(pos - 1);
-                    chats.remove(model);
-                    Handler.DeleteMessage(model);
-                } else {
-                    chats.remove(model);
-                    Handler.DeleteMessage(model);
-                }
+                    if (chats.get(pos - 1).getSender().equals("null")) {
+                        chats.remove(model);
+                        Handler.DeleteMessage(model);
+                        model = chats.get(pos - 1);
+                        chats.remove(model);
+                        Handler.DeleteMessage(model);
+                    } else {
+                        chats.remove(model);
+                        Handler.DeleteMessage(model);
+                    }
 
+                }
+            }
+            else
+            {
+                chats.remove(model);
+                Handler.DeleteMessage(model);
             }
             adapter.notifyDataSetChanged();
 
@@ -1880,6 +1891,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(chreceiver);
+
+        adapter.unregisterAdapterDataObserver(observer);
+        Handler.close();
     }
 
     protected URL stringToURL(String urlString){
@@ -1954,7 +1968,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             SharedPreferences.Editor editor = wallpaper.edit();
             editor.putString("value",null);
             editor.apply();
+            return null;
         }
-        return null;
     }
 }
