@@ -363,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             public void run() {
                 for (int i = 0; i < contacts1.size(); i++) {
                     if (!(contacts1.get(i).getGroupname() == null)) {
-                        (new GroupDp(i)).ProfileListener();
+                  //      (new GroupDp(i)).ProfileListener();
                     }
                 }
 
@@ -1088,6 +1088,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             new grouplistener(contacts1.size()-1).piclistener();
                             new grouplistener(contacts1.size()-1).VideoListener();
                             new grouplistener(contacts1.size()-1).child();
+                            (new GroupDp(contacts1.size()-1)).ProfileListener();
+
 
                         } else {
                             contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
@@ -1096,6 +1098,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             new grouplistener(contacts1.size() - 1).piclistener();
                             new grouplistener(contacts1.size() - 1).VideoListener();
                             new grouplistener(contacts1.size() - 1).child();
+                            (new GroupDp(contacts1.size()-1)).ProfileListener();
                         }
 
 
