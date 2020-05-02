@@ -413,7 +413,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             options.diskCacheStrategy(DiskCacheStrategy.NONE);
             options.skipMemoryCache(true);
 
-            Glide.with(context).setDefaultRequestOptions(options).load(messages.get(holder.getAdapterPosition()).getMessage()).addListener(new RequestListener<Drawable>() {
+            Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
                 @Override
                 public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
