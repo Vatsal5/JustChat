@@ -2,6 +2,7 @@ package com.androidstudio.chattingapp;
 
 import android.Manifest;
 import android.app.DownloadManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,7 +11,10 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.icu.lang.UCharacter;
 import android.icu.util.MeasureUnit;
 import android.net.ParseException;
@@ -119,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     int num=0;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -157,82 +162,97 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         editor = pref.edit();
         String theme=preftheme.getString("theme","red");
 
-        if(theme.equals("orange"))
-        {
+
+        if(theme.equals("orange")) {
             toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
 
-            btnContacts.setBackgroundColor(getResources().getColor(R.color.Orange));}
-
+            btnContacts.setBackgroundColor(getResources().getColor(R.color.Orange));
+        }
         else if(theme.equals("blue"))
         {
             btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.blue));}
+            toolbar.setBackgroundColor(getResources().getColor(R.color.blue));
+
+        }
 
 
         else if(theme.equals("bluish")) {
             toolbar.setBackgroundColor(getResources().getColor(R.color.bluish));
             btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.bluish)));
+
         }
 
         else if(theme.equals("deepred")) {
             btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.deepred)));
             toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
+
         }
 
         else if(theme.equals("faintpink")) {
             btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.faintpink)));
             toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
+
         }
 
         else if(theme.equals("darkblue")) {
             btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkblue)));
             toolbar.setBackgroundColor(getResources().getColor(R.color.darkblue));
+
         }
 
         else if (theme.equals("green")) {
             btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
             toolbar.setBackgroundColor(getResources().getColor(R.color.green));
+
         }
 
         else if (theme.equals("lightorange")) {
             btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightorange)));
             toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
+
         }
 
         else  if (theme.equals("lightred")) {
             btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightred)));
             toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
+
         }
 
         else if(theme.equals( "mustard")) {
             toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
             btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.mustard)));
+
         }
 
         else if (theme.equals("pink")) {
             toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
             btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pink)));
+
         }
 
         else if(theme.equals("pureorange")) {
             toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
             btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pureorange)));
+
         }
 
         else if(theme.equals( "purepink")) {
             toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
             btnContacts.setBackgroundTintList(ColorStateList.valueOf(
                     getResources().getColor(R.color.purepink)));
+
         }
 
         else if(theme.equals( "purple")) {
             toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
             btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.purple)));
+
         }
 
         else {
             toolbar.setBackgroundColor(getResources().getColor(R.color.red));
             btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+
 
         }
 

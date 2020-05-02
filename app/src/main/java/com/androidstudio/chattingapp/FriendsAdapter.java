@@ -144,75 +144,75 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> {
             if(list.get(position).getUrl().equals("null"))
             {
                 iv.setImageResource(R.drawable.person);
-                String theme1=preftheme.getString("theme","red");
-                switch (theme1) {
-                    case "orange":
-
-                        iv.setColorFilter(context.getResources().getColor(R.color.Orange));
-                        break;
-
-                    case "blue":
-
-                        iv.setColorFilter(context.getResources().getColor(R.color.blue));
-
-                        break;
-
-
-                    case "bluish":
-                        iv.setColorFilter(context.getResources().getColor(R.color.bluish));
-                        break;
-
-
-                    case "deepred":
-                        iv.setColorFilter(context.getResources().getColor(R.color.deepred));
-                        break;
-
-                    case "faintpink":
-                        iv.setColorFilter(context.getResources().getColor(R.color.faintpink));
-
-                        break;
-
-                    case "darkblue":
-                        iv.setColorFilter(context.getResources().getColor(R.color.darkblue));
-                        break;
-
-
-                    case "green":
-                        iv.setColorFilter(context.getResources().getColor(R.color.green));
-                        break;
-
-                    case "lightorange":
-                        iv.setColorFilter(context.getResources().getColor(R.color.lightorange));
-                        break;
-
-                    case "lightred":
-                        iv.setColorFilter(context.getResources().getColor(R.color.lightred));
-                        break;
-
-
-                    case "mustard":
-                        iv.setColorFilter(context.getResources().getColor(R.color.mustard));
-                        break;
-
-                    case "pink":
-                        iv.setColorFilter(context.getResources().getColor(R.color.pink));
-                        break;
-
-                    case "pureorange":
-                        iv.setColorFilter(context.getResources().getColor(R.color.pureorange));
-                        break;
-
-                    case "purepink":
-                        iv.setColorFilter(context.getResources().getColor(R.color.purepink));
-                        break;
-
-                    case "purple":
-                        iv.setColorFilter(context.getResources().getColor(R.color.purple));
-                        break;
-
-                    default:
-                        iv.setColorFilter(context.getResources().getColor(R.color.red));
-                }
+//                String theme1=preftheme.getString("theme","red");
+//                switch (theme1) {
+//                    case "orange":
+//
+//                        iv.setColorFilter(context.getResources().getColor(R.color.Orange));
+//                        break;
+//
+//                    case "blue":
+//
+//                        iv.setColorFilter(context.getResources().getColor(R.color.blue));
+//
+//                        break;
+//
+//
+//                    case "bluish":
+//                        iv.setColorFilter(context.getResources().getColor(R.color.bluish));
+//                        break;
+//
+//
+//                    case "deepred":
+//                        iv.setColorFilter(context.getResources().getColor(R.color.deepred));
+//                        break;
+//
+//                    case "faintpink":
+//                        iv.setColorFilter(context.getResources().getColor(R.color.faintpink));
+//
+//                        break;
+//
+//                    case "darkblue":
+//                        iv.setColorFilter(context.getResources().getColor(R.color.darkblue));
+//                        break;
+//
+//
+//                    case "green":
+//                        iv.setColorFilter(context.getResources().getColor(R.color.green));
+//                        break;
+//
+//                    case "lightorange":
+//                        iv.setColorFilter(context.getResources().getColor(R.color.lightorange));
+//                        break;
+//
+//                    case "lightred":
+//                        iv.setColorFilter(context.getResources().getColor(R.color.lightred));
+//                        break;
+//
+//
+//                    case "mustard":
+//                        iv.setColorFilter(context.getResources().getColor(R.color.mustard));
+//                        break;
+//
+//                    case "pink":
+//                        iv.setColorFilter(context.getResources().getColor(R.color.pink));
+//                        break;
+//
+//                    case "pureorange":
+//                        iv.setColorFilter(context.getResources().getColor(R.color.pureorange));
+//                        break;
+//
+//                    case "purepink":
+//                        iv.setColorFilter(context.getResources().getColor(R.color.purepink));
+//                        break;
+//
+//                    case "purple":
+//                        iv.setColorFilter(context.getResources().getColor(R.color.purple));
+//                        break;
+//
+//                    default:
+//                        iv.setColorFilter(context.getResources().getColor(R.color.red));
+//                }
             }
             else
             {
