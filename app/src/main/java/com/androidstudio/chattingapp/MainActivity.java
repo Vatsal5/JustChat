@@ -786,15 +786,20 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                     if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").exists()) {
                                         contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class), 2
                                                 , "", "",null,null));
+                                        new listener(contacts1.size()-1).piclistener();
+                                        new listener(contacts1.size()-1).VideoListener();
+                                        new listener(contacts1.size()-1).child();
+
                                     } else {
 
                                         contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null", 2
                                                 , "", "",null,null));
+                                        new listener(contacts1.size()-1).piclistener();
+                                        new listener(contacts1.size()-1).VideoListener();
+                                        new listener(contacts1.size()-1).child();
+
                                     }
                                     userAdapter.notifyDataSetChanged();
-                                    new listener(contacts1.size()-1).piclistener();
-                                    new listener(contacts1.size()-1).VideoListener();
-                                    new listener(contacts1.size()-1).child();
 
 
                                     (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
@@ -816,15 +821,19 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                            // Log.d("myapp", dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class));
                                             contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class), 2
                                                     , "", "",null,null));
+                                            new listener(contacts1.size()-1).piclistener();
+                                            new listener(contacts1.size()-1).VideoListener();
+                                            new listener(contacts1.size()-1).child();
                                         } else {
 
                                             contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null", 2
                                                     , "", "",null,null));
+                                            new listener(contacts1.size()-1).piclistener();
+                                            new listener(contacts1.size()-1).VideoListener();
+                                            new listener(contacts1.size()-1).child();
                                         }
                                         userAdapter.notifyDataSetChanged();
-                                        new listener(contacts1.size()-1).piclistener();
-                                        new listener(contacts1.size()-1).VideoListener();
-                                        new listener(contacts1.size()-1).child();
+
 
 
                                         (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
@@ -974,7 +983,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                             if(dataSnapshot.getValue()!=null) {
                                                 contacts1.add(new UserDetailwithUrl(key, "", dataSnapshot.getValue().toString(), 2
                                                         , "", "",null,null));
-                                                userAdapter.notifyItemInserted(contacts1.size()-1);
+                                             //   userAdapter.notifyItemInserted(contacts1.size()-1);
 
                                                 new listener(contacts1.size()-1).piclistener();
                                                 new listener(contacts1.size()-1).VideoListener();
@@ -1072,18 +1081,24 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                        // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
-                        if(Handler.getGroupMessages(dataSnapshot.getValue().toString()).size()>0)
-                                contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
-                                        , Handler.getLastMessageGroup(dataSnapshot.getValue().toString()),
-                                        Handler.getLastGroupMessageTime(dataSnapshot.getValue().toString()).substring(0,5), dataSnapshot.getKey(),dataSnapshot.getValue().toString()));
-                        else
+                        if(Handler.getGroupMessages(dataSnapshot.getValue().toString()).size()>0) {
+                            contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
+                                    , Handler.getLastMessageGroup(dataSnapshot.getValue().toString()),
+                                    Handler.getLastGroupMessageTime(dataSnapshot.getValue().toString()).substring(0, 5), dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
+                            new grouplistener(contacts1.size()-1).piclistener();
+                            new grouplistener(contacts1.size()-1).VideoListener();
+                            new grouplistener(contacts1.size()-1).child();
+
+                        } else {
                             contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
                                     , "",
-                                    "", dataSnapshot.getKey(),dataSnapshot.getValue().toString()));
+                                    "", dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
+                            new grouplistener(contacts1.size() - 1).piclistener();
+                            new grouplistener(contacts1.size() - 1).VideoListener();
+                            new grouplistener(contacts1.size() - 1).child();
+                        }
 
-                        new grouplistener(contacts1.size()-1).piclistener();
-                        new grouplistener(contacts1.size()-1).VideoListener();
-                        new grouplistener(contacts1.size()-1).child();
+
                      //   userAdapter.notifyDataSetChanged();
 
                                 userAdapter.notifyDataSetChanged();
@@ -1357,8 +1372,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             if(contacts1.get(i).getGroupname()!=null)
                             {
                                 if(contacts1.get(i).getGroupname().equals(dataSnapshot.getValue().toString()))
+                                {
                                     contacts1.remove(i);
-                                userAdapter.notifyDataSetChanged();
+                                userAdapter.notifyDataSetChanged();}
 
                             }
                         }
