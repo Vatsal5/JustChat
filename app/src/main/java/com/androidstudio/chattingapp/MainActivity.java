@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
     ArrayList<String> number1;
     SharedPreferences preftheme;
-    ValueEventListener profile;
     FirebaseDatabase database1;
     DatabaseReference reference1;
     DatabaseReference UserStatus;
@@ -103,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     SharedPreferences pref;
     SharedPreferences.Editor editor;
 
-    ChildEventListener Group;
+    ChildEventListener Group,profile;
     ChildEventListener childEvent;
 
     int l, pos;
@@ -976,46 +975,57 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             if (tell == 0) {
                                 if (dataSnapshot.child("info").child("friend").exists() && dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
 
-                                    final String key=dataSnapshot.getKey();
-                                    profile=new ValueEventListener(){
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            if(dataSnapshot.getValue()!=null) {
-                                                contacts1.add(new UserDetailwithUrl(key, "", dataSnapshot.getValue().toString(), 2
-                                                        , "", "",null,null));
-                                             //   userAdapter.notifyItemInserted(contacts1.size()-1);
-
-                                                new listener(contacts1.size()-1).piclistener();
-                                                new listener(contacts1.size()-1).VideoListener();
-                                                new listener(contacts1.size()-1).child();
-                                                userAdapter.notifyDataSetChanged();
-
-
-                                                //   Log.d("asdf",contacts1.get(contacts1.size()-1).getUrl());
-                                            }
-                                            else
-                                            {
-                                                contacts1.add(new UserDetailwithUrl(key, "", "null", 2
-                                                        , "", "",null,null));
-                                                new listener(contacts1.size()-1).piclistener();
-                                                new listener(contacts1.size()-1).VideoListener();
-                                                new listener(contacts1.size()-1).child();
-                                                userAdapter.notifyDataSetChanged();
-
-                                            }
-                                         //   userAdapter.notifyDataSetChanged();
-                                                reference.child("users").child(key).child("profile").removeEventListener(profile);
-
-
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    };
-                                    reference.child("users").child(dataSnapshot.getKey()).child("profile").addListenerForSingleValueEvent(profile);
-                                    userAdapter.notifyDataSetChanged();
+                                    contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), "", "null", 2
+                                            , "", "",null,null));
+                                    new listener(contacts1.size()-1).piclistener();
+                                    new listener(contacts1.size()-1).VideoListener();
+                                    new listener(contacts1.size()-1).child();
+                                   // final String key=dataSnapshot.getKey();
+//                                    profile=new ChildEventListener(){
+//                                        @Override
+//                                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                                            if(dataSnapshot.getKey().equals("profile")) {
+//
+//                                                contacts1.get(contacts1.size()-1).setUrl(dataSnapshot.getValue().toString());
+//                                                userAdapter= new UserAdapter(MainActivity.this, contacts1);
+//                                                lv.setAdapter(userAdapter);
+//
+////                                                contacts1.add(new UserDetailwithUrl(key, "", dataSnapshot.getValue().toString(), 2
+////                                                        , "", "",null,null));
+//                                                //   userAdapter.notifyItemInserted(contacts1.size()-1);
+//
+//
+//                                                //  userAdapter.notifyDataSetChanged();
+//
+//
+//                                                //   Log.d("asdf",contacts1.get(contacts1.size()-1).getUrl());
+//                                            }
+//
+//                                            reference.child("users").child(key).removeEventListener(profile);
+//                                        }
+//
+//                                        @Override
+//                                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                                        }
+//                                    };
+//                                    reference.child("users").child(dataSnapshot.getKey()).addChildEventListener(profile);
+//                                   // userAdapter.notifyDataSetChanged();
 
 
                                     }
