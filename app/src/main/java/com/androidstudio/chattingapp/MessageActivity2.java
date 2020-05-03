@@ -119,6 +119,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         ll=findViewById(R.id.ll);
         messageActivity2=this;
 
+        groupKey = getIntent().getStringExtra("groupkey");
+        ApplicationClass.CurrentReceiver = groupKey;
+
         ApplicationClass.MessageActivity2Context = MessageActivity2.this;
         membernumber=new ArrayList<>();
         preftheme=getSharedPreferences("theme",0);
@@ -214,7 +217,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         Glide.with(MessageActivity2.this).load(Uri.parse(profile)).into(ivProfile);
 
         groupname = getIntent().getStringExtra("groupname");
-        groupKey = getIntent().getStringExtra("groupkey");
         sender = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
         ivSend = findViewById(R.id.ivSend);
@@ -279,6 +281,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         };
 
         adapter.registerAdapterDataObserver(observer);
+
+//        new getMessages().execute();
+        chats.addAll(Handler.getGroupMessages(groupname));
+
+        for(int i=0;i<chats.size();i++)
+        {
+            Log.d("messageme",chats.get(i).getDate());
+        }
 
         rl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -785,96 +795,96 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         ItemTouchHelper itemTouchHelper= new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(Messages);
 
-        if(getIntent().getIntExtra("path",1)==2) {
-            String type = getIntent().getStringExtra("type");
-            String message1 = getIntent().getStringExtra("message");
-
-            if (!(type.equals(" "))) {
-                Date date = new Date();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
-                long millis = System.currentTimeMillis();
-                java.sql.Date date1 = new java.sql.Date(millis);
-
-                if (type.equals("text")) {
-
-                    MessageModel model = new MessageModel(-1, sender, "null", etMessage.getText().toString(), "text", -2, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
-                    etMessage.setText(null);
-
-                    if (chats.size() != 0) {
-                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
-                            int id = Handler.addMessage(messageModel);
-                            messageModel.setId(id);
-                            chats.add(messageModel);
-                        }
-                    } else {
-                        if ((!(defaultvalue.equals("private")))) {
-                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
-                            int id = Handler.addMessage(messageModel);
-                            messageModel.setId(id);
-                            chats.add(messageModel);
-                        }
-                    }
-
-                    int id = Handler.addMessage(model);
-                    model.setId(id);
-                    chats.add(model);
-                    adapter.notifyItemInserted(chats.size() - 1);
-
-
-                } else if (type.equals("image")) {
-
-                    MessageModel messageModel = new MessageModel(-1, sender, "nul", message1, "image", 2,simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9),date1.toString(),groupname);
-
-                    if (chats.size() != 0) {
-                        if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate()) || chats.size() == 0) {
-                            MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
-                            int id = Handler.addMessage(message);
-                            message.setId(id);
-                            chats.add(message);
-                        }
-                    } else {
-                        if (!(defaultvalue.equals("private"))) {
-                            MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
-                            int id = Handler.addMessage(message);
-                            message.setId(id);
-                            chats.add(message);
-                        }
-                    }
-
-                    int id = Handler.addMessage(messageModel);
-                    messageModel.setId(id);
-
-                    chats.add(messageModel);
-
-                    adapter.notifyItemInserted(chats.size() - 1);
-                } else {
-                    MessageModel model = new MessageModel(1190, sender, "null", message1, "video", 100, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
-
-                    if (chats.size() != 0) {
-                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
-                            int id = Handler.addMessage(messageModel);
-                            messageModel.setId(id);
-                            chats.add(messageModel);
-                        }
-                    } else {
-                        if ((!(defaultvalue.equals("private")))) {
-                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
-                            int id = Handler.addMessage(messageModel);
-                            messageModel.setId(id);
-                            chats.add(messageModel);
-                        }
-                    }
-
-                    int id = Handler.addMessage(model);
-                    model.setId(id);
-                    chats.add(model);
-
-                    adapter.notifyItemInserted(chats.size() - 1);
-                }
-            }
-        }
+//        if(getIntent().getIntExtra("path",1)==2) {
+//            String type = getIntent().getStringExtra("type");
+//            String message1 = getIntent().getStringExtra("message");
+//
+//            if (!(type.equals(" "))) {
+//                Date date = new Date();
+//                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+//                long millis = System.currentTimeMillis();
+//                java.sql.Date date1 = new java.sql.Date(millis);
+//
+//                if (type.equals("text")) {
+//
+//                    MessageModel model = new MessageModel(-1, sender, "null", etMessage.getText().toString(), "text", -2, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
+//                    etMessage.setText(null);
+//
+//                    if (chats.size() != 0) {
+//                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+//                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
+//                            int id = Handler.addMessage(messageModel);
+//                            messageModel.setId(id);
+//                            chats.add(messageModel);
+//                        }
+//                    } else {
+//                        if ((!(defaultvalue.equals("private")))) {
+//                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
+//                            int id = Handler.addMessage(messageModel);
+//                            messageModel.setId(id);
+//                            chats.add(messageModel);
+//                        }
+//                    }
+//
+//                    int id = Handler.addMessage(model);
+//                    model.setId(id);
+//                    chats.add(model);
+//                    adapter.notifyItemInserted(chats.size() - 1);
+//
+//
+//                } else if (type.equals("image")) {
+//
+//                    MessageModel messageModel = new MessageModel(-1, sender, "nul", message1, "image", 2,simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9),date1.toString(),groupname);
+//
+//                    if (chats.size() != 0) {
+//                        if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate()) || chats.size() == 0) {
+//                            MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
+//                            int id = Handler.addMessage(message);
+//                            message.setId(id);
+//                            chats.add(message);
+//                        }
+//                    } else {
+//                        if (!(defaultvalue.equals("private"))) {
+//                            MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
+//                            int id = Handler.addMessage(message);
+//                            message.setId(id);
+//                            chats.add(message);
+//                        }
+//                    }
+//
+//                    int id = Handler.addMessage(messageModel);
+//                    messageModel.setId(id);
+//
+//                    chats.add(messageModel);
+//
+//                    adapter.notifyItemInserted(chats.size() - 1);
+//                } else {
+//                    MessageModel model = new MessageModel(1190, sender, "null", message1, "video", 100, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
+//
+//                    if (chats.size() != 0) {
+//                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+//                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
+//                            int id = Handler.addMessage(messageModel);
+//                            messageModel.setId(id);
+//                            chats.add(messageModel);
+//                        }
+//                    } else {
+//                        if ((!(defaultvalue.equals("private")))) {
+//                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
+//                            int id = Handler.addMessage(messageModel);
+//                            messageModel.setId(id);
+//                            chats.add(messageModel);
+//                        }
+//                    }
+//
+//                    int id = Handler.addMessage(model);
+//                    model.setId(id);
+//                    chats.add(model);
+//
+//                    adapter.notifyItemInserted(chats.size() - 1);
+//                }
+//            }
+//        }
 
         if (ContextCompat.checkSelfPermission(MessageActivity2.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MessageActivity2.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 150);
@@ -967,6 +977,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     @Override
     protected void onRestart() {
         super.onRestart();
+
+        new getMessages().execute();
+
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).addChildEventListener(imagereceiver);
@@ -1282,12 +1295,13 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         Handler.UpdateMessage(chats.get(index));
 
         if(!Messages.isComputingLayout())
-            adapter.notifyDataSetChanged();
+            adapter.notifyItemChanged(index);
 
     }
 
     public void SendMessage(final int index, final MessageModel model)
             {
+                ApplicationClass.PendingRequests.add(groupKey);
                 final int[] x = {0};
             final MediaPlayer mp = MediaPlayer.create(MessageActivity2.this, R.raw.sharp);
 
@@ -1297,7 +1311,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             chats.get(index).setDownloaded(-3);
 
             if(!Messages.isComputingLayout())
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemChanged(index);
 
 
                 Log.d("asdf",membernumber.size()+"");
@@ -1319,18 +1333,21 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                         mp.start();
 
                                         if (!Messages.isComputingLayout())
-                                            adapter.notifyDataSetChanged();
+                                            adapter.notifyItemChanged(index);
                                     }
 
                                     if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
-                                        Intent intent = getIntent();
-                                        ((Activity) ApplicationClass.MessageActivity2Context).finish();
-                                        startActivity(intent);
-                                        mp.start();
+                                        if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
+                                            Intent intent = getIntent();
+                                            ((Activity) ApplicationClass.MessageActivity2Context).finish();
+                                            startActivity(intent);
+                                            mp.start();
 
-                                        overridePendingTransition(0, 0);
+                                            overridePendingTransition(0, 0);
+                                        }
                                     }
                                 }
+                                ApplicationClass.PendingRequests.remove(groupKey);
                             }
                         });
             }
@@ -1524,12 +1541,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         protected void onPreExecute() {
             super.onPreExecute();
 
+            ApplicationClass.PendingRequests.add(groupKey);
+
             message.setDownloaded(104);
             Handler.UpdateMessage(message);
 
             chats.get(index).setDownloaded(104);
             if(!Messages.isComputingLayout())
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemChanged(index);
         }
 
         @Override
@@ -1634,16 +1653,18 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                     if(!Messages.isComputingLayout())
                     {
-                        adapter.notifyDataSetChanged();
+                        adapter.notifyItemChanged(index);
                     }
                 }
 
                 if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
-                    Intent intent = getIntent();
-                    ((Activity) ApplicationClass.MessageActivity2Context).finish();
-                    startActivity(intent);
+                    if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
+                        Intent intent = getIntent();
+                        ((Activity) ApplicationClass.MessageActivity2Context).finish();
+                        startActivity(intent);
 
-                    overridePendingTransition(0, 0);
+                        overridePendingTransition(0, 0);
+                    }
                 }
 
             }
@@ -1651,25 +1672,25 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 message.setDownloaded(101);
                 Handler.UpdateMessage(message);
 
-                if(!MessageActivity2.this.isDestroyed())
-                {
+                if(!MessageActivity2.this.isDestroyed()) {
                     chats.get(index).setDownloaded(101);
-                    adapter.notifyDataSetChanged();
-                }
+                    adapter.notifyItemChanged(index);
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
-                builder.setTitle("Could not download Video");
-                builder.setMessage("Please ask "+pref.getString(message.getSender(),message.getSender())+
-                        " to resend the video")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
+                    builder.setTitle("Could not download Video");
+                    builder.setMessage("Please ask " + pref.getString(message.getSender(), message.getSender()) +
+                            " to resend the video")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
             }
+            ApplicationClass.PendingRequests.remove(groupKey);
             }
         }
 
@@ -1685,12 +1706,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         }
 
         protected void onPreExecute(){
+
+            ApplicationClass.PendingRequests.add(groupKey);
             message.setDownloaded(4);
             Handler.UpdateMessage(message);
 
             chats.get(index).setDownloaded(4);
             if(!Messages.isComputingLayout())
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemChanged(index);
         }
 
         protected Uri doInBackground(URL...urls){
@@ -1787,16 +1810,18 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                     if(!Messages.isComputingLayout())
                     {
-                        adapter.notifyDataSetChanged();
+                        adapter.notifyItemChanged(index);
                     }
                 }
 
                 if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
-                    Intent intent = getIntent();
-                    ((Activity) ApplicationClass.MessageActivity2Context).finish();
-                    startActivity(intent);
+                    if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
+                        Intent intent = getIntent();
+                        ((Activity) ApplicationClass.MessageActivity2Context).finish();
+                        startActivity(intent);
 
-                    overridePendingTransition(0, 0);
+                        overridePendingTransition(0, 0);
+                    }
                 }
 
             }
@@ -1805,30 +1830,31 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 message.setDownloaded(0);
                 Handler.UpdateMessage(message);
 
-                if(!MessageActivity2.this.isDestroyed())
-                {
+                if(!MessageActivity2.this.isDestroyed()) {
                     chats.get(index).setDownloaded(0);
-                    adapter.notifyDataSetChanged();
-                }
+                    adapter.notifyItemChanged(index);
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
-                builder.setTitle("Could not download Image");
-                builder.setMessage("Please ask "+pref.getString(message.getSender(),message.getSender())+
-                        " to resend the image")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
+                    builder.setTitle("Could not download Image");
+                    builder.setMessage("Please ask " + pref.getString(message.getSender(), message.getSender()) +
+                            " to resend the image")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
             }
+            ApplicationClass.PendingRequests.remove(groupKey);
         }
     }
 
     public void UploadImage(final int index, final MessageModel message)
     {
+        ApplicationClass.PendingRequests.add(groupKey);
         final int[] y = {0};
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
 
@@ -1838,7 +1864,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         chats.get(index).setDownloaded(3);
 
         if(!Messages.isComputingLayout())
-            adapter.notifyDataSetChanged();
+            adapter.notifyItemChanged(index);
 
         rf.child(groupKey).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).
                 putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -1870,21 +1896,24 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                             mp.start();
 
                                             if (!Messages.isComputingLayout()) {
-                                                adapter.notifyDataSetChanged();
+                                                adapter.notifyItemChanged(index);
                                             }
                                         }
 
                                         if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
-                                            Intent intent = getIntent();
-                                            ((Activity) ApplicationClass.MessageActivity2Context).finish();
-                                            startActivity(intent);
+                                            if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
+                                                Intent intent = getIntent();
+                                                ((Activity) ApplicationClass.MessageActivity2Context).finish();
+                                                startActivity(intent);
 
-                                            mp.start();
+                                                mp.start();
 
-                                            overridePendingTransition(0, 0);
+                                                overridePendingTransition(0, 0);
+                                            }
                                         }
                                     }
                                 }
+                                ApplicationClass.PendingRequests.remove(groupKey);
                             }
                        });
 
@@ -1895,6 +1924,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     public void uploadVideo(final int index, final MessageModel message)
     {
+        ApplicationClass.PendingRequests.add(groupKey);
         final int[] z = {0};
         message.setDownloaded(103);
         Handler.UpdateMessage(message);
@@ -1902,7 +1932,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         chats.get(index).setDownloaded(103);
 
         if(!Messages.isComputingLayout())
-            adapter.notifyDataSetChanged();
+            adapter.notifyItemChanged(index);
 
         rf.child(groupKey).child("videos/" + Uri.parse(message.getMessage()).getLastPathSegment()).
                 putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -1935,20 +1965,24 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                             chats.get(index).setDownloaded(102);
 
                                             if (!Messages.isComputingLayout()) {
-                                                adapter.notifyDataSetChanged();
+                                                adapter.notifyItemChanged(index);
                                             }
                                         }
 
                                         if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
-                                            Intent intent = getIntent();
-                                            ((Activity) ApplicationClass.MessageActivity2Context).finish();
-                                            startActivity(intent);
+                                            if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver))
+                                            {
+                                                Intent intent = getIntent();
+                                                ((Activity) ApplicationClass.MessageActivity2Context).finish();
+                                                startActivity(intent);
 
 
-                                            overridePendingTransition(0, 0);
+                                                overridePendingTransition(0, 0);
+                                            }
                                         }
                                     }
                                 }
+                                ApplicationClass.PendingRequests.remove(groupKey);
                             }
                         });
 
@@ -1974,7 +2008,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         ).removeEventListener(chreceiver);
 
         adapter.unregisterAdapterDataObserver(observer);
-        Handler.close();
+        ApplicationClass.CurrentReceiver="";
     }
 
     protected URL stringToURL(String urlString){
@@ -2034,7 +2068,31 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     protected void onResume() {
         super.onResume();
 
-        new getMessages().execute();
+//        SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode",0);
+//        defaultvalue = pref.getString("mode"+groupKey,"null");
+//        Log.d("mode",defaultvalue);
+//
+//        if(defaultvalue.equals("private"))
+//        {
+//               tvMode.setText("Private");
+//            if(chats.size()!=0)
+//            {
+//                chats.clear();
+//            }
+//            if(!Messages.isComputingLayout())
+//                adapter.notifyItemInserted(chats.size()-1);
+//        }
+//        else
+//        {
+//                tvMode.setText("Public");
+//            if(chats.size()!=0) {
+//                chats.clear();
+//            }
+//            chats.addAll(Handler.getGroupMessages(groupname));
+//
+//            if(!Messages.isComputingLayout())
+//                adapter.notifyItemInserted(chats.size()-1);
+//        }
 
     }
 

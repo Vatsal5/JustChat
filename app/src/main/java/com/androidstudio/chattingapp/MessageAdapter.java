@@ -368,6 +368,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).into(holder.ivImage);
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
+            holder.ivPlay.setVisibility(View.GONE);
             holder.tvError.setVisibility(View.GONE);
 
             holder.ivImage.setClickable(false);

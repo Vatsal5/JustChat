@@ -32,7 +32,8 @@ public class ApplicationClass extends Application
     public static String url;
     public static DBHandler Handler;
     public static ArrayList<String>members;
-    public static String Groupname,GroupDp,groupkey,RenameGroup;
+    public static ArrayList<String>PendingRequests;
+    public static String Groupname,GroupDp,groupkey,RenameGroup,CurrentReceiver;
     public  static  int create,addmembers,activity, groupusers;
     public  static boolean splash=true;
 
@@ -138,6 +139,7 @@ public class ApplicationClass extends Application
         new ChangeStatus().execute();
 
         members=new ArrayList<>();
+        PendingRequests=new ArrayList<>();
         Groupname=null;
         GroupDp="null";
         RenameGroup=null;
@@ -146,6 +148,7 @@ public class ApplicationClass extends Application
         groupusers=0;
         addmembers=0;
         activity=0;
+        CurrentReceiver = null;
 
         EmojiCompat.Config config = new BundledEmojiCompatConfig(this);
         EmojiCompat.init(config);

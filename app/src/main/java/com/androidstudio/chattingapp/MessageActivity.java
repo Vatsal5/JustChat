@@ -165,6 +165,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+
+        RecieverPhone = getIntent().getStringExtra("phone");
+        ApplicationClass.CurrentReceiver = RecieverPhone;
+
         ll=findViewById(R.id.ll);
         ivSend = findViewById(R.id.ivSend);
         preftheme=getSharedPreferences("theme",0);
@@ -290,7 +294,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        RecieverPhone = getIntent().getStringExtra("phone");
         sender = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
         chats = new ArrayList<>();
 
@@ -555,9 +558,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         manager.setStackFromEnd(false);
         Messages.setLayoutManager(manager);
 
-        for (int i = 0; i < chats.size(); i++) {
-            Log.d("messageme", chats.get(i).getMessage()+"");
-        }
+//        for (int i = 0; i < chats.size(); i++) {
+//            Log.d("messageme", chats.get(i).getDate()+"");
+//        }
+
+        new getMessages().execute();
 
         if(!wallpaper.getString("value","null").equals("null"))
         {
@@ -591,7 +596,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onItemRangeChanged(int positionStart, int itemCount) {
                 super.onItemRangeChanged(positionStart, itemCount);
 
-                Messages.smoothScrollToPosition(positionStart);
             }
 
             @Override
@@ -623,11 +627,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         Messages.setAdapter(adapter);
 
-        if(!defaultvalue.equals("private"))
-            chats.addAll(Handler.getMessages(RecieverPhone));
-
-        if(chats.size()!=0)
-            adapter.notifyItemInserted(chats.size()-1);
 
         // to forward a message
 
@@ -1105,6 +1104,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         reference.child("users").child(RecieverPhone).child(sender).removeEventListener(chreceiver);
         //reference.child("users").child(sender).removeEventListener(chsender);
         chats.clear();
+        ApplicationClass.CurrentReceiver="";
 
         adapter.unregisterAdapterDataObserver(observer);
 
@@ -1114,8 +1114,6 @@ if(getIntent().getIntExtra("path",1)==2) {
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").removeEventListener(imagereceiver);
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("videos").removeEventListener(videoreceiver);
         FirebaseDatabase.getInstance().getReference("users").child(sender).child("profile").removeEventListener(dp);
-
-        Handler.close();
     }
 
     @Override
@@ -1336,7 +1334,7 @@ if(getIntent().getIntExtra("path",1)==2) {
             tvMode.setText(Status);
 
             if(!Messages.isComputingLayout())
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemInserted(chats.size()-1);
 
             if(flag1) {
                 chats.add(new MessageModel(-678, "null  ", "null  ", "jgvjhv", "typing", 45, "null  ", "null","null"));
@@ -1352,7 +1350,6 @@ if(getIntent().getIntExtra("path",1)==2) {
     protected void onResume() {
         super.onResume();
 
-        new getMessages().execute();
 
     }
 
@@ -1382,6 +1379,9 @@ if(getIntent().getIntExtra("path",1)==2) {
     @Override
     protected void onRestart() {
         super.onRestart();
+
+        new getMessages().execute();
+
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").addChildEventListener(imagereceiver);
         reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
         //reference.child("users").child(sender).removeEventListener(chsender);
@@ -1404,7 +1404,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         {
             if(data.getClipData()!=null)
             {
-                if(data.getClipData().getItemCount()<=20) {
+                if(data.getClipData().getItemCount()<=15) {
                     for (int i = 0; i < data.getClipData().getItemCount(); i++) {
                         ClipData.Item imageItem = data.getClipData().getItemAt(i);
                         Uri uri = imageItem.getUri();
@@ -1647,21 +1647,6 @@ if(getIntent().getIntExtra("path",1)==2) {
                 //selectedImageUri = Uri.fromFile(new File(filepath));
             }
         }
-    }private String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } catch (Exception e) {
-            return "";
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
     }
 
 
@@ -1849,7 +1834,9 @@ if(getIntent().getIntExtra("path",1)==2) {
         chats.get(index).setDownloaded(103);
 
         if(!Messages.isComputingLayout())
-            adapter.notifyDataSetChanged();
+            adapter.notifyItemChanged(index);
+
+        ApplicationClass.PendingRequests.add(RecieverPhone);
 
         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("videos/" + Uri.parse(message.getMessage()).getLastPathSegment()).
                 putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -1876,18 +1863,21 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                                     if(!Messages.isComputingLayout())
                                     {
-                                        adapter.notifyDataSetChanged();
+                                        adapter.notifyItemChanged(index);
                                     }
                                 }
 
                                 if(MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
-                                    Intent intent = getIntent();
-                                    ((Activity) ApplicationClass.MessageActivityContext).finish();
-                                    startActivity(intent);
+                                    if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
+                                        Intent intent = getIntent();
+                                        ((Activity) ApplicationClass.MessageActivityContext).finish();
+                                        startActivity(intent);
 
 
-                                    overridePendingTransition(0, 0);
+                                        overridePendingTransition(0, 0);
+                                    }
                                 }
+                                ApplicationClass.PendingRequests.remove(RecieverPhone);
                             }
                         });
 
@@ -1897,6 +1887,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 
     public void UploadImage(final int index, final MessageModel message)
     {
+        ApplicationClass.PendingRequests.add(RecieverPhone);
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
 
         message.setDownloaded(3);
@@ -1905,7 +1896,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         chats.get(index).setDownloaded(3);
 
         if(!Messages.isComputingLayout())
-            adapter.notifyDataSetChanged();
+            adapter.notifyItemChanged(index);
 
         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).
                 putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -1932,19 +1923,23 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                                     if(!Messages.isComputingLayout())
                                     {
-                                        adapter.notifyDataSetChanged();
+                                        adapter.notifyItemChanged(index);
                                     }
                                 }
 
                                 if(MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
-                                    Intent intent = getIntent();
-                                    ((Activity) ApplicationClass.MessageActivityContext).finish();
-                                    startActivity(intent);
 
-                                    mp.start();
+                                    if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
+                                        Intent intent = getIntent();
+                                        ((Activity) ApplicationClass.MessageActivityContext).finish();
+                                        startActivity(intent);
 
-                                    overridePendingTransition(0, 0);
+                                        mp.start();
+
+                                        overridePendingTransition(0, 0);
+                                    }
                                 }
+                                ApplicationClass.PendingRequests.remove(RecieverPhone);
                             }
                         });
 
@@ -2080,7 +2075,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         Handler.UpdateMessage(chats.get(index));
 
         if(!Messages.isComputingLayout())
-            adapter.notifyDataSetChanged();
+            adapter.notifyItemChanged(index);
 
     }
 
@@ -2101,12 +2096,14 @@ if(getIntent().getIntExtra("path",1)==2) {
         protected void onPreExecute() {
             super.onPreExecute();
 
+            ApplicationClass.PendingRequests.add(RecieverPhone);
+
             message.setDownloaded(104);
             Handler.UpdateMessage(message);
 
             chats.get(index).setDownloaded(104);
             if(!Messages.isComputingLayout())
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemChanged(index);
 
         }
 
@@ -2192,43 +2189,44 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                     if(!Messages.isComputingLayout())
                     {
-                        adapter.notifyDataSetChanged();
+                        adapter.notifyItemChanged(index);
                     }
                 }
 
                 if (MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
-                    Intent intent = getIntent();
-                    ((Activity) ApplicationClass.MessageActivityContext).finish();
-                    startActivity(intent);
+                    if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
+                        Intent intent = getIntent();
+                        ((Activity) ApplicationClass.MessageActivityContext).finish();
+                        startActivity(intent);
 
-                    overridePendingTransition(0, 0);
+                        overridePendingTransition(0, 0);
+                    }
                 }
 
             }
-            else
-            {
+            else {
                 message.setDownloaded(101);
                 Handler.UpdateMessage(message);
 
-                if(!MessageActivity.this.isDestroyed())
-                {
+                if (!MessageActivity.this.isDestroyed()) {
                     chats.get(index).setDownloaded(101);
-                    adapter.notifyDataSetChanged();
-                }
+                    adapter.notifyItemChanged(index);
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
-                builder.setTitle("Could not download Video");
-                builder.setMessage("Please ask "+pref1.getString(getIntent().getStringExtra("title"),getIntent().getStringExtra("title"))+
-                        " to resend the video")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+                    builder.setTitle("Could not download Video");
+                    builder.setMessage("Please ask " + pref1.getString(getIntent().getStringExtra("title"), getIntent().getStringExtra("title")) +
+                            " to resend the video")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
             }
+            ApplicationClass.PendingRequests.remove(RecieverPhone);
         }
     }
 
@@ -2245,12 +2243,13 @@ if(getIntent().getIntExtra("path",1)==2) {
 
         protected void onPreExecute()
         {
+            ApplicationClass.PendingRequests.add(RecieverPhone);
             message.setDownloaded(4);
             Handler.UpdateMessage(message);
 
             chats.get(index).setDownloaded(4);
             if(!Messages.isComputingLayout())
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemChanged(index);
         }
 
         protected Uri doInBackground(URL...urls){
@@ -2331,55 +2330,56 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                     if(!Messages.isComputingLayout())
                     {
-                        adapter.notifyDataSetChanged();
+                        adapter.notifyItemChanged(index);
                     }
                 }
 
                 if (MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
-                    Intent intent = getIntent();
-                    ((Activity) ApplicationClass.MessageActivityContext).finish();
-                    startActivity(intent);
+                    if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
+                        Intent intent = getIntent();
+                        ((Activity) ApplicationClass.MessageActivityContext).finish();
+                        startActivity(intent);
 
-                    overridePendingTransition(0, 0);
+                        overridePendingTransition(0, 0);
+                    }
                 }
 
             }
-            else{
+            else {
                 message.setDownloaded(0);
                 Handler.UpdateMessage(message);
 
-                if(!MessageActivity.this.isDestroyed())
-                {
+                if (!MessageActivity.this.isDestroyed()) {
                     chats.get(index).setDownloaded(0);
-                    adapter.notifyDataSetChanged();
+                    adapter.notifyItemChanged(index);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+                    builder.setTitle("Could not download Image");
+                    builder.setMessage("Please ask " + pref1.getString(getIntent().getStringExtra("title"), getIntent().getStringExtra("title")) +
+                            " to resend the image")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 }
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
-                builder.setTitle("Could not download Image");
-                builder.setMessage("Please ask "+pref1.getString(getIntent().getStringExtra("title"),getIntent().getStringExtra("title"))+
-                        " to resend the image")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-                AlertDialog dialog = builder.create();
-                dialog.show();
             }
+            ApplicationClass.PendingRequests.remove(RecieverPhone);
         }
     }
 
     public void SendMessage(final int index, final MessageModel message)
     {
-
+        ApplicationClass.PendingRequests.add(RecieverPhone);
         message.setDownloaded(-3);
         Handler.UpdateMessage(message);
 
         chats.get(index).setDownloaded(-3);
 
         if(!Messages.isComputingLayout())
-            adapter.notifyDataSetChanged();
+            adapter.notifyItemChanged(index);
 
 
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
@@ -2402,18 +2402,20 @@ if(getIntent().getIntExtra("path",1)==2) {
                     mp.start();
 
                     if(!Messages.isComputingLayout())
-                        adapter.notifyDataSetChanged();
+                        adapter.notifyItemChanged(index);
                 }
 
-                if(MessageActivity.this.isDestroyed()  && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed())
-                {
-                    Intent intent = getIntent();
-                    ((Activity) ApplicationClass.MessageActivityContext).finish();
-                    startActivity(intent);
-                    mp.start();
+                if(MessageActivity.this.isDestroyed()  && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
+                    if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
+                        Intent intent = getIntent();
+                        ((Activity) ApplicationClass.MessageActivityContext).finish();
+                        startActivity(intent);
+                        mp.start();
 
-                    overridePendingTransition(0, 0);
+                        overridePendingTransition(0, 0);
+                    }
                 }
+                ApplicationClass.PendingRequests.remove(RecieverPhone);
             }
         };
 
@@ -2433,39 +2435,6 @@ if(getIntent().getIntExtra("path",1)==2) {
     }
 
     // Custom method to save a bitmap into internal storage
-    protected Uri saveImageToInternalStorage(Bitmap bitmap){
-
-        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Received");
-        if(!imagesFolder.exists())
-        {
-            imagesFolder.mkdirs();
-        }
-
-        // Create a file to save the image
-        File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis())+".jpg");
-        MessageActivity.this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
-
-        try{
-            OutputStream stream = null;
-
-            stream = new FileOutputStream(file);
-
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream);
-
-            stream.flush();
-
-            stream.close();
-
-        }catch (IOException e) // Catch the exception
-        {
-            e.printStackTrace();
-        }
-
-        // Parse the gallery image url to uri
-        Uri savedImageURI = Uri.parse(file.getAbsolutePath());
-
-        return savedImageURI;
-    }
 //**************************************************************************************************************************************
 
     public Drawable getBackground(Uri uri)
