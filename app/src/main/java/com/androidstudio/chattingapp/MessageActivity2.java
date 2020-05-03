@@ -2059,7 +2059,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             tvMode.setText(Status);
 
             if(!Messages.isComputingLayout())
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemInserted(chats.size()-1);
 
         }
     }
