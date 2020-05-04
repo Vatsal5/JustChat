@@ -28,6 +28,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Parcelable;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -35,6 +37,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -130,6 +133,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     SharedPreferences pref,wallpaper;
     SharedPreferences preftheme;
 
+    Integer HandlerIndex;
+    Parcelable state;
+
     StorageReference rf;
     int messagecount;
     ConstraintLayout llMessageActivity;
@@ -159,6 +165,44 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     ValueEventListener dp;
 
     RecyclerView.AdapterDataObserver observer;
+
+    public void getMessages() {
+        long millis = System.currentTimeMillis();
+        java.sql.Date date1 = new java.sql.Date(millis);
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("Mode", 0);
+        defaultvalue = pref.getString("mode" + RecieverPhone, "null");
+        Log.d("mode", defaultvalue);
+
+        if (defaultvalue.equals("private")) {
+            tvMode.setText("Private");
+            if (chats.size() != 0) {
+                chats.clear();
+            }
+            if (!Messages.isComputingLayout())
+                adapter.notifyDataSetChanged();
+        } else {
+            tvMode.setText("Public");
+            if (chats.size() != 0) {
+                chats.clear();
+                if(!Messages.isComputingLayout())
+                    adapter.notifyDataSetChanged();
+            }
+            Pair<ArrayList<MessageModel>,Integer> pair = Handler.getMessages(RecieverPhone,0);
+            HandlerIndex = pair.second;
+
+            chats.addAll(pair.first);
+            if (!Messages.isComputingLayout())
+                adapter.notifyItemInserted(chats.size() - 1);
+        }
+
+        if (flag1) {
+            chats.add(new MessageModel(-678, "null  ", "null  ", "jgvjhv", "typing", 45, "null  ", date1.toString(), "null"));
+
+            if(!Messages.isComputingLayout())
+                adapter.notifyItemInserted(chats.size()-1);
+        }
+    }
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -316,7 +360,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onClick(View view) {
                 Intent intent = new Intent(MessageActivity.this,Mode.class);
                 intent.putExtra("number",RecieverPhone);
-                startActivity(intent);
+                startActivityForResult(intent,1500);
             }
         });
 
@@ -562,8 +606,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 //            Log.d("messageme", chats.get(i).getDate()+"");
 //        }
 
-        new getMessages().execute();
-
         if(!wallpaper.getString("value","null").equals("null"))
         {
             if(getBackground(Uri.parse(wallpaper.getString("value","null")))!=null)
@@ -573,8 +615,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         //chats.add(new MessageModel(RecieverPhone,sender,"https://images.unsplash.com/photo-1579256308218-d162fd41c801?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjF9&auto=format&fit=crop&w=500&q=60","image",0));
 
         adapter = new MessageAdapter(MessageActivity.this, chats);
-
-
 
         if((defaultvalue.equals("null"))){
             SharedPreferences.Editor editor = pref.edit();
@@ -596,6 +636,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             public void onItemRangeChanged(int positionStart, int itemCount) {
                 super.onItemRangeChanged(positionStart, itemCount);
 
+                Messages.scrollToPosition(38);
+
             }
 
             @Override
@@ -606,8 +648,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
-
-                Log.d("position",chats.size()-1+"");
 
                 Messages.scrollToPosition(chats.size()-1);
             }
@@ -626,6 +666,44 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         adapter.registerAdapterDataObserver(observer);
 
         Messages.setAdapter(adapter);
+
+        Messages.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, final int dx, final int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+
+                if(manager.findLastCompletelyVisibleItemPosition()==7){
+
+                    if(HandlerIndex!=-1) {
+                        final Pair<ArrayList<MessageModel>, Integer> pair = Handler.getMessages(RecieverPhone, HandlerIndex);
+                        HandlerIndex = pair.second;
+
+                        chats.addAll(0, pair.first);
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(!Messages.isComputingLayout())
+                                    adapter.notifyDataSetChanged();
+                                Messages.scrollToPosition(37);
+                            }
+                        },50);
+                        }
+
+                    }
+                }
+
+        });
+
+        getMessages();
 
 
         // to forward a message
@@ -1296,60 +1374,10 @@ if(getIntent().getIntExtra("path",1)==2) {
 
     }
 
-    class getMessages extends AsyncTask<Void,Void,String>
-    {
-        @Override
-        protected String doInBackground(Void... voids) {
-
-            SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode",0);
-            defaultvalue = pref.getString("mode"+RecieverPhone,"null");
-            Log.d("mode",defaultvalue);
-
-            if(defaultvalue.equals("private"))
-            {
-//                tvMode.setText("Private");
-                if(chats.size()!=0)
-                {
-                    chats.clear();
-                }
-                return "Private";
-            }
-            else
-            {
-//                tvMode.setText("Public");
-                if(chats.size()!=0) {
-                    chats.clear();
-                }
-                chats.addAll(Handler.getMessages(RecieverPhone));
-
-                return "Public";
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(String Status) {
-            super.onPostExecute(Status);
-
-            tvMode.setText(Status);
-
-            if(!Messages.isComputingLayout())
-                adapter.notifyItemInserted(chats.size()-1);
-
-            if(flag1) {
-                chats.add(new MessageModel(-678, "null  ", "null  ", "jgvjhv", "typing", 45, "null  ", "null","null"));
-                if(!Messages.isComputingLayout())
-                    adapter.notifyItemInserted(chats.size()-1);
-            }
-
-        }
-    }
-
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onResume() {
         super.onResume();
-
 
     }
 
@@ -1380,7 +1408,6 @@ if(getIntent().getIntExtra("path",1)==2) {
     protected void onRestart() {
         super.onRestart();
 
-        new getMessages().execute();
 
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").addChildEventListener(imagereceiver);
         reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
@@ -1546,6 +1573,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                     }
 
 
+
                     long fileSizeInBytes = file.length();
                     long fileSizeInKB = fileSizeInBytes / 1024;
                     long fileSizeInMB = fileSizeInKB / 1024;
@@ -1593,59 +1621,14 @@ if(getIntent().getIntExtra("path",1)==2) {
                         adapter.notifyItemInserted(chats.size()-1);
 
 
-                    }}
-
-
-
-//                File file = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent/"+new Timestamp(System.currentTimeMillis())+".mp4");
-//
-//                try {
-//                    InputStream in = getContentResolver().openInputStream(selectedImageUri);
-//                    OutputStream out = new FileOutputStream(file);
-//                    byte[] buf = new byte[1024];
-//                    int len;
-//                    while ((len = in.read(buf)) > 0) {
-//                        out.write(buf, 0, len);
-//                    }
-//                    out.close();
-//                    in.close();
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                selectedImageUri = Uri.fromFile(file);
-
-
-
-//                File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
-//                if(!imagesFolder.exists())
-//                {
-//                    imagesFolder.mkdirs();
-//                }
-
-                // Create a file to save the image
-//                File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis())+".mp4");
-
-//                try {
-//                    InputStream in = getContentResolver().openInputStream(selectedImageUri);
-//                    OutputStream out = new FileOutputStream(file);
-//                    byte[] buf = new byte[1024];
-//                    int len;
-//                    while ((len = in.read(buf)) > 0) {
-//                        out.write(buf, 0, len);
-//                    }
-//                    out.close();
-//                    in.close();
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-
-                //selectedImageUri = Uri.fromFile(new File(filepath));
+                    }
+                }
             }
+        }
+
+        if(requestCode==1500)
+        {
+            getMessages();
         }
     }
 

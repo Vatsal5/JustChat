@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Pair;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -96,11 +97,20 @@ public class DBHandler
         return getID();
     }
 
-    public ArrayList<MessageModel> getMessages(String receiver)
+    public Pair<ArrayList<MessageModel>, Integer> getMessages(String receiver, int index)
     {
         ArrayList<MessageModel> messages = new ArrayList<>();
         String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPNAME};
         Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
+
+        int global;
+
+        if(index==0)
+            global=c.getCount()-1;
+        else
+            global=index;
+
+        int i=0;
 
         int iId = c.getColumnIndex(KEY_ID);
         int iSender = c.getColumnIndex(KEY_SENDER);
@@ -112,13 +122,65 @@ public class DBHandler
         int iDate = c.getColumnIndex(KEY_DATE);
         int iGroup = c.getColumnIndex(KEY_GROUPNAME);
 
-        for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
+        for(c.moveToPosition(global);!c.isBeforeFirst();c.moveToPrevious())
         {
-            if(c.getString(iGroup).equals("null") && (c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver)))
-                messages.add(new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate),c.getString(iGroup)));
+            global--;
+            if(c.getString(iGroup).equals("null") && (c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver))) {
+                messages.add(0,new MessageModel(c.getInt(iId), c.getString(iSender), c.getString(iReceiver), c.getString(iMessage), c.getString(iType), c.getInt(iDownloaded), c.getString(iTime), c.getString(iDate), c.getString(iGroup)));
+                i++;
+            }
+
+            if(i==30)
+                break;
+
         }
         c.close();
-        return messages;
+        return new Pair<>(messages, global);
+
+    }
+
+    public Pair<ArrayList<MessageModel>,Integer> getGroupMessages(String grpName,int index)
+    {
+        ArrayList<MessageModel> messages = new ArrayList<>();
+        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPNAME};
+        Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
+
+        int global;
+
+        if(index==0)
+            global=c.getCount()-1;
+        else
+            global=index;
+
+        int i=0;
+
+        int iId = c.getColumnIndex(KEY_ID);
+        int iSender = c.getColumnIndex(KEY_SENDER);
+        int iReceiver = c.getColumnIndex(KEY_RECEIVER);
+        int iMessage = c.getColumnIndex(KEY_MESSAGE);
+        int iType = c.getColumnIndex(KEY_TYPE);
+        int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
+        int iTime = c.getColumnIndex(KEY_TIME);
+        int iDate = c.getColumnIndex(KEY_DATE);
+        int iGroup = c.getColumnIndex(KEY_GROUPNAME);
+
+        MessageModel model = null;
+
+        for(c.moveToPosition(global);!c.isBeforeFirst();c.moveToPrevious())
+        {
+            global--;
+            model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate),c.getString(iGroup));
+            if(model.getGroupName().equals(grpName)) {
+                messages.add(0,model);
+                i++;
+            }
+
+            if(i==30)
+                break;
+
+        }
+        c.close();
+        return new Pair<>(messages, global);
 
     }
 
@@ -159,10 +221,11 @@ public class DBHandler
         int iDate = c.getColumnIndex(KEY_DATE);
         int iGroup = c.getColumnIndex(KEY_GROUPNAME);
 
-        for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
+        for(c.moveToLast();!c.isBeforeFirst();c.moveToPrevious())
         {
             if(c.getString(iGroup).equals("null") && (c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver))) {
                 model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate),c.getString(iGroup));
+                break;
             }
         }
 
@@ -200,10 +263,11 @@ public class DBHandler
         int iDate = c.getColumnIndex(KEY_TIME);
         int iGroup = c.getColumnIndex(KEY_GROUPNAME);
 
-        for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
+        for(c.moveToLast();!c.isBeforeFirst();c.moveToPrevious())
         {
             if(c.getString(iGroup).equals("null") && (c.getString(iSender).equals(receiver) || c.getString(iReceiver).equals(receiver))) {
                 model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate),c.getString(iGroup));
+                break;
             }
         }
 
@@ -256,34 +320,6 @@ public class DBHandler
 
     }
 
-    public ArrayList<MessageModel> getGroupMessages(String grpName)
-    {
-        ArrayList<MessageModel> messages = new ArrayList<>();
-        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPNAME};
-        Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
-
-        int iId = c.getColumnIndex(KEY_ID);
-        int iSender = c.getColumnIndex(KEY_SENDER);
-        int iReceiver = c.getColumnIndex(KEY_RECEIVER);
-        int iMessage = c.getColumnIndex(KEY_MESSAGE);
-        int iType = c.getColumnIndex(KEY_TYPE);
-        int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
-        int iTime = c.getColumnIndex(KEY_TIME);
-        int iDate = c.getColumnIndex(KEY_DATE);
-        int iGroup = c.getColumnIndex(KEY_GROUPNAME);
-
-        MessageModel model = null;
-
-        for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
-        {
-            model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate),c.getString(iGroup));
-            if(model.getGroupName().equals(grpName))
-                messages.add(model);
-        }
-        c.close();
-        return messages;
-
-    }
 
     public String getLastMessageGroup(String grpName) {
         MessageModel model = null;
@@ -301,10 +337,11 @@ public class DBHandler
         int iGroup = c.getColumnIndex(KEY_GROUPNAME);
 
 
-        for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
+        for(c.moveToLast();!c.isBeforeFirst();c.moveToPrevious())
         {
             if(c.getString(iGroup).equals(grpName)) {
                 model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate),c.getString(iGroup));
+                break;
             }
         }
 
@@ -343,10 +380,11 @@ public class DBHandler
         int iDate = c.getColumnIndex(KEY_TIME);
         int iGroup = c.getColumnIndex(KEY_GROUPNAME);
 
-        for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
+        for(c.moveToLast();!c.isBeforeFirst();c.moveToPrevious())
         {
             if(c.getString(iGroup).equals(grpName)) {
                 model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate),c.getString(iGroup));
+                break;
             }
         }
 

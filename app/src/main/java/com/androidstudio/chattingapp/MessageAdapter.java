@@ -264,37 +264,41 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             if(holder.llDownload!=null)
                 holder.llDownload.setVisibility(View.GONE);
 
-//            RequestOptions options = new RequestOptions();
-//            options.diskCacheStrategy(DiskCacheStrategy.NONE);
-//            options.skipMemoryCache(true);
-//
-//            if (isValidContextForGlide(context.getApplicationContext())) {
-//                Glide.with(context).setDefaultRequestOptions(options).load(messages.get(position).getMessage()).addListener(new RequestListener<Drawable>() {
-//                    @Override
-//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//                        holder.ivImage.setClickable(false);
-//                        holder.tvError.setVisibility(View.VISIBLE);
-//
-//                        if(!messages.get(position).getMessage().equals("null"))
-//                            Activity.OnFileDeleted(position);
-//                        return false;
-//                    }
-//
-//                    @Override
-//                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                        return false;
-//                    }
-//                }).into(holder.ivImage);
+            RequestOptions options = new RequestOptions();
+            options.diskCacheStrategy(DiskCacheStrategy.NONE);
+            options.skipMemoryCache(true);
 
-            holder.ivImage.setImageURI(Uri.parse(messages.get(holder.getAdapterPosition()).getMessage()));
-            if(holder.ivImage.getDrawable() == null)
-            {
-                holder.ivImage.setClickable(false);
-                holder.tvError.setVisibility(View.VISIBLE);
+            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
+                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        holder.ivImage.setClickable(false);
+                        holder.tvError.setVisibility(View.VISIBLE);
 
-                if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null"))
-                    Activity.OnFileDeleted(holder.getAdapterPosition());
+                            Activity.OnFileDeleted(holder.getAdapterPosition());
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(holder.ivImage);
             }
+            else
+            {
+                holder.tvError.setVisibility(View.VISIBLE);
+            }
+
+//            holder.ivImage.setImageURI(Uri.parse(messages.get(holder.getAdapterPosition()).getMessage()));
+//            if(holder.ivImage.getDrawable() == null)
+//            {
+//                holder.ivImage.setClickable(false);
+//                holder.tvError.setVisibility(View.VISIBLE);
+//
+//                if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null"))
+//                    Activity.OnFileDeleted(holder.getAdapterPosition());
+//            }
 
                 if (messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                     holder.ivImage.setBackgroundResource(R.drawable.background_right);
@@ -414,33 +418,39 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             options.diskCacheStrategy(DiskCacheStrategy.NONE);
             options.skipMemoryCache(true);
 
-            Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
+                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
-                    holder.ivPlay.setVisibility(View.GONE);
-                    holder.tvError.setVisibility(View.VISIBLE);
+                        holder.ivPlay.setVisibility(View.GONE);
+                        holder.tvError.setVisibility(View.VISIBLE);
 
-                    if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null"))
-                        Activity.OnFileDeleted(holder.getAdapterPosition());
+                            Activity.OnFileDeleted(holder.getAdapterPosition());
 
-                    return false;
-                }
+                        return false;
+                    }
 
-                @Override
-                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                    holder.ivPlay.setVisibility(View.VISIBLE);
-                    holder.tvError.setVisibility(View.GONE);
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        holder.ivPlay.setVisibility(View.VISIBLE);
+                        holder.tvError.setVisibility(View.GONE);
 
-                    holder.ivPlay.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Activity.showVideo(holder.getAdapterPosition());
-                        }
-                    });
-                    return false;
-                }
-            }).into(holder.ivImage);
+                        holder.ivPlay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Activity.showVideo(holder.getAdapterPosition());
+                            }
+                        });
+                        return false;
+                    }
+                }).into(holder.ivImage);
+            }
+            else
+            {
+                holder.ivPlay.setVisibility(View.GONE);
+                holder.tvError.setVisibility(View.VISIBLE);
+            }
 
 
         }

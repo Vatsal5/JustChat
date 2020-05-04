@@ -41,6 +41,7 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -63,18 +64,15 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -96,8 +94,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     StorageReference rf;
     int numberOfMembers=-1;
     SharedPreferences preftheme;
-    RecyclerView.LayoutManager manager;
+    LinearLayoutManager manager;
     MessageAdapter adapter;
+    Integer HandlerIndex;
     ArrayList<MessageModel> chats;
     DBHandler Handler;
     int y=0,z=0;
@@ -109,6 +108,37 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     public static MessageActivity2 getInstance(){
         return messageActivity2;
+    }
+
+    public void getMessages() {
+        long millis = System.currentTimeMillis();
+        java.sql.Date date1 = new java.sql.Date(millis);
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("Mode", 0);
+        defaultvalue = pref.getString("mode" + groupKey, "null");
+        Log.d("mode", defaultvalue);
+
+        if (defaultvalue.equals("private")) {
+            tvMode.setText("Private");
+            if (chats.size() != 0) {
+                chats.clear();
+            }
+            if (!Messages.isComputingLayout())
+                adapter.notifyDataSetChanged();
+        } else {
+            tvMode.setText("Public");
+            if (chats.size() != 0) {
+                chats.clear();
+                if(!Messages.isComputingLayout())
+                    adapter.notifyDataSetChanged();
+            }
+            Pair<ArrayList<MessageModel> , Integer> pair = Handler.getGroupMessages(groupname,0);
+            HandlerIndex = pair.second;
+            chats.addAll(pair.first);
+
+            if (!Messages.isComputingLayout())
+                adapter.notifyItemInserted(chats.size() - 1);
+        }
     }
 
     @Override
@@ -235,7 +265,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             public void onClick(View view) {
                 Intent intent = new Intent(MessageActivity2.this,Mode.class);
                 intent.putExtra("number",groupKey);
-                startActivity(intent);
+                startActivityForResult(intent,1500);
             }
         });
 
@@ -282,8 +312,40 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         adapter.registerAdapterDataObserver(observer);
 
-//        new getMessages().execute();
-        chats.addAll(Handler.getGroupMessages(groupname));
+        Messages.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if(manager.findLastCompletelyVisibleItemPosition()==7){
+
+                    if(HandlerIndex!=-1) {
+                        final Pair<ArrayList<MessageModel>, Integer> pair = Handler.getGroupMessages(groupname, HandlerIndex);
+                        HandlerIndex = pair.second;
+
+                        chats.addAll(0, pair.first);
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(!Messages.isComputingLayout())
+                                    adapter.notifyDataSetChanged();
+                                Messages.scrollToPosition(37);
+                            }
+                        },50);
+                    }
+
+                }
+
+            }
+        });
+
+        getMessages();
 
         for(int i=0;i<chats.size();i++)
         {
@@ -978,7 +1040,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     protected void onRestart() {
         super.onRestart();
 
-        new getMessages().execute();
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
@@ -1159,6 +1220,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     adapter.notifyItemInserted(chats.size()-1);
                 }
             }
+        }
+
+        if(requestCode==1500)
+        {
+            getMessages();
         }
 
     }
@@ -2019,81 +2085,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             e.printStackTrace();
         }
         return null;
-    }
-
-    class getMessages extends AsyncTask<Void,Void,String>
-    {
-        @Override
-        protected String doInBackground(Void... voids) {
-
-            SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode",0);
-            defaultvalue = pref.getString("mode"+groupKey,"null");
-            Log.d("mode",defaultvalue);
-
-            if(defaultvalue.equals("private"))
-            {
-//                tvMode.setText("Private");
-                if(chats.size()!=0)
-                {
-                    chats.clear();
-                }
-                return "Private";
-            }
-            else
-            {
-//                tvMode.setText("Public");
-                if(chats.size()!=0) {
-                    chats.clear();
-                }
-                chats.addAll(Handler.getGroupMessages(groupname));
-
-                return "Public";
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(String Status) {
-            super.onPostExecute(Status);
-
-            tvMode.setText(Status);
-
-            if(!Messages.isComputingLayout())
-                adapter.notifyItemInserted(chats.size()-1);
-
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-//        SharedPreferences pref= getApplicationContext().getSharedPreferences("Mode",0);
-//        defaultvalue = pref.getString("mode"+groupKey,"null");
-//        Log.d("mode",defaultvalue);
-//
-//        if(defaultvalue.equals("private"))
-//        {
-//               tvMode.setText("Private");
-//            if(chats.size()!=0)
-//            {
-//                chats.clear();
-//            }
-//            if(!Messages.isComputingLayout())
-//                adapter.notifyItemInserted(chats.size()-1);
-//        }
-//        else
-//        {
-//                tvMode.setText("Public");
-//            if(chats.size()!=0) {
-//                chats.clear();
-//            }
-//            chats.addAll(Handler.getGroupMessages(groupname));
-//
-//            if(!Messages.isComputingLayout())
-//                adapter.notifyItemInserted(chats.size()-1);
-//        }
-
     }
 
     public Drawable getBackground(Uri uri)
