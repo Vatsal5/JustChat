@@ -174,6 +174,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
         if(  !(list.get(position).getLastmessage().equals(" ")) &&!(list.get(position).getLastmessage().equals("null")) &&!(list.get(position).getLastmessage().equals("  ")))
         {
+            holder.tvlastmessage.setVisibility(View.VISIBLE);
+
             if(list.get(position).getLastmessage().length()>20) {
                 holder.tvlastmessage.setText(list.get(position).getLastmessage().substring(0,20)+"..");
             }
@@ -182,7 +184,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
                 holder.tvlastmessage.setText(list.get(position).getLastmessage());
             }
             holder.ivImage.setVisibility(View.GONE);
-            holder.tvlastmessage.setVisibility(View.VISIBLE);
         }
         else if(list.get(position).getLastmessage().equals(" "))
         {
@@ -198,10 +199,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
         else if(list.get(position).getLastmessage().equals("  "))
         {
+            holder.tvlastmessage.setVisibility(View.VISIBLE);
             holder.ivImage.setImageResource(R.drawable.video);
             holder.tvlastmessage.setText("Video");
             holder.ivImage.setVisibility(View.VISIBLE);
-            holder.tvlastmessage.setVisibility(View.VISIBLE);
+
         }
         else{
             holder.tvlastmessage.setText("");
