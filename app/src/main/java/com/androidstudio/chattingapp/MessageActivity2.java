@@ -350,10 +350,19 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         getMessages();
 
-        for(int i=0;i<chats.size();i++)
-        {
-            Log.d("messageme",chats.get(i).getDate());
+        Date date2 = new Date();
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("HH:mm:ss.SSS");
+        long millis1 = System.currentTimeMillis();
+        java.sql.Date date3 = new java.sql.Date(millis1);
+
+        if(messagecount>2) {
+            chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0,8)+simpleDateFormat1.format(date2).substring(9), date3.toString(), groupname));
         }
+
+//        for(int i=0;i<chats.size();i++)
+//        {
+//            Log.d("messageme",chats.get(i).getDate());
+//        }
 
         rl.setOnClickListener(new View.OnClickListener() {
             @Override
