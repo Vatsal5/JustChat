@@ -1065,6 +1065,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                             contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), pref.getString(dataSnapshot.getKey(),dataSnapshot.getKey()), "null", 2
                                     , "", "", null, null));
+                            userAdapter.notifyItemInserted(contacts1.size()-1);
                             new listener(contacts1.size() - 1).profilelistener();
                             new listener(contacts1.size() - 1).piclistener();
                             new listener(contacts1.size() - 1).VideoListener();
@@ -1137,6 +1138,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
                                 , Handler.getLastMessageGroup(dataSnapshot.getValue().toString()),
                                 Handler.getLastGroupMessageTime(dataSnapshot.getValue().toString()).substring(0, 5), dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
+                        userAdapter.notifyItemInserted(contacts1.size()-1);
                         new grouplistener(contacts1.size() - 1).piclistener();
                         new grouplistener(contacts1.size() - 1).VideoListener();
                         new grouplistener(contacts1.size() - 1).child();
@@ -1147,6 +1149,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
                                 , "",
                                 "", dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
+                        userAdapter.notifyItemInserted(contacts1.size()-1);
                         new grouplistener(contacts1.size() - 1).piclistener();
                         new grouplistener(contacts1.size() - 1).VideoListener();
                         new grouplistener(contacts1.size() - 1).child();
