@@ -59,6 +59,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int GRP_MSG_LEFT = 8;
     public static final int GRP_VIDEO_LEFT = 9;
     public static final int GRP_IMAGE_LEFT = 10;
+    public static final int UNREAD = 11;
 
     FirebaseUser user;
     Context context;
@@ -155,6 +156,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         else if (viewType == GRP_VIDEO_LEFT) {
             View v = LayoutInflater.from(context).inflate(R.layout.video_left2, parent, false);
+            return new ViewHolder(v);
+        }else if(viewType == UNREAD){
+            View v = LayoutInflater.from(context).inflate(R.layout.unreadmessages, parent, false);
             return new ViewHolder(v);
         }
         else {
@@ -498,6 +502,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public int getItemViewType(int position) {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(messages.get(position).getType().equals("unread"))
+        {
+            return UNREAD;
+        }
 
         if(messages.get(position).getType().equals("typing"))
         {
