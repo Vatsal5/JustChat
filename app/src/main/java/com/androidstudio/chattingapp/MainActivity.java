@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     DatabaseReference reference1;
     DatabaseReference UserStatus;
     ChildEventListener chreceiver;
-    ValueEventListener dataCreater,deleteimage,deletevideo,deleteGroupimages,deleteGroupvideos;
+    ValueEventListener dataCreater,deleteimage,deletevideo;
     DBHandler Handler;
     LinearLayoutManager linearLayoutManager;
 
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
     ChildEventListener Group;
     ValueEventListener profile,check;
-    ChildEventListener childEvent;
+    ChildEventListener childEvent,deleteGroupimages,deleteGroupvideos;
 
     int l, pos;
     boolean flag=false,flag2=false;
@@ -939,112 +939,112 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         // both the arraylists got clone
         //Toast.makeText(MainActivity.this,contacts2.size()+"",Toast.LENGTH_LONG).show();
         if (num == 0) {
-            childEvent = new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    if (!(dataSnapshot.getKey().equals("name") || dataSnapshot.getKey().equals("groups") || dataSnapshot.getKey().equals("profile") ||
-                            dataSnapshot.getKey().equals("status"))) {
+        childEvent = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if (!(dataSnapshot.getKey().equals("name") || dataSnapshot.getKey().equals("groups") || dataSnapshot.getKey().equals("profile") ||
+                        dataSnapshot.getKey().equals("status"))) {
 
-                        // to delete a 3 days old image in one
+                    // to delete a 3 days old image in one
 
-                        deleteimage = new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    deleteimage = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                for (final DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                    long millis = System.currentTimeMillis();
-                                    java.sql.Date date1 = new java.sql.Date(millis);
-                                    Date date = null;
-                                    try {
-                                        date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot1.getValue().toString().substring(
-                                                5, 15
-                                        ));
-                                    } catch (java.text.ParseException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    long milliSecondsElapsed = date1.getTime() - date.getTime();
-                                    //  Log.d("poiu",date1.getTime()+"");
-                                    // Log.d("poiu",date.getTime()+"");
-                                    // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
-                                    if (milliSecondsElapsed / (24 * 60 * 60 * 1000) >= 3) {
-                                        // Log.d("poiu",diff+"");
-                                        StorageReference file1;
-                                        file1 = FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot1.getValue().toString().substring(15));
-                                        file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                dataSnapshot1.getRef().removeValue();
-
-                                            }
-                                        });
-                                    }
+                            for (final DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                long millis = System.currentTimeMillis();
+                                java.sql.Date date1 = new java.sql.Date(millis);
+                                Date date = null;
+                                try {
+                                    date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot1.getValue().toString().substring(
+                                            5, 15
+                                    ));
+                                } catch (java.text.ParseException e) {
+                                    e.printStackTrace();
                                 }
 
+                                long milliSecondsElapsed = date1.getTime() - date.getTime();
+                                //  Log.d("poiu",date1.getTime()+"");
+                                // Log.d("poiu",date.getTime()+"");
+                                // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
+                                if (milliSecondsElapsed / (24 * 60 * 60 * 1000) >= 3) {
+                                    // Log.d("poiu",diff+"");
+                                    StorageReference file1;
+                                    file1 = FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot1.getValue().toString().substring(15));
+                                    file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            dataSnapshot1.getRef().removeValue();
 
-                                reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
-                                        .getPhoneNumber()).child("info").child("images").removeEventListener(deletevideo);
-
+                                        }
+                                    });
+                                }
                             }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                            }
-                        };
-                        reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
-                                .getPhoneNumber()).child("info").child("images").addListenerForSingleValueEvent(deleteimage);
+                            reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
+                                    .getPhoneNumber()).child("info").child("images").removeEventListener(deletevideo);
 
-                        deletevideo = new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        }
 
-                                for (final DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                    long millis = System.currentTimeMillis();
-                                    java.sql.Date date1 = new java.sql.Date(millis);
-                                    Date date = null;
-                                    try {
-                                        date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot1.getValue().toString().substring(
-                                                5, 15
-                                        ));
-                                    } catch (java.text.ParseException e) {
-                                        e.printStackTrace();
-                                    }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                    long milliSecondsElapsed = date1.getTime() - date.getTime();
-                                    //  Log.d("poiu",date1.getTime()+"");
-                                    // Log.d("poiu",date.getTime()+"");
-                                    // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
-                                    if (milliSecondsElapsed / (24 * 60 * 60 * 1000) >= 3) {
-                                        // Log.d("poiu",diff+"");
-                                        StorageReference file1;
-                                        file1 = FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot1.getValue().toString().substring(15));
-                                        file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                dataSnapshot1.getRef().removeValue();
+                        }
+                    };
+                    reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
+                            .getPhoneNumber()).child("info").child("images").addListenerForSingleValueEvent(deleteimage);
 
-                                            }
-                                        });
-                                    }
+                    deletevideo = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            for (final DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                long millis = System.currentTimeMillis();
+                                java.sql.Date date1 = new java.sql.Date(millis);
+                                Date date = null;
+                                try {
+                                    date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot1.getValue().toString().substring(
+                                            5, 15
+                                    ));
+                                } catch (java.text.ParseException e) {
+                                    e.printStackTrace();
                                 }
 
+                                long milliSecondsElapsed = date1.getTime() - date.getTime();
+                                //  Log.d("poiu",date1.getTime()+"");
+                                // Log.d("poiu",date.getTime()+"");
+                                // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
+                                if (milliSecondsElapsed / (24 * 60 * 60 * 1000) >= 3) {
+                                    // Log.d("poiu",diff+"");
+                                    StorageReference file1;
+                                    file1 = FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot1.getValue().toString().substring(15));
+                                    file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            dataSnapshot1.getRef().removeValue();
 
-                                reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
-                                        .getPhoneNumber()).child("info").child("videos").removeEventListener(deletevideo);
-
+                                        }
+                                    });
+                                }
                             }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                            }
-                        };
-                        reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
-                                .getPhoneNumber()).child("info").child("videos").addListenerForSingleValueEvent(deletevideo);
+                            reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
+                                    .getPhoneNumber()).child("info").child("videos").removeEventListener(deletevideo);
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    };
+                    reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
+                            .getPhoneNumber()).child("info").child("videos").addListenerForSingleValueEvent(deletevideo);
 
 
-                        //  Log.d("contacts",dataSnapshot.getKey());
+                    //  Log.d("contacts",dataSnapshot.getKey());
 //                            int tell = 0;
 //
 //
@@ -1061,134 +1061,134 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //
 //                            }
 //                            if (tell == 0) {
-                        if (dataSnapshot.child("info").child("friend").exists() && dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
+                    if (dataSnapshot.child("info").child("friend").exists() && dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
 
-                            contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), pref.getString(dataSnapshot.getKey(),dataSnapshot.getKey()), "null", 2
-                                    , "", "", null, null));
-                            userAdapter.notifyItemInserted(contacts1.size()-1);
-                            new listener(contacts1.size() - 1).profilelistener();
-                            new listener(contacts1.size() - 1).piclistener();
-                            new listener(contacts1.size() - 1).VideoListener();
-                            new listener(contacts1.size() - 1).child();
+                        contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), pref.getString(dataSnapshot.getKey(), dataSnapshot.getKey()), "null", 2
+                                , "", "", null, null));
+                        userAdapter.notifyItemInserted(contacts1.size() - 1);
+                        new listener(contacts1.size() - 1).profilelistener();
+                        new listener(contacts1.size() - 1).piclistener();
+                        new listener(contacts1.size() - 1).VideoListener();
+                        new listener(contacts1.size() - 1).child();
 
 
-                        }
+                    }
 
-                        //                           }
+                    //                           }
 
-                        for (int i = 0; i < contacts1.size(); i++) {
-                            if (contacts1.get(i).getGroupname() == null) {
-
-                                String name = pref.getString(contacts1.get(i).getPh_number(), "null");
-                                if (name.equals("null")) {
-                                    if (!contacts1.get(i).getuID().equals("")) {
-                                        editor.putString(contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
-                                        editor.apply();
-                                    } else {
-                                        editor.putString(contacts1.get(i).getPh_number(), contacts1.get(i).getPh_number());
-                                        editor.apply();
-                                    }
-                                }
-                                contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
-                                contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
-
-                            } else {
-                                contacts1.get(i).setLastmessage(Handler.getLastMessageGroup(contacts1.get(i).getGroupname()));
-                                contacts1.get(i).setTime(Handler.getLastGroupMessageTime(contacts1.get(i).getGroupname()));
-                            }
-                        }
+//                        for (int i = 0; i < contacts1.size(); i++) {
+//                            if (contacts1.get(i).getGroupname() == null) {
+//
+//                                String name = pref.getString(contacts1.get(i).getPh_number(), "null");
+//                                if (name.equals("null")) {
+//                                    if (!contacts1.get(i).getuID().equals("")) {
+//                                        editor.putString(contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
+//                                        editor.apply();
+//                                    } else {
+//                                        editor.putString(contacts1.get(i).getPh_number(), contacts1.get(i).getPh_number());
+//                                        editor.apply();
+//                                    }
+//                                }
+//                                contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
+//                                contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
+//
+//                            } else {
+//                                contacts1.get(i).setLastmessage(Handler.getLastMessageGroup(contacts1.get(i).getGroupname()));
+//                                contacts1.get(i).setTime(Handler.getLastGroupMessageTime(contacts1.get(i).getGroupname()));
+//                            }
+//                        }
 
 //                            userAdapter = new UserAdapter(MainActivity.this, contacts1);
 //                            lv.setAdapter(userAdapter);
-                        userAdapter.notifyDataSetChanged();
-
-                    }
-
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            };
-
-            reference.child("users").child(currentUserNumber).addChildEventListener(childEvent);
-
-            Group = new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
-
-                    if (Handler.getGroupMessages(dataSnapshot.getValue().toString(),0).first.size() > 0) {
-                        contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
-                                , Handler.getLastMessageGroup(dataSnapshot.getValue().toString()),
-                                Handler.getLastGroupMessageTime(dataSnapshot.getValue().toString()).substring(0, 5), dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
-                        userAdapter.notifyItemInserted(contacts1.size()-1);
-                        new grouplistener(contacts1.size() - 1).piclistener();
-                        new grouplistener(contacts1.size() - 1).VideoListener();
-                        new grouplistener(contacts1.size() - 1).child();
-                        (new GroupDp(contacts1.size() - 1)).ProfileListener();
-
-
-                    } else {
-                        contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
-                                , "",
-                                "", dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
-                        userAdapter.notifyItemInserted(contacts1.size()-1);
-                        new grouplistener(contacts1.size() - 1).piclistener();
-                        new grouplistener(contacts1.size() - 1).VideoListener();
-                        new grouplistener(contacts1.size() - 1).child();
-                        (new GroupDp(contacts1.size() - 1)).ProfileListener();
-                    }
-
-
-                    //   userAdapter.notifyDataSetChanged();
-
                     userAdapter.notifyDataSetChanged();
-                    num++;
-                    reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
-                            new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.exists()) {
-                                        contacts1.get(contacts1.size() - 1).setUrl(dataSnapshot.getValue().toString());
 
-                                        //   userAdapter.notifyDataSetChanged();
-                                    } else {
-                                        contacts1.get(contacts1.size() - 1).setUrl("null");
+                }
 
-                                        //  userAdapter.notifyDataSetChanged();
-                                    }
-                                }
+            }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        reference.child("users").child(currentUserNumber).addChildEventListener(childEvent);
+
+        Group = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+
+                if (Handler.getGroupMessages(dataSnapshot.getValue().toString(), 0).first.size() > 0) {
+                    contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
+                            , Handler.getLastMessageGroup(dataSnapshot.getValue().toString()),
+                            Handler.getLastGroupMessageTime(dataSnapshot.getValue().toString()).substring(0, 5), dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
+                    userAdapter.notifyItemInserted(contacts1.size() - 1);
+                    new grouplistener(contacts1.size() - 1).piclistener();
+                    new grouplistener(contacts1.size() - 1).VideoListener();
+                    new grouplistener(contacts1.size() - 1).child();
+                    (new GroupDp(contacts1.size() - 1)).ProfileListener();
+
+
+                } else {
+                    contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
+                            , "",
+                            "", dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
+                    userAdapter.notifyItemInserted(contacts1.size() - 1);
+                    new grouplistener(contacts1.size() - 1).piclistener();
+                    new grouplistener(contacts1.size() - 1).VideoListener();
+                    new grouplistener(contacts1.size() - 1).child();
+                    (new GroupDp(contacts1.size() - 1)).ProfileListener();
+                }
+
+
+                //   userAdapter.notifyDataSetChanged();
+
+                userAdapter.notifyDataSetChanged();
+                num++;
+                reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    contacts1.get(contacts1.size() - 1).setUrl(dataSnapshot.getValue().toString());
+
+                                    //   userAdapter.notifyDataSetChanged();
+                                } else {
+                                    contacts1.get(contacts1.size() - 1).setUrl("null");
+
+                                    //  userAdapter.notifyDataSetChanged();
                                 }
                             }
-                    );
-                    deleteGroupimages = new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                            for (final DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                long millis = System.currentTimeMillis();
-                                java.sql.Date date1 = new java.sql.Date(millis);
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        }
+                );
+                final String key = dataSnapshot.getKey();
+                deleteGroupimages = new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+                        long millis = System.currentTimeMillis();
+                        java.sql.Date date1 = new java.sql.Date(millis);
+                        Log.d("zxcv", dataSnapshot.getValue().toString());
 
 
 //                                    if(date1.toString().substring(0,4).equals(dataSnapshot.getValue().toString().substring(1,5))
@@ -1213,60 +1213,73 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                                    }
 
 
-                                try {
+                        try {
 
 
-                                    // get difference between two dates in MINUTES
-                                    Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot.getValue().toString().substring(
-                                            dataSnapshot.getValue().toString().indexOf("h") - 10, dataSnapshot.getValue().toString().indexOf("h")
-                                    ));
+                            // get difference between two dates in MINUTES
+                            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot.getValue().toString().substring(
+                                    dataSnapshot.getValue().toString().indexOf("h") - 10, dataSnapshot.getValue().toString().indexOf("h")
+                            ));
 
-                                    long milliSecondsElapsed = date1.getTime() - date.getTime();
-                                    //  Log.d("poiu",date1.getTime()+"");
-                                    // Log.d("poiu",date.getTime()+"");
-                                    // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
-                                    if (milliSecondsElapsed / (24 * 60 * 60 * 1000) >= 3) {
-                                        // Log.d("poiu",diff+"");
+                            long milliSecondsElapsed = date1.getTime() - date.getTime();
+                            //  Log.d("poiu",date1.getTime()+"");
+                            // Log.d("poiu",date.getTime()+"");
+                            // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
+                            if (milliSecondsElapsed / (24 * 60 * 60 * 1000) >= 3) {
+                                // Log.d("poiu",diff+"");
 
-                                        StorageReference file1;
-                                        file1 = FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot1.getValue().toString().substring(dataSnapshot1
-                                                .getValue().toString().indexOf("h")));
-                                        file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                dataSnapshot1.getRef().removeValue();
-                                            }
-                                        });
+                                StorageReference file1;
+                                file1 = FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot
+                                        .getValue().toString().indexOf("h")));
+                                file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        dataSnapshot.getRef().removeValue();
                                     }
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                } catch (java.text.ParseException e) {
-                                    e.printStackTrace();
-                                }
-
-
+                                });
                             }
-                            FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deleteimages").removeEventListener(deleteGroupimages);
-
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        } catch (java.text.ParseException e) {
+                            e.printStackTrace();
                         }
 
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // FirebaseDatabase.getInstance().getReference().child("groups").child(key).child("deleteimages").removeEventListener(deleteGroupimages);
 
-                        }
-                    };
+                    }
 
-                    FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deleteimages").addListenerForSingleValueEvent(deleteGroupimages);
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                };
+
+                FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deleteimages").addChildEventListener(deleteGroupimages);
 
 
-                    deleteGroupvideos = new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                deleteGroupvideos = new ChildEventListener() {
 
-                            for (final DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                long millis = System.currentTimeMillis();
-                                java.sql.Date date1 = new java.sql.Date(millis);
+                    @Override
+                    public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+                        long millis = System.currentTimeMillis();
+                        java.sql.Date date1 = new java.sql.Date(millis);
+                        Log.d("zxcv", dataSnapshot.getValue().toString());
 
 
 //                                    if(date1.toString().substring(0,4).equals(dataSnapshot.getValue().toString().substring(1,5))
@@ -1291,52 +1304,64 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                                    }
 
 
-                                try {
+                        try {
 
 
-                                    // get difference between two dates in MINUTES
-                                    Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot.getValue().toString().substring(
-                                            dataSnapshot.getValue().toString().indexOf("h") - 10, dataSnapshot.getValue().toString().indexOf("h")
-                                    ));
+                            // get difference between two dates in MINUTES
+                            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot.getValue().toString().substring(
+                                    dataSnapshot.getValue().toString().indexOf("h") - 10, dataSnapshot.getValue().toString().indexOf("h")
+                            ));
 
-                                    long milliSecondsElapsed = date1.getTime() - date.getTime();
-                                    //  Log.d("poiu",date1.getTime()+"");
-                                    // Log.d("poiu",date.getTime()+"");
-                                    // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
-                                    if (milliSecondsElapsed / (24 * 60 * 60 * 1000) >= 3) {
-                                        // Log.d("poiu",diff+"");
+                            long milliSecondsElapsed = date1.getTime() - date.getTime();
 
-                                        StorageReference file1;
-                                        file1 = FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot1.getValue().toString().substring(dataSnapshot1
-                                                .getValue().toString().indexOf("h")));
-                                        file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                dataSnapshot1.getRef().removeValue();
-                                            }
-                                        });
+
+                            // Log.d("poiu",date.getTime()+"");
+                            // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
+                            if (milliSecondsElapsed / (24 * 60 * 60 * 1000) >= 3) {
+                                // Log.d("poiu",diff+"");
+                                Log.d("poiu", milliSecondsElapsed / (24 * 60 * 60 * 1000) + "");
+
+                                StorageReference file1;
+                                file1 = FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot
+                                        .getValue().toString().indexOf("h")));
+                                file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        dataSnapshot.getRef().removeValue();
                                     }
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                } catch (java.text.ParseException e) {
-                                    e.printStackTrace();
-                                }
-
-
+                                });
                             }
-                            FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletevideos").removeEventListener(deleteGroupvideos);
-
-
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        } catch (java.text.ParseException e) {
+                            e.printStackTrace();
                         }
 
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
 
-                        }
-                    };
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                    FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletevideos").addListenerForSingleValueEvent(deleteGroupvideos);
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                };
+
+                FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletevideos").addChildEventListener(deleteGroupvideos);
 
 
 //                        FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletevideos").addChildEventListener(new ChildEventListener() {
@@ -1406,44 +1431,45 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                            }
 //                        });
 
-                }
+            }
 
 
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                }
+            }
 
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                    for (int i = 0; i < contacts1.size(); i++) {
-                        if (contacts1.get(i).getGroupname() != null) {
-                            if (contacts1.get(i).getGroupname().equals(dataSnapshot.getValue().toString())) {
-                                contacts1.remove(i);
-                                userAdapter.notifyDataSetChanged();
-                            }
-
+                for (int i = 0; i < contacts1.size(); i++) {
+                    if (contacts1.get(i).getGroupname() != null) {
+                        if (contacts1.get(i).getGroupname().equals(dataSnapshot.getValue().toString())) {
+                            contacts1.remove(i);
+                            userAdapter.notifyDataSetChanged();
                         }
+
                     }
-
                 }
 
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
 
-                }
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
 
-                }
-            };
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            if (FirebaseAuth.getInstance().getCurrentUser() != null)
-                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(Group);
-            num ++;
-        }
+            }
+        };
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null)
+            reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(Group);
+        num++;
+    }
+
     }
 
 

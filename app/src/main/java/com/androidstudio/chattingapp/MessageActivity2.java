@@ -1694,7 +1694,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").child(dataSnapshot.getKey())
-                                                .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("h")-10))-1)+dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")))
+                                                .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("h")-10))-1)+dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")-10))
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
@@ -1861,7 +1861,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").child(dataSnapshot.getKey())
-                                                .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("h")-10))-1)+dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
+                                                .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("h")-10))-1)+dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")-10));
                                     }
 
                                     @Override
