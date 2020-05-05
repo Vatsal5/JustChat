@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="11dp"
+    android:background="#60000000"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/date"
+        android:gravity="center"
+        android:paddingLeft="7dp"
+        android:paddingTop="4dp"
+        android:paddingRight="7dp"
+        android:paddingBottom="4dp"
+        android:text="Unread Messages"
+        android:textColor="#212121"
+
+        android:textSize="15dp"
+        android:textStyle="bold" />
+
+</LinearLayout>
