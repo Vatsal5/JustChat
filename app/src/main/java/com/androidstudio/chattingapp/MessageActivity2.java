@@ -324,9 +324,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if(manager.findLastCompletelyVisibleItemPosition()==7){
+                if(manager.findFirstCompletelyVisibleItemPosition()==0){
 
                     if(HandlerIndex!=-1) {
+                        final int pos = manager.findLastVisibleItemPosition();
                         final Pair<ArrayList<MessageModel>, Integer> pair = Handler.getGroupMessages(groupname, HandlerIndex);
                         HandlerIndex = pair.second;
 
@@ -337,7 +338,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             public void run() {
                                 if(!Messages.isComputingLayout())
                                     adapter.notifyDataSetChanged();
-                                Messages.scrollToPosition(37);
+                                Messages.scrollToPosition(pair.first.size()-1+pos);
                             }
                         },50);
                     }
@@ -977,39 +978,57 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             int pos = viewHolder.getAdapterPosition();
 
             MessageModel model = chats.get(pos);
+            Boolean flag2=true;
+            int counter=0;
 
-            if(pos!=0) {
-                if (pos < chats.size() - 1) {
-                    if (chats.get(pos - 1).getSender().equals("null") && chats.get(pos + 1).getSender().equals("null")) {
-                        chats.remove(model);
-                        Handler.DeleteMessage(model);
-                        model = chats.get(pos - 1);
-                        chats.remove(model);
-                        Handler.DeleteMessage(model);
+            for(int i = chats.size()-1;i>=0;i--)
+            {
+                if(chats.get(i).getDownloaded()==2 || chats.get(i).getDownloaded()==3 || chats.get(i).getDownloaded()==4 || chats.get(i).getDownloaded()==-2
+                        || chats.get(i).getDownloaded()==-3 || chats.get(i).getDownloaded()==100 || chats.get(i).getDownloaded()==103 || chats.get(i).getDownloaded()==104) {
+                    flag2 = false;
+                    break;
+                }
+                counter++;
+                if(counter==5)
+                    break;
+            }
+            if(flag2) {
+                if (pos != 0) {
+                    if (pos < chats.size() - 1) {
+                        if (chats.get(pos - 1).getSender().equals("null") && chats.get(pos + 1).getSender().equals("null")) {
+                            chats.remove(model);
+                            Handler.DeleteMessage(model);
+                            model = chats.get(pos - 1);
+                            chats.remove(model);
+                            Handler.DeleteMessage(model);
+                        } else {
+                            chats.remove(model);
+                            Handler.DeleteMessage(model);
+                        }
                     } else {
-                        chats.remove(model);
-                        Handler.DeleteMessage(model);
+                        if (chats.get(pos - 1).getSender().equals("null")) {
+                            chats.remove(model);
+                            Handler.DeleteMessage(model);
+                            model = chats.get(pos - 1);
+                            chats.remove(model);
+                            Handler.DeleteMessage(model);
+                        } else {
+                            chats.remove(model);
+                            Handler.DeleteMessage(model);
+                        }
+
                     }
                 } else {
-                    if (chats.get(pos - 1).getSender().equals("null")) {
-                        chats.remove(model);
-                        Handler.DeleteMessage(model);
-                        model = chats.get(pos - 1);
-                        chats.remove(model);
-                        Handler.DeleteMessage(model);
-                    } else {
-                        chats.remove(model);
-                        Handler.DeleteMessage(model);
-                    }
-
+                    chats.remove(model);
+                    Handler.DeleteMessage(model);
                 }
+                adapter.notifyDataSetChanged();
             }
             else
             {
-                chats.remove(model);
-                Handler.DeleteMessage(model);
+                adapter.notifyItemChanged(pos);
+                Toast.makeText(MessageActivity2.this, "Messages cannot be deleted if there are pending messages", Toast.LENGTH_SHORT).show();
             }
-            adapter.notifyDataSetChanged();
 
         }
 

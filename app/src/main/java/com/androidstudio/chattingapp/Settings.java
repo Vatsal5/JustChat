@@ -2,6 +2,7 @@ package com.androidstudio.chattingapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
@@ -25,6 +26,7 @@ import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -44,6 +46,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -400,9 +403,7 @@ flag=true;
                     else {
                         if(wallpaper.getString("value","null").equals("null"))
                         {
-                            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            intent.setType("image/*");
-                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 10);
+                            CropImage.startPickImageActivity(Settings.this);
                         }
                         else
                         {
@@ -421,9 +422,7 @@ flag=true;
                                                     break;
 
                                                 case 1:
-                                                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                                    intent.setType("image/*");
-                                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), 10);
+                                                    CropImage.startPickImageActivity(Settings.this);
                                                     break;
                                             }
                                         }
@@ -437,16 +436,41 @@ flag=true;
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 10 && resultCode == RESULT_OK) {
-            Uri imageuri = data.getData();
-
-            new CompressImage().execute(imageuri);
+        if(requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK)
+        {
+            Uri imageuri = CropImage.getPickImageResultUri(this,data);
+            if(CropImage.isReadExternalStoragePermissionsRequired(this,imageuri))
+            {
+                requestPermissions(new String []{Manifest.permission.READ_EXTERNAL_STORAGE},0);
+            }else {
+                startCrop(imageuri);
+            }
         }
 
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                new CompressImage().execute(result.getUri());
+            }
+        }
+
+    }
+
+    private void startCrop(Uri imageuri)
+    {
+        CropImage.activity(imageuri)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setMultiTouchEnabled(true)
+                .setAllowRotation(true)
+                .setCropShape(CropImageView.CropShape.RECTANGLE)
+                .setActivityTitle("Select Wallpaper")
+                .setAspectRatio(25,25)
+                .start(this);
     }
 
     @Override
@@ -480,9 +504,7 @@ flag=true;
             }
             if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
             {
-                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intent.setType("image/*");
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 10);
+                CropImage.startPickImageActivity(Settings.this);
             }
         }
 

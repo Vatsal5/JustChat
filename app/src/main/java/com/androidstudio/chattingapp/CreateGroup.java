@@ -5,14 +5,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.media.ExifInterface;
@@ -58,11 +62,14 @@ public class CreateGroup extends AppCompatActivity {
     TextView tvInstruct;
     EditText etGroupName;
     Button btnCreate,btnSkip;
+    SharedPreferences preftheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
+
+        preftheme=getSharedPreferences("theme",0);
 
         ivGroupDP = findViewById(R.id.ivGroupDP);
         ivClick = findViewById(R.id.ivClick);
@@ -72,7 +79,9 @@ public class CreateGroup extends AppCompatActivity {
 
         etGroupName = findViewById(R.id.etGroupName);
         btnCreate = findViewById(R.id.btnCreate);
+        setBackground(btnCreate);
         btnSkip = findViewById(R.id.btnSkip);
+        setBackground(btnSkip);
 
         final DatabaseReference[] reference = new DatabaseReference[1];
 
@@ -391,6 +400,83 @@ public class CreateGroup extends AppCompatActivity {
         }
 
         return inSampleSize;
+    }
+
+    public void setBackground(View view)
+    {
+        String theme=preftheme.getString("theme","red");
+
+        switch (theme)
+        {
+            case "orange":
+
+                ViewCompat.setBackgroundTintList(view, ColorStateList.valueOf(Color.parseColor("#d6514a")));
+
+                break;
+
+            case "blue":
+
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#283470")));
+
+                break;
+
+
+            case "bluish":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#292f3b")));
+                break;
+
+
+            case "deepred":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#e24a3c")));
+                break;
+
+            case "faintpink":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#f25c65")));
+
+                break;
+
+            case "darkblue":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#2b3050")));
+                break;
+
+
+            case "green":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#6ebd52")));
+                break;
+
+            case "lightorange":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#f2a37a")));
+
+                break;
+
+            case "lightred":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#e9776c")));
+                break;
+
+
+            case "mustard":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#eba54d")));
+                break;
+
+            case "pink":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#e91e63")));
+                break;
+
+            case "pureorange":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#ff5722")));
+                break;
+
+            case "purepink":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#f57268")));
+                break;
+
+            case "purple":
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#49264e")));
+                break;
+
+            default:
+                ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#d6514a")));
+        }
     }
 
 }

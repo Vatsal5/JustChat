@@ -488,6 +488,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setMultiTouchEnabled(true)
                 .setAllowRotation(true)
+                .setCropShape(CropImageView.CropShape.OVAL)
                 .setAspectRatio(25,25)
                 .start(this);
     }
