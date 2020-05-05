@@ -92,6 +92,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     LinearLayout ll;
     static MessageActivity2 messageActivity2;
     StorageReference rf;
+    int messagecount;
     int numberOfMembers=-1;
     SharedPreferences preftheme;
     LinearLayoutManager manager;
@@ -148,6 +149,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         ivProfile=findViewById(R.id.ivProfile);
         ll=findViewById(R.id.ll);
         messageActivity2=this;
+        messagecount=getIntent().getIntExtra("messagecount",2);
 
         groupKey = getIntent().getStringExtra("groupkey");
         ApplicationClass.CurrentReceiver = groupKey;
@@ -619,7 +621,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 adapter.notifyItemInserted(chats.size()-1);
 
-                received.start();
+                if(messagecount==2)
+                    received.start();
+                else
+                    messagecount--;
 
                 dataSnapshot.getRef().removeValue();
 
@@ -701,7 +706,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 //                adapter.notifyDataSetChanged();
                 adapter.notifyItemInserted(chats.size()-1);
 
+                if(messagecount==2)
                     received.start();
+                else
+                    messagecount--;
                 dataSnapshot.getRef().removeValue();
 
             }
@@ -781,7 +789,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                         adapter.notifyItemInserted(chats.size()-1);
                         // adapter.notifyItemRangeInserted(chats.size()-1,1);
+                if(messagecount==2)
                         received.start();
+                else
+                    messagecount--;
 //                    }
 //                }
                 dataSnapshot.getRef().removeValue();
