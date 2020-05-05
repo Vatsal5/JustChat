@@ -66,26 +66,11 @@ public class ApplicationClass extends Application
                     check=0;
                 }
 
-                if(messages.get(i).getGroupName().equals("null")) {
-                    if (messages.get(i).getDownloaded() == -3) {
-                        FirebaseDatabase.getInstance().getReference("users").child(messages.get(i).getSender()).child(messages.get(i).getReciever()).push().setValue(messages.get(i)
-                                .getTime() + messages.get(i).getDate() + messages.get(i).getMessage().trim()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                model.setDownloaded(-1);
-                                Handler.UpdateMessage(model);
-                                check=0;
-                            }
-                        });
-                    }
-                }
-                if(!messages.get(i).getGroupName().equals("null")) {
                     if (messages.get(i).getDownloaded() == -3) {
                         model.setDownloaded(-2);
                         Handler.UpdateMessage(model);
                         check=0;
                     }
-                }
 
                 if(messages.get(i).getDownloaded()==103)
                 {
