@@ -20,6 +20,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.media.MediaPlayer;
@@ -41,6 +42,7 @@ import android.util.Pair;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -612,8 +614,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 getWindow().setBackgroundDrawable(getBackground(Uri.parse(wallpaper.getString("value","null"))));
         }
 
-        //chats.add(new MessageModel(RecieverPhone,sender,"https://images.unsplash.com/photo-1579256308218-d162fd41c801?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjF9&auto=format&fit=crop&w=500&q=60","image",0));
-
         adapter = new MessageAdapter(MessageActivity.this, chats);
 
         if((defaultvalue.equals("null"))){
@@ -635,8 +635,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             @Override
             public void onItemRangeChanged(int positionStart, int itemCount) {
                 super.onItemRangeChanged(positionStart, itemCount);
-
-                Messages.scrollToPosition(38);
 
             }
 
@@ -680,9 +678,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 super.onScrolled(recyclerView, dx, dy);
 
 
-                if(manager.findLastCompletelyVisibleItemPosition()==7){
+                if(manager.findFirstCompletelyVisibleItemPosition()==0){
 
                     if(HandlerIndex!=-1) {
+
+                        final int pos = manager.findLastVisibleItemPosition();
+
                         final Pair<ArrayList<MessageModel>, Integer> pair = Handler.getMessages(RecieverPhone, HandlerIndex);
                         HandlerIndex = pair.second;
 
@@ -693,7 +694,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                             public void run() {
                                 if(!Messages.isComputingLayout())
                                     adapter.notifyDataSetChanged();
-                                Messages.scrollToPosition(37);
+                                Messages.scrollToPosition(pair.first.size()-1+pos);
                             }
                         },50);
                         }
@@ -1096,40 +1097,59 @@ if(getIntent().getIntExtra("path",1)==2) {
 
             int pos = viewHolder.getAdapterPosition();
             MessageModel model = chats.get(pos);
+            Boolean flag2=true;
+            int counter=0;
 
+            for(int i = chats.size()-1;i>=0;i--)
+            {
+                if(chats.get(i).getDownloaded()==2 || chats.get(i).getDownloaded()==3 || chats.get(i).getDownloaded()==4 || chats.get(i).getDownloaded()==-2
+                    || chats.get(i).getDownloaded()==-3 || chats.get(i).getDownloaded()==100 || chats.get(i).getDownloaded()==103 || chats.get(i).getDownloaded()==104) {
+                    flag2 = false;
+                    break;
+                }
+                counter++;
 
-            if(pos!=0) {
-                if (pos < chats.size() - 1) {
-                    if (chats.get(pos - 1).getSender().equals("null") && chats.get(pos + 1).getSender().equals("null")) {
-                        chats.remove(model);
-                        Handler.DeleteMessage(model);
-                        model = chats.get(pos - 1);
-                        chats.remove(model);
-                        Handler.DeleteMessage(model);
+                if(counter==5)
+                    break;
+            }
+
+            if(flag2) {
+                if (pos != 0) {
+                    if (pos < chats.size() - 1) {
+                        if (chats.get(pos - 1).getSender().equals("null") && chats.get(pos + 1).getSender().equals("null")) {
+                            chats.remove(model);
+                            Handler.DeleteMessage(model);
+                            model = chats.get(pos - 1);
+                            chats.remove(model);
+                            Handler.DeleteMessage(model);
+                        } else {
+                            chats.remove(model);
+                            Handler.DeleteMessage(model);
+                        }
                     } else {
-                        chats.remove(model);
-                        Handler.DeleteMessage(model);
+                        if (chats.get(pos - 1).getSender().equals("null")) {
+                            chats.remove(model);
+                            Handler.DeleteMessage(model);
+                            model = chats.get(pos - 1);
+                            chats.remove(model);
+                            Handler.DeleteMessage(model);
+                        } else {
+                            chats.remove(model);
+                            Handler.DeleteMessage(model);
+                        }
+
                     }
                 } else {
-                    if (chats.get(pos - 1).getSender().equals("null")) {
-                        chats.remove(model);
-                        Handler.DeleteMessage(model);
-                        model = chats.get(pos - 1);
-                        chats.remove(model);
-                        Handler.DeleteMessage(model);
-                    } else {
-                        chats.remove(model);
-                        Handler.DeleteMessage(model);
-                    }
-
+                    chats.remove(model);
+                    Handler.DeleteMessage(model);
                 }
-            }
-            else {
-                chats.remove(model);
-                Handler.DeleteMessage(model);
-            }
 
-            adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
+            }else
+            {
+                adapter.notifyItemChanged(pos);
+                Toast.makeText(MessageActivity.this, "Messages cannot be deleted if there are pending messages", Toast.LENGTH_SHORT).show();
+            }
 
         }
 
@@ -1147,7 +1167,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
 
             int swipeFlags;
-            if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 60)){
+            if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 60 || chats.get(viewHolder.getAdapterPosition()).getType().equals("typing"))){
 
                 if(chats.get(viewHolder.getAdapterPosition()).getSender().equals(RecieverPhone)) {
                     swipeFlags = ItemTouchHelper.END;
@@ -2425,6 +2445,8 @@ if(getIntent().getIntExtra("path",1)==2) {
         try {
             InputStream inputStream = getContentResolver().openInputStream(uri);
              return Drawable.createFromStream(inputStream, uri.toString() );
+
+
         } catch (FileNotFoundException e) {
             Toast.makeText(this, "Wallpaper set to default as file not found!", Toast.LENGTH_SHORT).show();
             llMessageActivity.setBackground(null);

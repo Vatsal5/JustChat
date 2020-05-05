@@ -4,7 +4,9 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -23,6 +25,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -50,6 +53,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     ArrayList<UserDetailWithStatus> contacts1;
     Toolbar toolbar;
     CardView cvCreate;
+    SharedPreferences pref;
+    SharedPreferences.Editor edit;
     ImageView ivBack;
     ArrayList<String> number1,membersToadd;
     int yes=0;
@@ -63,6 +68,10 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         tvtitle=findViewById(R.id.tvhead);
         cvCreate=findViewById(R.id.ivCreate);
         ivBack=findViewById(R.id.ivBack);
+
+        pref= getApplicationContext().getSharedPreferences("Names",0);
+        edit = pref.edit();
+        edit.apply();
 
          toolbar = findViewById(R.id.toolbar);
         SharedPreferences preftheme;
@@ -82,86 +91,74 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         { case "orange":
 
             toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
-            cvCreate.setBackgroundColor(getResources().getColor(R.color.Orange));
+            ViewCompat.setBackgroundTintList(cvCreate, ColorStateList.valueOf(Color.parseColor("#d6514a")));
             break;
 
             case "blue":
 
                 toolbar.setBackgroundColor(getResources().getColor(R.color.blue));
-                cvCreate.setBackgroundColor(getResources().getColor(R.color.blue));
-
+                ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#283470")));
                 break;
 
 
             case "bluish":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.bluish));
-                cvCreate.setBackgroundColor(getResources().getColor(R.color.bluish));
+                ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#292f3b")));
                 break;
-
 
             case "deepred":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
-                cvCreate.setBackgroundColor(getResources().getColor(R.color.deepred));
-                break;
+                ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#e24a3c")));
 
             case "faintpink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
-                cvCreate.setBackgroundColor(getResources().getColor(R.color.faintpink));
-
+                ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#f25c65")));
                 break;
 
             case "darkblue":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.darkblue));
-                cvCreate.setBackgroundColor(getResources().getColor(R.color.darkblue));
+                ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#2b3050")));
                 break;
 
 
             case "green":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.green));
-                cvCreate.setBackgroundColor(getResources().getColor(R.color.green));
-                break;
+                ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#f2a37a")));
 
             case "lightorange":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
-                cvCreate.setBackgroundColor(getResources().getColor(R.color.lightorange));
+                ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#f2a37a")));
                 break;
 
             case "lightred":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
-                cvCreate.setBackgroundColor(getResources().getColor(R.color.lightred));
-                break;
+                ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#e9776c")));
 
 
             case "mustard":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
-                cvCreate.setBackgroundColor(getResources().getColor(R.color.mustard));
-                break;
+                ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#eba54d")));
 
             case "pink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
-                cvCreate.setBackgroundColor(getResources().getColor(R.color.pink));
-
+                ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#e91e63")));
                 break;
 
             case "pureorange":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
-                cvCreate.setBackgroundColor(getResources().getColor(R.color.pureorange));
-                break;
+                ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#ff5722")));
 
             case "purepink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
-                cvCreate.setBackgroundColor(getResources().getColor(R.color.purepink));
-                break;
+                ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#f57268")));
 
             case "purple":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
-                cvCreate.setBackgroundColor(getResources().getColor(R.color.purple));
-                break;
+                ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#49264e")));
 
             default:
                 toolbar.setBackgroundColor(getResources().getColor(R.color.red));
-                cvCreate.setBackgroundColor(getResources().getColor(R.color.red));
-
+                ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#d6514a")));
         }
         tvCreateGroup=findViewById(R.id.tvCreate);
         members=new ArrayList<>();
@@ -404,6 +401,12 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                     if (!(number.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
                         contacts.add(new UserDetail(number, name));
                         number1.add(number);
+
+                        if(!pref.getString(number,number).equals(name)) {
+                            edit.putString(number, name);
+                            edit.apply();
+                        }
+
                     }
                 } else {
 
@@ -411,8 +414,15 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
                         contacts.add(new UserDetail("+91"+number, name));
                         number1.add("+91"+number);
+
+                        if(!pref.getString("+91"+number,"+91"+number).equals(name)) {
+                            edit.putString("+91"+number, name);
+                            edit.apply();
+                        }
+
                     }
                 }
+
             }
 
         }

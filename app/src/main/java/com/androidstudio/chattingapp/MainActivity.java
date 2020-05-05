@@ -159,7 +159,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         preftheme=getSharedPreferences("theme",0);
 
         pref= getApplicationContext().getSharedPreferences("Names",0);
-        editor = pref.edit();
         String theme=preftheme.getString("theme","red");
 
 
@@ -296,6 +295,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             currentUserNumber = "null";
 
         lv=findViewById(R.id.lv);
+        lv.setHasFixedSize(true);
         lv.setLayoutManager(linearLayoutManager);
         userAdapter = new UserAdapter(MainActivity.this, contacts1);
         lv.setAdapter(userAdapter);
@@ -1063,7 +1063,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                            if (tell == 0) {
                         if (dataSnapshot.child("info").child("friend").exists() && dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
 
-                            contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), "", "null", 2
+                            contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), pref.getString(dataSnapshot.getKey(),dataSnapshot.getKey()), "null", 2
                                     , "", "", null, null));
                             new listener(contacts1.size() - 1).profilelistener();
                             new listener(contacts1.size() - 1).piclistener();
@@ -1641,7 +1641,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         {
             toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
 
-            btnContacts.setBackgroundColor(getResources().getColor(R.color.Orange));}
+            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.Orange)));
+        }
 
         else if(theme.equals("blue"))
         {
