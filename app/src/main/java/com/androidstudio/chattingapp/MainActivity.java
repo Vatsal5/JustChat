@@ -115,11 +115,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     boolean flag=false,flag2=false;
 
     UserAdapter userAdapter;
-    int c=0;
-    int u;
-    int messageno;
-
-    int k=0;
 
     int num=0;
 
@@ -1310,7 +1305,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         Log.d("destroy","App is killed");
 
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null)
             Status("offline");
     }
     public void Status(String Status)
