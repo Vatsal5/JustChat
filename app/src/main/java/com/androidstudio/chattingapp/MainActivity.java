@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     FloatingActionButton btnContacts;
     String currentUserNumber;
     DatabaseReference reference;
-    ConstraintLayout llSplash;
+
 
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -130,18 +130,17 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        llSplash = findViewById(R.id.llsplash);
+        
 
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 
-            if (ApplicationClass.splash == true) {
-
-                llSplash.setVisibility(View.VISIBLE);
-                ApplicationClass.splash = false;
-
-            } else
-                llSplash.setVisibility(View.GONE);
+//            if (ApplicationClass.splash == true) {
+//
+//                llSplash.setVisibility(View.VISIBLE);
+//                ApplicationClass.splash = false;
+//
+//            } else
+//                llSplash.setVisibility(View.GONE);
 
             toolbar = findViewById(R.id.toolbar);
             btnContacts = findViewById(R.id.btnContacts);
@@ -297,62 +296,14 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                 }
             });
-            final android.os.Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-//                if(contacts1.size()>0) {
-//                    for ( int q = 0; q < contacts1.size(); ) {
-//
-//                        if(contacts1.get(q).getGroupname()==null) {
-//                            new listener(q).piclistener();
-//                            new listener(q).VideoListener();
-//                            new listener(q).child();
-//                        }
-//                        else{
-//                            new grouplistener(q).piclistener();
-//                            new grouplistener(q).VideoListener();
-//                final android.os.Handler handler1= new Handler();
-//
-//                handler1.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        for (int i = 0; i < contacts1.size(); i++) {
-//                            if (!(contacts1.get(i).getGroupname() == null)) {
-//                                //      (new GroupDp(i)).ProfileListener();
-//                            }
-//                        }
-//
-//                    }
-//                },1000);
-//                            new grouplistener(q).child();
-//                        }
-//
-//                            q++;
-//
-//                    }
-                    llSplash.setVisibility(View.GONE);
-//                }
-//
-                }
-            }, 2000);
+
             // final android.os.Handler handler1= new Handler();
 
 
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
 
             itemTouchHelper.attachToRecyclerView(lv);
-        }
-        else {
 
-            Intent intent = new Intent(this, Registration.class);
-
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            finish();
-            startActivity(intent);
-            ApplicationClass.splash = false;
-            overridePendingTransition(0, 0);
-        }
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback= new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
@@ -871,23 +822,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             .getPhoneNumber()).child("info").child("videos").addListenerForSingleValueEvent(deletevideo);
 
 
-                    //  Log.d("contacts",dataSnapshot.getKey());
-//                            int tell = 0;
-//
-//
-//                            for (int i = 0; i < contacts1.size(); i++) {
-//
-//                                // Log.d("contact",contacts1.get(i).getPh_number());
-//
-//
-//                                    if (contacts1.get(i).getPh_number().equals(dataSnapshot.getKey())) {
-//                                        tell = 1;
-//                                        break;
-//                                    }
+
 //
 //
 //                            }
-//                            if (tell == 0) {
+
                     if (dataSnapshot.child("info").child("friend").exists() && dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
 
                         contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), pref.getString(dataSnapshot.getKey(), dataSnapshot.getKey()), "null", 2
@@ -994,27 +933,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         Log.d("zxcv", dataSnapshot.getValue().toString());
 
 
-//                                    if(date1.toString().substring(0,4).equals(dataSnapshot.getValue().toString().substring(1,5))
-//                                     && date1.toString().substring(5,7).equals(dataSnapshot.getValue().toString().substring(6,8))
-//                                    && (Integer.parseInt(date1.toString().substring(8,10))-Integer.parseInt(dataSnapshot.getValue().toString().substring(9,11)))>=1)
-//                                    {
-//                                        dataSnapshot.getRef().removeValue();
-//                                    }
-//                                    else if(date1.toString().substring(0,4).equals(dataSnapshot.getValue().toString().substring(1,5))
-//                                            && (Integer.parseInt(date1.toString().substring(5,7))-Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8)))>=1
-//                                            && (Integer.parseInt(date1.toString().substring(0,4))-Integer.parseInt(dataSnapshot.getValue().toString().substring(9,11)))>=1)
-//                                    {
-//                                        if(Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==1 || Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==3 ||
-//                                        Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==5 || Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==7
-//                                        ||Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==8 || Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==10 ||
-//                                                Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==12)
-//                                        {
-//                                            if(Integer.parseInt(dataSnapshot.getValue().toString().substring(9,11)==29))
-//                                                dataSnapshot.getRef().removeValue();
-//                                    }
 //
-//                                    }
-
 
                         try {
 
@@ -1167,72 +1086,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletevideos").addChildEventListener(deleteGroupvideos);
 
 
-//                        FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletevideos").addChildEventListener(new ChildEventListener() {
-//                            @Override
-//                            public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
-//                                try {
 //
-//
-//                                    long millis = System.currentTimeMillis();
-//                                    java.sql.Date date1 = new java.sql.Date(millis);
-//                                    // get difference between two dates in MINUTES
-//                                    Date date=new SimpleDateFormat("yyyy-mm-dd").parse(dataSnapshot.getValue().toString().substring(
-//                                            dataSnapshot.getValue().toString().indexOf("h")-10,dataSnapshot.getValue().toString().indexOf("h")
-//                                    ));
-//
-//                                    long milliSecondsElapsed = date1.getTime() - date.getTime();
-//                                   // long diff = TimeUnit.DAYS.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
-//                                    if(milliSecondsElapsed/(24*60*60*1000) >=3)
-//                                    {
-//                                        dataSnapshot.getRef().removeValue();
-//                                    }
-//                                }
-//                                catch (ParseException e) {
-//                                    e.printStackTrace();
-//                                } catch (java.text.ParseException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onChildChanged(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                                if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,1))==0)
-//                                {
-//
-//                                    StorageReference file1;
-//                                    file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
-//                                    file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                        @Override
-//                                        public void onSuccess(Void aVoid) {
-//                                            dataSnapshot.getRef().removeValue();
-//
-//                                        }
-//                                    });
-//
-//
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//                                StorageReference file1;
-//                                file1=FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")));
-//                                file1.delete();
-//
-//                            }
-//
-//                            @Override
-//                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                            }
-//                        });
 
             }
 
@@ -1550,105 +1404,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         }
 
 
-     //   reference.removeEventListener(dataCreater);
-//        reference.child("users").child(currentUserNumber).removeEventListener(childEvent);
-//
-////       getcontact();
-//        childEvent = new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                if (!(dataSnapshot.getKey().equals("name") || dataSnapshot.getKey().equals("groups") || dataSnapshot.getKey().equals("profile") ||
-//                        dataSnapshot.getKey().equals("status"))) {
-//
-//
-//
-//
-//                    //  Log.d("contacts",dataSnapshot.getKey());
-//                    int tell = 0;
-//
-//
-//                    for (int i = 0; i < contacts1.size(); i++) {
-//
-//                        // Log.d("contact",contacts1.get(i).getPh_number());
-//
-//
-//                        if (contacts1.get(i).getPh_number().equals(dataSnapshot.getKey())) {
-//                            tell = 1;
-//                            break;
-//                        }
-//
-//
-//                    }
-//                    if (tell == 0) {
-//                        if (dataSnapshot.child("info").child("friend").exists() && dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
-//                            Log.d("qwer","hi");
-//
-//
-//                            contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), "", "null", 2
-//                                    , "", "",null,null));
-//                            userAdapter.notifyDataSetChanged();
-//                            new listener(contacts1.size()-1).piclistener();
-//                            new listener(contacts1.size()-1).VideoListener();
-//                            new listener(contacts1.size()-1).child();
-//
-//
-//                        }
-//
-//                    }
-//
-////                    for (int i = 0; i < contacts1.size(); i++) {
-////                        if (contacts1.get(i).getGroupname() == null) {
-////
-////                            String name = pref.getString(contacts1.get(i).getPh_number(), "null");
-////                            if (name.equals("null")) {
-////                                if(!contacts1.get(i).getuID().equals("")) {
-////                                    editor.putString(contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
-////                                    editor.apply();
-////                                }
-////                                else{
-////                                    editor.putString(contacts1.get(i).getPh_number(), contacts1.get(i).getPh_number());
-////                                    editor.apply();
-////                                }
-////                            }
-////                            contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
-////                            contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
-////
-////                        } else {
-////                            contacts1.get(i).setLastmessage(Handler.getLastMessageGroup(contacts1.get(i).getGroupname()));
-////                            contacts1.get(i).setTime(Handler.getLastGroupMessageTime(contacts1.get(i).getGroupname()));
-////                        }
-////                    }
-//
-//                    userAdapter = new UserAdapter(MainActivity.this, contacts1);
-//                    lv.setAdapter(userAdapter);
-//
-//                }
-//                reference.child("users").child(currentUserNumber).removeEventListener(childEvent);
-//
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        };
-//
-//        reference.child("users").child(currentUserNumber).addChildEventListener(childEvent);
+
 
             if(contacts1.get(l).getGroupname()==null) {
 

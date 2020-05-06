@@ -35,7 +35,6 @@ public class ApplicationClass extends Application
     public static ArrayList<String>PendingRequests;
     public static String Groupname,GroupDp,groupkey,RenameGroup,CurrentReceiver;
     public  static  int create,addmembers,activity, groupusers;
-    public  static boolean splash=true;
 
     static class ChangeStatus extends AsyncTask<Void,Void,Void>
     {
