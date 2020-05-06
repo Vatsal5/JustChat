@@ -1497,36 +1497,12 @@ if(getIntent().getIntExtra("path",1)==2) {
                         for (int i = 0; i < data.getClipData().getItemCount(); i++) {
                             ClipData.Item videoItem = data.getClipData().getItemAt(i);
                             Uri videoURI = videoItem.getUri();
-                            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
-                if(!imagesFolder.exists())
-                {
-                    imagesFolder.mkdirs();
-                }
 
-                         //    Create a file to save the image
-                File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis())+".mp4");
-
-                try {
-                    InputStream in = getContentResolver().openInputStream(videoURI);
-                    OutputStream out = new FileOutputStream(file);
-                    byte[] buf = new byte[1024];
-                    int len;
-                    while ((len = in.read(buf)) > 0) {
-                        out.write(buf, 0, len);
-                    }
-                    out.close();
-                    in.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+                            File file = new File(getPath(MessageActivity.this,videoURI));
 
                             long fileSizeInBytes = file.length();
                             long fileSizeInKB = fileSizeInBytes / 1024;
                             long fileSizeInMB = fileSizeInKB / 1024;
-                            Toast.makeText(this,""+fileSizeInBytes,Toast.LENGTH_LONG).show();
 
 
                             if (fileSizeInMB >= 15) {
@@ -1582,32 +1558,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                     Uri videoURI = data.getData();
 
 
-                    File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
-                    if(!imagesFolder.exists())
-                    {
-                        imagesFolder.mkdirs();
-                    }
-
-                    //    Create a file to save the image
-                    File file = new File(imagesFolder, new Timestamp(System.currentTimeMillis())+".mp4");
-
-                    try {
-                        InputStream in = getContentResolver().openInputStream(videoURI);
-                        OutputStream out = new FileOutputStream(file);
-                        byte[] buf = new byte[1024];
-                        int len;
-                        while ((len = in.read(buf)) > 0) {
-                            out.write(buf, 0, len);
-                        }
-                        out.close();
-                        in.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-
+                    File file = new File(getPath(MessageActivity.this,videoURI));
 
                     long fileSizeInBytes = file.length();
                     long fileSizeInKB = fileSizeInBytes / 1024;
