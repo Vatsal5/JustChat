@@ -126,220 +126,166 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        llSplash=findViewById(R.id.llsplash);
-
-        if(FirebaseAuth.getInstance().getCurrentUser()==null)
-        {
-
-            Intent intent=new Intent(this,Registration.class);
-
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            finish();
-            startActivity(intent);
-            ApplicationClass.splash=false;
-            overridePendingTransition(0,0);
-        }
-
-        if(ApplicationClass.splash==true)
-        {
-
-            llSplash.setVisibility(View.VISIBLE);
-            ApplicationClass.splash=false;
-
-        }
-        else
-            llSplash.setVisibility(View.GONE);
-
-        toolbar=findViewById(R.id.toolbar);
-        btnContacts=findViewById(R.id.btnContacts);
-        preftheme=getSharedPreferences("theme",0);
-
-        pref= getApplicationContext().getSharedPreferences("Names",0);
-        String theme=preftheme.getString("theme","red");
+        llSplash = findViewById(R.id.llsplash);
 
 
-        if(theme.equals("orange")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 
-            btnContacts.setBackgroundColor(getResources().getColor(R.color.Orange));
-        }
-        else if(theme.equals("blue"))
-        {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.blue));
+            if (ApplicationClass.splash == true) {
 
-        }
+                llSplash.setVisibility(View.VISIBLE);
+                ApplicationClass.splash = false;
 
+            } else
+                llSplash.setVisibility(View.GONE);
 
-        else if(theme.equals("bluish")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.bluish));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.bluish)));
+            toolbar = findViewById(R.id.toolbar);
+            btnContacts = findViewById(R.id.btnContacts);
+            preftheme = getSharedPreferences("theme", 0);
 
-        }
-
-        else if(theme.equals("deepred")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.deepred)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
-
-        }
-
-        else if(theme.equals("faintpink")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.faintpink)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
-
-        }
-
-        else if(theme.equals("darkblue")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkblue)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.darkblue));
-
-        }
-
-        else if (theme.equals("green")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.green));
-
-        }
-
-        else if (theme.equals("lightorange")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightorange)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
-
-        }
-
-        else  if (theme.equals("lightred")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightred)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
-
-        }
-
-        else if(theme.equals( "mustard")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.mustard)));
-
-        }
-
-        else if (theme.equals("pink")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pink)));
-
-        }
-
-        else if(theme.equals("pureorange")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pureorange)));
-
-        }
-
-        else if(theme.equals( "purepink")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(
-                    getResources().getColor(R.color.purepink)));
-
-        }
-
-        else if(theme.equals( "purple")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.purple)));
-
-        }
-
-        else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.red));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+            pref = getApplicationContext().getSharedPreferences("Names", 0);
+            String theme = preftheme.getString("theme", "red");
 
 
-        }
+            if (theme.equals("orange")) {
+                toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
+
+                btnContacts.setBackgroundColor(getResources().getColor(R.color.Orange));
+            } else if (theme.equals("blue")) {
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.blue));
+
+            } else if (theme.equals("bluish")) {
+                toolbar.setBackgroundColor(getResources().getColor(R.color.bluish));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.bluish)));
+
+            } else if (theme.equals("deepred")) {
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.deepred)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
+
+            } else if (theme.equals("faintpink")) {
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.faintpink)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
+
+            } else if (theme.equals("darkblue")) {
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkblue)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.darkblue));
+
+            } else if (theme.equals("green")) {
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.green));
+
+            } else if (theme.equals("lightorange")) {
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightorange)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
+
+            } else if (theme.equals("lightred")) {
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightred)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
+
+            } else if (theme.equals("mustard")) {
+                toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.mustard)));
+
+            } else if (theme.equals("pink")) {
+                toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pink)));
+
+            } else if (theme.equals("pureorange")) {
+                toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pureorange)));
+
+            } else if (theme.equals("purepink")) {
+                toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(
+                        getResources().getColor(R.color.purepink)));
+
+            } else if (theme.equals("purple")) {
+                toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.purple)));
+
+            } else {
+                toolbar.setBackgroundColor(getResources().getColor(R.color.red));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
 
 
-
-
-
-
-        Handler = new DBHandler(MainActivity.this);
-        Handler.Open();
-        chats = new ArrayList<>();
-        database1= FirebaseDatabase.getInstance();
-        reference1 = database1.getReference();
-        linearLayoutManager= new LinearLayoutManager(MainActivity.this);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            toolbar.setOverflowIcon(getDrawable(R.drawable.overflow));
-        }
-
-        setTitle(null);
-
-        number1= new ArrayList<String>();
-        contacts = new ArrayList<UserDetail>();
-        contacts1 = new ArrayList<UserDetailwithUrl>();
-        contacts2 = new ArrayList<UserDetailwithUrl>();
-
-
-
-
-
-        database=FirebaseDatabase.getInstance();
-
-        reference=database.getReference();
-
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null)
-        currentUserNumber= FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
-        else
-            currentUserNumber = "null";
-
-        lv=findViewById(R.id.lv);
-        lv.setHasFixedSize(true);
-        lv.setLayoutManager(linearLayoutManager);
-        userAdapter = new UserAdapter(MainActivity.this, contacts1);
-        lv.setAdapter(userAdapter);
-
-        if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_CONTACTS},1);
-        }
-        else
-        {
-            getcontact();
-
-        }
-
-        btnContacts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent= new Intent(MainActivity.this,FriendsActivity.class);
-                startActivity(intent);
             }
-        });
 
-        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+
+            Handler = new DBHandler(MainActivity.this);
+            Handler.Open();
+            chats = new ArrayList<>();
+            database1 = FirebaseDatabase.getInstance();
+            reference1 = database1.getReference();
+            linearLayoutManager = new LinearLayoutManager(MainActivity.this);
+
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                toolbar.setOverflowIcon(getDrawable(R.drawable.overflow));
+            }
+
+            setTitle(null);
+
+            number1 = new ArrayList<String>();
+            contacts = new ArrayList<UserDetail>();
+            contacts1 = new ArrayList<UserDetailwithUrl>();
+            contacts2 = new ArrayList<UserDetailwithUrl>();
+
+
+            database = FirebaseDatabase.getInstance();
+
+            reference = database.getReference();
+
+            if (FirebaseAuth.getInstance().getCurrentUser() != null)
+                currentUserNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+            else
+                currentUserNumber = "null";
+
+            lv = findViewById(R.id.lv);
+            lv.setHasFixedSize(true);
+            lv.setLayoutManager(linearLayoutManager);
+            userAdapter = new UserAdapter(MainActivity.this, contacts1);
+            lv.setAdapter(userAdapter);
+
+            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+            } else {
+                getcontact();
+
+            }
+
+            btnContacts.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, FriendsActivity.class);
+                    startActivity(intent);
+                }
+            });
+
 
             DatabaseReference rf = FirebaseDatabase.getInstance().getReference(".info/connected");
             UserStatus = FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
 
             rf.addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-                {
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     boolean connected = dataSnapshot.getValue(Boolean.class);
 
                     UserStatus.onDisconnect().setValue("offline");
 
-                    if (connected)
-                    {
+                    if (connected) {
 
                         UserStatus.setValue("online").addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                               // if(task.isSuccessful())
-                                   // Toast.makeText(MainActivity.this, "Online", Toast.LENGTH_LONG).show();
+                                // if(task.isSuccessful())
+                                // Toast.makeText(MainActivity.this, "Online", Toast.LENGTH_LONG).show();
                             }
                         });
                     }
@@ -351,11 +297,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                 }
             });
-        }
-        final android.os.Handler handler= new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+            final android.os.Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
 //                if(contacts1.size()>0) {
 //                    for ( int q = 0; q < contacts1.size(); ) {
 //
@@ -386,21 +331,28 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                            q++;
 //
 //                    }
-                  llSplash.setVisibility(View.GONE);
+                    llSplash.setVisibility(View.GONE);
 //                }
 //
-           }
-        },2000);
-       // final android.os.Handler handler1= new Handler();
+                }
+            }, 2000);
+            // final android.os.Handler handler1= new Handler();
 
 
-        ItemTouchHelper itemTouchHelper= new ItemTouchHelper(simpleCallback);
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
 
-        itemTouchHelper.attachToRecyclerView(lv);
+            itemTouchHelper.attachToRecyclerView(lv);
+        }
+        else {
 
+            Intent intent = new Intent(this, Registration.class);
 
-
-
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            finish();
+            startActivity(intent);
+            ApplicationClass.splash = false;
+            overridePendingTransition(0, 0);
+        }
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback= new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {

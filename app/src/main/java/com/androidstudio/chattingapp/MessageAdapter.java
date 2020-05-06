@@ -279,7 +279,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                         holder.ivImage.setClickable(false);
                         holder.tvError.setVisibility(View.VISIBLE);
 
-                            Activity.OnFileDeleted(holder.getAdapterPosition());
+                        if(holder.getAdapterPosition()!=-1)
+                            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null"))
+                                Activity.OnFileDeleted(holder.getAdapterPosition());
                         return false;
                     }
 
@@ -430,6 +432,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                         holder.ivPlay.setVisibility(View.GONE);
                         holder.tvError.setVisibility(View.VISIBLE);
 
+                        if(holder.getAdapterPosition()!=-1)
+                            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null"))
                             Activity.OnFileDeleted(holder.getAdapterPosition());
 
                         return false;
