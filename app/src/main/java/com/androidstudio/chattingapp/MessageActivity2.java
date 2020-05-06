@@ -1010,9 +1010,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             model = chats.get(pos - 1);
                             chats.remove(model);
                             Handler.DeleteMessage(model);
+                            adapter.notifyItemRangeRemoved(pos-1,2);
                         } else {
                             chats.remove(model);
                             Handler.DeleteMessage(model);
+                            adapter.notifyItemRemoved(pos);
                         }
                     } else {
                         if (chats.get(pos - 1).getSender().equals("null")) {
@@ -1021,17 +1023,19 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             model = chats.get(pos - 1);
                             chats.remove(model);
                             Handler.DeleteMessage(model);
+                            adapter.notifyItemRangeRemoved(pos-1,2);
                         } else {
                             chats.remove(model);
                             Handler.DeleteMessage(model);
+                            adapter.notifyItemRemoved(pos);
                         }
 
                     }
                 } else {
                     chats.remove(model);
                     Handler.DeleteMessage(model);
+                    adapter.notifyItemRemoved(pos);
                 }
-                adapter.notifyDataSetChanged();
             }
             else
             {

@@ -809,136 +809,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         }
     }
 
-//    public class num
-//    {
-//
-////        public void checkauth( final String key, final int index)
-////        {
-//
-////            check= new ValueEventListener() {
-////                @Override
-////                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-////                    if(dataSnapshot.exists())
-////                    {
-////                        if (index == 0) {
-////                            if ((dataSnapshot.child("info").child("friend").exists())) {
-////                                if (dataSnapshot.child("profile").exists()) {
-////                                    contacts1.add(new UserDetailwithUrl(contacts.get(index).getPh_number(), contacts.get(index).getuID(), dataSnapshot.child("profile").getValue(String.class), 2
-////                                            , "", "",null,null));
-////                                    new listener(contacts1.size()-1).piclistener();
-////                                    new listener(contacts1.size()-1).VideoListener();
-////                                    new listener(contacts1.size()-1).child();
-////
-////                                } else {
-////
-////                                    contacts1.add(new UserDetailwithUrl(contacts.get(index).getPh_number(), contacts.get(index).getuID(), "null", 2
-////                                            , "", "",null,null));
-////                                    new listener(contacts1.size()-1).piclistener();
-////                                    new listener(contacts1.size()-1).VideoListener();
-////                                    new listener(contacts1.size()-1).child();
-////
-////                                }
-////                                userAdapter.notifyDataSetChanged();
-////
-////
-////                                (reference.child("users").child(currentUserNumber).child(contacts.get(index).getPh_number()).child("message")).setValue("/null");
-////                                // (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("info").child("friend")).setValue("no");
-////
-////                                //  (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("activeStatus")).setValue("online");
-////                                c = 1;
-////                            }
-////                        } else {
-////                            for (int j = 0; j < c; j++) {
-////                                if (contacts.get(index).getPh_number().equals(contacts1.get(j).getPh_number())) {
-////                                    k = 1;
-////                                    break;
-////                                }
-////                            }
-////                            if (k == 0) {
-////                                if ((dataSnapshot.child("info").child("friend").exists())) {
-////                                    if (dataSnapshot.child("profile").exists()) {
-////                                        // Log.d("myapp", dataSnapshot.child("users").child(contacts.get(i).getPh_number()).child("profile").getValue(String.class));
-////                                        contacts1.add(new UserDetailwithUrl(contacts.get(index).getPh_number(), contacts.get(index).getuID(), dataSnapshot.child("users").child(contacts.get(index).getPh_number()).child("profile").getValue(String.class), 2
-////                                                , "", "",null,null));
-////                                        new listener(contacts1.size()-1).piclistener();
-////                                        new listener(contacts1.size()-1).VideoListener();
-////                                        new listener(contacts1.size()-1).child();
-////                                    } else {
-////
-////                                        contacts1.add(new UserDetailwithUrl(contacts.get(i).getPh_number(), contacts.get(i).getuID(), "null", 2
-////                                                , "", "",null,null));
-////                                        new listener(contacts1.size()-1).piclistener();
-////                                        new listener(contacts1.size()-1).VideoListener();
-////                                        new listener(contacts1.size()-1).child();
-////                                    }
-////                                    userAdapter.notifyDataSetChanged();
-////
-////
-////
-////                                    (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("message")).setValue("/null");
-////
-////                                    //  (reference.child("users").child(currentUserNumber).child(contacts.get(i).getPh_number()).child("info").child("friend")).setValue("no");
-////
-////                                    c++;
-////                                }
-////                            }
-////                        }
-////                        k = 0;
-////                    }
-////                    reference.child("users").child(key).removeEventListener(check);
-////
-////
-////
-////                }
-////
-////                @Override
-////                public void onCancelled(@NonNull DatabaseError databaseError) {
-////
-////                }
-////            };
-////            reference.child("users").child(key).addListenerForSingleValueEvent(check);
-////        }
-//    }
 
     public  void getcontact() {
 
-//        Cursor cursor=getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-//                null,null,null,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME );
-//        while (cursor.moveToNext())
-//        {
-//
-//           final String name= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-//           final String number= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-//           if(IsValid(number)==0) {
-//               if(number.substring(0,3).equals("+91")) {
-//                   contacts.add(new UserDetail(number, name));
-//                   number1.add(number);
-//               }
-//               else
-//               {
-//                   contacts.add(new UserDetail("+91"+number, name));
-//                   number1.add("+91"+number);
-//               }
-//           }
-//
-//        }
-//        dataCreater=new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-//                for (int i = 0; i < contacts.size(); i++) {
-//
-//
-//                        if (dataSnapshot.child("users").child(contacts.get(i).getPh_number()).exists()) {
-//
-//
-//
-//                        }
-//
-//
-//                }
-        // both the arraylists got clone
-        //Toast.makeText(MainActivity.this,contacts2.size()+"",Toast.LENGTH_LONG).show();
         if (num == 0) {
         childEvent = new ChildEventListener() {
             @Override
@@ -1065,7 +939,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     if (dataSnapshot.child("info").child("friend").exists() && dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
 
                         contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), pref.getString(dataSnapshot.getKey(), dataSnapshot.getKey()), "null", 2
-                                , "", "", null, null));
+                                , Handler.getLastMessage(dataSnapshot.getKey()), Handler.getLastMessageTime(dataSnapshot.getKey()), null, null));
                         userAdapter.notifyItemInserted(contacts1.size() - 1);
                         new listener(contacts1.size() - 1).profilelistener();
                         new listener(contacts1.size() - 1).piclistener();
@@ -1077,30 +951,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                     //                           }
 
-//                        for (int i = 0; i < contacts1.size(); i++) {
-//                            if (contacts1.get(i).getGroupname() == null) {
-//
-//                                String name = pref.getString(contacts1.get(i).getPh_number(), "null");
-//                                if (name.equals("null")) {
-//                                    if (!contacts1.get(i).getuID().equals("")) {
-//                                        editor.putString(contacts1.get(i).getPh_number(), contacts1.get(i).getuID());
-//                                        editor.apply();
-//                                    } else {
-//                                        editor.putString(contacts1.get(i).getPh_number(), contacts1.get(i).getPh_number());
-//                                        editor.apply();
-//                                    }
-//                                }
-//                                contacts1.get(i).setLastmessage(Handler.getLastMessage(contacts1.get(i).getPh_number()));
-//                                contacts1.get(i).setTime(Handler.getLastMessageTime(contacts1.get(i).getPh_number()));
-//
-//                            } else {
-//                                contacts1.get(i).setLastmessage(Handler.getLastMessageGroup(contacts1.get(i).getGroupname()));
-//                                contacts1.get(i).setTime(Handler.getLastGroupMessageTime(contacts1.get(i).getGroupname()));
-//                            }
-//                        }
-
-//                            userAdapter = new UserAdapter(MainActivity.this, contacts1);
-//                            lv.setAdapter(userAdapter);
                     userAdapter.notifyDataSetChanged();
 
                 }
