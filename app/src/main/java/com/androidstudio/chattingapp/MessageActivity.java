@@ -916,18 +916,14 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                 MediaPlayer received = MediaPlayer.create(MessageActivity.this, R.raw.received);
 
-                Toast.makeText(MessageActivity.this, "Video", Toast.LENGTH_SHORT).show();
 
-                Log.d("Received","Video");
 
                 time=dataSnapshot.getValue(String.class).substring(0,5);
                 date=dataSnapshot.getValue(String.class).substring(5,15);
                 uri=dataSnapshot.getValue(String.class).substring(15);
 
                 MessageModel messageModel = new MessageModel(-1,RecieverPhone,sender,uri,"video",101,time,date,"null");
-                Log.d("video",messageModel.getMessage());
 
-                Toast.makeText(getApplicationContext(),"galbaat",Toast.LENGTH_LONG).show();
 
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 

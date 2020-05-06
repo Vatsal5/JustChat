@@ -79,6 +79,8 @@ import java.util.Date;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
+import static com.androidstudio.chattingapp.MessageActivity.getPath;
+
 public class MessageActivity2 extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
     String groupKey, groupname,profile;
@@ -117,7 +119,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Mode", 0);
         defaultvalue = pref.getString("mode" + groupKey, "null");
-        Log.d("mode", defaultvalue);
 
         if (defaultvalue.equals("private")) {
             tvMode.setText("Private");
@@ -288,6 +289,38 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             if(getBackground(Uri.parse(wallpaper.getString("value","null")))!=null)
                 getWindow().setBackgroundDrawable(getBackground(Uri.parse(wallpaper.getString("value","null"))));
         }
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(
+                new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        //  Log.d("asdf","hi");
+
+                        if(!(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())))
+                            membernumber.add(dataSnapshot.getValue(String.class));
+                        numberOfMembers++;
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                }
+        );
 
         Messages = findViewById(R.id.Messages);
         Messages.setHasFixedSize(true);
@@ -410,7 +443,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         }
                     });
 
-
                 }
             }
 
@@ -501,38 +533,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         });
 
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(
-                new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                      //  Log.d("asdf","hi");
 
-                        if(!(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())))
-                       membernumber.add(dataSnapshot.getValue(String.class));
-                        numberOfMembers++;
-                    }
-
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                }
-        );
 
         etMessage.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -602,7 +603,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 sender = dataSnapshot.getValue(String.class).substring(21, 34);
 
-                Log.d("Received", "Image");
 
 
                 MessageModel messageModel = new MessageModel(-1, sender, "null", dataSnapshot.getValue(String.class).substring(34), "image", 0, time, date, groupname);
@@ -674,9 +674,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 MediaPlayer received = MediaPlayer.create(MessageActivity2.this, R.raw.received);
 
-                Toast.makeText(MessageActivity2.this, "Video", Toast.LENGTH_SHORT).show();
 
-                Log.d("Received", "Video");
 
                 time = dataSnapshot.getValue(String.class).substring(0, 11);
                 date = dataSnapshot.getValue(String.class).substring(11, 21);
@@ -684,9 +682,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 sender = dataSnapshot.getValue(String.class).substring(21,34);
 
                 MessageModel messageModel = new MessageModel(-1,sender,"null",uri,"video",101,time,date,groupname);
-                Log.d("video",messageModel.getMessage());
 
-                Toast.makeText(getApplicationContext(),"galbaat",Toast.LENGTH_LONG).show();
 
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 
@@ -1197,70 +1193,92 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             ClipData.Item videoItem = data.getClipData().getItemAt(i);
                             Uri videoURI = videoItem.getUri();
 
-                            Date date = new Date();
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+                            File file = new File(getPath(MessageActivity2.this, videoURI));
 
-                            long millis = System.currentTimeMillis();
-                            java.sql.Date date1 = new java.sql.Date(millis);
+                            long fileSizeInBytes = file.length();
+                            long fileSizeInKB = fileSizeInBytes / 1024;
+                            long fileSizeInMB = fileSizeInKB / 1024;
 
-                            MessageModel model = new MessageModel(1190, sender, "null", videoURI.toString(), "video", 100, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
 
-                            if (chats.size() != 0) {
-                                if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                                    MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
-                                    int id = Handler.addMessage(messageModel);
-                                    messageModel.setId(id);
-                                    chats.add(messageModel);
-                                }
+                            if (fileSizeInMB >= 15) {
+                                Toast.makeText(this, "Video files lesser than 15MB are allowed", Toast.LENGTH_LONG).show();
+
                             } else {
-                                if ((!(defaultvalue.equals("private")))) {
-                                    MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
-                                    int id = Handler.addMessage(messageModel);
-                                    messageModel.setId(id);
-                                    chats.add(messageModel);
+                                Date date = new Date();
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+
+                                long millis = System.currentTimeMillis();
+                                java.sql.Date date1 = new java.sql.Date(millis);
+
+                                MessageModel model = new MessageModel(1190, sender, "null", videoURI.toString(), "video", 100, simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
+
+                                if (chats.size() != 0) {
+                                    if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                                        MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                                        int id = Handler.addMessage(messageModel);
+                                        messageModel.setId(id);
+                                        chats.add(messageModel);
+                                    }
+                                } else {
+                                    if ((!(defaultvalue.equals("private")))) {
+                                        MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                                        int id = Handler.addMessage(messageModel);
+                                        messageModel.setId(id);
+                                        chats.add(messageModel);
+                                    }
                                 }
+                                int id = Handler.addMessage(model);
+                                model.setId(id);
+                                chats.add(model);
+                                adapter.notifyItemInserted(chats.size() - 1);
                             }
-                            int id = Handler.addMessage(model);
-                            model.setId(id);
-                            chats.add(model);
-                            adapter.notifyItemInserted(chats.size()-1);
-                        }
-                    }
-                    else
-                    {
-                        Toast.makeText(this, "You cannot send more than 5 videos at a time", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else
-                {
-                    Uri uri = data.getData();
-                    Date date = new Date();
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
-
-                    long millis = System.currentTimeMillis();
-                    java.sql.Date date1 = new java.sql.Date(millis);
-
-                    MessageModel model = new MessageModel(1190, sender, "null", uri.toString(), "video", 100, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
-
-                    if (chats.size() != 0) {
-                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
-                            int id = Handler.addMessage(messageModel);
-                            messageModel.setId(id);
-                            chats.add(messageModel);
                         }
                     } else {
-                        if ((!(defaultvalue.equals("private")))) {
-                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
-                            int id = Handler.addMessage(messageModel);
-                            messageModel.setId(id);
-                            chats.add(messageModel);
-                        }
+                        Toast.makeText(this, "You cannot send more than 5 videos at a time", Toast.LENGTH_SHORT).show();
                     }
-                    int id = Handler.addMessage(model);
-                    model.setId(id);
-                    chats.add(model);
-                    adapter.notifyItemInserted(chats.size()-1);
+                } else {
+
+                    Uri videoURI = data.getData();
+                    File file = new File(getPath(MessageActivity2.this, videoURI));
+
+                    long fileSizeInBytes = file.length();
+                    long fileSizeInKB = fileSizeInBytes / 1024;
+                    long fileSizeInMB = fileSizeInKB / 1024;
+
+
+                    if (fileSizeInMB >= 15) {
+                        Toast.makeText(this, "Video files lesser than 15MB are allowed", Toast.LENGTH_LONG).show();
+
+                    } else {
+                        Uri uri = data.getData();
+                        Date date = new Date();
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+
+                        long millis = System.currentTimeMillis();
+                        java.sql.Date date1 = new java.sql.Date(millis);
+
+                        MessageModel model = new MessageModel(1190, sender, "null", uri.toString(), "video", 100, simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
+
+                        if (chats.size() != 0) {
+                            if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                                MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                                int id = Handler.addMessage(messageModel);
+                                messageModel.setId(id);
+                                chats.add(messageModel);
+                            }
+                        } else {
+                            if ((!(defaultvalue.equals("private")))) {
+                                MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                                int id = Handler.addMessage(messageModel);
+                                messageModel.setId(id);
+                                chats.add(messageModel);
+                            }
+                        }
+                        int id = Handler.addMessage(model);
+                        model.setId(id);
+                        chats.add(model);
+                        adapter.notifyItemInserted(chats.size() - 1);
+                    }
                 }
             }
         }
@@ -1304,7 +1322,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     @Override
     public void downloadImage(int index) {
-        Log.d("imagereceived","downloadImage");
         new DownloadTask(index,chats.get(index)).execute(stringToURL(chats.get(index).getMessage()));
     }
 
@@ -1423,9 +1440,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 adapter.notifyItemChanged(index);
 
 
-                Log.d("asdf",membernumber.size()+"");
             for(int i=0;i<membernumber.size();i++) {
-                Log.d("asdf", "hi");
                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages")
                         .child(membernumber.get(i)).push().setValue(
                         model.getTime() + model.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + model.getMessage())
@@ -1557,7 +1572,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 int orientation = exif.getAttributeInt(
                         ExifInterface.TAG_ORIENTATION, 0);
-                Log.d("EXIF", "Exif: " + orientation);
                 Matrix matrix = new Matrix();
                 if (orientation == 6) {
                     matrix.postRotate(90);
@@ -1690,7 +1704,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 if (buffer.length > 0) {
                     try {
                         FileOutputStream fos = new FileOutputStream(file);
-                        Log.d("5FILE", "Writing from buffer to the new file..");
                         fos.write(buffer);
                         fos.flush();
                         fos.close();
@@ -1728,7 +1741,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     }
                 } else {
                     //Could not download the file...
-                    Log.e("8ERROR", "Buffer size is zero ! & returning 'false'.......");
 
                 }
             }catch (FileNotFoundException e) {
@@ -1746,7 +1758,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         protected void onPostExecute(Uri uri) {
             super.onPostExecute(uri);
 
-            Log.d("videoDownload","PostExecute");
 
             if (uri != null) {
 
@@ -1826,7 +1837,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         }
 
         protected Uri doInBackground(URL...urls){
-            Log.d("imagereceived","background");
             InputStream urlInputStream = null;
 
             URLConnection urlConnection;
@@ -1855,7 +1865,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 if (buffer.length > 0) {
                     try {
                         FileOutputStream fos = new FileOutputStream(file);
-                        Log.d("5FILE", "Writing from buffer to the new file..");
                         fos.write(buffer);
                         fos.flush();
                         fos.close();
@@ -1887,7 +1896,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     }
                 } else {
                     //Could not download the file...
-                    Log.e("8ERROR", "Buffer size is zero ! & returning 'false'.......");
 
                 }
             }catch (FileNotFoundException e)
@@ -1904,7 +1912,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         // When all async task done
         protected void onPostExecute(Uri result) {
-            Log.d("imagereceived","postexecute");
             if (result != null) {
 
                 message.setDownloaded(1);
@@ -2061,7 +2068,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                     FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).
                                             child("videos").child(membernumber.get(i)).
                                             push().setValue(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + uri.toString());
-                                    Toast.makeText(getApplicationContext(), "Ghaint", Toast.LENGTH_LONG).show();
 
                                     if (z[0] == 0) {
                                         z[0] = 1;
@@ -2370,13 +2376,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             while ((read = inputStream.read(buffers)) != -1) {
                 outputStream.write(buffers, 0, read);
             }
-            Log.e("File Size", "Size " + file.length());
             inputStream.close();
             outputStream.close();
-            Log.e("File Path", "Path " + file.getPath());
-            Log.e("File Size", "Size " + file.length());
         } catch (Exception e) {
-            Log.e("Exception", e.getMessage());
         }
         return file.getPath();
     }
@@ -2409,13 +2411,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             while ((read = inputStream.read(buffers)) != -1) {
                 outputStream.write(buffers, 0, read);
             }
-            Log.e("File Size", "Size " + file.length());
             inputStream.close();
             outputStream.close();
-            Log.e("File Path", "Path " + file.getPath());
-            Log.e("File Size", "Size " + file.length());
         } catch (Exception e) {
-            Log.e("Exception", e.getMessage());
         }
         return file.getPath();
     }

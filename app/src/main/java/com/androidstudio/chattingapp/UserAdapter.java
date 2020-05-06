@@ -162,7 +162,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
         database=FirebaseDatabase.getInstance();
         DatabaseReference dbreference=database.getReference();
-        Log.d("tag",list.get(position).getUrl());
 
         if(!(list.get(position).getTime().equals("null")))
         {
@@ -207,7 +206,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
         }
         else{
-            holder.tvlastmessage.setText("");
+          //  holder.tvlastmessage.setText("");
             holder.ivImage.setVisibility(View.GONE);
             holder.tvlastmessage.setVisibility(View.GONE);
             holder.tvUserName.setPadding(0,13,0,0);
@@ -220,78 +219,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             if(list.get(position).getGroupname()==null) {
                 holder.iv.setImageResource(R.drawable.person);
 
-//                Drawable person=context.getResources().getDrawable(R.drawable.person);
-//                Drawable wrappedDrawable = DrawableCompat.wrap(person);
-////
-//                String theme1=preftheme.getString("theme","red");
-//                switch (theme1) {
-//                    case "orange":
 //
-////                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.Orange));
-//                        break;
-//
-//                    case "blue":
-//
-//                       // holder.iv.setColorFilter(context.getResources().getColor(R.color.blue));
-//                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.blue));
-//                        break;
-//
-//
-//                    case "bluish":
-//                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.bluish));
-//                        break;
-//
-//
-//                    case "deepred":
-//                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.deepred));
-//                        break;
-//
-//                    case "faintpink":
-//                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.faintpink));
-//
-//                        break;
-//
-//                    case "darkblue":
-//                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.darkblue));
-//                        break;
-//
-//
-//                    case "green":
-//                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.green));
-//                        break;
-//
-//                    case "lightorange":
-//                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.lightorange));
-//                        break;
-//
-//                    case "lightred":
-//                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.lightred));
-//                        break;
-//
-//
-//                    case "mustard":
-//                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.mustard));
-//                        break;
-//
-//                    case "pink":
-//                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.pink));
-//                        break;
-//
-//                    case "pureorange":
-//                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.pureorange));
-//                        break;
-//
-//                    case "purepink":
-//                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.purepink));
-//                        break;
-//
-//                    case "purple":
-//                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.purple));
-//                        break;
-//
-//                    default:
-//                        DrawableCompat.setTint(wrappedDrawable, context.getResources().getColor(R.color.red));
-//                }
                 holder.iv.setClickable(false);
 
             }
@@ -424,12 +352,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
     public String Check(String phone)
     {
         String newPhone;
-        if(!phone.substring(0,3).equals("+91"))
-        {
-            newPhone = "+91".concat(phone);
-            return newPhone;
-        }
-        else
+//        if(!phone.substring(0,3).equals("+91"))
+//        {
+//            newPhone = "+91".concat(phone);
+//            return newPhone;
+//        }
+//        else
             return phone;
 
     }
