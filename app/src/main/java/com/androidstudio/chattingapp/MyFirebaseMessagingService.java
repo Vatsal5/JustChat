@@ -117,6 +117,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.setDefaultUseCaches(true);
+            connection.setUseCaches(true);
             connection.connect();
             InputStream input = connection.getInputStream();
             Bitmap myBitmap = BitmapFactory.decodeStream(input);

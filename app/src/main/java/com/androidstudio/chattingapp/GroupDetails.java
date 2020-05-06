@@ -669,6 +669,20 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
         }
     }
     class CompressImage extends AsyncTask<Uri,Void,Uri> {
+
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            dialog = new ProgressDialog(GroupDetails.this);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("Please Wait");
+            dialog.show();
+
+        }
+
         @Override
         protected Uri doInBackground(Uri... uris) {
             String filePath = getRealPathFromURI(uris[0]);
@@ -811,6 +825,9 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).
                                                 child("profile").setValue(uri.toString());
                                        // progress.setVisibility(View.GONE);
+
+                                        dialog.dismiss();
+
                                         Glide.with(GroupDetails.this)
                                                 .load(uri.toString())
                                                 .into(ivGroupDP);

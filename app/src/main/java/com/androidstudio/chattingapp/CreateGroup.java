@@ -73,6 +73,7 @@ public class CreateGroup extends AppCompatActivity {
 
         ivGroupDP = findViewById(R.id.ivGroupDP);
         ivClick = findViewById(R.id.ivClick);
+        setBackground(ivClick);
         tvInstruct=findViewById(R.id.tvInstruct);
 
         progress = findViewById(R.id.progress);
