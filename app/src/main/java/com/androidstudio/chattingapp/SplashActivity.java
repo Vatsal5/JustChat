@@ -21,13 +21,14 @@ public class SplashActivity extends AppCompatActivity {
                 Intent intent;
                 if(FirebaseAuth.getInstance().getCurrentUser()==null){
                      intent = new Intent(SplashActivity.this, Registration.class);
-
+                     finish();
 
                 }
                 else
                 {
                      intent = new Intent(SplashActivity.this, MainActivity.class);
 
+                     finish();
                 }
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
@@ -35,8 +36,8 @@ public class SplashActivity extends AppCompatActivity {
 
                 overridePendingTransition(0, 0);
             }
-        },1000);
-        finish();
+        },1200);
+
 
     }
 

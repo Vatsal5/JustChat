@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        
+
 
 
 

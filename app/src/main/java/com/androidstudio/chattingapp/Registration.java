@@ -47,6 +47,7 @@ public class Registration extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
@@ -68,7 +69,7 @@ public class Registration extends AppCompatActivity {
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                Log.d("myapp","Verification Completed");
+              //  Log.d("myapp","Verification Completed");
 
                 editor.putString("Number",etPhone.getText().toString());
                 editor.apply();
