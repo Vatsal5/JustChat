@@ -153,7 +153,6 @@ public class Verification extends AppCompatActivity {
                             // ...
                         } else {
                             dialog.dismiss();
-                            task.getException().printStackTrace();
                             // Sign in failed, display a message and update the UI
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
