@@ -30,6 +30,8 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -97,6 +99,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     int messagecount;
     int numberOfMembers=-1;
     SharedPreferences preftheme;
+
+    Ringtone sent,received;
+
     LinearLayoutManager manager;
     MessageAdapter adapter;
     Integer HandlerIndex;
@@ -147,6 +152,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message2);
+
+        sent = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/sharp"));
+        received = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/received"));
+
         ivProfile=findViewById(R.id.ivProfile);
         ll=findViewById(R.id.ll);
         messageActivity2=this;
@@ -602,7 +611,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String time, date, sender;
-                MediaPlayer received = MediaPlayer.create(MessageActivity2.this, R.raw.received);
 
                 time = dataSnapshot.getValue(String.class).substring(0, 11);
                 date = dataSnapshot.getValue(String.class).substring(11, 21);
@@ -638,7 +646,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 adapter.notifyItemInserted(chats.size()-1);
 
                 if(messagecount==2)
-                    received.start();
+                    received.play();
                 else
                     messagecount--;
 
@@ -678,9 +686,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 String time, date,sender;
                 String uri;
 
-                MediaPlayer received = MediaPlayer.create(MessageActivity2.this, R.raw.received);
-
-
 
                 time = dataSnapshot.getValue(String.class).substring(0, 11);
                 date = dataSnapshot.getValue(String.class).substring(11, 21);
@@ -719,7 +724,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 adapter.notifyItemInserted(chats.size()-1);
 
                 if(messagecount==2)
-                    received.start();
+                    received.play();
                 else
                     messagecount--;
                 dataSnapshot.getRef().removeValue();
@@ -758,8 +763,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
                 String time, date,sender;
-
-                MediaPlayer received = MediaPlayer.create(MessageActivity2.this, R.raw.received);
 
 //                if (!(dataSnapshot.getKey().equals("message"))) {
 //                    if (dataSnapshot.getKey().equals("info")) {
@@ -802,7 +805,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         adapter.notifyItemInserted(chats.size()-1);
                         // adapter.notifyItemRangeInserted(chats.size()-1,1);
                 if(messagecount==2)
-                        received.start();
+                        received.play();
                 else
                     messagecount--;
 //                    }
@@ -1442,7 +1445,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             {
                 ApplicationClass.PendingRequests.add(groupKey);
                 final int[] x = {0};
-            final MediaPlayer mp = MediaPlayer.create(MessageActivity2.this, R.raw.sharp);
 
             model.setDownloaded(-3);
             Handler.UpdateMessage(model);
@@ -1467,7 +1469,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                     if (!MessageActivity2.this.isDestroyed()) {
                                         chats.get(index).setDownloaded(-1);
-                                        mp.start();
+                                        sent.play();
 
                                         if (!Messages.isComputingLayout())
                                             adapter.notifyItemChanged(index);
@@ -1478,7 +1480,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                             Intent intent = getIntent();
                                             ((Activity) ApplicationClass.MessageActivity2Context).finish();
                                             startActivity(intent);
-                                            mp.start();
+                                            sent.play();
 
                                             overridePendingTransition(0, 0);
                                         }
@@ -1985,7 +1987,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     {
         ApplicationClass.PendingRequests.add(groupKey);
         final int[] y = {0};
-        final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
 
         message.setDownloaded(3);
         Handler.UpdateMessage(message);
@@ -2022,7 +2023,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                         if (!MessageActivity2.this.isDestroyed()) {
                                             chats.get(index).setDownloaded(1);
-                                            mp.start();
+                                            sent.play();
 
                                             if (!Messages.isComputingLayout()) {
                                                 adapter.notifyItemChanged(index);
@@ -2035,7 +2036,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                                 ((Activity) ApplicationClass.MessageActivity2Context).finish();
                                                 startActivity(intent);
 
-                                                mp.start();
+                                                sent.play();
 
                                                 overridePendingTransition(0, 0);
                                             }
@@ -2091,6 +2092,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                         if (!MessageActivity2.this.isDestroyed()) {
                                             chats.get(index).setDownloaded(102);
+                                            sent.play();
 
                                             if (!Messages.isComputingLayout()) {
                                                 adapter.notifyItemChanged(index);
@@ -2104,6 +2106,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                                 ((Activity) ApplicationClass.MessageActivity2Context).finish();
                                                 startActivity(intent);
 
+                                                sent.play();
 
                                                 overridePendingTransition(0, 0);
                                             }

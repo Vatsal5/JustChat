@@ -24,6 +24,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -159,6 +161,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     ChildEventListener imagereceiver;
     ValueEventListener Status;
 
+    Ringtone sent,received;
+
     OnCompleteListener SendMesage;
     String defaultvalue;
 
@@ -214,6 +218,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         RecieverPhone = getIntent().getStringExtra("phone");
         ApplicationClass.CurrentReceiver = RecieverPhone;
+
+        sent = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/sharp"));
+        received = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/received"));
 
         ll=findViewById(R.id.ll);
         ivSend = findViewById(R.id.ivSend);
@@ -833,7 +840,6 @@ if(getIntent().getIntExtra("path",1)==2) {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String time,date;
-                MediaPlayer received = MediaPlayer.create(MessageActivity.this, R.raw.received);
 
                 time=dataSnapshot.getValue(String.class).substring(0,5);
                 date=dataSnapshot.getValue(String.class).substring(5,15);
@@ -890,7 +896,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                     adapter.notifyItemInserted(chats.size() - 1);
                 }
                 if(messagecount==2)
-                    received.start();
+                    received.play();
                 else messagecount--;
             }
 
@@ -922,9 +928,6 @@ if(getIntent().getIntExtra("path",1)==2) {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String time,date;
                 String uri;
-
-                MediaPlayer received = MediaPlayer.create(MessageActivity.this, R.raw.received);
-
 
 
                 time=dataSnapshot.getValue(String.class).substring(0,5);
@@ -976,7 +979,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 //                adapter.notifyDataSetChanged();
                 adapter.notifyItemInserted(chats.size()-1);
                 if(messagecount==2)
-                    received.start();
+                    received.play();
                 else messagecount--;
             }
 
@@ -1012,8 +1015,6 @@ if(getIntent().getIntExtra("path",1)==2) {
                 //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
                 String time, date;
-
-                MediaPlayer received = MediaPlayer.create(MessageActivity.this, R.raw.received);
 
                 if (!(dataSnapshot.getKey().equals("message"))) {
                     if (dataSnapshot.getKey().equals("info")) {
@@ -1067,7 +1068,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                         adapter.notifyItemInserted(chats.size()-1);
                         // adapter.notifyItemRangeInserted(chats.size()-1,1);
                         if(messagecount==2)
-                            received.start();
+                            received.play();
                         else messagecount--;
                     }
                 }
@@ -1842,6 +1843,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                                 if(!MessageActivity.this.isDestroyed())
                                 {
                                     chats.get(index).setDownloaded(102);
+                                    sent.play();
 
                                     if(!Messages.isComputingLayout())
                                     {
@@ -1854,6 +1856,8 @@ if(getIntent().getIntExtra("path",1)==2) {
                                         Intent intent = getIntent();
                                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                                         startActivity(intent);
+
+                                        sent.play();
 
 
                                         overridePendingTransition(0, 0);
@@ -1870,7 +1874,6 @@ if(getIntent().getIntExtra("path",1)==2) {
     public void UploadImage(final int index, final MessageModel message)
     {
         ApplicationClass.PendingRequests.add(RecieverPhone);
-        final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
 
         message.setDownloaded(3);
         Handler.UpdateMessage(message);
@@ -1901,7 +1904,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                                 if(!MessageActivity.this.isDestroyed())
                                 {
                                     chats.get(index).setDownloaded(1);
-                                    mp.start();
+                                    sent.play();
 
                                     if(!Messages.isComputingLayout())
                                     {
@@ -1916,7 +1919,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                                         startActivity(intent);
 
-                                        mp.start();
+                                        sent.play();
 
                                         overridePendingTransition(0, 0);
                                     }
@@ -2363,8 +2366,6 @@ if(getIntent().getIntExtra("path",1)==2) {
         if(!Messages.isComputingLayout())
             adapter.notifyItemChanged(index);
 
-
-        final MediaPlayer mp = MediaPlayer.create(this, R.raw.sharp);
         long millis=System.currentTimeMillis();
         java.sql.Date date=new java.sql.Date(millis);
 
@@ -2381,7 +2382,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                 if(!MessageActivity.this.isDestroyed())
                 {
                     chats.get(index).setDownloaded(-1);
-                    mp.start();
+                    sent.play();
 
                     if(!Messages.isComputingLayout())
                         adapter.notifyItemChanged(index);
@@ -2392,7 +2393,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                         Intent intent = getIntent();
                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                         startActivity(intent);
-                        mp.start();
+                        sent.play();
 
                         overridePendingTransition(0, 0);
                     }
