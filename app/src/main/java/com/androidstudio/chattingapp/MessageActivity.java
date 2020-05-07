@@ -1345,12 +1345,16 @@ if(getIntent().getIntExtra("path",1)==2) {
                                 ActivityCompat.requestPermissions(MessageActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},5);
                             }
                         })
-                        .setNegativeButton("No Thanks", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-
+                                dialogInterface.cancel();
                             }
                         });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
             }
             else
             {
@@ -1378,9 +1382,13 @@ if(getIntent().getIntExtra("path",1)==2) {
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-
+                                dialogInterface.dismiss();
+                                MessageActivity.this.finish();
                             }
                         });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         }
     }
