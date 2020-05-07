@@ -712,10 +712,19 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         java.sql.Date date3 = new java.sql.Date(millis1);
 
         if(messagecount>2) {
-            if (flag1)
-                chats.add(chats.size() - 1, new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 5), date3.toString(), "null"));
+            if (chats.size()>0 && chats.get(chats.size() - 1).getDate().equals(date3.toString())) {
+                if (flag1)
+                    chats.add(chats.size() - 1, new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 5), date3.toString(), "null"));
+                else
+                    chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 5), date3.toString(), "null"));
+            }
             else
-                chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 5), date3.toString(), "null"));
+            {
+                if (flag1)
+                    chats.add(chats.size() - 1, new MessageModel(-65, "null", "null", "null123", "unread", 1234, "null", "null", "null"));
+                else
+                    chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, "null", "null", "null"));
+            }
         }
 
 

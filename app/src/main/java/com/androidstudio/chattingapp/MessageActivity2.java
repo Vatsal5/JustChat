@@ -389,7 +389,13 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         java.sql.Date date3 = new java.sql.Date(millis1);
 
         if(messagecount>2) {
-            chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0,8)+simpleDateFormat1.format(date2).substring(9), date3.toString(), groupname));
+            if (chats.size() > 0 && chats.get(chats.size() - 1).getDate().equals(date3.toString())) {
+                chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 8) + simpleDateFormat1.format(date2).substring(9), date3.toString(), groupname));
+            }
+            else
+            {
+                chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 8) + simpleDateFormat1.format(date2).substring(9), "null", groupname));
+            }
         }
 
 //        for(int i=0;i<chats.size();i++)
