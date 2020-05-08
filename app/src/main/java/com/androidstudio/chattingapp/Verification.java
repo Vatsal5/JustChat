@@ -41,9 +41,6 @@ public class Verification extends AppCompatActivity {
     DatabaseReference reference;
 
 
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
-
     PhoneAuthProvider.ForceResendingToken token;
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     String phone;
@@ -52,8 +49,6 @@ public class Verification extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
-        preferences = getSharedPreferences("Numbers",0);
-        editor = preferences.edit();
 
         database=FirebaseDatabase.getInstance();
         reference=database.getReference();
@@ -138,10 +133,6 @@ public class Verification extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
 
-                            editor.putString("Number",phone);
-                            editor.apply();
-                            Log.d("asdf",task.getException().getMessage());
-
                             dialog.dismiss();
                             FirebaseUser user = task.getResult().getUser();
                             (reference.child("users").child(phone).child("name")).setValue("Enter Your Name");
@@ -153,7 +144,6 @@ public class Verification extends AppCompatActivity {
                             // ...
                         } else {
                             dialog.dismiss();
-                            Log.d("asdf",task.getException().getMessage());
                             // Sign in failed, display a message and update the UI
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
