@@ -18,7 +18,12 @@ import android.provider.ContactsContract;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,19 +40,50 @@ public class SplashActivity extends AppCompatActivity {
 
         pref= getApplicationContext().getSharedPreferences("Names",0);
         edit = pref.edit();
-        if (ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
-        } else {
-            getContacts();
+        DatabaseReference offsetRef = FirebaseDatabase.getInstance().getReference(".info/serverTimeOffset");
+        offsetRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                long offset = snapshot.getValue(Long.class);
+                long estimatedServerTimeMs = System.currentTimeMillis() + offset;
+                long millis = System.currentTimeMillis();
+                java.sql.Date date1 = new java.sql.Date(millis);
 
 
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
+                long milliSecondsElapsed = date1.getTime() - estimatedServerTimeMs;
+                //  Log.d("poiu",date1.getTime()+"");
+                // Log.d("poiu",date.getTime()+"");
+                // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
+                if (milliSecondsElapsed / (24 * 60 * 60 * 1000) >= 1)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
+                    builder.setTitle("Alert")
+                            .setMessage("Date Of Your Device Is Not Accurate. Please Correct It And Open App Again")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                  //  ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+                                    dialogInterface.dismiss();
+                                    SplashActivity.this.finish();
+                                }
+                            });
 
-                    Intent intent;
-                    if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                    AlertDialog dialog = builder.create();
+                    dialog.setCanceledOnTouchOutside(false);
+                    dialog.show();
+                }
+                else
+                {
+                    if (ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+                    } else {
+                        getContacts();
+
+
+
+
+                                Intent intent;
+                                if (FirebaseAuth.getInstance().getCurrentUser() == null) {
 //
 //                    if (ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
 //                        ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
@@ -55,21 +91,30 @@ public class SplashActivity extends AppCompatActivity {
 //                        getContacts();
 //                    }
 
-                        intent = new Intent(SplashActivity.this, Registration.class);
-                        finish();
+                                    intent = new Intent(SplashActivity.this, Registration.class);
+                                    finish();
 
-                    } else {
-                        intent = new Intent(SplashActivity.this, MainActivity.class);
-                        finish();
+                                } else {
+                                    intent = new Intent(SplashActivity.this, MainActivity.class);
+                                    finish();
+                                }
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+                                startActivity(intent);
+
+                                overridePendingTransition(0, 0);
+                            
                     }
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
-                    startActivity(intent);
-
-                    overridePendingTransition(0, 0);
                 }
-            }, 200);
-        }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+               // System.err.println("Listener was cancelled");
+            }
+        });
+
+
 
 
     }
