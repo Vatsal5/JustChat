@@ -52,7 +52,6 @@ public class Verification extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
-
         preferences = getSharedPreferences("Numbers",0);
         editor = preferences.edit();
 
@@ -141,6 +140,7 @@ public class Verification extends AppCompatActivity {
 
                             editor.putString("Number",phone);
                             editor.apply();
+                            Log.d("asdf",task.getException().getMessage());
 
                             dialog.dismiss();
                             FirebaseUser user = task.getResult().getUser();
@@ -153,6 +153,7 @@ public class Verification extends AppCompatActivity {
                             // ...
                         } else {
                             dialog.dismiss();
+                            Log.d("asdf",task.getException().getMessage());
                             // Sign in failed, display a message and update the UI
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid

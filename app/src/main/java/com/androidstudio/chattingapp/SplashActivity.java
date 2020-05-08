@@ -15,8 +15,13 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ServerValue;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -30,14 +35,19 @@ public class SplashActivity extends AppCompatActivity {
 
         pref= getApplicationContext().getSharedPreferences("Names",0);
         edit = pref.edit();
+        if (ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+        } else {
+            getContacts();
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
 
-                Intent intent;
-                if(FirebaseAuth.getInstance().getCurrentUser()==null){
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    Intent intent;
+                    if (FirebaseAuth.getInstance().getCurrentUser() == null) {
 //
 //                    if (ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
 //                        ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
@@ -45,23 +55,21 @@ public class SplashActivity extends AppCompatActivity {
 //                        getContacts();
 //                    }
 
-                     intent = new Intent(SplashActivity.this, Registration.class);
-                     finish();
+                        intent = new Intent(SplashActivity.this, Registration.class);
+                        finish();
 
+                    } else {
+                        intent = new Intent(SplashActivity.this, MainActivity.class);
+                        finish();
+                    }
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+                    startActivity(intent);
+
+                    overridePendingTransition(0, 0);
                 }
-                else
-                {
-                    getContacts();
-                     intent = new Intent(SplashActivity.this, MainActivity.class);
-                     finish();
-                }
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
-                startActivity(intent);
-
-                overridePendingTransition(0, 0);
-            }
-        },1200);
+            }, 200);
+        }
 
 
     }
@@ -75,7 +83,6 @@ public class SplashActivity extends AppCompatActivity {
             final String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             if (IsValid(number) == 0) {
                 if (number.substring(0, 3).equals("+91")) {
-                    if (!(number.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
                         ApplicationClass.Contacts.add(new UserDetail(number, name));
                         //number1.add(number);
 
@@ -84,10 +91,9 @@ public class SplashActivity extends AppCompatActivity {
                             edit.apply();
                         }
 
-                    }
+
                 } else {
 
-                    if (!(("+91" + number).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
 
                         ApplicationClass.Contacts.add(new UserDetail("+91" + number, name));
                         //number1.add("+91" + number);
@@ -97,12 +103,14 @@ public class SplashActivity extends AppCompatActivity {
                             edit.apply();
                         }
 
-                    }
+
                 }
 
             }
         }
     }
+
+
 
     public int IsValid(String number)
     {int c=0;
@@ -132,6 +140,27 @@ public class SplashActivity extends AppCompatActivity {
             if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
             {
                 getContacts();
+                Intent intent;
+                if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+//
+//                    if (ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+//                        ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+//                    } else {
+//                        getContacts();
+//                    }
+
+                    intent = new Intent(SplashActivity.this, Registration.class);
+                    finish();
+
+                } else {
+                    intent = new Intent(SplashActivity.this, MainActivity.class);
+                    finish();
+                }
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+                startActivity(intent);
+
+                overridePendingTransition(0, 0);
             }
             else
             {
