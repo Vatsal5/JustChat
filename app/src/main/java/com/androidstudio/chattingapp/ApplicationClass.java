@@ -33,6 +33,7 @@ public class ApplicationClass extends Application
     public static DBHandler Handler;
     public static ArrayList<String>members;
     public static ArrayList<String>PendingRequests;
+    public static ArrayList<UserDetail>Contacts;
     public static String Groupname,GroupDp,groupkey,RenameGroup,CurrentReceiver;
     public  static  int create,addmembers,activity, groupusers;
 
@@ -124,6 +125,7 @@ public class ApplicationClass extends Application
 
         members=new ArrayList<>();
         PendingRequests=new ArrayList<>();
+        Contacts=new ArrayList<>();
         Groupname=null;
         GroupDp="null";
         RenameGroup=null;

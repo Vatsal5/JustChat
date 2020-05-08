@@ -53,8 +53,6 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     ArrayList<UserDetailWithStatus> contacts1;
     Toolbar toolbar;
     CardView cvCreate;
-    SharedPreferences pref;
-    SharedPreferences.Editor edit;
     ImageView ivBack;
     ArrayList<String> number1,membersToadd;
     int yes=0;
@@ -69,9 +67,6 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         cvCreate=findViewById(R.id.ivCreate);
         ivBack=findViewById(R.id.ivBack);
 
-        pref= getApplicationContext().getSharedPreferences("Names",0);
-        edit = pref.edit();
-        edit.apply();
 
          toolbar = findViewById(R.id.toolbar);
         SharedPreferences preftheme;
@@ -402,10 +397,10 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                         contacts.add(new UserDetail(number, name));
                         number1.add(number);
 
-                        if(!pref.getString(number,number).equals(name)) {
-                            edit.putString(number, name);
-                            edit.apply();
-                        }
+//                        if(!pref.getString(number,number).equals(name)) {
+//                            edit.putString(number, name);
+//                            edit.apply();
+//                        }
 
                     }
                 } else {
@@ -415,10 +410,10 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                         contacts.add(new UserDetail("+91"+number, name));
                         number1.add("+91"+number);
 
-                        if(!pref.getString("+91"+number,"+91"+number).equals(name)) {
-                            edit.putString("+91"+number, name);
-                            edit.apply();
-                        }
+//                        if(!pref.getString("+91"+number,"+91"+number).equals(name)) {
+//                            edit.putString("+91"+number, name);
+//                            edit.apply();
+//                        }
 
                     }
                 }
