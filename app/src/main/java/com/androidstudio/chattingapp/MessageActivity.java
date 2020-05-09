@@ -203,7 +203,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         }
 
         if (flag1) {
-            chats.add(new MessageModel(-678, "null  ", "null  ", "jgvjhv", "typing", 45, "null  ", date1.toString(), "null"));
+            chats.add(new MessageModel(-678, "null  ", "null  ", "jgvjhv", "typing", 45, "null  ", date1.toString(), "null","null"));
 
             if(!Messages.isComputingLayout())
                 adapter.notifyItemInserted(chats.size()-1);
@@ -408,7 +408,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     ivStatus.setBackgroundResource(R.drawable.orange);
 
                     if(!flag1) {
-                        chats.add(new MessageModel(-678, "null  ", "null  ", "jgvjhv", "typing", 45, "null  ", date1.toString(),"null"));
+                        chats.add(new MessageModel(-678, "null  ", "null  ", "jgvjhv", "typing", 45, "null  ", date1.toString(),"null","null"));
                         if (!Messages.isComputingLayout()) {
                             adapter.notifyItemInserted(chats.size() - 1);
                         }
@@ -424,7 +424,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         if (chats.get(chats.size() - 1).getType().equals("typing")) {
                             chats.remove(chats.size() - 1);
                             if (!Messages.isComputingLayout())
-                                adapter.notifyDataSetChanged();
+                                adapter.notifyItemRemoved(chats.size()-1);
 
                             flag1 = false;
                         }
@@ -440,7 +440,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         if (chats.get(chats.size() - 1).getType().equals("typing")) {
                             chats.remove(chats.size() - 1);
                             if (!Messages.isComputingLayout())
-                                adapter.notifyDataSetChanged();
+                                adapter.notifyItemRemoved(chats.size()-1);
 
                             flag1 = false;
                         }
@@ -560,12 +560,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     long millis = System.currentTimeMillis();
                     java.sql.Date date1 = new java.sql.Date(millis);
 
-                    MessageModel model = new MessageModel(-1, sender, RecieverPhone, etMessage.getText().toString(), "text", -2, simpleDateFormat.format(date).substring(0, 5), date1.toString(),"null");
+                    MessageModel model = new MessageModel(-1, sender, RecieverPhone, etMessage.getText().toString(), "text", -2, simpleDateFormat.format(date).substring(0, 5), date1.toString(),"null","null");
                     etMessage.setText(null);
 
                     if (chats.size() != 0) {
                         if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                            MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null");
+                            MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
                             int id = Handler.addMessage(messageModel);
                             messageModel.setId(id);
                             chats.add(messageModel);
@@ -574,7 +574,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     else
                     {
                         if((!(defaultvalue.equals("private")))) {
-                            MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null");
+                            MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
                             int id = Handler.addMessage(messageModel);
                             messageModel.setId(id);
                             chats.add(messageModel);
@@ -721,16 +721,16 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         if(messagecount>2) {
             if (chats.size()>0 && chats.get(chats.size() - 1).getDate().equals(date3.toString())) {
                 if (flag1)
-                    chats.add(chats.size() - 1, new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 5), date3.toString(), "null"));
+                    chats.add(chats.size() - 1, new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 5), date3.toString(), "null","null"));
                 else
-                    chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 5), date3.toString(), "null"));
+                    chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 5), date3.toString(), "null","null"));
             }
             else
             {
                 if (flag1)
-                    chats.add(chats.size() - 1, new MessageModel(-65, "null", "null", "null123", "unread", 1234, "null", "null", "null"));
+                    chats.add(chats.size() - 1, new MessageModel(-65, "null", "null", "null123", "unread", 1234, "null", "null", "null","null"));
                 else
-                    chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, "null", "null", "null"));
+                    chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, "null", "null", "null","null"));
             }
         }
 
@@ -752,20 +752,20 @@ if(getIntent().getIntExtra("path",1)==2) {
             reference.child("users").child(RecieverPhone).child(sender).child("info").child("friend").setValue("yes");
 
 
-            MessageModel model = new MessageModel(-1, sender, RecieverPhone, message1, "text", -2, simpleDateFormat.format(date).substring(0, 5), date1.toString(),"null");
+            MessageModel model = new MessageModel(-1, sender, RecieverPhone, message1, "text", -2, simpleDateFormat.format(date).substring(0, 5), date1.toString(),"null","null");
             etMessage.setText(null);
             sendFCMPush(model.getMessage());
 
             if (chats.size() != 0) {
                 if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                    MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null");
+                    MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
                     int id = Handler.addMessage(messageModel);
                     messageModel.setId(id);
                     chats.add(messageModel);
                 }
             } else {
                 if ((!(defaultvalue.equals("private")))) {
-                    MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null");
+                    MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
                     int id = Handler.addMessage(messageModel);
                     messageModel.setId(id);
                     chats.add(messageModel);
@@ -780,18 +780,18 @@ if(getIntent().getIntExtra("path",1)==2) {
 
         } else if (type.equals("image")) {
 
-            MessageModel messageModel = new MessageModel(-1, sender, RecieverPhone, message1, "image", 2, simpleDateFormat.format(date).substring(0, 5), date1.toString(),"null");
+            MessageModel messageModel = new MessageModel(-1, sender, RecieverPhone, message1, "image", 2, simpleDateFormat.format(date).substring(0, 5), date1.toString(),"null","null");
 
             if (chats.size() != 0) {
                 if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate()) || chats.size() == 0) {
-                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null");
+                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
                     int id = Handler.addMessage(message);
                     message.setId(id);
                     chats.add(message);
                 }
             } else {
                 if (!(defaultvalue.equals("private"))) {
-                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null");
+                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
                     int id = Handler.addMessage(message);
                     message.setId(id);
                     chats.add(message);
@@ -805,18 +805,18 @@ if(getIntent().getIntExtra("path",1)==2) {
 
             adapter.notifyItemInserted(chats.size() - 1);
         } else {
-            MessageModel model = new MessageModel(1190, sender, RecieverPhone, message1, "video", 100, simpleDateFormat.format(date).substring(0, 5), date1.toString(),"null");
+            MessageModel model = new MessageModel(1190, sender, RecieverPhone, message1, "video", 100, simpleDateFormat.format(date).substring(0, 5), date1.toString(),"null","null");
 
             if (chats.size() != 0) {
                 if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                    MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null");
+                    MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
                     int id = Handler.addMessage(messageModel);
                     messageModel.setId(id);
                     chats.add(messageModel);
                 }
             } else {
                 if ((!(defaultvalue.equals("private")))) {
-                    MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null");
+                    MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
                     int id = Handler.addMessage(messageModel);
                     messageModel.setId(id);
                     chats.add(messageModel);
@@ -847,12 +847,12 @@ if(getIntent().getIntExtra("path",1)==2) {
                 Log.d("Received","Image");
 
 
-                MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(15), "image", 0,time,date,"null");
+                MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(15), "image", 0,time,date,"null",dataSnapshot.getKey());
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 
                 if(chats.size()!=0) {
                     if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
-                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date,"null");
+                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date,"null","null");
                         int id = Handler.addMessage(message);
                         message.setId(id);
                         chats.add(message);
@@ -861,7 +861,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                 else {
                     if(!(defaultvalue.equals("private")))
                     {
-                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date,"null");
+                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date,"null","null");
                         int id = Handler.addMessage(message);
                         message.setId(id);
                         chats.add(message);
@@ -934,14 +934,14 @@ if(getIntent().getIntExtra("path",1)==2) {
                 date=dataSnapshot.getValue(String.class).substring(5,15);
                 uri=dataSnapshot.getValue(String.class).substring(15);
 
-                MessageModel messageModel = new MessageModel(-1,RecieverPhone,sender,uri,"video",101,time,date,"null");
+                MessageModel messageModel = new MessageModel(-1,RecieverPhone,sender,uri,"video",101,time,date,"null",dataSnapshot.getKey());
 
 
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 
                 if(chats.size()!=0) {
                     if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
-                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date,"null");
+                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date,"null","null");
                         int id = Handler.addMessage(message);
                         message.setId(id);
                         chats.add(message);
@@ -949,7 +949,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                 }
                 else {
                     if (!(defaultvalue.equals("private"))) {
-                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date,"null");
+                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date,"null","null");
                         int id = Handler.addMessage(message);
                         message.setId(id);
                         chats.add(message);
@@ -1028,11 +1028,11 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                         reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 
-                        MessageModel messageModel = new MessageModel(435, RecieverPhone, sender, dataSnapshot.getValue().toString().substring(15), "text", -1,time,date,"null");
+                        MessageModel messageModel = new MessageModel(435, RecieverPhone, sender, dataSnapshot.getValue().toString().substring(15), "text", -1,time,date,"null",dataSnapshot.getKey());
 
                         if(chats.size()!=0) {
                             if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
-                                MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date,"null");
+                                MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date,"null","null");
                                 int id = Handler.addMessage(message);
                                 message.setId(id);
                                 chats.add(message);
@@ -1041,7 +1041,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                         else {
                             if(!(defaultvalue.equals("private")))
                             {
-                                MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date,"null");
+                                MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date,"null","null");
                                 int id = Handler.addMessage(message);
                                 message.setId(id);
                                 chats.add(message);
@@ -1531,18 +1531,18 @@ if(getIntent().getIntExtra("path",1)==2) {
                             long millis = System.currentTimeMillis();
                             java.sql.Date date1 = new java.sql.Date(millis);
 
-                            MessageModel model = new MessageModel(1190, sender, RecieverPhone, videoURI.toString(), "video", 100, simpleDateFormat.format(date).substring(0, 5), date1.toString(), "null");
+                            MessageModel model = new MessageModel(1190, sender, RecieverPhone, videoURI.toString(), "video", 100, simpleDateFormat.format(date).substring(0, 5), date1.toString(), "null","null");
 
                             if (chats.size() != 0) {
                                 if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                                    MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null");
+                                    MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
                                     int id = Handler.addMessage(messageModel);
                                     messageModel.setId(id);
                                     chats.add(messageModel);
                                 }
                             } else {
                                 if ((!(defaultvalue.equals("private")))) {
-                                    MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(), "null");
+                                    MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(), "null","null");
                                     int id = Handler.addMessage(messageModel);
                                     messageModel.setId(id);
                                     chats.add(messageModel);
@@ -1591,18 +1591,18 @@ if(getIntent().getIntExtra("path",1)==2) {
                     long millis=System.currentTimeMillis();
                     java.sql.Date date1=new java.sql.Date(millis);
 
-                    MessageModel model = new MessageModel(1190,sender,RecieverPhone,videoURI.toString(),"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString(),"null");
+                    MessageModel model = new MessageModel(1190,sender,RecieverPhone,videoURI.toString(),"video",100,simpleDateFormat.format(date).substring(0,5),date1.toString(),"null","null");
 
                     if (chats.size() != 0) {
                         if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                            MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null");
+                            MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
                             int id = Handler.addMessage(messageModel);
                             messageModel.setId(id);
                             chats.add(messageModel);
                         }
                     } else {
                         if ((!(defaultvalue.equals("private")))) {
-                            MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(), "null");
+                            MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(), "null","null");
                             int id = Handler.addMessage(messageModel);
                             messageModel.setId(id);
                             chats.add(messageModel);
@@ -1765,11 +1765,11 @@ if(getIntent().getIntExtra("path",1)==2) {
             long millis=System.currentTimeMillis();
             java.sql.Date date1=new java.sql.Date(millis);
 
-            MessageModel messageModel = new MessageModel(-1, sender, RecieverPhone, uri.toString(), "image", 2,simpleDateFormat.format(date).substring(0,5),date1.toString(),"null");
+            MessageModel messageModel = new MessageModel(-1, sender, RecieverPhone, uri.toString(), "image", 2,simpleDateFormat.format(date).substring(0,5),date1.toString(),"null","null");
 
             if(chats.size()!=0) {
                 if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate()) || chats.size() == 0) {
-                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null");
+                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
                     int id = Handler.addMessage(message);
                     message.setId(id);
                     chats.add(message);
@@ -1778,7 +1778,7 @@ if(getIntent().getIntExtra("path",1)==2) {
             else {
                 if(!(defaultvalue.equals("private")))
                 {
-                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null");
+                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
                     int id = Handler.addMessage(message);
                     message.setId(id);
                     chats.add(message);

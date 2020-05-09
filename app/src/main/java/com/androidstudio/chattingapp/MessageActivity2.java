@@ -399,11 +399,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         if(messagecount>2) {
             if (chats.size() > 0 && chats.get(chats.size() - 1).getDate().equals(date3.toString())) {
-                chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 8) + simpleDateFormat1.format(date2).substring(9), date3.toString(), groupname));
+                chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 8) + simpleDateFormat1.format(date2).substring(9), date3.toString(), groupname,"null"));
             }
             else
             {
-                chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 8) + simpleDateFormat1.format(date2).substring(9), "null", groupname));
+                chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 8) + simpleDateFormat1.format(date2).substring(9), "null", groupname,"null"));
             }
         }
 
@@ -619,19 +619,19 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
 
 
-                MessageModel messageModel = new MessageModel(-1, sender, "null", dataSnapshot.getValue(String.class).substring(34), "image", 0, time, date, groupname);
+                MessageModel messageModel = new MessageModel(-1, sender, "null", dataSnapshot.getValue(String.class).substring(34), "image", 0, time, date, groupname,dataSnapshot.getKey());
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 
                 if (chats.size() != 0) {
                     if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
-                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date, groupname);
+                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date, groupname,"null");
                         int id = Handler.addMessage(message);
                         message.setId(id);
                         chats.add(message);
                     }
                 } else {
                     if(!(defaultvalue.equals("private"))) {
-                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date, groupname);
+                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date, groupname,"null");
                         int id = Handler.addMessage(message);
                         message.setId(id);
                         chats.add(message);
@@ -692,14 +692,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 uri = dataSnapshot.getValue(String.class).substring(34);
                 sender = dataSnapshot.getValue(String.class).substring(21,34);
 
-                MessageModel messageModel = new MessageModel(-1,sender,"null",uri,"video",101,time,date,groupname);
+                MessageModel messageModel = new MessageModel(-1,sender,"null",uri,"video",101,time,date,groupname,dataSnapshot.getKey());
 
 
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 
                 if(chats.size()!=0) {
                     if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
-                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date,groupname);
+                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date,groupname,"null");
                         int id = Handler.addMessage(message);
                         message.setId(id);
                         chats.add(message);
@@ -707,7 +707,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 }
                 else {
                     if(!(defaultvalue.equals("private"))) {
-                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date, groupname);
+                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date, groupname,"null");
                         int id = Handler.addMessage(message);
                         message.setId(id);
                         chats.add(message);
@@ -777,11 +777,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 //
 //                        reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 //
-                        MessageModel messageModel = new MessageModel(435, sender, "null", dataSnapshot.getValue().toString().substring(34), "text", -1,time,date,groupname);
+                        MessageModel messageModel = new MessageModel(435, sender, "null", dataSnapshot.getValue().toString().substring(34), "text", -1,time,date,groupname,dataSnapshot.getKey());
 
                         if(chats.size()!=0) {
                             if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
-                                MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date,groupname);
+                                MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date,groupname,"null");
                                 int id = Handler.addMessage(message);
                                 message.setId(id);
                                 chats.add(message);
@@ -789,7 +789,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         }
                         else {
                             if(!(defaultvalue.equals("private"))) {
-                                MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date, groupname);
+                                MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date, groupname,"null");
                                 int id = Handler.addMessage(message);
                                 message.setId(id);
                                 chats.add(message);
@@ -851,19 +851,19 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     long millis = System.currentTimeMillis();
                     java.sql.Date date1 = new java.sql.Date(millis);
 
-                    MessageModel model = new MessageModel(-1, sender, "null", etMessage.getText().toString(), "text", -2, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
+                    MessageModel model = new MessageModel(-1, sender, "null", etMessage.getText().toString(), "text", -2, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupname,"null");
                     etMessage.setText(null);
 
                     if (chats.size() != 0) {
                         if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname,"null");
                             int id = Handler.addMessage(messageModel);
                             messageModel.setId(id);
                             chats.add(messageModel);
                         }
                     } else {
                         if((!(defaultvalue.equals("private")))) {
-                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname,"null");
                             int id = Handler.addMessage(messageModel);
                             messageModel.setId(id);
                             chats.add(messageModel);
@@ -1226,18 +1226,18 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                 long millis = System.currentTimeMillis();
                                 java.sql.Date date1 = new java.sql.Date(millis);
 
-                                MessageModel model = new MessageModel(1190, sender, "null", videoURI.toString(), "video", 100, simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
+                                MessageModel model = new MessageModel(1190, sender, "null", videoURI.toString(), "video", 100, simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupname,"null");
 
                                 if (chats.size() != 0) {
                                     if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                                        MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                                        MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname,"null");
                                         int id = Handler.addMessage(messageModel);
                                         messageModel.setId(id);
                                         chats.add(messageModel);
                                     }
                                 } else {
                                     if ((!(defaultvalue.equals("private")))) {
-                                        MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                                        MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname,"null");
                                         int id = Handler.addMessage(messageModel);
                                         messageModel.setId(id);
                                         chats.add(messageModel);
@@ -1273,18 +1273,18 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         long millis = System.currentTimeMillis();
                         java.sql.Date date1 = new java.sql.Date(millis);
 
-                        MessageModel model = new MessageModel(1190, sender, "null", uri.toString(), "video", 100, simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupname);
+                        MessageModel model = new MessageModel(1190, sender, "null", uri.toString(), "video", 100, simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupname,"null");
 
                         if (chats.size() != 0) {
                             if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                                MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                                MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname,"null");
                                 int id = Handler.addMessage(messageModel);
                                 messageModel.setId(id);
                                 chats.add(messageModel);
                             }
                         } else {
                             if ((!(defaultvalue.equals("private")))) {
-                                MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                                MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname,"null");
                                 int id = Handler.addMessage(messageModel);
                                 messageModel.setId(id);
                                 chats.add(messageModel);
@@ -1636,11 +1636,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             long millis=System.currentTimeMillis();
             java.sql.Date date1=new java.sql.Date(millis);
 
-            MessageModel messageModel = new MessageModel(-1, sender, "nul", uri.toString(), "image", 2,simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9),date1.toString(),groupname);
+            MessageModel messageModel = new MessageModel(-1, sender, "nul", uri.toString(), "image", 2,simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9),date1.toString(),groupname,"null");
 
             if(chats.size()!=0) {
                 if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate()) || chats.size() == 0) {
-                    MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname);
+                    MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname,"null");
                     int id = Handler.addMessage(message);
                     message.setId(id);
                     chats.add(message);
@@ -1648,7 +1648,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
             else {
                 if(!(defaultvalue.equals("private"))) {
-                    MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname);
+                    MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname,"null");
                     int id = Handler.addMessage(message);
                     message.setId(id);
                     chats.add(message);

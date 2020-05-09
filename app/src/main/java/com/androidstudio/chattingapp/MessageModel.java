@@ -13,6 +13,7 @@ public class MessageModel
     private String time;
     private String date;
     private String groupName;
+    private String firebaseId;
 
     public MessageModel(){
         this.id = -1;
@@ -24,9 +25,10 @@ public class MessageModel
         this.time = null;
         this.date = null;
         this.groupName = null;
+        this.firebaseId = null;
     };
 
-    public MessageModel(int id,String sender, String reciever, String message,String type,int isDownloaded,String time,String date,String groupName) {
+    public MessageModel(int id,String sender, String reciever, String message,String type,int isDownloaded,String time,String date,String groupName,String firebaseId) {
         this.id = id;
         this.sender = sender;
         this.reciever = reciever;
@@ -36,6 +38,7 @@ public class MessageModel
         this.time = time;
         this.date=date;
         this.groupName = groupName;
+        this.firebaseId = firebaseId;
     }
 
     public String getDate() {
@@ -108,5 +111,13 @@ public class MessageModel
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+    }
+
+    public String getFirebaseId() {
+        return firebaseId;
+    }
+
+    public void setFirebaseId(String firebaseId) {
+        this.firebaseId = firebaseId;
     }
 }
