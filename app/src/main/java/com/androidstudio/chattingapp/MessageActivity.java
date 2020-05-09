@@ -847,6 +847,22 @@ if(getIntent().getIntExtra("path",1)==2) {
     public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
         String snimage;
      snimage=dataSnapshot.getKey();
+
+        for(int i=chats.size()-1;i>=0;i--)
+        {
+            if(chats.get(i).getFirebaseId().equals(snimage))
+            {
+                MessageModel messageModel = chats.get(i);
+                messageModel.setDownloaded(5);
+                Handler.UpdateMessageByFirebaseID(messageModel);
+
+                chats.get(i).setDownloaded(5);
+                if(!Messages.isComputingLayout())
+                    adapter.notifyItemChanged(i);
+
+                break;
+            }
+        }
     }
 
     @Override
@@ -967,6 +983,22 @@ if(getIntent().getIntExtra("path",1)==2) {
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
                 String snvideo;
                 snvideo=dataSnapshot.getKey();
+
+                for(int i=chats.size()-1;i>=0;i--)
+                {
+                    if(chats.get(i).getFirebaseId().equals(snvideo))
+                    {
+                        MessageModel messageModel = chats.get(i);
+                        messageModel.setDownloaded(105);
+                        Handler.UpdateMessageByFirebaseID(messageModel);
+
+                        chats.get(i).setDownloaded(105);
+                        if(!Messages.isComputingLayout())
+                            adapter.notifyItemChanged(i);
+
+                        break;
+                    }
+                }
             }
 
             @Override
@@ -1085,6 +1117,22 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                  if (!(dataSnapshot.getKey().equals("info")) && !(dataSnapshot.getKey().equals("message")) ) {
                      String snmessage = dataSnapshot.getKey();
+
+                     for(int i=chats.size()-1;i>=0;i--)
+                     {
+                         if(chats.get(i).getFirebaseId().equals(snmessage))
+                         {
+                             MessageModel messageModel = chats.get(i);
+                             messageModel.setDownloaded(-4);
+                             Handler.UpdateMessageByFirebaseID(messageModel);
+
+                             chats.get(i).setDownloaded(-4);
+                             if(!Messages.isComputingLayout())
+                                 adapter.notifyItemChanged(i);
+
+                             break;
+                         }
+                     }
                  }
             }
 
@@ -1938,11 +1986,8 @@ if(getIntent().getIntExtra("path",1)==2) {
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
                                         child("videos").child(push).setValue(message.getTime()+message.getDate()+uri.toString());
-                                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                        child(message.getReciever()).child("info").
-                                        child("deletevideos").child(push).setValue(message.getTime()+message.getDate()+uri.toString());
-                                Toast.makeText(getApplicationContext(),"Ghaint",Toast.LENGTH_LONG).show();
 
+                                message.setFirebaseId(push);
                                 message.setDownloaded(102);
                                 Handler.UpdateMessage(message);
 
@@ -1958,6 +2003,11 @@ if(getIntent().getIntExtra("path",1)==2) {
                                         adapter.notifyItemChanged(index);
                                     }
                                 }
+
+                                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                        child(message.getReciever()).child("info").
+                                        child("deletevideos").child(push).setValue(message.getTime()+message.getDate()+uri.toString());
+
 
                                 if(MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                                     if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
@@ -2007,10 +2057,8 @@ if(getIntent().getIntExtra("path",1)==2) {
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
                                         child("images").child(push).setValue(message.getTime()+message.getDate()+uri.toString());
-                                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                        child(message.getReciever()).child("info").
-                                        child("deleteimages").child(push).setValue(message.getTime()+message.getDate()+uri.toString());
 
+                                message.setFirebaseId(push);
                                 message.setDownloaded(1);
                                 Handler.UpdateMessage(message);
 
@@ -2026,6 +2074,11 @@ if(getIntent().getIntExtra("path",1)==2) {
                                         adapter.notifyItemChanged(index);
                                     }
                                 }
+
+
+                                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                        child(message.getReciever()).child("info").
+                                        child("deleteimages").child(push).setValue(message.getTime()+message.getDate()+uri.toString());
 
                                 if(MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
 
@@ -2518,6 +2571,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         };
 
         String push= reference.child("users").child(sender).child(RecieverPhone).push().getKey();
+        message.setFirebaseId(push);
         reference.child("users").child(sender).child(RecieverPhone).child(push).setValue(message.getTime()+date.toString() +message.getMessage().trim()).addOnCompleteListener(SendMesage);
     }
 

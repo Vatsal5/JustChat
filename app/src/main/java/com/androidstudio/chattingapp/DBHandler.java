@@ -199,6 +199,23 @@ public class DBHandler
         return database.update(DATABASE_TABLE,values,KEY_ID+"=?",new String[] {message.getId()+""});
     }
 
+    public long UpdateMessageByFirebaseID(MessageModel message)
+    {
+        ContentValues values = new ContentValues();
+
+        values.put(KEY_SENDER,message.getSender());
+        values.put(KEY_RECEIVER,message.getReciever());
+        values.put(KEY_MESSAGE,message.getMessage());
+        values.put(KEY_TYPE,message.getType());
+        values.put(KEY_ISDOWNLOADED,message.getDownloaded());
+        values.put(KEY_TIME,message.getTime());
+        values.put(KEY_DATE,message.getDate());
+        values.put(KEY_GROUPNAME,message.getGroupName());
+        values.put(KEY_FIREBASEID,message.getFirebaseId());
+
+        return database.update(DATABASE_TABLE,values,KEY_FIREBASEID+"=?",new String[] {message.getFirebaseId()+""});
+    }
+
     public long DeleteMessage(MessageModel message)
     {
         return database.delete(DATABASE_TABLE,KEY_ID+"=?",new String[]{message.getId()+""});

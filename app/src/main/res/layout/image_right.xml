@@ -6,35 +6,33 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp">
 
-    <TextView
-        android:id="@+id/tvSeen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/ivImage"
+    <ImageView
+        android:id="@+id/ivSeen"
+        app:srcCompat="@drawable/tick"
+        android:layout_width="18dp"
+        android:layout_height="22dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="16dp"
-        android:visibility="gone"
-        android:text="Seen"/>
+        android:layout_marginRight="2dp"
+        android:visibility="invisible"/>
 
     <ImageView
         android:id="@+id/ivImage"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:layout_marginRight="16dp"
         android:background="@drawable/background_right"
         android:padding="6dp"
         android:clickable="false"
         android:scaleType="centerCrop"
         android:cropToPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/ivSeen"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="10:10"
         android:textSize="10sp"
         android:layout_marginTop="15dp"
         android:layout_marginRight="12dp"

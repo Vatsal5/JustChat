@@ -91,9 +91,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTime,tvDate,tvSender,tvError,tvSeen;
+        TextView tvTime,tvDate,tvSender,tvError;
         EmojiTextView tvMessage;
-        ImageView ivImage,ivPlay,ivProfile,ivTyping;
+        ImageView ivImage,ivPlay,ivProfile,ivTyping,ivSeen;
         ProgressBar progress;
         LinearLayout llMessageRight,llMesageLeft,llTyping,llDownload;
 
@@ -114,7 +114,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             llMesageLeft = itemView.findViewById(R.id.llMessageLeft);
             llTyping = itemView.findViewById(R.id.llTyping);
             tvError = itemView.findViewById(R.id.tvError);
-            tvSeen = itemView.findViewById(R.id.tvSeen);
+            ivSeen = itemView.findViewById(R.id.ivSeen);
         }
     }
 
@@ -300,7 +300,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
                 if (messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                     holder.ivImage.setBackgroundResource(R.drawable.background_right);
-                    holder.tvSeen.setVisibility(View.GONE);
+                    holder.ivSeen.setVisibility(View.INVISIBLE);
                 }
                 else
                     setBackground(holder.ivImage);
@@ -344,7 +344,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
 
             holder.ivImage.setBackgroundResource(R.drawable.background_right);
-            holder.tvSeen.setVisibility(View.VISIBLE);
+            holder.ivSeen.setVisibility(View.VISIBLE);
         }
         else if (messages.get(holder.getAdapterPosition()).getDownloaded() == 2) // when sender sends the image
         {
@@ -352,7 +352,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
             holder.tvError.setVisibility(View.GONE);
-            holder.tvSeen.setVisibility(View.GONE);
+            holder.ivSeen.setVisibility(View.INVISIBLE);
 
 
             Glide.with(context.getApplicationContext()).load(messages.get(holder.getAdapterPosition()).getMessage()).into(holder.ivImage);
@@ -364,7 +364,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
             holder.tvError.setVisibility(View.GONE);
-            holder.tvSeen.setVisibility(View.GONE);
+            holder.ivSeen.setVisibility(View.INVISIBLE);
 
             Glide.with(context.getApplicationContext()).load(messages.get(holder.getAdapterPosition()).getMessage()).into(holder.ivImage);
         }else if(messages.get(holder.getAdapterPosition()).getDownloaded() == 4) // when request has been sent to download image
@@ -380,7 +380,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         {
             holder.tvMessage.setText(messages.get(holder.getAdapterPosition()).getMessage());
             holder.llMessageRight.setBackgroundResource(R.drawable.orange2);
-            holder.tvSeen.setVisibility(View.GONE);
+            holder.ivSeen.setVisibility(View.INVISIBLE);
             Activity.sentTextMessage(holder.getAdapterPosition());
         } else if (messages.get(holder.getAdapterPosition()).getDownloaded() == -3) // when request has been sent to listener
         {
@@ -388,7 +388,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             if (holder.llMessageRight != null) {
                 holder.llMessageRight.setBackgroundResource(R.drawable.orange2);
-                holder.tvSeen.setVisibility(View.GONE);
+                holder.ivSeen.setVisibility(View.INVISIBLE);
             }
         } else if (messages.get(holder.getAdapterPosition()).getDownloaded() == -1) // if text message is sent or received successfully
         {
@@ -396,7 +396,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             if (holder.llMessageRight != null) {
                 holder.llMessageRight.setBackgroundResource(R.drawable.background_right);
-                holder.tvSeen.setVisibility(View.GONE);
+                holder.ivSeen.setVisibility(View.INVISIBLE);
             }
 
             if(holder.llMesageLeft!=null)
@@ -406,7 +406,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         {
             holder.tvMessage.setText(messages.get(holder.getAdapterPosition()).getMessage());
             holder.llMessageRight.setBackgroundResource(R.drawable.background_right);
-            holder.tvSeen.setVisibility(View.VISIBLE);
+            holder.ivSeen.setVisibility(View.VISIBLE);
         }
         else if(messages.get(holder.getAdapterPosition()).getDownloaded()==100) // when sender sends video
         {
@@ -415,7 +415,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivPlay.setVisibility(View.GONE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
             holder.tvError.setVisibility(View.GONE);
-            holder.tvSeen.setVisibility(View.GONE);
+            holder.ivSeen.setVisibility(View.INVISIBLE);
 
             holder.ivImage.setClickable(false);
 
@@ -428,7 +428,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
             holder.ivPlay.setVisibility(View.GONE);
             holder.tvError.setVisibility(View.GONE);
-            holder.tvSeen.setVisibility(View.GONE);
+            holder.ivSeen.setVisibility(View.INVISIBLE);
 
             holder.ivImage.setClickable(false);
         }
@@ -462,7 +462,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             if (messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                 holder.ivImage.setBackgroundResource(R.drawable.background_right);
-                holder.tvSeen.setVisibility(View.GONE);
+                holder.ivSeen.setVisibility(View.INVISIBLE);
             }
 
             else {
@@ -520,15 +520,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             if(holder.llDownload!=null)
                 holder.llDownload.setVisibility(View.GONE);
 
-            if (messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                 holder.ivImage.setBackgroundResource(R.drawable.background_right);
-                holder.tvSeen.setVisibility(View.VISIBLE);
-            }
-
-            else {
-                setBackground(holder.ivImage);
-                setBackground(holder.ivPlay);
-            }
+                holder.ivSeen.setVisibility(View.VISIBLE);
 
             RequestOptions options = new RequestOptions();
             options.diskCacheStrategy(DiskCacheStrategy.NONE);
