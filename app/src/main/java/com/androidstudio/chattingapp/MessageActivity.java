@@ -874,7 +874,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                     int id = Handler.addMessage(messageModel);
                     messageModel.setId(id);
 
-                  //  dataSnapshot.getRef().removeValue();
+                    dataSnapshot.getRef().removeValue();
 
                     chats.add(chats.size()-1,messageModel);
 
@@ -888,7 +888,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 
 
 
-                      //  dataSnapshot.getRef().removeValue();
+                        dataSnapshot.getRef().removeValue();
 
                     chats.add(messageModel);
 
@@ -962,7 +962,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                     if(flag1==true) {
 
-                       // dataSnapshot.getRef().removeValue();
+                        dataSnapshot.getRef().removeValue();
 
                     chats.add(chats.size()-1,messageModel);}
                 }
@@ -971,7 +971,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                     int id = Handler.addMessage(messageModel);
                     messageModel.setId(id);
 
-                  //  dataSnapshot.getRef().removeValue();
+                    dataSnapshot.getRef().removeValue();
 
                     chats.add(messageModel);
                 }
@@ -1833,6 +1833,9 @@ if(getIntent().getIntExtra("path",1)==2) {
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
                                         child("videos").push().setValue(message.getTime()+message.getDate()+uri.toString());
+                                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                        child(message.getReciever()).child("info").
+                                        child("deletevideos").push().setValue(message.getTime()+message.getDate()+uri.toString());
                                 Toast.makeText(getApplicationContext(),"Ghaint",Toast.LENGTH_LONG).show();
 
                                 message.setDownloaded(102);
@@ -1895,6 +1898,9 @@ if(getIntent().getIntExtra("path",1)==2) {
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
                                         child("images").push().setValue(message.getTime()+message.getDate()+uri.toString());
+                                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                        child(message.getReciever()).child("info").
+                                        child("deleteimages").push().setValue(message.getTime()+message.getDate()+uri.toString());
 
                                 message.setDownloaded(1);
                                 Handler.UpdateMessage(message);
