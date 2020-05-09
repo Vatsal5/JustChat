@@ -462,7 +462,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             if (messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                 holder.ivImage.setBackgroundResource(R.drawable.background_right);
-                holder.tvSeen.setVisibility(View.VISIBLE);
+                holder.tvSeen.setVisibility(View.GONE);
             }
 
             else {
