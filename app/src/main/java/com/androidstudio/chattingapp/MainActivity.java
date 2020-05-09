@@ -762,7 +762,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
                             reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
-                                    .getPhoneNumber()).child("info").child("images").removeEventListener(deletevideo);
+                                    .getPhoneNumber()).child("info").child("deleteimages").removeEventListener(deleteimage);
 
                         }
 
@@ -772,7 +772,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         }
                     };
                     reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
-                            .getPhoneNumber()).child("info").child("images").addListenerForSingleValueEvent(deleteimage);
+                            .getPhoneNumber()).child("info").child("deleteimages").addListenerForSingleValueEvent(deleteimage);
 
                     deletevideo = new ValueEventListener() {
                         @Override
@@ -814,9 +814,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 }
                             }
 
-
                             reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
-                                    .getPhoneNumber()).child("info").child("videos").removeEventListener(deletevideo);
+                                    .getPhoneNumber()).child("info").child("deletevideos").removeEventListener(deletevideo);
 
                         }
 
@@ -826,7 +825,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         }
                     };
                     reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
-                            .getPhoneNumber()).child("info").child("videos").addListenerForSingleValueEvent(deletevideo);
+                            .getPhoneNumber()).child("info").child("deletevideos").addListenerForSingleValueEvent(deletevideo);
 
 
 
