@@ -153,12 +153,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     LinearLayoutManager manager;
     MessageAdapter adapter;
     ArrayList<MessageModel> chats;
-    ChildEventListener chreceiver,videoreceiver;
+    ChildEventListener chreceiver,videoreceiver,messageseen;
 
     DBHandler Handler;
     int l;
     int flag=0;
-    ChildEventListener imagereceiver;
+    ChildEventListener imagereceiver,imageseen,videoseen;
     ValueEventListener Status;
 
     Ringtone sent,received;
@@ -832,7 +832,35 @@ if(getIntent().getIntExtra("path",1)==2) {
     }
 }
 
+    imageseen=new ChildEventListener() {
+    @Override
+    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
+    }
+
+    @Override
+    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+    }
+
+    @Override
+    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+        String snimage;
+     snimage=dataSnapshot.getKey();
+    }
+
+    @Override
+    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+    }
+    };
+
+        reference.child("users").child(sender).child(RecieverPhone).child("info").child("images").addChildEventListener(imageseen);
 
 //**************************************************************************************************************************************************************************
 
@@ -923,6 +951,37 @@ if(getIntent().getIntExtra("path",1)==2) {
 
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").addChildEventListener(imagereceiver);
 
+
+        videoseen =  new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                String snvideo;
+                snvideo=dataSnapshot.getKey();
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        reference.child("users").child(sender).child(RecieverPhone).child("info").child("videos").addChildEventListener(videoseen);
+
         videoreceiver = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -1008,6 +1067,40 @@ if(getIntent().getIntExtra("path",1)==2) {
 
 
 //********************************************************************************************************************************************************
+
+        messageseen = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                 if (!(dataSnapshot.getKey().equals("info")) && !(dataSnapshot.getKey().equals("message")) ) {
+                     String snmessage = dataSnapshot.getKey();
+                 }
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        reference.child("users").child(sender).child(RecieverPhone).addChildEventListener(messageseen);
+
 
         chreceiver = new ChildEventListener() {
             @Override
@@ -1228,6 +1321,9 @@ if(getIntent().getIntExtra("path",1)==2) {
         adapter.unregisterAdapterDataObserver(observer);
 
         //Handler.close();
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("videos").removeEventListener(videoseen);
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").removeEventListener(imageseen);
+        reference.child("users").child(sender).child(RecieverPhone).removeEventListener(messageseen);
 
         FirebaseDatabase.getInstance().getReference("UserStatus").child(RecieverPhone).removeEventListener(Status);
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").removeEventListener(imagereceiver);
@@ -1436,6 +1532,9 @@ if(getIntent().getIntExtra("path",1)==2) {
 
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").removeEventListener(imagereceiver);
         reference.child("users").child(RecieverPhone).child(sender).removeEventListener(chreceiver);
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("videos").removeEventListener(videoseen);
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").removeEventListener(imageseen);
+        reference.child("users").child(sender).child(RecieverPhone).removeEventListener(messageseen);
         //reference.child("users").child(sender).removeEventListener(chsender);
 
         //Handler.close();
@@ -1460,6 +1559,9 @@ if(getIntent().getIntExtra("path",1)==2) {
 
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").addChildEventListener(imagereceiver);
         reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("videos").addChildEventListener(videoseen);
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").addChildEventListener(imageseen);
+        reference.child("users").child(sender).child(RecieverPhone).addChildEventListener(messageseen);
         //reference.child("users").child(sender).removeEventListener(chsender);
 
         //Handler.close();
@@ -1830,12 +1932,15 @@ if(getIntent().getIntExtra("path",1)==2) {
                             @Override
                             public void onSuccess(Uri uri) {
 
+                                String push=reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                        child(message.getReciever()).child("info").
+                                        child("videos").push().getKey();
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
-                                        child("videos").push().setValue(message.getTime()+message.getDate()+uri.toString());
+                                        child("videos").child(push).setValue(message.getTime()+message.getDate()+uri.toString());
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
-                                        child("deletevideos").push().setValue(message.getTime()+message.getDate()+uri.toString());
+                                        child("deletevideos").child(push).setValue(message.getTime()+message.getDate()+uri.toString());
                                 Toast.makeText(getApplicationContext(),"Ghaint",Toast.LENGTH_LONG).show();
 
                                 message.setDownloaded(102);
@@ -1895,12 +2000,16 @@ if(getIntent().getIntExtra("path",1)==2) {
                             @Override
                             public void onSuccess(Uri uri) {
 
+                                String push=reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                        child(message.getReciever()).child("info").
+                                        child("images").push().getKey();
+
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
-                                        child("images").push().setValue(message.getTime()+message.getDate()+uri.toString());
+                                        child("images").child(push).setValue(message.getTime()+message.getDate()+uri.toString());
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
-                                        child("deleteimages").push().setValue(message.getTime()+message.getDate()+uri.toString());
+                                        child("deleteimages").child(push).setValue(message.getTime()+message.getDate()+uri.toString());
 
                                 message.setDownloaded(1);
                                 Handler.UpdateMessage(message);
@@ -2408,7 +2517,8 @@ if(getIntent().getIntExtra("path",1)==2) {
             }
         };
 
-        reference.child("users").child(sender).child(RecieverPhone).push().setValue(message.getTime()+date.toString() +message.getMessage().trim()).addOnCompleteListener(SendMesage);
+        String push= reference.child("users").child(sender).child(RecieverPhone).push().getKey();
+        reference.child("users").child(sender).child(RecieverPhone).child(push).setValue(message.getTime()+date.toString() +message.getMessage().trim()).addOnCompleteListener(SendMesage);
     }
 
 
