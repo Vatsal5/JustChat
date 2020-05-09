@@ -22,6 +22,7 @@
         android:layout_height="250dp"
         android:background="@drawable/background_right"
         android:padding="6dp"
+        android:layout_marginRight="1dp"
         android:clickable="false"
         android:scaleType="centerCrop"
         android:cropToPadding="true"
