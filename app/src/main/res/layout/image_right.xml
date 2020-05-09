@@ -13,14 +13,14 @@
         android:layout_height="22dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="2dp"
+        android:layout_marginRight="4dp"
         android:visibility="invisible"/>
 
     <ImageView
         android:id="@+id/ivImage"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:layout_marginRight="1dp"
+        android:layout_marginRight="2dp"
         android:background="@drawable/background_right"
         android:padding="6dp"
         android:clickable="false"

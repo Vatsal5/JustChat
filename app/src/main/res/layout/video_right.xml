@@ -14,7 +14,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:visibility="invisible"
-        android:layout_marginRight="2dp"/>
+        android:layout_marginRight="4dp"/>
 
     <ImageView
         android:id="@+id/ivImage"
@@ -22,7 +22,7 @@
         android:layout_height="250dp"
         android:background="@drawable/background_right"
         android:padding="6dp"
-        android:layout_marginRight="1dp"
+        android:layout_marginRight="2dp"
         android:clickable="false"
         android:scaleType="centerCrop"
         android:cropToPadding="true"
