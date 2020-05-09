@@ -750,6 +750,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                             dataSnapshot1.getRef().removeValue();
 
                                         }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            dataSnapshot1.getRef().removeValue();
+
+                                        }
                                     });
                                 }
                             }
@@ -795,6 +801,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                     file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
+                                            dataSnapshot1.getRef().removeValue();
+
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
                                             dataSnapshot1.getRef().removeValue();
 
                                         }

@@ -874,7 +874,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                     int id = Handler.addMessage(messageModel);
                     messageModel.setId(id);
 
-                    dataSnapshot.getRef().removeValue();
+                  //  dataSnapshot.getRef().removeValue();
 
                     chats.add(chats.size()-1,messageModel);
 
@@ -888,7 +888,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 
 
 
-                        dataSnapshot.getRef().removeValue();
+                      //  dataSnapshot.getRef().removeValue();
 
                     chats.add(messageModel);
 
@@ -962,7 +962,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                     if(flag1==true) {
 
-                        dataSnapshot.getRef().removeValue();
+                       // dataSnapshot.getRef().removeValue();
 
                     chats.add(chats.size()-1,messageModel);}
                 }
@@ -971,7 +971,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                     int id = Handler.addMessage(messageModel);
                     messageModel.setId(id);
 
-                    dataSnapshot.getRef().removeValue();
+                  //  dataSnapshot.getRef().removeValue();
 
                     chats.add(messageModel);
                 }
