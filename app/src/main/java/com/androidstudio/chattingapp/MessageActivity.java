@@ -124,11 +124,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class MessageActivity extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
-    EmojiEditText etMessage;
+    EmojiconEditText etMessage;
     ImageView ivSend,ivProfile,ivBack,ivStatus;
     String RecieverPhone;
     FirebaseDatabase database;
@@ -356,6 +358,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         pref= getApplicationContext().getSharedPreferences("Mode",0);
         defaultvalue = pref.getString("mode"+RecieverPhone,"null");
         etMessage = findViewById(R.id.etMessage);
+//        EmojIconActions emojIcon=new EmojIconActions(this,null,etMessage,null,"#495C66","#DCE1E2","#E6EBEF");
+//        emojIcon.ShowEmojIcon();
+//        emojIcon.setUseSystemEmoji(true);
+        etMessage.setUseSystemDefault(true);
 
         ivProfile = findViewById(R.id.ivProfile);
         ivBack = findViewById(R.id.ivBack);
@@ -942,6 +948,9 @@ if(getIntent().getIntExtra("path",1)==2) {
                 if(messagecount==2)
                     received.play();
                 else messagecount--;
+                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                        child(RecieverPhone).child("info").
+                        child("seenmessages").child(dataSnapshot.getKey()).setValue("image");
             }
 
             @Override
@@ -1072,6 +1081,9 @@ if(getIntent().getIntExtra("path",1)==2) {
                 if(messagecount==2)
                     received.play();
                 else messagecount--;
+                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                        child(RecieverPhone).child("info").
+                        child("seenmessages").child(dataSnapshot.getKey()).setValue("video");
             }
 
             @Override
@@ -1224,6 +1236,10 @@ if(getIntent().getIntExtra("path",1)==2) {
                         if(messagecount==2)
                             received.play();
                         else messagecount--;
+
+                        reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                child(RecieverPhone).child("info").
+                                child("seenmessages").child(dataSnapshot.getKey()).setValue("text");
                     }
                 }
             }
@@ -2001,9 +2017,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
                                         child("videos").child(push).setValue(message.getTime()+message.getDate()+uri.toString());
-                                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                        child(message.getReciever()).child("info").
-                                        child("seenmessages").child(push).setValue("video");
+
 
                                 message.setFirebaseId(push);
                                 message.setDownloaded(102);
@@ -2075,9 +2089,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
                                         child("images").child(push).setValue(message.getTime()+message.getDate()+uri.toString());
-                                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                        child(message.getReciever()).child("info").
-                                        child("seenmessages").child(push).setValue("image");
+                                
 
                                 message.setFirebaseId(push);
                                 message.setDownloaded(1);
@@ -2593,9 +2605,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 
         String push= reference.child("users").child(sender).child(RecieverPhone).push().getKey();
         message.setFirebaseId(push);
-//        reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-//                child(message.getReciever()).child("info").
-//                child("seenmessages").child(push).setValue("text");
+
         reference.child("users").child(sender).child(RecieverPhone).child(push).setValue(message.getTime()+date.toString() +message.getMessage().trim()).addOnCompleteListener(SendMesage);
     }
 
