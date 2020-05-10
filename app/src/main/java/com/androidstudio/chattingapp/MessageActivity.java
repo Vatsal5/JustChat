@@ -948,6 +948,9 @@ if(getIntent().getIntExtra("path",1)==2) {
                 if(messagecount==2)
                     received.play();
                 else messagecount--;
+                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                        child(RecieverPhone).child("info").
+                        child("seenmessages").child(dataSnapshot.getKey()).setValue("image");
             }
 
             @Override
@@ -1078,6 +1081,9 @@ if(getIntent().getIntExtra("path",1)==2) {
                 if(messagecount==2)
                     received.play();
                 else messagecount--;
+                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                        child(RecieverPhone).child("info").
+                        child("seenmessages").child(dataSnapshot.getKey()).setValue("video");
             }
 
             @Override
@@ -1230,6 +1236,10 @@ if(getIntent().getIntExtra("path",1)==2) {
                         if(messagecount==2)
                             received.play();
                         else messagecount--;
+
+                        reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                child(RecieverPhone).child("info").
+                                child("seenmessages").child(dataSnapshot.getKey()).setValue("text");
                     }
                 }
             }
@@ -2005,9 +2015,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
                                         child("videos").child(push).setValue(message.getTime()+message.getDate()+uri.toString());
-                                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                        child(message.getReciever()).child("info").
-                                        child("seenmessages").child(push).setValue("video");
+
 
                                 message.setFirebaseId(push);
                                 message.setDownloaded(102);
@@ -2079,9 +2087,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
                                         child("images").child(push).setValue(message.getTime()+message.getDate()+uri.toString());
-                                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                        child(message.getReciever()).child("info").
-                                        child("seenmessages").child(push).setValue("image");
+                                
 
                                 message.setFirebaseId(push);
                                 message.setDownloaded(1);
@@ -2597,9 +2603,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 
         String push= reference.child("users").child(sender).child(RecieverPhone).push().getKey();
         message.setFirebaseId(push);
-//        reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-//                child(message.getReciever()).child("info").
-//                child("seenmessages").child(push).setValue("text");
+
         reference.child("users").child(sender).child(RecieverPhone).child(push).setValue(message.getTime()+date.toString() +message.getMessage().trim()).addOnCompleteListener(SendMesage);
     }
 
