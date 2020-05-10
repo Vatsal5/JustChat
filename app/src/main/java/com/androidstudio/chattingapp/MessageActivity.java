@@ -921,6 +921,10 @@ if(getIntent().getIntExtra("path",1)==2) {
                     int id = Handler.addMessage(messageModel);
                     messageModel.setId(id);
 
+                    reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                            child(RecieverPhone).child("info").
+                            child("seenmessages").child(dataSnapshot.getKey()).setValue("image");
+
                     dataSnapshot.getRef().removeValue();
 
                     chats.add(chats.size()-1,messageModel);
@@ -932,6 +936,9 @@ if(getIntent().getIntExtra("path",1)==2) {
                 {
                     int id = Handler.addMessage(messageModel);
                     messageModel.setId(id);
+                    reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                            child(RecieverPhone).child("info").
+                            child("seenmessages").child(dataSnapshot.getKey()).setValue("image");
 
 
 
@@ -945,9 +952,6 @@ if(getIntent().getIntExtra("path",1)==2) {
                 if(messagecount==2)
                     received.play();
                 else messagecount--;
-                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                        child(RecieverPhone).child("info").
-                        child("seenmessages").child(dataSnapshot.getKey()).setValue("image");
             }
 
             @Override
@@ -1058,6 +1062,10 @@ if(getIntent().getIntExtra("path",1)==2) {
                     messageModel.setId(id);
 
                     if(flag1==true) {
+                        reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                child(RecieverPhone).child("info").
+                                child("seenmessages").child(dataSnapshot.getKey()).setValue("video");
+
 
                         dataSnapshot.getRef().removeValue();
 
@@ -1067,6 +1075,10 @@ if(getIntent().getIntExtra("path",1)==2) {
                 {
                     int id = Handler.addMessage(messageModel);
                     messageModel.setId(id);
+                    reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                            child(RecieverPhone).child("info").
+                            child("seenmessages").child(dataSnapshot.getKey()).setValue("video");
+
 
                     dataSnapshot.getRef().removeValue();
 
@@ -1078,9 +1090,6 @@ if(getIntent().getIntExtra("path",1)==2) {
                 if(messagecount==2)
                     received.play();
                 else messagecount--;
-                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                        child(RecieverPhone).child("info").
-                        child("seenmessages").child(dataSnapshot.getKey()).setValue("video");
             }
 
             @Override
@@ -1216,6 +1225,10 @@ if(getIntent().getIntExtra("path",1)==2) {
                             messageModel.setId(id);
                             if(flag1==true) {
                                 chats.add(chats.size()-1,messageModel);
+                                reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                        child(RecieverPhone).child("info").
+                                        child("seenmessages").child(dataSnapshot.getKey()).setValue("text");
+
                                 dataSnapshot.getRef().removeValue();
                             }
                         }
@@ -1224,6 +1237,10 @@ if(getIntent().getIntExtra("path",1)==2) {
                             messageModel.setId(id);
 
                             chats.add(messageModel);
+                            reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                    child(RecieverPhone).child("info").
+                                    child("seenmessages").child(dataSnapshot.getKey()).setValue("text");
+
                             dataSnapshot.getRef().removeValue();
                         }
 
@@ -1234,9 +1251,6 @@ if(getIntent().getIntExtra("path",1)==2) {
                             received.play();
                         else messagecount--;
 
-                        reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                child(RecieverPhone).child("info").
-                                child("seenmessages").child(dataSnapshot.getKey()).setValue("text");
                     }
                 }
             }
