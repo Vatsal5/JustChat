@@ -615,7 +615,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         Messages = findViewById(R.id.Messages);
         Messages.setHasFixedSize(true);
 
-        ((SimpleItemAnimator) Messages.getItemAnimator()).setSupportsChangeAnimations(false);
+//        ((SimpleItemAnimator) Messages.getItemAnimator()).setSupportsChangeAnimations(false);
 
         Messages.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -647,6 +647,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         }
 
         adapter = new MessageAdapter(MessageActivity.this, chats);
+        adapter.setHasStableIds(true);
 
         if((defaultvalue.equals("null"))){
             SharedPreferences.Editor editor = pref.edit();

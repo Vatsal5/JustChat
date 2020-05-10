@@ -663,23 +663,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         return -1;
     }
 
-    public static boolean isValidContextForGlide(final Context context) {
-        if (context == null) {
-            return false;
-        }
-        if (context instanceof android.app.Activity) {
-            final Activity activity = (Activity) context;
-            if (activity.isDestroyed() || activity.isFinishing()) {
-                return false;
-            }
-        }
-        return true;
-    }
+    @Override
+    public long getItemId(int position) {
 
-    public Bitmap getThumbnail(Uri Uri)
-    {
-        Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(Uri.toString(), MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
-        return bitmap;
+        return messages.get(position).getId();
     }
 
     public String newDate(String date)
