@@ -63,6 +63,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -124,11 +125,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class MessageActivity extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
-    EmojiEditText etMessage;
+    EmojiconEditText etMessage;
     ImageView ivSend,ivProfile,ivBack,ivStatus;
     String RecieverPhone;
     FirebaseDatabase database;
@@ -356,9 +359,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         pref= getApplicationContext().getSharedPreferences("Mode",0);
         defaultvalue = pref.getString("mode"+RecieverPhone,"null");
         etMessage = findViewById(R.id.etMessage);
-//        EmojIconActions emojIcon=new EmojIconActions(this,null,etMessage,null,"#495C66","#DCE1E2","#E6EBEF");
-//        emojIcon.ShowEmojIcon();
-//        emojIcon.setUseSystemEmoji(true);
+
+        EmojIconActions emojIcon= new EmojIconActions(this, llMessageActivity, etMessage,
+                ivSend );
+
+        emojIcon.ShowEmojIcon() 
+        emojIcon.setIconsIds(R.drawable.ic_action_keyboard,R.drawable.smiley);
 
         ivProfile = findViewById(R.id.ivProfile);
         ivBack = findViewById(R.id.ivBack);
@@ -609,6 +615,23 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         Messages = findViewById(R.id.Messages);
         Messages.setHasFixedSize(true);
+
+        ((SimpleItemAnimator) Messages.getItemAnimator()).setSupportsChangeAnimations(false);
+
+        Messages.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                if(i3<i7)
+                {
+                    Messages.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Messages.scrollToPosition(chats.size()-1);
+                        }
+                    },20);
+                }
+            }
+        });
 
         manager = new LinearLayoutManager(MessageActivity.this);
         manager.setStackFromEnd(false);

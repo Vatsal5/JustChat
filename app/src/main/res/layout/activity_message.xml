@@ -111,7 +111,7 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
-        <androidx.emoji.widget.EmojiEditText
+        <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
             android:id="@+id/etMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
