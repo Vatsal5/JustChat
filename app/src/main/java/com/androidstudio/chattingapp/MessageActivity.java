@@ -1178,7 +1178,7 @@ if(getIntent().getIntExtra("path",1)==2) {
             }
         };
 
-        reference.child("users").child(sender).child(RecieverPhone).child("info").child("seenmessages").addChildEventListener(messageseen);
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("seenmessages").addChildEventListener(messageseen);
 
 
         chreceiver = new ChildEventListener() {
