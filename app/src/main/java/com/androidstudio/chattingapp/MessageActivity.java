@@ -124,13 +124,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
-import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class MessageActivity extends AppCompatActivity implements MessageAdapter.ImageSelected {
 
-    EmojiconEditText etMessage;
+    EmojiEditText etMessage;
     ImageView ivSend,ivProfile,ivBack,ivStatus;
     String RecieverPhone;
     FirebaseDatabase database;
@@ -361,7 +359,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 //        EmojIconActions emojIcon=new EmojIconActions(this,null,etMessage,null,"#495C66","#DCE1E2","#E6EBEF");
 //        emojIcon.ShowEmojIcon();
 //        emojIcon.setUseSystemEmoji(true);
-        etMessage.setUseSystemDefault(true);
 
         ivProfile = findViewById(R.id.ivProfile);
         ivBack = findViewById(R.id.ivBack);
