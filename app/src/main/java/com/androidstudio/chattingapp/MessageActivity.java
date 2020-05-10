@@ -1342,7 +1342,9 @@ if(getIntent().getIntExtra("path",1)==2) {
         public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
 
             int swipeFlags;
-            if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 60 || chats.get(viewHolder.getAdapterPosition()).getType().equals("typing"))){
+            if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3
+                    || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 60 || chats.get(viewHolder.getAdapterPosition()).getType().equals("typing")
+            || chats.get(viewHolder.getAdapterPosition()).getType().equals("unread") || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -3)){
 
                 if(chats.get(viewHolder.getAdapterPosition()).getSender().equals(RecieverPhone)) {
                     swipeFlags = ItemTouchHelper.END;
