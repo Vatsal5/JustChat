@@ -164,6 +164,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     ChildEventListener imagereceiver;
     ValueEventListener Status;
 
+    ImageView emojibtn;
     Ringtone sent,received;
 
     OnCompleteListener SendMesage;
@@ -221,6 +222,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         RecieverPhone = getIntent().getStringExtra("phone");
         ApplicationClass.CurrentReceiver = RecieverPhone;
+        emojibtn=findViewById(R.id.emoji_btn);
 
         sent = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/sharp"));
         received = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/received"));
@@ -365,12 +367,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ivStatus = findViewById(R.id.ivStatus);
         tvMode = findViewById(R.id.tvMode);
         llMessageActivity = findViewById(R.id.llMessageActivity);
-
-        EmojIconActions emojIcon= new EmojIconActions(this, llMessageActivity, etMessage,
-                ivSend );
-
-        emojIcon.ShowEmojIcon() 
-        emojIcon.setIconsIds(R.drawable.ic_action_keyboard,R.drawable.smiley);
+        EmojIconActions emojIcon= new EmojIconActions(this,llMessageActivity,etMessage,emojibtn);
+        emojIcon.setUseSystemEmoji(true);
+        etMessage.setUseSystemDefault(true);
 
         tvMode.setOnClickListener(new View.OnClickListener() {
             @Override
