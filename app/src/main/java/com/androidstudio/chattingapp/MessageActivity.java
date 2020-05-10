@@ -367,6 +367,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ivStatus = findViewById(R.id.ivStatus);
         tvMode = findViewById(R.id.tvMode);
         llMessageActivity = findViewById(R.id.llMessageActivity);
+
         EmojIconActions  emojIcon=new EmojIconActions(this,llMessageActivity,etMessage,emojibtn);
         emojIcon.ShowEmojIcon();
         emojIcon.setIconsIds(R.drawable.ic_action_keyboard,R.drawable.smiley);
@@ -916,7 +917,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                 Log.d("Received","Image");
 
 
-                MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(15), "image", 0,time,date,"null",dataSnapshot.getKey());
+                MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(15), "image", 0,time,date,"null","null");
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 
                 if(chats.size()!=0) {
@@ -1057,7 +1058,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                 date=dataSnapshot.getValue(String.class).substring(5,15);
                 uri=dataSnapshot.getValue(String.class).substring(15);
 
-                MessageModel messageModel = new MessageModel(-1,RecieverPhone,sender,uri,"video",101,time,date,"null",dataSnapshot.getKey());
+                MessageModel messageModel = new MessageModel(-1,RecieverPhone,sender,uri,"video",101,time,date,"null","null");
 
 
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
@@ -1152,8 +1153,10 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                 for(int i=chats.size()-1;i>=0;i--)
                 {
+
                     if(chats.get(i).getFirebaseId().equals(snmessage))
                     {
+                        Log.d("aass",chats.get(i).getReciever());
                         if(type.equals("text")){
 
                             chats.get(i).setDownloaded(-4);
@@ -1200,7 +1203,7 @@ if(getIntent().getIntExtra("path",1)==2) {
             }
         };
 
-        reference.child("users").child(RecieverPhone).child(sender).child("info").child("seenmessages").addChildEventListener(messageseen);
+        reference.child("users").child(RecieverPhone).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("info").child("seenmessages").addChildEventListener(messageseen);
 
 
         chreceiver = new ChildEventListener() {
@@ -1222,7 +1225,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                         reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 
-                        MessageModel messageModel = new MessageModel(435, RecieverPhone, sender, dataSnapshot.getValue().toString().substring(15), "text", -1,time,date,"null",dataSnapshot.getKey());
+                        MessageModel messageModel = new MessageModel(435, RecieverPhone, sender, dataSnapshot.getValue().toString().substring(15), "text", -1,time,date,"null","null");
 
                         if(chats.size()!=0) {
                             if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {

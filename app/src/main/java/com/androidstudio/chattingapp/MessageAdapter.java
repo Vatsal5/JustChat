@@ -46,6 +46,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
+
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
@@ -93,7 +95,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTime,tvDate,tvSender,tvError;
-        EmojiTextView tvMessage;
+        EmojiconTextView tvMessage;
         ImageView ivImage,ivPlay,ivProfile,ivTyping,ivSeen;
         ProgressBar progress;
         LinearLayout llMesageLeft,llTyping,llDownload;

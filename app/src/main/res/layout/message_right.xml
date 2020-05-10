@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:emojicon="http://schemas.android.com/tools"
     android:layout_marginBottom="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,11 +17,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-    <androidx.emoji.widget.EmojiTextView
+    <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
         android:id="@+id/tvMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
+        emojicon:emojiconSize="20sp"
         android:textColor="#ffffff"
         android:layout_marginTop="2dp"
         android:paddingTop="3dp"
@@ -29,7 +31,7 @@
         android:paddingBottom="7dp"
         android:maxWidth="200dp"
         android:minHeight="50dp"
-        android:minWidth="65dp"
+        android:minWidth="70dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/ivSeen"/>
@@ -44,8 +46,8 @@
             android:visibility="gone"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginRight="7dp"
-            android:layout_marginTop="7dp" />
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp" />
 
     <TextView
         android:id="@+id/tvTime"

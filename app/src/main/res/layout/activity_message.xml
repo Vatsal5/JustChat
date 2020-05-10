@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
     tools:context=".MessageActivity"
     android:id="@+id/llMessageActivity">
 
@@ -111,28 +112,30 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
+        <ImageView
+            android:id="@+id/emoji_btn"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:padding="4dp"
+            android:layout_weight="1"
+            android:tint="#FFFFFF"
+            app:srcCompat="@drawable/smiley"
+            />
+
         <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
             android:id="@+id/etMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
             android:layout_marginRight="2dp"
             android:layout_weight="7"
+            emojicon:emojiconSize="28sp"
             android:background="@drawable/edittext_background"
             android:hint="Type a message"
             android:padding="10dp"
             android:drawableRight="@drawable/attachment"
             android:textColor="#d6514a"
             android:textSize="16sp" />
-        <ImageView
-            android:id="@+id/emoji_btn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:padding="4dp"
-            app:srcCompat="@drawable/smiley"
-            />
 
         <ImageView
             android:id="@+id/ivSend"
@@ -141,12 +144,12 @@
 
             android:layout_marginLeft="2dp"
             android:layout_marginRight="4dp"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:background="@drawable/image_background"
             android:backgroundTint="#ffffff"
             android:clickable="true"
-            android:padding="11dp"
+            android:padding="8dp"
+            android:layout_weight="1"
             app:srcCompat="@drawable/send" />
 
     </LinearLayout>

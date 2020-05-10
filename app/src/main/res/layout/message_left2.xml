@@ -3,6 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:emojicon="http://schemas.android.com/tools"
     android:layout_marginLeft="8dp"
     android:layout_marginBottom="8dp"
     android:background="#00ffffff"
@@ -40,17 +41,18 @@
             android:textColor="#FFFFFF"/>
 
 
-        <androidx.emoji.widget.EmojiTextView
+        <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:paddingTop="3dp"
+            android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:minHeight="38dp"
             android:maxWidth="200dp"
+            emojicon:emojiconSize="20sp"
             android:minWidth="32dp"
             android:textColor="#ffffff"
             android:textSize="14sp" />
