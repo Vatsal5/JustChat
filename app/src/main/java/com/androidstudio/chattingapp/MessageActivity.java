@@ -366,11 +366,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         tvMode = findViewById(R.id.tvMode);
         llMessageActivity = findViewById(R.id.llMessageActivity);
 
-        EmojIconActions emojIcon= new EmojIconActions(this, llMessageActivity, etMessage,
-                ivSend );
-
-        emojIcon.ShowEmojIcon() 
-        emojIcon.setIconsIds(R.drawable.ic_action_keyboard,R.drawable.smiley);
+//        EmojIconActions emojIcon= new EmojIconActions(this, llMessageActivity, etMessage,
+//                ivSend );
+//
+//        emojIcon.ShowEmojIcon() ;
+//        emojIcon.setIconsIds(R.drawable.ic_action_keyboard,R.drawable.smiley);
 
         tvMode.setOnClickListener(new View.OnClickListener() {
             @Override
