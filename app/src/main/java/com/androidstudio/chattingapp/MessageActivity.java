@@ -58,7 +58,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.emoji.widget.EmojiEditText;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -620,16 +619,15 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         Messages.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
-                if(i3<i7)
-                {
-                    Messages.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Messages.scrollToPosition(chats.size()-1);
-                        }
-                    },20);
+                if(i3<i7) {
+                        Messages.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Messages.scrollToPosition(chats.size() - 1);
+                            }
+                        }, 20);
+                    }
                 }
-            }
         });
 
         manager = new LinearLayoutManager(MessageActivity.this);

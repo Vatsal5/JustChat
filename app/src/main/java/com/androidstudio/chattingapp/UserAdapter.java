@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.emoji.widget.EmojiTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -35,6 +34,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
@@ -327,7 +328,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
        final ImageView iv,ivStatus,ivImage,ivBackground;
         TextView tvMessageNum,tvUserName,time;
-        EmojiTextView tvlastmessage;
+        EmojiconTextView tvlastmessage;
         ConstraintLayout innerConstraintLayout;
 
 
