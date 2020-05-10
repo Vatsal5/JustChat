@@ -181,7 +181,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Mode", 0);
         defaultvalue = pref.getString("mode" + RecieverPhone, "null");
-        Log.d("mode", defaultvalue);
+    //    Log.d("mode", defaultvalue);
 
         if (defaultvalue.equals("private")) {
             tvMode.setText("Private");

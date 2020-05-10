@@ -79,6 +79,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 import static com.androidstudio.chattingapp.MessageActivity.getPath;
@@ -90,7 +92,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     RecyclerView Messages;
     TextView tvTitle,tvMode;
     ArrayList<String> membernumber;
-    EditText etMessage;
+    EmojiconEditText etMessage;
     ConstraintLayout llMessageActivity2;
     ConstraintLayout rl;
     LinearLayout ll;
@@ -101,6 +103,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     SharedPreferences preftheme;
 
     Ringtone sent,received;
+    ImageView emojibtn;
 
     LinearLayoutManager manager;
     MessageAdapter adapter;
@@ -108,8 +111,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     ArrayList<MessageModel> chats;
     DBHandler Handler;
     int y=0,z=0;
-    String sender;
-    ChildEventListener imagereceiver, videoreceiver, chreceiver; ValueEventListener deletevideo,deleteimage;
+     String sender;
+    ChildEventListener imagereceiver, videoreceiver, chreceiver,seenmessages; ValueEventListener deletevideo,deleteimage,set,set1,set2;
     String defaultvalue;
     SharedPreferences pref,wallpaper;
     RecyclerView.AdapterDataObserver observer;
@@ -124,6 +127,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Mode", 0);
         defaultvalue = pref.getString("mode" + groupKey, "null");
+
 
         if (defaultvalue.equals("private")) {
             tvMode.setText("Private");
@@ -163,6 +167,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         groupKey = getIntent().getStringExtra("groupkey");
         ApplicationClass.CurrentReceiver = groupKey;
+        emojibtn=findViewById(R.id.emoji_btn);
 
         ApplicationClass.MessageActivity2Context = MessageActivity2.this;
         membernumber=new ArrayList<>();
@@ -264,11 +269,17 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         ivSend = findViewById(R.id.ivSend);
         rf = FirebaseStorage.getInstance().getReference("docs/");
         etMessage = findViewById(R.id.etMessage);
+        llMessageActivity2 = findViewById(R.id.llMessageActivity2);
+
+        EmojIconActions emojIcon=new EmojIconActions(this,llMessageActivity2,etMessage,emojibtn);
+        emojIcon.ShowEmojIcon();
+        emojIcon.setIconsIds(R.drawable.ic_action_keyboard,R.drawable.smiley);
+
         tvTitle = findViewById(R.id.title);
         ivBack = findViewById(R.id.ivBack);
         tvMode = findViewById(R.id.tvMode);
         rl = findViewById(R.id.rl);
-        llMessageActivity2 = findViewById(R.id.llMessageActivity2);
+
 
         tvTitle.setText(groupname);
 
@@ -606,16 +617,71 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         });
 
+        seenmessages= new ChildEventListener(){
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("m")))==0)
+                {
+
+                    dataSnapshot.getRef().removeValue();
+                }
+                else if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("m")))<membernumber.size())
+                {
+
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(FirebaseAuth
+                .getInstance().getCurrentUser().getPhoneNumber()).addChildEventListener(seenmessages);
 
         imagereceiver = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                String time, date, sender;
+                final String time, date, sender;
 
                 time = dataSnapshot.getValue(String.class).substring(0, 11);
                 date = dataSnapshot.getValue(String.class).substring(11, 21);
 
                 sender = dataSnapshot.getValue(String.class).substring(21, 34);
+
+                set= new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                .setValue(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("m")))-1
+                                + dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m")));
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                .removeEventListener(set);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                };
+                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                        .addListenerForSingleValueEvent(set);
+
 
 
 
@@ -683,7 +749,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         videoreceiver = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                String time, date,sender;
+                final String time, date,sender;
                 String uri;
 
 
@@ -691,6 +757,23 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 date = dataSnapshot.getValue(String.class).substring(11, 21);
                 uri = dataSnapshot.getValue(String.class).substring(34);
                 sender = dataSnapshot.getValue(String.class).substring(21,34);
+                set1= new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                .setValue(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("m")))-1
+                                        + dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m")));
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                .removeEventListener(set1);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                };
+                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                        .addListenerForSingleValueEvent(set1);
 
                 MessageModel messageModel = new MessageModel(-1,sender,"null",uri,"video",101,time,date,groupname,dataSnapshot.getKey());
 
@@ -762,7 +845,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
-                String time, date,sender;
+                final String time, date,sender;
 
 //                if (!(dataSnapshot.getKey().equals("message"))) {
 //                    if (dataSnapshot.getKey().equals("info")) {
@@ -774,6 +857,23 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         time=dataSnapshot.getValue().toString().substring(0,11);
                         date=dataSnapshot.getValue().toString().substring(11,21);
                         sender = dataSnapshot.getValue(String.class).substring(21,34);
+                set2= new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                .setValue(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("m")))-1
+                                        + dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m")));
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                .removeEventListener(set2);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                };
+                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                        .addListenerForSingleValueEvent(set2);
 //
 //                        reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 //
@@ -1454,10 +1554,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             if(!Messages.isComputingLayout())
                 adapter.notifyItemChanged(index);
 
+            String push= FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages")
+                    .child(membernumber.get(0)).push().getKey();
+                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(FirebaseAuth
+                        .getInstance().getCurrentUser().getPhoneNumber()).child(push).setValue(membernumber.size()+"mtext");
 
             for(int i=0;i<membernumber.size();i++) {
                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages")
-                        .child(membernumber.get(i)).push().setValue(
+                        .child(membernumber.get(i)).child(push).setValue(
                         model.getTime() + model.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + model.getMessage())
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -2008,13 +2112,19 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                         child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(numberOfMembers + message.getDate()+  uri.toString());
 
+                                 String push=FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(membernumber.get(0)).
+
+                                          push().getKey();
+
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(FirebaseAuth
+                                .getInstance().getCurrentUser().getPhoneNumber()).child(push).setValue(membernumber.size()+"mimage");
 
 
                                 for(int i=0;i<membernumber.size();i++) {
 
                                     FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(membernumber.get(i)).
 
-                                            push().setValue(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + uri.toString());
+                                            child(push).setValue(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + uri.toString());
 
                                     if(y[0] ==0) {
                                         y[0] =1;
@@ -2073,6 +2183,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             @Override
                             public void onSuccess(Uri uri) {
 
+                                String push= FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).
+                                        child("videos").child(membernumber.get(0)).
+                                        push().getKey();
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(FirebaseAuth
+                                        .getInstance().getCurrentUser().getPhoneNumber()).child(push).setValue(membernumber.size()+"mvideo");
                                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletevideos").
 
                                         child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() ).setValue(numberOfMembers+message.getDate() + uri.toString());
@@ -2081,7 +2196,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                     FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).
                                             child("videos").child(membernumber.get(i)).
-                                            push().setValue(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + uri.toString());
+                                            child(push).setValue(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + uri.toString());
 
                                     if (z[0] == 0) {
                                         z[0] = 1;
@@ -2137,6 +2252,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(chreceiver);
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(FirebaseAuth
+                .getInstance().getCurrentUser().getPhoneNumber()).removeEventListener(seenmessages);
 
         adapter.unregisterAdapterDataObserver(observer);
         ApplicationClass.CurrentReceiver="";
