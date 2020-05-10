@@ -159,12 +159,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     ChildEventListener chreceiver,videoreceiver,messageseen;
 
     DBHandler Handler;
+    ImageView emojibtn;
     int l;
     int flag=0;
     ChildEventListener imagereceiver;
     ValueEventListener Status;
 
-    ImageView emojibtn;
     Ringtone sent,received;
 
     OnCompleteListener SendMesage;
@@ -222,7 +222,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         RecieverPhone = getIntent().getStringExtra("phone");
         ApplicationClass.CurrentReceiver = RecieverPhone;
-        emojibtn=findViewById(R.id.emoji_btn);
 
         sent = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/sharp"));
         received = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/received"));
@@ -230,6 +229,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ll=findViewById(R.id.ll);
         ivSend = findViewById(R.id.ivSend);
         preftheme=getSharedPreferences("theme",0);
+        emojibtn=findViewById(R.id.emoji_btn);
 
         pref1 = getSharedPreferences("Names",0);
         wallpaper = getSharedPreferences("Wallpaper",0);
@@ -367,9 +367,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ivStatus = findViewById(R.id.ivStatus);
         tvMode = findViewById(R.id.tvMode);
         llMessageActivity = findViewById(R.id.llMessageActivity);
-        EmojIconActions emojIcon= new EmojIconActions(this,llMessageActivity,etMessage,emojibtn);
-        emojIcon.setUseSystemEmoji(true);
-        etMessage.setUseSystemDefault(true);
+        EmojIconActions  emojIcon=new EmojIconActions(this,llMessageActivity,etMessage,emojibtn);
+        emojIcon.ShowEmojIcon();
+        emojIcon.setIconsIds(R.drawable.ic_action_keyboard,R.drawable.smiley);
 
         tvMode.setOnClickListener(new View.OnClickListener() {
             @Override

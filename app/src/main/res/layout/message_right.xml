@@ -5,24 +5,14 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp">
 
-    <ImageView
-        android:id="@+id/ivSeen"
-        android:layout_width="18sp"
-        android:layout_height="22dp"
-        app:srcCompat="@drawable/tick"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:visibility="invisible"
-        android:layout_marginRight="4dp" />
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llMessageRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minHeight="50dp"
-        android:layout_marginRight="2dp"
+        android:layout_marginRight="16dp"
         android:background="@drawable/background_right"
-        app:layout_constraintRight_toLeftOf="@+id/ivSeen"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -36,10 +26,26 @@
         android:paddingTop="3dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingBottom="5dp"
+        android:paddingBottom="7dp"
         android:maxWidth="200dp"
         android:minHeight="50dp"
-        android:minWidth="50dp" />
+        android:minWidth="65dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/ivSeen"/>
+
+        <ImageView
+            android:id="@+id/ivSeen"
+            android:layout_width="18sp"
+            android:layout_height="18dp"
+            android:padding="2dp"
+            app:srcCompat="@drawable/tick"
+            android:tint="#ffffff"
+            android:visibility="gone"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="2dp" />
 
     <TextView
         android:id="@+id/tvTime"
@@ -49,8 +55,10 @@
         android:layout_gravity="bottom"
         android:layout_marginBottom="1dp"
         android:layout_marginRight="5dp"
-        android:textColor="#DFDBDB"/>
+        android:textColor="#DFDBDB"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

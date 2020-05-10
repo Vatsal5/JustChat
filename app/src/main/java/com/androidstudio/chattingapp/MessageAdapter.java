@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
 import androidx.emoji.widget.EmojiTextView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -95,7 +96,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         EmojiTextView tvMessage;
         ImageView ivImage,ivPlay,ivProfile,ivTyping,ivSeen;
         ProgressBar progress;
-        LinearLayout llMessageRight,llMesageLeft,llTyping,llDownload;
+        LinearLayout llMesageLeft,llTyping,llDownload;
+        ConstraintLayout llMessageRight;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -300,7 +302,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
                 if (messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                     holder.ivImage.setBackgroundResource(R.drawable.background_right);
-                    holder.ivSeen.setVisibility(View.INVISIBLE);
+                    holder.ivSeen.setVisibility(View.GONE);
                 }
                 else
                     setBackground(holder.ivImage);
@@ -352,7 +354,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
             holder.tvError.setVisibility(View.GONE);
-            holder.ivSeen.setVisibility(View.INVISIBLE);
+            holder.ivSeen.setVisibility(View.GONE);
 
 
             Glide.with(context.getApplicationContext()).load(messages.get(holder.getAdapterPosition()).getMessage()).into(holder.ivImage);
@@ -364,7 +366,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
             holder.tvError.setVisibility(View.GONE);
-            holder.ivSeen.setVisibility(View.INVISIBLE);
+            holder.ivSeen.setVisibility(View.GONE);
 
             Glide.with(context.getApplicationContext()).load(messages.get(holder.getAdapterPosition()).getMessage()).into(holder.ivImage);
         }else if(messages.get(holder.getAdapterPosition()).getDownloaded() == 4) // when request has been sent to download image
@@ -380,7 +382,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         {
             holder.tvMessage.setText(messages.get(holder.getAdapterPosition()).getMessage());
             holder.llMessageRight.setBackgroundResource(R.drawable.orange2);
-            holder.ivSeen.setVisibility(View.INVISIBLE);
+            holder.ivSeen.setVisibility(View.GONE);
             Activity.sentTextMessage(holder.getAdapterPosition());
         } else if (messages.get(holder.getAdapterPosition()).getDownloaded() == -3) // when request has been sent to listener
         {
@@ -388,7 +390,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             if (holder.llMessageRight != null) {
                 holder.llMessageRight.setBackgroundResource(R.drawable.orange2);
-                holder.ivSeen.setVisibility(View.INVISIBLE);
+                holder.ivSeen.setVisibility(View.GONE);
             }
         } else if (messages.get(holder.getAdapterPosition()).getDownloaded() == -1) // if text message is sent or received successfully
         {
@@ -396,7 +398,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             if (holder.llMessageRight != null) {
                 holder.llMessageRight.setBackgroundResource(R.drawable.background_right);
-                holder.ivSeen.setVisibility(View.INVISIBLE);
+                holder.ivSeen.setVisibility(View.GONE);
             }
 
             if(holder.llMesageLeft!=null)
@@ -415,7 +417,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivPlay.setVisibility(View.GONE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
             holder.tvError.setVisibility(View.GONE);
-            holder.ivSeen.setVisibility(View.INVISIBLE);
+            holder.ivSeen.setVisibility(View.GONE);
 
             holder.ivImage.setClickable(false);
 
@@ -428,7 +430,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
             holder.ivPlay.setVisibility(View.GONE);
             holder.tvError.setVisibility(View.GONE);
-            holder.ivSeen.setVisibility(View.INVISIBLE);
+            holder.ivSeen.setVisibility(View.GONE);
 
             holder.ivImage.setClickable(false);
         }
@@ -462,7 +464,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             if (messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                 holder.ivImage.setBackgroundResource(R.drawable.background_right);
-                holder.ivSeen.setVisibility(View.INVISIBLE);
+                holder.ivSeen.setVisibility(View.GONE);
             }
 
             else {
