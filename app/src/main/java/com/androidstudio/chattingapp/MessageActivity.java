@@ -1105,6 +1105,38 @@ if(getIntent().getIntExtra("path",1)==2) {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
+                String snmessage = dataSnapshot.getKey();
+                String type = dataSnapshot.getValue(String.class);
+
+                Handler.UpdateMessageByFirebaseID(snmessage,type);
+
+                for(int i=chats.size()-1;i>=0;i--)
+                {
+                    if(chats.get(i).getFirebaseId().equals(snmessage))
+                    {
+                        if(type.equals("text")){
+
+                            chats.get(i).setDownloaded(-4);
+
+                        }else if(type.equals("image")){
+
+                            chats.get(i).setDownloaded(5);
+
+                        }
+                        else if(type.equals("video")){
+
+                            chats.get(i).setDownloaded(105);
+
+                        }
+
+                        if(!Messages.isComputingLayout())
+                            adapter.notifyItemChanged(i);
+
+                        dataSnapshot.getRef().removeValue();
+
+                        break;
+                    }
+                }
 
             }
 
@@ -1114,25 +1146,6 @@ if(getIntent().getIntExtra("path",1)==2) {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-
-                     String snmessage = dataSnapshot.getKey();
-
-                     for(int i=chats.size()-1;i>=0;i--)
-                     {
-                         if(chats.get(i).getFirebaseId().equals(snmessage))
-                         {
-                             MessageModel messageModel = chats.get(i);
-                             messageModel.setDownloaded(-4);
-                             Handler.UpdateMessageByFirebaseID(messageModel);
-
-                             chats.get(i).setDownloaded(-4);
-                             if(!Messages.isComputingLayout())
-                                 adapter.notifyItemChanged(i);
-
-                             break;
-                         }
-                     }
 
             }
 
@@ -2578,9 +2591,9 @@ if(getIntent().getIntExtra("path",1)==2) {
 
         String push= reference.child("users").child(sender).child(RecieverPhone).push().getKey();
         message.setFirebaseId(push);
-        reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                child(message.getReciever()).child("info").
-                child("seenmessages").child(push).setValue("text");
+//        reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+//                child(message.getReciever()).child("info").
+//                child("seenmessages").child(push).setValue("text");
         reference.child("users").child(sender).child(RecieverPhone).child(push).setValue(message.getTime()+date.toString() +message.getMessage().trim()).addOnCompleteListener(SendMesage);
     }
 

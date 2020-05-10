@@ -199,21 +199,20 @@ public class DBHandler
         return database.update(DATABASE_TABLE,values,KEY_ID+"=?",new String[] {message.getId()+""});
     }
 
-    public long UpdateMessageByFirebaseID(MessageModel message)
+    public long UpdateMessageByFirebaseID(String firebaseId,String type)
     {
         ContentValues values = new ContentValues();
 
-        values.put(KEY_SENDER,message.getSender());
-        values.put(KEY_RECEIVER,message.getReciever());
-        values.put(KEY_MESSAGE,message.getMessage());
-        values.put(KEY_TYPE,message.getType());
-        values.put(KEY_ISDOWNLOADED,message.getDownloaded());
-        values.put(KEY_TIME,message.getTime());
-        values.put(KEY_DATE,message.getDate());
-        values.put(KEY_GROUPNAME,message.getGroupName());
-        values.put(KEY_FIREBASEID,message.getFirebaseId());
+        //Cursor cursor = database.rawQuery("Select * from "+DATABASE_TABLE+" where "+KEY_FIREBASEID+" = "+firebaseId ,null);
 
-        return database.update(DATABASE_TABLE,values,KEY_FIREBASEID+"=?",new String[] {message.getFirebaseId()+""});
+        if(type.equals("text"))
+            values.put(KEY_ISDOWNLOADED,-4);
+        else if(type.equals("image"))
+            values.put(KEY_ISDOWNLOADED,5);
+        else if(type.equals("video"))
+            values.put(KEY_ISDOWNLOADED,105);
+
+        return database.update(DATABASE_TABLE,values,KEY_FIREBASEID+"=?",new String[] {firebaseId+""});
     }
 
     public long DeleteMessage(MessageModel message)
