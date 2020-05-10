@@ -360,18 +360,17 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         defaultvalue = pref.getString("mode"+RecieverPhone,"null");
         etMessage = findViewById(R.id.etMessage);
 
-        EmojIconActions emojIcon= new EmojIconActions(this, llMessageActivity, etMessage,
-                ivSend );
-
-        emojIcon.ShowEmojIcon() 
-        emojIcon.setIconsIds(R.drawable.ic_action_keyboard,R.drawable.smiley);
-
         ivProfile = findViewById(R.id.ivProfile);
         ivBack = findViewById(R.id.ivBack);
         ivStatus = findViewById(R.id.ivStatus);
         tvMode = findViewById(R.id.tvMode);
         llMessageActivity = findViewById(R.id.llMessageActivity);
 
+        EmojIconActions emojIcon= new EmojIconActions(this, llMessageActivity, etMessage,
+                ivSend );
+
+        emojIcon.ShowEmojIcon() 
+        emojIcon.setIconsIds(R.drawable.ic_action_keyboard,R.drawable.smiley);
 
         tvMode.setOnClickListener(new View.OnClickListener() {
             @Override
