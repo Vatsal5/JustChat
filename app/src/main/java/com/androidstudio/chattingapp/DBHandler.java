@@ -199,18 +199,28 @@ public class DBHandler
         return database.update(DATABASE_TABLE,values,KEY_ID+"=?",new String[] {message.getId()+""});
     }
 
-    public long UpdateMessageByFirebaseID(String firebaseId,String type)
+    public long UpdateMessageByFirebaseID(String firebaseId,String type,int seenbyall)
     {
         ContentValues values = new ContentValues();
 
         //Cursor cursor = database.rawQuery("Select * from "+DATABASE_TABLE+" where "+KEY_FIREBASEID+" = "+firebaseId ,null);
 
-        if(type.equals("text"))
-            values.put(KEY_ISDOWNLOADED,-4);
-        else if(type.equals("image"))
-            values.put(KEY_ISDOWNLOADED,5);
-        else if(type.equals("video"))
-            values.put(KEY_ISDOWNLOADED,105);
+        if(seenbyall==1) {
+            if (type.equals("text"))
+                values.put(KEY_ISDOWNLOADED, -5);
+            else if (type.equals("image"))
+                values.put(KEY_ISDOWNLOADED, 6);
+            else if (type.equals("video"))
+                values.put(KEY_ISDOWNLOADED, 106);
+        }
+        else{
+            if (type.equals("text"))
+                values.put(KEY_ISDOWNLOADED, -4);
+            else if (type.equals("image"))
+                values.put(KEY_ISDOWNLOADED, 5);
+            else if (type.equals("video"))
+                values.put(KEY_ISDOWNLOADED, 105);
+        }
 
         return database.update(DATABASE_TABLE,values,KEY_FIREBASEID+"=?",new String[] {firebaseId+""});
     }

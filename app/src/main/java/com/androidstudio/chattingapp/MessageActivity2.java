@@ -345,6 +345,20 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         Messages = findViewById(R.id.Messages);
         Messages.setHasFixedSize(true);
 
+        Messages.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                if(i3<i7) {
+                    Messages.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Messages.scrollToPosition(chats.size() - 1);
+                        }
+                    }, 1);
+                }
+            }
+        });
+
         manager = new LinearLayoutManager(this);
         Messages.setLayoutManager(manager);
 
@@ -354,6 +368,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         chats = new ArrayList<>();
 
         adapter = new MessageAdapter(MessageActivity2.this, chats);
+        adapter.setHasStableIds(true);
         Messages.setAdapter(adapter);
 
         observer = new RecyclerView.AdapterDataObserver() {
@@ -620,20 +635,145 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         seenmessages= new ChildEventListener(){
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                String key = dataSnapshot.getKey();
+                String type = dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m")+1);
+
+                Log.d("asdf",type);
+
                 if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("m")))==0)
                 {
+                    Handler.UpdateMessageByFirebaseID(key,type,1);
+
+                    for(int i=chats.size()-1;i>=0;i--)
+                    {
+
+                        if(chats.get(i).getFirebaseId().equals(key))
+                        {
+                            Log.d("aass",chats.get(i).getReciever());
+                            if(type.equals("text")){
+
+                                chats.get(i).setDownloaded(-5);
+
+                            }else if(type.equals("image")){
+
+                                chats.get(i).setDownloaded(6);
+
+                            }
+                            else if(type.equals("video")){
+
+                                chats.get(i).setDownloaded(106);
+
+                            }
+
+                            if(!Messages.isComputingLayout())
+                                adapter.notifyItemChanged(i);
+
+                            break;
+                        }
+                    }
 
                     dataSnapshot.getRef().removeValue();
                 }
                 else if(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("m")))<membernumber.size())
                 {
+                    Handler.UpdateMessageByFirebaseID(key,type,0);
 
+                    for(int i=chats.size()-1;i>=0;i--)
+                    {
+
+                        if(chats.get(i).getFirebaseId().equals(key))
+                        {
+
+                            if(!((chats.get(i).getDownloaded()==-4) || (chats.get(i).getDownloaded()==5) || (chats.get(i).getDownloaded()==105))) {
+                                if (type.equals("text")) {
+
+                                    chats.get(i).setDownloaded(-4);
+
+                                } else if (type.equals("image")) {
+
+                                    chats.get(i).setDownloaded(5);
+
+                                } else if (type.equals("video")) {
+
+                                    chats.get(i).setDownloaded(105);
+
+                                }
+
+                                if (!Messages.isComputingLayout())
+                                    adapter.notifyItemChanged(i);
+                            }
+                        }
+                        break;
+                    }
                 }
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                String key = dataSnapshot.getKey();
+                String type = dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m") + 1);
 
+                Log.d("asdf", type);
+
+                if (Integer.parseInt(dataSnapshot.getValue().toString().substring(0, dataSnapshot.getValue().toString().indexOf("m"))) == 0) {
+                    Handler.UpdateMessageByFirebaseID(key, type, 1);
+
+                    for (int i = chats.size() - 1; i >= 0; i--) {
+
+                        if (chats.get(i).getFirebaseId().equals(key)) {
+                            Log.d("aass", chats.get(i).getReciever());
+                            if (type.equals("text")) {
+
+                                chats.get(i).setDownloaded(-5);
+
+                            } else if (type.equals("image")) {
+
+                                chats.get(i).setDownloaded(6);
+
+                            } else if (type.equals("video")) {
+
+                                chats.get(i).setDownloaded(106);
+
+                            }
+
+                            if (!Messages.isComputingLayout())
+                                adapter.notifyItemChanged(i);
+
+                            break;
+                        }
+                    }
+
+                    dataSnapshot.getRef().removeValue();
+                } else if (Integer.parseInt(dataSnapshot.getValue().toString().substring(0, dataSnapshot.getValue().toString().indexOf("m"))) < membernumber.size()) {
+                    Handler.UpdateMessageByFirebaseID(key, type, 0);
+
+                    for (int i = chats.size() - 1; i >= 0; i--) {
+
+                        if (chats.get(i).getFirebaseId().equals(key)) {
+
+                            if (!((chats.get(i).getDownloaded() == -4) || (chats.get(i).getDownloaded() == 5) || (chats.get(i).getDownloaded() == 105))) {
+                                if (type.equals("text")) {
+
+                                    chats.get(i).setDownloaded(-4);
+
+                                } else if (type.equals("image")) {
+
+                                    chats.get(i).setDownloaded(5);
+
+                                } else if (type.equals("video")) {
+
+                                    chats.get(i).setDownloaded(105);
+
+                                }
+
+                                if (!Messages.isComputingLayout())
+                                    adapter.notifyItemChanged(i);
+                            }
+                        }
+                        break;
+                    }
+                }
             }
 
             @Override
@@ -685,7 +825,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
 
 
-                MessageModel messageModel = new MessageModel(-1, sender, "null", dataSnapshot.getValue(String.class).substring(34), "image", 0, time, date, groupname,dataSnapshot.getKey());
+                MessageModel messageModel = new MessageModel(-1, sender, "null", dataSnapshot.getValue(String.class).substring(34), "image", 0, time, date, groupname,"null");
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
 
                 if (chats.size() != 0) {
@@ -775,7 +915,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
                         .addListenerForSingleValueEvent(set1);
 
-                MessageModel messageModel = new MessageModel(-1,sender,"null",uri,"video",101,time,date,groupname,dataSnapshot.getKey());
+                MessageModel messageModel = new MessageModel(-1,sender,"null",uri,"video",101,time,date,groupname,"null");
 
 
                 //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
@@ -877,7 +1017,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 //
 //                        reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 //
-                        MessageModel messageModel = new MessageModel(435, sender, "null", dataSnapshot.getValue().toString().substring(34), "text", -1,time,date,groupname,dataSnapshot.getKey());
+                        MessageModel messageModel = new MessageModel(435, sender, "null", dataSnapshot.getValue().toString().substring(34), "text", -1,time,date,groupname,"null");
 
                         if(chats.size()!=0) {
                             if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
@@ -1554,7 +1694,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             if(!Messages.isComputingLayout())
                 adapter.notifyItemChanged(index);
 
-            String push= FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages")
+            final String push= FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages")
                     .child(membernumber.get(0)).push().getKey();
                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(FirebaseAuth
                         .getInstance().getCurrentUser().getPhoneNumber()).child(push).setValue(membernumber.size()+"mtext");
@@ -1568,10 +1708,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             public void onSuccess(Void aVoid) {
                                 if (x[0] == 0) {
                                     x[0] = 1;
+                                    model.setFirebaseId(push);
                                     model.setDownloaded(-1);
                                     Handler.UpdateMessage(model);
 
                                     if (!MessageActivity2.this.isDestroyed()) {
+                                        chats.get(index).setFirebaseId(push);
                                         chats.get(index).setDownloaded(-1);
                                         sent.play();
 
@@ -2128,10 +2270,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                     if(y[0] ==0) {
                                         y[0] =1;
+                                        message.setFirebaseId(push);
                                         message.setDownloaded(1);
                                         Handler.UpdateMessage(message);
 
                                         if (!MessageActivity2.this.isDestroyed()) {
+                                            chats.get(index).setFirebaseId(push);
                                             chats.get(index).setDownloaded(1);
                                             sent.play();
 
@@ -2200,12 +2344,13 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                     if (z[0] == 0) {
                                         z[0] = 1;
-
+                                        message.setFirebaseId(push);
                                         message.setDownloaded(102);
                                         Handler.UpdateMessage(message);
 
 
                                         if (!MessageActivity2.this.isDestroyed()) {
+                                            chats.get(index).setFirebaseId(push);
                                             chats.get(index).setDownloaded(102);
                                             sent.play();
 

@@ -625,7 +625,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                             public void run() {
                                 Messages.scrollToPosition(chats.size() - 1);
                             }
-                        }, 20);
+                        }, 1);
                     }
                 }
         });
@@ -1147,7 +1147,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                 String snmessage = dataSnapshot.getKey();
                 String type = dataSnapshot.getValue(String.class);
 
-                Handler.UpdateMessageByFirebaseID(snmessage,type);
+                Handler.UpdateMessageByFirebaseID(snmessage,type,1);
 
                 for(int i=chats.size()-1;i>=0;i--)
                 {
@@ -1157,16 +1157,16 @@ if(getIntent().getIntExtra("path",1)==2) {
                         Log.d("aass",chats.get(i).getReciever());
                         if(type.equals("text")){
 
-                            chats.get(i).setDownloaded(-4);
+                            chats.get(i).setDownloaded(-5);
 
                         }else if(type.equals("image")){
 
-                            chats.get(i).setDownloaded(5);
+                            chats.get(i).setDownloaded(6);
 
                         }
                         else if(type.equals("video")){
 
-                            chats.get(i).setDownloaded(105);
+                            chats.get(i).setDownloaded(106);
 
                         }
 
@@ -2061,6 +2061,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                                 if(!MessageActivity.this.isDestroyed())
                                 {
+                                    chats.get(index).setFirebaseId(push);
                                     chats.get(index).setDownloaded(102);
                                     sent.play();
 
@@ -2133,6 +2134,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                                 if(!MessageActivity.this.isDestroyed())
                                 {
+                                    chats.get(index).setFirebaseId(push);
                                     chats.get(index).setDownloaded(1);
                                     sent.play();
 
@@ -2639,6 +2641,7 @@ if(getIntent().getIntExtra("path",1)==2) {
 
         String push= reference.child("users").child(sender).child(RecieverPhone).push().getKey();
         message.setFirebaseId(push);
+        chats.get(index).setFirebaseId(push);
 
         reference.child("users").child(sender).child(RecieverPhone).child(push).setValue(message.getTime()+date.toString() +message.getMessage().trim()).addOnCompleteListener(SendMesage);
     }

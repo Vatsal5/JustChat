@@ -31,7 +31,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="@id/ivImage"
         android:layout_marginRight="7dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="7dp"
         android:visibility="gone"/>
 
     <de.hdodenhof.circleimageview.CircleImageView

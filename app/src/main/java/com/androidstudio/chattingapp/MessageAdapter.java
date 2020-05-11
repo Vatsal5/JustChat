@@ -308,7 +308,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 else
                     setBackground(holder.ivImage);
 
-        }else if(messages.get(holder.getAdapterPosition()).getDownloaded()==5) // when image bas been "seen"
+        }else if(messages.get(holder.getAdapterPosition()).getDownloaded()==5 || messages.get(holder.getAdapterPosition()).getDownloaded()==6) // when image bas been "seen"
         {
             holder.progress.setVisibility(View.GONE);
             holder.ivImage.setClickable(false);
@@ -345,9 +345,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             {
                 holder.tvError.setVisibility(View.VISIBLE);
             }
-
             holder.ivImage.setBackgroundResource(R.drawable.background_right);
             holder.ivSeen.setVisibility(View.VISIBLE);
+
+            if(messages.get(holder.getAdapterPosition()).getDownloaded()==6){
+                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.red));
+            }
+            else
+                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.white));
         }
         else if (messages.get(holder.getAdapterPosition()).getDownloaded() == 2) // when sender sends the image
         {
@@ -405,11 +410,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             if(holder.llMesageLeft!=null)
                 setBackground(holder.llMesageLeft);
         }
-        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==-4)  //when text message has been "seen"
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==-4 || messages.get(holder.getAdapterPosition()).getDownloaded()==-5)  //when text message has been "seen"
         {
             holder.tvMessage.setText(messages.get(holder.getAdapterPosition()).getMessage());
             holder.llMessageRight.setBackgroundResource(R.drawable.background_right);
             holder.ivSeen.setVisibility(View.VISIBLE);
+
+            if(messages.get(holder.getAdapterPosition()).getDownloaded()==-5)
+                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.red));
+            else
+                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.white));
         }
         else if(messages.get(holder.getAdapterPosition()).getDownloaded()==100) // when sender sends video
         {
@@ -515,7 +525,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
         }
-        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==105) //when video has been "seen"
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==105  || messages.get(holder.getAdapterPosition()).getDownloaded()==106) //when video has been "seen"
         {
             holder.progress.setVisibility(View.GONE);
             holder.ivImage.setClickable(false);
@@ -525,6 +535,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
                 holder.ivImage.setBackgroundResource(R.drawable.background_right);
                 holder.ivSeen.setVisibility(View.VISIBLE);
+
+                if(messages.get(holder.getAdapterPosition()).getDownloaded()==106)
+                    holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.red));
+                else
+                    holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.white));
 
             RequestOptions options = new RequestOptions();
             options.diskCacheStrategy(DiskCacheStrategy.NONE);
