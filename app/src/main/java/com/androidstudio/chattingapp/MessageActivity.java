@@ -527,20 +527,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 int height = LinearLayout.LayoutParams.WRAP_CONTENT;
                                                 boolean focusable = true; // lets taps outside the popup also dismiss it
                                                 final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-                                                popupWindow.setAnimationStyle(R.style.popup_window_animation_phone);
+                                                popupWindow.setAnimationStyle(R.style.DialogTheme);
 
                                                 // show the popup window
                                                 // which view you pass in doesn't matter, it is only used for the window tolken
-                                                popupWindow.showAtLocation(Messages, Gravity.BOTTOM|Gravity.CENTER, 0,ll.getHeight()+5);
-
-                                                // dismiss the popup window when touched
-                                                popupView.setOnTouchListener(new View.OnTouchListener() {
-                                                    @Override
-                                                    public boolean onTouch(View v, MotionEvent event) {
-                                                        popupWindow.dismiss();
-                                                        return true;
-                                                    }
-                                                });
+                                                popupWindow.showAsDropDown(ll,0,5,Gravity.BOTTOM);
 
                                                 RecyclerView rvgif= popupView.findViewById(R.id.rvgif);
                                                 rvgif.setHasFixedSize(true);

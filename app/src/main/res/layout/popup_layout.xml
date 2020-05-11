@@ -2,7 +2,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="220dp"
-    android:minHeight="200dp"
+    android:minHeight="220dp"
     android:background="@drawable/background_right"
     android:backgroundTint="#E7E5E5"
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,6 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
+            android:gravity="end"
             android:queryHint="Search Here"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />

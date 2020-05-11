@@ -22,8 +22,9 @@
 
     </style>
 
-    <style name="popup_window_animation_phone">
-        <item name="android:windowEnterAnimation">@android:anim/slide_in_left</item>
+    <style name="DialogTheme">
+        <item name="android:windowEnterAnimation">@anim/slide_left</item>
+        <item name="android:windowExitAnimation">@anim/slide_right</item>
     </style>
 
 
