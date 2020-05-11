@@ -476,7 +476,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 final int DRAWABLE_RIGHT = 2;
                 final int DRAWABLE_BOTTOM = 3;
 
-                String [] choices = {"Image","Video"};
+                String [] choices = {"Image","Video","GIF"};
 
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (etMessage.getRight() - etMessage.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
@@ -514,27 +514,23 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                     startActivityForResult(intent, 100);
                                                 }
                                                 break;
+                                            case 2:
+                                                if(!flag3) {
+                                                    llgif.setVisibility(View.VISIBLE);
+                                                    flag3 = true;
+                                                }
+                                                else {
+                                                    llgif.setVisibility(View.GONE);
+                                                    flag3=false;
+                                                }
+                                                break;
                                         }
                                     }
                                 });
                         AlertDialog dialog = builder.create();
                         dialog.show();
                     }
-
-                    else if(event.getRawX() <= (etMessage.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width()))
-                    {
-                        etMessage.setShowSoftInputOnFocus(false);
-                        if(!flag3) {
-                            llgif.setVisibility(View.VISIBLE);
-                            flag3 = true;
-                        }
-                        else {
-                            llgif.setVisibility(View.GONE);
-                            flag3=false;
-                        }
-                    }
-                    else
-                        etMessage.setShowSoftInputOnFocus(true);
+                    else if()
                 }
                 return false;
             }
