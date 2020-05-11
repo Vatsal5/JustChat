@@ -529,7 +529,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
                                                 popupWindow.setAnimationStyle(R.style.DialogTheme);
 
-                                                popupWindow.showAsDropDown(Messages,0,Messages.getHeight()-300,Gravity.TOP);
+                                                popupWindow.showAsDropDown(ll,0,-5*ll.getHeight()-25,Gravity.TOP);
 
                                                 RecyclerView rvgif= popupView.findViewById(R.id.rvgif);
                                                 rvgif.setHasFixedSize(true);
@@ -579,6 +579,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                     });
 
                                                     r.add(j);
+                                                    break;
 
                                                 }
                                     }

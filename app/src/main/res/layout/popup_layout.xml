@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-    android:minHeight="220dp"
+        android:layout_height="250dp"
+    android:minHeight="250dp"
     android:background="@drawable/background_right"
     android:backgroundTint="#E7E5E5"
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -21,7 +21,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvgif"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/SearchView"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

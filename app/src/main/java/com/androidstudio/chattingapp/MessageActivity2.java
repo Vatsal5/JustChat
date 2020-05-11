@@ -2,11 +2,13 @@ package com.androidstudio.chattingapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,14 +46,23 @@ import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -65,6 +76,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -584,10 +599,13 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 final int DRAWABLE_RIGHT = 2;
                 final int DRAWABLE_BOTTOM = 3;
 
-                String[] choices = {"Image", "Video"};
+                String[] choices = {"Image", "Video","GIF"};
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
+
                     if (event.getRawX() >= (etMessage.getRight() - etMessage.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+
+                        etMessage.setShowSoftInputOnFocus(false);
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
                         builder.setTitle("Send...")
@@ -621,12 +639,77 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                                     startActivityForResult(intent, 100);
                                                 }
                                                 break;
+                                            case 2:
+                                                LayoutInflater inflater = (LayoutInflater)
+                                                        getSystemService(LAYOUT_INFLATER_SERVICE);
+                                                View popupView = inflater.inflate(R.layout.popup_layout, null);
+
+                                                // create the popup window
+                                                int width = LinearLayout.LayoutParams.MATCH_PARENT;
+                                                int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                                                boolean focusable = true; // lets taps outside the popup also dismiss it
+                                                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+                                                popupWindow.setAnimationStyle(R.style.DialogTheme);
+
+                                                popupWindow.showAsDropDown(ll,0,-5*ll.getHeight()-25, Gravity.TOP);
+
+                                                RecyclerView rvgif= popupView.findViewById(R.id.rvgif);
+                                                rvgif.setHasFixedSize(true);
+                                                final ArrayList<String> gifurl=new ArrayList<>();
+
+                                                GridLayoutManager manager = new GridLayoutManager(MessageActivity2.this,2);
+                                                rvgif.setLayoutManager(manager);
+
+                                                final gif_adapter gif_adapter=new gif_adapter(MessageActivity2.this,gifurl);
+                                                rvgif.setAdapter(gif_adapter);
+
+                                                RequestQueue r = Volley.newRequestQueue(MessageActivity2.this);
+                                                JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET,
+                                                        "http://api.giphy.com/v1/gifs/trending?api_key=M7poelh7604JssbY9PPRGO9u7FzOfK5l",
+                                                        null, new Response.Listener<JSONObject>() {
+                                                    @RequiresApi(api = Build.VERSION_CODES.N)
+                                                    @Override
+                                                    public void onResponse(JSONObject response) {
+                                                        try {
+                                                            JSONArray j1 = (JSONArray) response.getJSONArray("data");
+                                                            for (int i = 0; i < j1.length(); i++) {
+                                                                JSONObject j2 = (JSONObject) j1.getJSONObject(i);
+                                                                JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+                                                                JSONArray names=j3.names();
+                                                                for (int j = 1; j < names.length(); j++) {
+                                                                    JSONObject j4 = (JSONObject) j3.getJSONObject(names.get(j).toString());
+                                                                    // Log.d("asdf",names.get(j).toString());
+                                                                    // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+                                                                    String url= j4.getString("url");
+                                                                    gifurl.add(url);
+                                                                    gif_adapter.notifyDataSetChanged();
+
+                                                                }
+                                                            }
+
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                            Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_LONG).show();
+                                                        }
+
+                                                    }
+                                                }, new Response.ErrorListener() {
+                                                    @Override
+                                                    public void onErrorResponse(VolleyError error) {
+                                                        //Toast.makeText(getApplicationContext(),"something went wrong",Toast.LENGTH_LONG).show();
+                                                    }
+                                                });
+
+                                                r.add(j);
+                                                break;
                                         }
                                     }
                                 });
                         AlertDialog dialog = builder.create();
                         dialog.show();
                     }
+                    else
+                        etMessage.setShowSoftInputOnFocus(true);
                 }
                 return false;
             }
