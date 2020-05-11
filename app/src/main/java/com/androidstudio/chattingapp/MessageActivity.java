@@ -529,9 +529,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
                                                 popupWindow.setAnimationStyle(R.style.DialogTheme);
 
-                                                // show the popup window
-                                                // which view you pass in doesn't matter, it is only used for the window tolken
-                                                popupWindow.showAsDropDown(ll,0,5,Gravity.BOTTOM);
+                                                popupWindow.showAsDropDown(Messages,0,Messages.getHeight()-300,Gravity.TOP);
 
                                                 RecyclerView rvgif= popupView.findViewById(R.id.rvgif);
                                                 rvgif.setHasFixedSize(true);
