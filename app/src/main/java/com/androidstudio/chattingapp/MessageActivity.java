@@ -52,6 +52,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -96,6 +97,7 @@ import com.google.firebase.storage.UploadTask;
 
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -138,9 +140,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     String lastpath;
     SharedPreferences pref,wallpaper;
     SharedPreferences preftheme;
-
+ gif_adapter gif_adapter;
     Integer HandlerIndex;
+    RecyclerView rvgif;
     Parcelable state;
+    ArrayList <String> gifurl;
 
     StorageReference rf;
     int messagecount;
@@ -230,6 +234,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ll=findViewById(R.id.ll);
 
         llgif = findViewById(R.id.llgif);
+        rvgif= findViewById(R.id.rvgif);
+        gifurl=new ArrayList<>();
+        gif_adapter=new gif_adapter(MessageActivity.this,gifurl);
+        rvgif.setAdapter(gif_adapter);
+
 
         ivSend = findViewById(R.id.ivSend);
         preftheme=getSharedPreferences("theme",0);
@@ -468,6 +477,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         FirebaseDatabase.getInstance().getReference("UserStatus").child(RecieverPhone).addValueEventListener(Status);
 
+
         etMessage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -518,6 +528,58 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 if(!flag3) {
                                                     llgif.setVisibility(View.VISIBLE);
                                                     flag3 = true;
+                                                    RequestQueue r = Volley.newRequestQueue(MessageActivity.this);
+                                                    JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET,
+                                                            "http://api.giphy.com/v1/gifs/trending?api_key=M7poelh7604JssbY9PPRGO9u7FzOfK5l",
+                                                            null, new Response.Listener<JSONObject>() {
+                                                        @RequiresApi(api = Build.VERSION_CODES.N)
+                                                        @Override
+                                                        public void onResponse(JSONObject response) {
+                                                            try {
+                                                                JSONArray j1 = (JSONArray) response.getJSONArray("data");
+                                                                for (int i = 0; i < j1.length(); i++) {
+                                                                    JSONObject j2 = (JSONObject) j1.getJSONObject(i);
+                                                                    JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+                                                                     JSONArray names=j3.names();
+                                                                    for (int j = 0; j < names.length(); j++) {
+                                                                       JSONObject j4 = (JSONObject) j3.getJSONObject(names.get(j).toString());
+                                                                       // Log.d("asdf",names.get(j).toString());
+                                                                       // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+                                                                        String url= j4.getString("url");
+                                                                        gifurl.add(url);
+                                                                        gif_adapter.notifyDataSetChanged();
+
+
+
+//                                                                    list.add(new News(j2.getString("title"), j2.getString("content"), j2.getString("description"), j2.getString("publishedAt"), j2.getString("urlToImage"),j2.getString("url"),
+//                                                                            response.getInt("totalResults")));
+                                                                    }
+
+
+//                                                                    list.add(new News(j2.getString("title"), j2.getString("content"), j2.getString("description"), j2.getString("publishedAt"), j2.getString("urlToImage"),j2.getString("url"),
+//                                                                            response.getInt("totalResults")));
+                                                                }
+
+//                                                                adapter = new NewsAdapter(MainActivity.this, list);
+//                                                                lv.setAdapter(adapter);
+//                                                                dialog.dismiss();
+
+
+                                                            } catch (JSONException e) {
+                                                                e.printStackTrace();
+                                                                Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_LONG).show();
+                                                            }
+
+                                                        }
+                                                    }, new Response.ErrorListener() {
+                                                        @Override
+                                                        public void onErrorResponse(VolleyError error) {
+                                                            //Toast.makeText(getApplicationContext(),"something went wrong",Toast.LENGTH_LONG).show();
+                                                        }
+                                                    });
+
+                                                    r.add(j);
+
                                                 }
                                                 else {
                                                     llgif.setVisibility(View.GONE);
@@ -530,7 +592,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         AlertDialog dialog = builder.create();
                         dialog.show();
                     }
-                    else if()
+                //    else if(){}
                 }
                 return false;
             }
