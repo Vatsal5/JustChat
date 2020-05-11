@@ -555,16 +555,16 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                                 for (int i = 0; i < j1.length(); i++) {
                                                                     JSONObject j2 = (JSONObject) j1.getJSONObject(i);
                                                                     JSONObject j3 = (JSONObject) j2.getJSONObject("images");
-                                                                     JSONArray names=j3.names();
-                                                                    for (int j = 1; j < names.length(); j++) {
-                                                                       JSONObject j4 = (JSONObject) j3.getJSONObject(names.get(j).toString());
+                                                                     
+
+                                                                       JSONObject j4 = (JSONObject) j3.getJSONObject("preview_gif");
                                                                        // Log.d("asdf",names.get(j).toString());
                                                                        // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
                                                                         String url= j4.getString("url");
                                                                         gifurl.add(url);
                                                                         gif_adapter.notifyDataSetChanged();
 
-                                                                    }
+
                                                                 }
 
                                                             } catch (JSONException e) {
