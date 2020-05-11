@@ -55,6 +55,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -62,6 +63,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -99,6 +101,7 @@ import com.google.firebase.storage.UploadTask;
 
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -141,9 +144,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     String lastpath;
     SharedPreferences pref,wallpaper;
     SharedPreferences preftheme;
-
     Integer HandlerIndex;
-    Parcelable state;
 
     StorageReference rf;
     int messagecount;
@@ -159,6 +160,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     MessageAdapter adapter;
     ArrayList<MessageModel> chats;
     ChildEventListener chreceiver,videoreceiver,messageseen;
+
 
     DBHandler Handler;
     ImageView emojibtn;
@@ -229,7 +231,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         received = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/received"));
 
         ll=findViewById(R.id.ll);
-
 
         ivSend = findViewById(R.id.ivSend);
         preftheme=getSharedPreferences("theme",0);
@@ -468,6 +469,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         FirebaseDatabase.getInstance().getReference("UserStatus").child(RecieverPhone).addValueEventListener(Status);
 
+
         etMessage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -487,25 +489,25 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                 .setItems(choices, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        switch (i) {
+                                        switch (i){
                                             case 0:
                                                 if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                                     ActivityCompat.requestPermissions(MessageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 5);
-                                                } else {
+                                                } else{
                                                     Intent intent = new Intent();
                                                     intent.setType("image/*");
                                                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                                                     intent.setAction(Intent.ACTION_GET_CONTENT);
-                                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), 10);
+                                                    startActivityForResult(Intent.createChooser(intent,"Select Picture"), 10);
                                                 }
                                                 break;
                                             case 1:
-                                                if (Build.VERSION.SDK_INT < 19) {
+                                                if (Build.VERSION.SDK_INT <19){
                                                     Intent intent = new Intent();
                                                     intent.setType("video/mp4");
                                                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                                                     intent.setAction(Intent.ACTION_GET_CONTENT);
-                                                    startActivityForResult(Intent.createChooser(intent, "Select videos"), 100);
+                                                    startActivityForResult(Intent.createChooser(intent, "Select videos"),100);
                                                 } else {
                                                     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                                                     intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -515,6 +517,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 }
                                                 break;
                                             case 2:
+
                                                 LayoutInflater inflater = (LayoutInflater)
                                                         getSystemService(LAYOUT_INFLATER_SERVICE);
                                                 View popupView = inflater.inflate(R.layout.popup_layout, null);
@@ -528,7 +531,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                                                 // show the popup window
                                                 // which view you pass in doesn't matter, it is only used for the window tolken
-                                                popupWindow.showAtLocation(Messages, Gravity.BOTTOM, 0, 0);
+                                                popupWindow.showAtLocation(Messages, Gravity.BOTTOM|Gravity.CENTER, 0,ll.getHeight()+5);
 
                                                 // dismiss the popup window when touched
                                                 popupView.setOnTouchListener(new View.OnTouchListener() {
@@ -538,13 +541,64 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                         return true;
                                                     }
                                                 });
-                                                break;
-                                        }
+
+                                                RecyclerView rvgif= popupView.findViewById(R.id.rvgif);
+                                                rvgif.setHasFixedSize(true);
+                                                final ArrayList<String> gifurl=new ArrayList<>();
+
+                                                GridLayoutManager manager = new GridLayoutManager(MessageActivity.this,2);
+                                                rvgif.setLayoutManager(manager);
+
+                                                final gif_adapter gif_adapter=new gif_adapter(MessageActivity.this,gifurl);
+                                                rvgif.setAdapter(gif_adapter);
+
+                                                RequestQueue r = Volley.newRequestQueue(MessageActivity.this);
+                                                    JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET,
+                                                            "http://api.giphy.com/v1/gifs/trending?api_key=M7poelh7604JssbY9PPRGO9u7FzOfK5l",
+                                                            null, new Response.Listener<JSONObject>() {
+                                                        @RequiresApi(api = Build.VERSION_CODES.N)
+                                                        @Override
+                                                        public void onResponse(JSONObject response) {
+                                                            try {
+                                                                JSONArray j1 = (JSONArray) response.getJSONArray("data");
+                                                                for (int i = 0; i < j1.length(); i++) {
+                                                                    JSONObject j2 = (JSONObject) j1.getJSONObject(i);
+                                                                    JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+                                                                     JSONArray names=j3.names();
+                                                                    for (int j = 1; j < names.length(); j++) {
+                                                                       JSONObject j4 = (JSONObject) j3.getJSONObject(names.get(j).toString());
+                                                                       // Log.d("asdf",names.get(j).toString());
+                                                                       // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+                                                                        String url= j4.getString("url");
+                                                                        gifurl.add(url);
+                                                                        gif_adapter.notifyDataSetChanged();
+
+                                                                    }
+                                                                }
+
+                                                            } catch (JSONException e) {
+                                                                e.printStackTrace();
+                                                                Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_LONG).show();
+                                                            }
+
+                                                        }
+                                                    }, new Response.ErrorListener() {
+                                                        @Override
+                                                        public void onErrorResponse(VolleyError error) {
+                                                            //Toast.makeText(getApplicationContext(),"something went wrong",Toast.LENGTH_LONG).show();
+                                                        }
+                                                    });
+
+                                                    r.add(j);
+
+                                                }
                                     }
                                 });
                         AlertDialog dialog = builder.create();
                         dialog.show();
                     }
+                    else
+                        etMessage.setShowSoftInputOnFocus(true);
                 }
                 return false;
             }
@@ -1548,7 +1602,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         }
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, "https://fcm.googleapis.com/fcm/send", obj,
-                new com.android.volley.Response.Listener<JSONObject>() {
+                new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.e("!_@@_SUCESS", response + "");
