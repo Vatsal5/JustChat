@@ -145,7 +145,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     StorageReference rf;
     int messagecount;
     ConstraintLayout llMessageActivity;
-    LinearLayout ll;
+    LinearLayout ll,llgif;
     SharedPreferences pref1;
 
     TextView title,tvMode;
@@ -156,6 +156,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     MessageAdapter adapter;
     ArrayList<MessageModel> chats;
     ChildEventListener chreceiver,videoreceiver,messageseen;
+
+    Boolean flag3 = false;
 
     DBHandler Handler;
     ImageView emojibtn;
@@ -226,6 +228,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         received = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/received"));
 
         ll=findViewById(R.id.ll);
+
+        llgif = findViewById(R.id.llgif);
+
         ivSend = findViewById(R.id.ivSend);
         preftheme=getSharedPreferences("theme",0);
         emojibtn=findViewById(R.id.emoji_btn);
@@ -475,6 +480,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (etMessage.getRight() - etMessage.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        etMessage.setShowSoftInputOnFocus(false);
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
                         builder.setTitle("Send...")
@@ -514,6 +520,21 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         AlertDialog dialog = builder.create();
                         dialog.show();
                     }
+
+                    else if(event.getRawX() <= (etMessage.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width()))
+                    {
+                        etMessage.setShowSoftInputOnFocus(false);
+                        if(!flag3) {
+                            llgif.setVisibility(View.VISIBLE);
+                            flag3 = true;
+                        }
+                        else {
+                            llgif.setVisibility(View.GONE);
+                            flag3=false;
+                        }
+                    }
+                    else
+                        etMessage.setShowSoftInputOnFocus(true);
                 }
                 return false;
             }

@@ -133,6 +133,7 @@
             android:hint="Type a message"
             android:padding="10dp"
             android:drawableRight="@drawable/attachment"
+            android:drawableLeft="@drawable/gif"
             android:textColor="#d6514a"
             android:textSize="16sp" />
 
@@ -157,23 +158,21 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:background="#212121"
-        android:orientation="horizontal"
+        android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp">
+        app:layout_constraintRight_toRightOf="parent">
+
+        <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvgif"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            ></androidx.recyclerview.widget.RecyclerView>
-
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
