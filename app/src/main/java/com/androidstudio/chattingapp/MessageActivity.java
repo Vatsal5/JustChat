@@ -41,12 +41,15 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -145,7 +148,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     StorageReference rf;
     int messagecount;
     ConstraintLayout llMessageActivity;
-    LinearLayout ll,llgif;
+    LinearLayout ll;
     SharedPreferences pref1;
 
     TextView title,tvMode;
@@ -156,8 +159,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     MessageAdapter adapter;
     ArrayList<MessageModel> chats;
     ChildEventListener chreceiver,videoreceiver,messageseen;
-
-    Boolean flag3 = false;
 
     DBHandler Handler;
     ImageView emojibtn;
@@ -229,7 +230,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         ll=findViewById(R.id.ll);
 
-        llgif = findViewById(R.id.llgif);
 
         ivSend = findViewById(R.id.ivSend);
         preftheme=getSharedPreferences("theme",0);
@@ -487,25 +487,25 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                 .setItems(choices, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        switch (i){
+                                        switch (i) {
                                             case 0:
                                                 if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                                     ActivityCompat.requestPermissions(MessageActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 5);
-                                                } else{
+                                                } else {
                                                     Intent intent = new Intent();
                                                     intent.setType("image/*");
                                                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                                                     intent.setAction(Intent.ACTION_GET_CONTENT);
-                                                    startActivityForResult(Intent.createChooser(intent,"Select Picture"), 10);
+                                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), 10);
                                                 }
                                                 break;
                                             case 1:
-                                                if (Build.VERSION.SDK_INT <19){
+                                                if (Build.VERSION.SDK_INT < 19) {
                                                     Intent intent = new Intent();
                                                     intent.setType("video/mp4");
                                                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                                                     intent.setAction(Intent.ACTION_GET_CONTENT);
-                                                    startActivityForResult(Intent.createChooser(intent, "Select videos"),100);
+                                                    startActivityForResult(Intent.createChooser(intent, "Select videos"), 100);
                                                 } else {
                                                     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                                                     intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -515,14 +515,29 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 }
                                                 break;
                                             case 2:
-                                                if(!flag3) {
-                                                    llgif.setVisibility(View.VISIBLE);
-                                                    flag3 = true;
-                                                }
-                                                else {
-                                                    llgif.setVisibility(View.GONE);
-                                                    flag3=false;
-                                                }
+                                                LayoutInflater inflater = (LayoutInflater)
+                                                        getSystemService(LAYOUT_INFLATER_SERVICE);
+                                                View popupView = inflater.inflate(R.layout.popup_layout, null);
+
+                                                // create the popup window
+                                                int width = LinearLayout.LayoutParams.MATCH_PARENT;
+                                                int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                                                boolean focusable = true; // lets taps outside the popup also dismiss it
+                                                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+                                                popupWindow.setAnimationStyle(R.style.popup_window_animation_phone);
+
+                                                // show the popup window
+                                                // which view you pass in doesn't matter, it is only used for the window tolken
+                                                popupWindow.showAtLocation(Messages, Gravity.BOTTOM, 0, 0);
+
+                                                // dismiss the popup window when touched
+                                                popupView.setOnTouchListener(new View.OnTouchListener() {
+                                                    @Override
+                                                    public boolean onTouch(View v, MotionEvent event) {
+                                                        popupWindow.dismiss();
+                                                        return true;
+                                                    }
+                                                });
                                                 break;
                                         }
                                     }
@@ -530,7 +545,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         AlertDialog dialog = builder.create();
                         dialog.show();
                     }
-                    else if()
                 }
                 return false;
             }

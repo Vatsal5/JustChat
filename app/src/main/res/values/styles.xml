@@ -20,8 +20,10 @@
     <style name="Theme.MyTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowDisablePreview">true</item>
 
+    </style>
 
-
+    <style name="popup_window_animation_phone">
+        <item name="android:windowEnterAnimation">@android:anim/slide_in_left</item>
     </style>
 
 
