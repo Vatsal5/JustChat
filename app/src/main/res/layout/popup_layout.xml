@@ -3,8 +3,6 @@
         android:layout_width="match_parent"
         android:layout_height="250dp"
     android:minHeight="250dp"
-    android:background="@drawable/background_right"
-    android:backgroundTint="#E7E5E5"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 

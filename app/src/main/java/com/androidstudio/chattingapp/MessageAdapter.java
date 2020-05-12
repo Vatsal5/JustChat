@@ -62,6 +62,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int GRP_VIDEO_LEFT = 9;
     public static final int GRP_IMAGE_LEFT = 10;
     public static final int UNREAD = 11;
+    public static final int GIF_RIGHT = 12;
+    public static final int GIF_LEFT = 13;
+    public static final int GIF_LEFT_GRP = 14;
 
     FirebaseUser user;
     Context context;
@@ -79,6 +82,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public void showVideo(int index);
         public void Onlongclick(int index);
         public void OnFileDeleted(int index);
+        public void sendGIF(int index);
+        public void downloadGIF(int index);
     }
 
     static ImageSelected Activity;
@@ -95,7 +100,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTime,tvDate,tvSender,tvError;
         EmojiconTextView tvMessage;
-        ImageView ivImage,ivPlay,ivProfile,ivTyping,ivSeen;
+        ImageView ivImage,ivPlay,ivProfile,ivTyping,ivSeen,ivGIF;
         ProgressBar progress;
         LinearLayout llMesageLeft,llTyping,llDownload;
         ConstraintLayout llMessageRight;
@@ -118,6 +123,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             llTyping = itemView.findViewById(R.id.llTyping);
             tvError = itemView.findViewById(R.id.tvError);
             ivSeen = itemView.findViewById(R.id.ivSeen);
+            ivGIF = itemView.findViewById(R.id.ivGIF);
         }
     }
 
@@ -163,6 +169,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             return new ViewHolder(v);
         }else if(viewType == UNREAD){
             View v = LayoutInflater.from(context).inflate(R.layout.unreadmessages, parent, false);
+            return new ViewHolder(v);
+        }else if(viewType == GIF_RIGHT){
+            View v = LayoutInflater.from(context).inflate(R.layout.gif_right, parent, false);
+            return new ViewHolder(v);
+        }else if(viewType == GIF_LEFT){
+            View v = LayoutInflater.from(context).inflate(R.layout.gif_left, parent, false);
+            return new ViewHolder(v);
+        }else if(viewType == GIF_LEFT_GRP){
+            View v = LayoutInflater.from(context).inflate(R.layout.gif_left2, parent, false);
             return new ViewHolder(v);
         }
         else {
@@ -243,7 +258,170 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             setBackground(holder.llTyping);
         }
 
-        if (messages.get(holder.getAdapterPosition()).getDownloaded() == 0)   //image is received but yet to be downloaded
+
+
+
+        if(messages.get(holder.getAdapterPosition()).getDownloaded()==200) // when sender sends gif
+        {
+            String message = messages.get(holder.getAdapterPosition()).getMessage();
+            Glide.with(context).load(message.substring(0,message.lastIndexOf(" "))).into(holder.ivImage);
+            holder.progress.setVisibility(View.VISIBLE);
+            holder.ivGIF.setVisibility(View.GONE);
+            holder.ivImage.setBackgroundResource(R.drawable.orange2);
+            holder.tvError.setVisibility(View.GONE);
+            holder.ivSeen.setVisibility(View.GONE);
+
+            Activity.sendGIF(holder.getAdapterPosition());
+        }
+
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==201) // when request has been sent to upload gif
+        {
+            String message = messages.get(holder.getAdapterPosition()).getMessage();
+            Glide.with(context).load(message.substring(0,message.lastIndexOf(" "))).into(holder.ivImage);
+            holder.progress.setVisibility(View.VISIBLE);
+            holder.ivImage.setBackgroundResource(R.drawable.orange2);
+            holder.ivGIF.setVisibility(View.GONE);
+            holder.tvError.setVisibility(View.GONE);
+            holder.ivSeen.setVisibility(View.GONE);
+        }
+
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==202) // when gif has been sent or downloaded successfully
+        {
+            holder.progress.setVisibility(View.GONE);
+
+            if(holder.llDownload!=null)
+                holder.llDownload.setVisibility(View.GONE);
+
+            if (messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
+                holder.ivImage.setBackgroundResource(R.drawable.background_right);
+                holder.ivSeen.setVisibility(View.GONE);
+            }
+
+            else {
+                setBackground(holder.ivImage);
+                setBackground(holder.ivGIF);
+            }
+
+            RequestOptions options = new RequestOptions();
+            options.diskCacheStrategy(DiskCacheStrategy.NONE);
+            options.skipMemoryCache(true);
+
+            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
+                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                        holder.ivGIF.setVisibility(View.GONE);
+                        holder.tvError.setVisibility(View.VISIBLE);
+
+                        if(holder.getAdapterPosition()!=-1)
+                            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null"))
+                                Activity.OnFileDeleted(holder.getAdapterPosition());
+
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        holder.ivGIF.setVisibility(View.VISIBLE);
+                        holder.tvError.setVisibility(View.GONE);
+
+                        return false;
+                    }
+                }).into(holder.ivImage);
+            }
+            else
+            {
+                holder.ivGIF.setVisibility(View.GONE);
+                holder.tvError.setVisibility(View.VISIBLE);
+            }
+
+        }
+
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==203) // when gif is received and yet to be downloaded
+        {
+                holder.ivImage.setImageResource(0);
+                setBackground(holder.ivImage);
+                holder.progress.setVisibility(View.GONE);
+                holder.ivGIF.setVisibility(View.GONE);
+                holder.llDownload.setVisibility(View.VISIBLE);
+                holder.tvError.setVisibility(View.GONE);
+
+                holder.llDownload.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        holder.progress.setVisibility(View.VISIBLE);
+                        holder.llDownload.setVisibility(View.GONE);
+                        Activity.downloadGIF(holder.getAdapterPosition());
+                    }
+                });
+        }
+
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==204) // when request has been sent to download gif
+        {
+            holder.progress.setVisibility(View.VISIBLE);
+            holder.llDownload.setVisibility(View.GONE);
+            holder.ivGIF.setVisibility(View.GONE);
+            holder.ivImage.setImageResource(0);
+            setBackground(holder.ivImage);
+            holder.tvError.setVisibility(View.GONE);
+        }
+
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==205  || messages.get(holder.getAdapterPosition()).getDownloaded()==206) //when gif has been "seen"
+        {
+            holder.progress.setVisibility(View.GONE);
+
+            if(holder.llDownload!=null)
+                holder.llDownload.setVisibility(View.GONE);
+
+            holder.ivImage.setBackgroundResource(R.drawable.background_right);
+            holder.ivSeen.setVisibility(View.VISIBLE);
+
+            if(messages.get(holder.getAdapterPosition()).getDownloaded()==206)
+                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.red));
+            else
+                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.white));
+
+            RequestOptions options = new RequestOptions();
+            options.diskCacheStrategy(DiskCacheStrategy.NONE);
+            options.skipMemoryCache(true);
+
+            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
+                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                        holder.ivGIF.setVisibility(View.GONE);
+                        holder.tvError.setVisibility(View.VISIBLE);
+
+                        if(holder.getAdapterPosition()!=-1)
+                            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null"))
+                                Activity.OnFileDeleted(holder.getAdapterPosition());
+
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        holder.ivGIF.setVisibility(View.VISIBLE);
+                        holder.tvError.setVisibility(View.GONE);
+
+                        return false;
+                    }
+                }).into(holder.ivImage);
+            }
+            else
+            {
+                holder.ivGIF.setVisibility(View.GONE);
+                holder.tvError.setVisibility(View.VISIBLE);
+            }
+
+
+        }
+
+
+
+        else if (messages.get(holder.getAdapterPosition()).getDownloaded() == 0)   //image is received but yet to be downloaded
         {
             holder.progress.setVisibility(View.GONE);
             holder.ivImage.setImageResource(0);
@@ -434,7 +612,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             Activity.SendVideo(holder.getAdapterPosition());
         }
-        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==103) // when request has been sent
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==103) // when request has been sent to upload video
         {
             Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).into(holder.ivImage);
             holder.progress.setVisibility(View.VISIBLE);
@@ -650,6 +828,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 return MSG_TXT_RIGHT;
             }else if(messages.get(position).getType().equals("video")){
                 return MSG_VIDEO_RIGHT;
+            }else if(messages.get(position).getType().equals("gif")){
+                return GIF_RIGHT;
             }
         }
 
@@ -661,6 +841,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     return MSG_TXT_LEFT;
                 } else if (messages.get(position).getType().equals("video")) {
                     return MSG_VIDEO_LEFT;
+                }else if(messages.get(position).getType().equals("gif")){
+                    return GIF_LEFT;
                 }
             }
         }
@@ -673,6 +855,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     return GRP_MSG_LEFT;
                 } else if (messages.get(position).getType().equals("video")) {
                     return GRP_VIDEO_LEFT;
+                }else if(messages.get(position).getType().equals("gif")){
+                    return GIF_LEFT_GRP;
                 }
             }
         }

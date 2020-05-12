@@ -1764,6 +1764,16 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     }
 
+    @Override
+    public void sendGIF(int index) {
+
+    }
+
+    @Override
+    public void downloadGIF(int index) {
+
+    }
+
     public void SendMessage(final int index, final MessageModel model)
             {
                 ApplicationClass.PendingRequests.add(groupKey);

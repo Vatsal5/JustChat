@@ -212,6 +212,8 @@ public class DBHandler
                 values.put(KEY_ISDOWNLOADED, 6);
             else if (type.equals("video"))
                 values.put(KEY_ISDOWNLOADED, 106);
+            else if (type.equals("gif"))
+                values.put(KEY_ISDOWNLOADED, 206);
         }
         else{
             if (type.equals("text"))
@@ -220,6 +222,8 @@ public class DBHandler
                 values.put(KEY_ISDOWNLOADED, 5);
             else if (type.equals("video"))
                 values.put(KEY_ISDOWNLOADED, 105);
+            else if (type.equals("gif"))
+                values.put(KEY_ISDOWNLOADED, 205);
         }
 
         return database.update(DATABASE_TABLE,values,KEY_FIREBASEID+"=?",new String[] {firebaseId+""});
@@ -264,6 +268,8 @@ public class DBHandler
                 return "null";
             else if(model.getType().equals("video"))
                 return "  ";
+            else if(model.getType().equals("gif"))
+                return "   ";
         }
         else
         {

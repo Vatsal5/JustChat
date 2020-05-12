@@ -18,10 +18,17 @@ public class gif_adapter extends RecyclerView.Adapter<gif_adapter.viewholder> {
 
     Context context;
     ArrayList<String> url;
+    ItemSelected Activity;
+
+    public interface ItemSelected
+    {
+        public void ImageClicked(int index);
+    }
 
     public gif_adapter(Context context, ArrayList<String> url) {
         this.context = context;
         this.url=url;
+        Activity = (ItemSelected) context;
     }
 
     public class viewholder extends RecyclerView.ViewHolder
@@ -44,9 +51,17 @@ public class gif_adapter extends RecyclerView.Adapter<gif_adapter.viewholder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull viewholder holder, int position) {
+    public void onBindViewHolder(@NonNull final viewholder holder, int position) {
 
         Glide.with(context).load(Uri.parse(url.get(position))).into(holder.imageView);
+
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Activity.ImageClicked(holder.getAdapterPosition());
+            }
+        });
+
     }
 
 
