@@ -54,6 +54,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -119,6 +120,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     Ringtone sent,received;
     ImageView emojibtn;
+    SearchView searchView;
 
     LinearLayoutManager manager;
     MessageAdapter adapter;
@@ -178,6 +180,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         ivProfile=findViewById(R.id.ivProfile);
         ll=findViewById(R.id.ll);
         messageActivity2=this;
+
         messagecount=getIntent().getIntExtra("messagecount",2);
 
         groupKey = getIntent().getStringExtra("groupkey");
@@ -644,6 +647,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                                         getSystemService(LAYOUT_INFLATER_SERVICE);
                                                 View popupView = inflater.inflate(R.layout.popup_layout, null);
 
+
                                                 // create the popup window
                                                 int width = LinearLayout.LayoutParams.MATCH_PARENT;
                                                 int height = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -652,6 +656,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                                 popupWindow.setAnimationStyle(R.style.DialogTheme);
 
                                                 popupWindow.showAsDropDown(ll,0,-5*ll.getHeight()-25, Gravity.TOP);
+                                                searchView=popupView.findViewById(R.id.SearchView);
 
                                                 RecyclerView rvgif= popupView.findViewById(R.id.rvgif);
                                                 rvgif.setHasFixedSize(true);

@@ -49,6 +49,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -60,6 +61,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -173,8 +175,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     ArrayList<MessageModel> chats;
     ChildEventListener chreceiver,videoreceiver,gifreceiver,messageseen;
 
-
+    gif_adapter gif_adapter;
     DBHandler Handler;
+    SearchView searchview;
     ImageView emojibtn;
     int l;
     int flag=0;
@@ -229,6 +232,52 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 adapter.notifyItemInserted(chats.size()-1);
         }
     }
+
+    public  void gifSearch(String query){
+
+        gifurl.clear();
+        RequestQueue r = Volley.newRequestQueue(MessageActivity.this);
+        JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET,
+                "http://api.giphy.com/v1/gifs/search?q="+query+"&api_key=M7poelh7604JssbY9PPRGO9u7FzOfK5l",
+                null, new Response.Listener<JSONObject>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray j1 = (JSONArray) response.getJSONArray("data");
+                    for (int i = 0; i < j1.length(); i++) {
+                        JSONObject j2 = (JSONObject) j1.getJSONObject(i);
+                        JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+
+
+                        JSONObject j4 = (JSONObject) j3.getJSONObject("preview_gif");
+                        // Log.d("asdf",names.get(j).toString());
+                        // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+                        String url= j4.getString("url");
+                        gifurl.add(url);
+                        gif_adapter.notifyDataSetChanged();
+
+
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Toast.makeText(getApplicationContext(),"something went wrong",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        r.add(j);
+    }
+
+
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -494,7 +543,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (etMessage.getRight() - etMessage.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        etMessage.setShowSoftInputOnFocus(false);
+
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
                         builder.setTitle("Send...")
@@ -546,6 +595,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 popupWindow.setAnimationStyle(R.style.DialogTheme);
 
                                                 popupWindow.showAsDropDown(ll,0,-5*ll.getHeight()-25,Gravity.TOP);
+                                                searchview=popupView.findViewById(R.id.SearchView);
+
+
 
                                                 RecyclerView rvgif= popupView.findViewById(R.id.rvgif);
                                                 rvgif.setHasFixedSize(true);
@@ -554,8 +606,22 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 GridLayoutManager manager = new GridLayoutManager(MessageActivity.this,2);
                                                 rvgif.setLayoutManager(manager);
 
-                                                final gif_adapter gif_adapter=new gif_adapter(MessageActivity.this,gifurl);
+                                                 gif_adapter=new gif_adapter(MessageActivity.this,gifurl);
                                                 rvgif.setAdapter(gif_adapter);
+
+                                                searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                                                    @Override
+                                                    public boolean onQueryTextSubmit(String query) {
+                                                       gifSearch(query);
+                                                        return false;
+                                                    }
+
+                                                    @Override
+                                                    public boolean onQueryTextChange(String newText) {
+                                                        gifSearch(newText);
+                                                        return false;
+                                                    }
+                                                });
 
                                                 RequestQueue r = Volley.newRequestQueue(MessageActivity.this);
                                                     JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET,
@@ -603,8 +669,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         AlertDialog dialog = builder.create();
                         dialog.show();
                     }
-                    else
-                        etMessage.setShowSoftInputOnFocus(true);
+//                    else
+//                        etMessage.setShowSoftInputOnFocus(true);
                 }
                 return false;
             }
