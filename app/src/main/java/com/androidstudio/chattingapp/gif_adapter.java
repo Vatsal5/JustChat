@@ -53,7 +53,7 @@ public class gif_adapter extends RecyclerView.Adapter<gif_adapter.viewholder> {
     @Override
     public void onBindViewHolder(@NonNull final viewholder holder, int position) {
 
-        Glide.with(context).load(Uri.parse(url.get(position))).into(holder.imageView);
+        Glide.with(context.getApplicationContext()).load(Uri.parse(url.get(position))).into(holder.imageView);
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override

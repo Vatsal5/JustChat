@@ -43,6 +43,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -160,6 +161,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     ConstraintLayout llMessageActivity;
     LinearLayout ll;
     SharedPreferences pref1;
+
+    PopupWindow popupWindow;
 
     TextView title,tvMode;
     String to = "";
@@ -535,7 +538,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 int width = LinearLayout.LayoutParams.MATCH_PARENT;
                                                 int height = LinearLayout.LayoutParams.WRAP_CONTENT;
                                                 boolean focusable = true; // lets taps outside the popup also dismiss it
-                                                final PopupWindow popupWindow = new PopupWindow(popupView, width, height);
+                                                popupWindow = new PopupWindow(popupView, width, height);
 
                                                 popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
                                                 popupWindow.setOutsideTouchable(true);
@@ -3436,5 +3439,20 @@ if(getIntent().getIntExtra("path",1)==2) {
         return inSampleSize;
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // Check if the key event was the Back button
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
 
+            if(popupWindow!=null && popupWindow.isShowing())
+                popupWindow.dismiss();
+            else
+                MessageActivity.this.finish();
+            return true;
+        }
+
+        // If it wasn't the Back key, bubble up to the default
+        // system behavior
+        return super.onKeyDown(keyCode, event);
+    }
 }
