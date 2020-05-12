@@ -233,7 +233,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
             }
             else
-                holder.iv.setImageResource(R.drawable.group);
+                holder.iv.setImageResource(R.drawable.group1);
 
         }
 

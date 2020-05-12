@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     FirebaseDatabase database1;
     DatabaseReference reference1;
     DatabaseReference UserStatus;
-    ChildEventListener chreceiver;
+    ChildEventListener chreceiver,gifreceiver;
     ValueEventListener dataCreater,deleteimage,deletevideo;
     DBHandler Handler;
     LinearLayoutManager linearLayoutManager;
@@ -391,6 +391,56 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
              reference.child("users").child(contacts1.get(index).getPh_number()).child("profile").addListenerForSingleValueEvent(profile);
              // userAdapter.notifyDataSetChanged();
 
+         }
+
+         public void giflistener()
+         {
+             gifreceiver= new ChildEventListener() {
+                 @Override
+                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                     //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+
+
+//                     contacts1.get(index).setLastmessage("  ");
+                     contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                     userAdapter.notifyDataSetChanged();
+
+
+
+//                     if (contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
+//                         model = new MessageModel(1110, contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+//                                 , dataSnapshot.getValue(String.class).substring(15), "video", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
+//                     }
+//                     else
+//                     {
+//                         model = new MessageModel(1110,"+91"+contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+//                                 , dataSnapshot.getValue(String.class).substring(15), "video", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
+//                     }
+//                     Handler.addMessage(model);
+
+
+                 }
+
+                 @Override
+                 public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                 }
+
+                 @Override
+                 public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                 }
+
+                 @Override
+                 public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                 }
+
+                 @Override
+                 public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                 }
+             };
+             reference.child("users").child(contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("info").child("gif").addChildEventListener(gifreceiver);
          }
 
          public void VideoListener()
@@ -841,6 +891,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         new listener(contacts1.size() - 1).profilelistener();
                         new listener(contacts1.size() - 1).piclistener();
                         new listener(contacts1.size() - 1).VideoListener();
+                        new listener(contacts1.size() - 1).giflistener();
                         new listener(contacts1.size() - 1).child();
 
 
@@ -1314,7 +1365,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onDestroy() {
         super.onDestroy();
 
-        Log.d("destroy","App is killed");
+
 
             Status("offline");
     }
@@ -1474,6 +1525,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         super.onStop();
 
 
-        Log.d("Destroy","onStop");
+
     }
 }

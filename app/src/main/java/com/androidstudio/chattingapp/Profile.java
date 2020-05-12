@@ -355,8 +355,11 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                 builder.setTitle("Enter Your Name");
 
                 final EditText etTitle = v.findViewById(R.id.etGroupTitle);
+                if(data.get(index).equals("Enter Your Name"))
+                    etTitle.setText("");
+                else
                 etTitle.setText(data.get(index));
-                etTitle.setSelection(data.get(index).length());
+              //  etTitle.setSelection(data.get(index).length());
 
                 builder.setView(v);
                 builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
