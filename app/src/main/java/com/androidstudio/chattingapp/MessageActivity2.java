@@ -205,7 +205,50 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         // Log.d("asdf",names.get(j).toString());
                         // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
                         String url= j4.getString("url");
-                        gifurl.add(url);
+                        gifurl.add("g"+url);
+                        gif_adapter.notifyDataSetChanged();
+
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Toast.makeText(getApplicationContext(),"something went wrong",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        r.add(j);
+    }
+
+    public  void stickerSearch(String query){
+
+        gifurl.clear();
+        RequestQueue r = Volley.newRequestQueue(MessageActivity2.this);
+        JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET,
+                "http://api.giphy.com/v1/stickers/search?q="+query+"&api_key=M7poelh7604JssbY9PPRGO9u7FzOfK5l",
+                null, new Response.Listener<JSONObject>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray j1 = (JSONArray) response.getJSONArray("data");
+                    for (int i = 0; i < j1.length(); i++) {
+                        JSONObject j2 = (JSONObject) j1.getJSONObject(i);
+                        JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+
+
+                        JSONObject j4 = (JSONObject) j3.getJSONObject("original_still");
+                        // Log.d("asdf",names.get(j).toString());
+                        // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+                        String url= j4.getString("url");
+                        gifurl.add("s"+url);
                         gif_adapter.notifyDataSetChanged();
 
                     }
@@ -660,7 +703,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 final int DRAWABLE_RIGHT = 2;
                 final int DRAWABLE_BOTTOM = 3;
 
-                String[] choices = {"Image", "Video","GIF"};
+                String[] choices = {"Image", "Video","GIF","Stickers"};
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
 
@@ -760,7 +803,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                                                 // Log.d("asdf",names.get(j).toString());
                                                                 // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
                                                                 String url= j4.getString("url");
-                                                                gifurl.add(url);
+                                                                gifurl.add("g"+url);
                                                                 gif_adapter.notifyDataSetChanged();
 
 
@@ -781,7 +824,87 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                                 r.add(j);
                                                 break;
+                                            case 3:
+                                                LayoutInflater inflater1 = (LayoutInflater)
+                                                        getSystemService(LAYOUT_INFLATER_SERVICE);
+                                                View popupView1 = inflater1.inflate(R.layout.popup_layout, null);
 
+                                                // create the popup window
+                                                int width1 = LinearLayout.LayoutParams.MATCH_PARENT;
+                                                int height1 = LinearLayout.LayoutParams.WRAP_CONTENT;
+                                                boolean focusable1 = true; // lets taps outside the popup also dismiss it
+                                                popupWindow = new PopupWindow(popupView1, width1, height1,focusable1);
+
+                                                popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
+
+                                                popupWindow.setAnimationStyle(R.style.DialogTheme);
+
+                                                popupWindow.showAsDropDown(ll,0,-5*ll.getHeight()-25,Gravity.TOP);
+                                                searchview=popupView1.findViewById(R.id.SearchView);
+
+                                                RecyclerView rvgif1= popupView1.findViewById(R.id.rvgif);
+                                                rvgif1.setHasFixedSize(true);
+                                                gifurl=new ArrayList<>();
+
+                                                GridLayoutManager manager1 = new GridLayoutManager(MessageActivity2.this,3);
+                                                rvgif1.setLayoutManager(manager1);
+
+                                                gif_adapter=new gif_adapter(MessageActivity2.this,gifurl);
+                                                rvgif1.setAdapter(gif_adapter);
+
+                                                searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                                                    @Override
+                                                    public boolean onQueryTextSubmit(String query) {
+                                                        stickerSearch(query);
+                                                        return false;
+                                                    }
+
+                                                    @Override
+                                                    public boolean onQueryTextChange(String newText) {
+                                                        stickerSearch(newText);
+                                                        return false;
+                                                    }
+                                                });
+
+                                                RequestQueue r1 = Volley.newRequestQueue(MessageActivity2.this);
+                                                JsonObjectRequest j1 = new JsonObjectRequest(Request.Method.GET,
+                                                        "http://api.giphy.com/v1/stickers/trending?api_key=M7poelh7604JssbY9PPRGO9u7FzOfK5l",
+                                                        null, new Response.Listener<JSONObject>() {
+                                                    @RequiresApi(api = Build.VERSION_CODES.N)
+                                                    @Override
+                                                    public void onResponse(JSONObject response) {
+                                                        try {
+                                                            JSONArray j1 = (JSONArray) response.getJSONArray("data");
+                                                            for (int i = 0; i < j1.length(); i++) {
+                                                                JSONObject j2 = (JSONObject) j1.getJSONObject(i);
+                                                                JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+
+
+                                                                JSONObject j4 = (JSONObject) j3.getJSONObject("original_still");
+                                                                // Log.d("asdf",names.get(j).toString());
+                                                                // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+
+                                                                gifurl.add("s"+j4.getString("url"));
+                                                                gif_adapter.notifyDataSetChanged();
+
+
+                                                            }
+
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                            Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_LONG).show();
+                                                        }
+
+                                                    }
+                                                }, new Response.ErrorListener() {
+                                                    @Override
+                                                    public void onErrorResponse(VolleyError error) {
+                                                        //Toast.makeText(getApplicationContext(),"something went wrong",Toast.LENGTH_LONG).show();
+                                                    }
+                                                });
+
+                                                r1.add(j1);
+                                                break;
                                         }
                                     }
                                 });

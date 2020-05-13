@@ -16,6 +16,9 @@ import java.util.ArrayList;
 
 public class gif_adapter extends RecyclerView.Adapter<gif_adapter.viewholder> {
 
+    public static final int GIF = 0;
+    public static final int STICK = 1;
+
     Context context;
     ArrayList<String> url;
     ItemSelected Activity;
@@ -46,19 +49,29 @@ public class gif_adapter extends RecyclerView.Adapter<gif_adapter.viewholder> {
     public viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater= (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View v= inflater.inflate(R.layout.gif_layout,parent,false);
-        return  new gif_adapter.viewholder(v);
+
+        if(viewType == GIF) {
+            final View v = inflater.inflate(R.layout.gif_layout, parent, false);
+            return new gif_adapter.viewholder(v);
+        }
+        else
+        {
+            final View v = inflater.inflate(R.layout.sticker_layout, parent, false);
+            return new gif_adapter.viewholder(v);
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull final viewholder holder, int position) {
 
-        Glide.with(context.getApplicationContext()).load(Uri.parse(url.get(position))).into(holder.imageView);
+        Glide.with(context.getApplicationContext()).load(Uri.parse(url.get(position).substring(1))).into(holder.imageView);
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Activity.ImageClicked(holder.getAdapterPosition());
+
+                if(url.get(holder.getAdapterPosition()).substring(0,1).equals("g"))
+                    Activity.ImageClicked(holder.getAdapterPosition());
             }
         });
 
@@ -69,5 +82,15 @@ public class gif_adapter extends RecyclerView.Adapter<gif_adapter.viewholder> {
     @Override
     public int getItemCount() {
         return url.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+
+        if(url.get(position).substring(0,1).equals("s"))
+            return STICK;
+        else
+            return GIF;
+
     }
 }

@@ -254,7 +254,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         // Log.d("asdf",names.get(j).toString());
                         // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
                         String url= j4.getString("url");
-                        gifurl.add(url);
+                        gifurl.add("g"+url);
                         gif_adapter.notifyDataSetChanged();
 
                     }
@@ -297,7 +297,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         // Log.d("asdf",names.get(j).toString());
                         // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
                         String url= j4.getString("url");
-                        gifurl.add(url);
+                        gifurl.add("s"+url);
                         gif_adapter.notifyDataSetChanged();
 
                     }
@@ -647,13 +647,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 GridLayoutManager manager = new GridLayoutManager(MessageActivity.this,2);
                                                 rvgif.setLayoutManager(manager);
 
-                                                 gif_adapter=new gif_adapter(MessageActivity.this,gifurl);
+                                                gif_adapter=new gif_adapter(MessageActivity.this,gifurl);
                                                 rvgif.setAdapter(gif_adapter);
 
-                                                searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                                                searchview.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
                                                     @Override
                                                     public boolean onQueryTextSubmit(String query) {
-                                                       gifSearch(query);
+                                                        gifSearch(query);
                                                         return false;
                                                     }
 
@@ -665,44 +665,45 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 });
 
                                                 RequestQueue r = Volley.newRequestQueue(MessageActivity.this);
-                                                    JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET,
-                                                            "http://api.giphy.com/v1/gifs/trending?api_key=M7poelh7604JssbY9PPRGO9u7FzOfK5l",
-                                                            null, new Response.Listener<JSONObject>() {
-                                                        @RequiresApi(api = Build.VERSION_CODES.N)
-                                                        @Override
-                                                        public void onResponse(JSONObject response) {
-                                                            try {
-                                                                JSONArray j1 = (JSONArray) response.getJSONArray("data");
-                                                                for (int i = 0; i < j1.length(); i++) {
-                                                                    JSONObject j2 = (JSONObject) j1.getJSONObject(i);
-                                                                    JSONObject j3 = (JSONObject) j2.getJSONObject("images");
-                                                                     
-
-                                                                       JSONObject j4 = (JSONObject) j3.getJSONObject("preview_gif");
-                                                                       // Log.d("asdf",names.get(j).toString());
-                                                                       // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
-
-                                                                    gifurl.add(new HashMap<String,String>().put("g",j4.getString("url")));
-                                                                        gif_adapter.notifyDataSetChanged();
+                                                JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET,
+                                                        "http://api.giphy.com/v1/gifs/trending?api_key=M7poelh7604JssbY9PPRGO9u7FzOfK5l",
+                                                        null, new Response.Listener<JSONObject>() {
+                                                    @RequiresApi(api = Build.VERSION_CODES.N)
+                                                    @Override
+                                                    public void onResponse(JSONObject response) {
+                                                        try {
+                                                            JSONArray j1 = (JSONArray) response.getJSONArray("data");
+                                                            for (int i = 0; i < j1.length(); i++) {
+                                                                JSONObject j2 = (JSONObject) j1.getJSONObject(i);
+                                                                JSONObject j3 = (JSONObject) j2.getJSONObject("images");
 
 
-                                                                }
+                                                                JSONObject j4 = (JSONObject) j3.getJSONObject("preview_gif");
+                                                                // Log.d("asdf",names.get(j).toString());
+                                                                // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+                                                                String url= j4.getString("url");
+                                                                gifurl.add("g"+url);
+                                                                gif_adapter.notifyDataSetChanged();
 
-                                                            } catch (JSONException e) {
-                                                                e.printStackTrace();
-                                                                Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_LONG).show();
+
                                                             }
 
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                            Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_LONG).show();
                                                         }
-                                                    }, new Response.ErrorListener() {
-                                                        @Override
-                                                        public void onErrorResponse(VolleyError error) {
-                                                            //Toast.makeText(getApplicationContext(),"something went wrong",Toast.LENGTH_LONG).show();
-                                                        }
-                                                    });
 
-                                                    r.add(j);
-                                                    break;
+                                                    }
+                                                }, new Response.ErrorListener() {
+                                                    @Override
+                                                    public void onErrorResponse(VolleyError error) {
+                                                        //Toast.makeText(getApplicationContext(),"something went wrong",Toast.LENGTH_LONG).show();
+                                                    }
+                                                });
+
+                                                r.add(j);
+                                                break;
+
 
                                             case 3:
                                                 LayoutInflater inflater1 = (LayoutInflater)
@@ -764,7 +765,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                                 // Log.d("asdf",names.get(j).toString());
                                                                 // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
 
-                                                                gifurl.add(new HashMap<String,String>().put("s",j4.getString("url")));
+                                                                gifurl.add("s"+j4.getString("url"));
                                                                 gif_adapter.notifyDataSetChanged();
 
 
