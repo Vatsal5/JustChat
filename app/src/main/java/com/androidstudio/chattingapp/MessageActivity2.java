@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentUris;
@@ -54,7 +56,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +66,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -84,10 +89,12 @@ import org.json.JSONObject;
 
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -100,8 +107,10 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 import static com.androidstudio.chattingapp.MessageActivity.getPath;
+import static java.lang.System.in;
+import static java.lang.System.out;
 
-public class MessageActivity2 extends AppCompatActivity implements MessageAdapter.ImageSelected {
+public class MessageActivity2 extends AppCompatActivity implements MessageAdapter.ImageSelected, com.androidstudio.chattingapp.gif_adapter.ItemSelected {
 
     String groupKey, groupname,profile;
     ImageView ivSend,ivBack,ivProfile;
@@ -118,9 +127,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     int numberOfMembers=-1;
     SharedPreferences preftheme;
 
+    ArrayList<String > gifurl;
+    gif_adapter gif_adapter;
+    PopupWindow popupWindow;
+
     Ringtone sent,received;
     ImageView emojibtn;
-    SearchView searchView;
+
+    SearchView searchview;
 
     LinearLayoutManager manager;
     MessageAdapter adapter;
@@ -129,7 +143,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     DBHandler Handler;
     int y=0,z=0;
      String sender;
-    ChildEventListener imagereceiver, videoreceiver, chreceiver,seenmessages; ValueEventListener deletevideo,deleteimage,set,set1,set2;
+    ChildEventListener imagereceiver, videoreceiver, chreceiver,seenmessages,gifreceiver;
+    ValueEventListener deletevideo,deleteimage,set,set1,set2;
     String defaultvalue;
     SharedPreferences pref,wallpaper;
     RecyclerView.AdapterDataObserver observer;
@@ -167,6 +182,49 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             if (!Messages.isComputingLayout())
                 adapter.notifyItemInserted(chats.size() - 1);
         }
+    }
+
+    public  void gifSearch(String query){
+
+        gifurl.clear();
+        RequestQueue r = Volley.newRequestQueue(MessageActivity2.this);
+        JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET,
+                "http://api.giphy.com/v1/gifs/search?q="+query+"&api_key=M7poelh7604JssbY9PPRGO9u7FzOfK5l",
+                null, new Response.Listener<JSONObject>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray j1 = (JSONArray) response.getJSONArray("data");
+                    for (int i = 0; i < j1.length(); i++) {
+                        JSONObject j2 = (JSONObject) j1.getJSONObject(i);
+                        JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+
+
+                        JSONObject j4 = (JSONObject) j3.getJSONObject("preview_gif");
+                        // Log.d("asdf",names.get(j).toString());
+                        // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+                        String url= j4.getString("url");
+                        gifurl.add(url);
+                        gif_adapter.notifyDataSetChanged();
+
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "something went wrong", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Toast.makeText(getApplicationContext(),"something went wrong",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        r.add(j);
     }
 
     @Override
@@ -647,26 +705,42 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                                         getSystemService(LAYOUT_INFLATER_SERVICE);
                                                 View popupView = inflater.inflate(R.layout.popup_layout, null);
 
-
                                                 // create the popup window
                                                 int width = LinearLayout.LayoutParams.MATCH_PARENT;
                                                 int height = LinearLayout.LayoutParams.WRAP_CONTENT;
                                                 boolean focusable = true; // lets taps outside the popup also dismiss it
-                                                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+                                                popupWindow = new PopupWindow(popupView, width, height,focusable);
+
+                                                popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
+
                                                 popupWindow.setAnimationStyle(R.style.DialogTheme);
 
-                                                popupWindow.showAsDropDown(ll,0,-5*ll.getHeight()-25, Gravity.TOP);
-                                                searchView=popupView.findViewById(R.id.SearchView);
+                                                popupWindow.showAsDropDown(ll,0,-5*ll.getHeight()-25,Gravity.TOP);
+                                                searchview=popupView.findViewById(R.id.SearchView);
 
                                                 RecyclerView rvgif= popupView.findViewById(R.id.rvgif);
                                                 rvgif.setHasFixedSize(true);
-                                                final ArrayList<String> gifurl=new ArrayList<>();
+                                                gifurl=new ArrayList<>();
 
                                                 GridLayoutManager manager = new GridLayoutManager(MessageActivity2.this,2);
                                                 rvgif.setLayoutManager(manager);
 
-                                                final gif_adapter gif_adapter=new gif_adapter(MessageActivity2.this,gifurl);
+                                                gif_adapter=new gif_adapter(MessageActivity2.this,gifurl);
                                                 rvgif.setAdapter(gif_adapter);
+
+                                                searchview.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+                                                    @Override
+                                                    public boolean onQueryTextSubmit(String query) {
+                                                        gifSearch(query);
+                                                        return false;
+                                                    }
+
+                                                    @Override
+                                                    public boolean onQueryTextChange(String newText) {
+                                                        gifSearch(newText);
+                                                        return false;
+                                                    }
+                                                });
 
                                                 RequestQueue r = Volley.newRequestQueue(MessageActivity2.this);
                                                 JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET,
@@ -680,16 +754,16 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                                             for (int i = 0; i < j1.length(); i++) {
                                                                 JSONObject j2 = (JSONObject) j1.getJSONObject(i);
                                                                 JSONObject j3 = (JSONObject) j2.getJSONObject("images");
-                                                                JSONArray names=j3.names();
-                                                                for (int j = 1; j < names.length(); j++) {
-                                                                    JSONObject j4 = (JSONObject) j3.getJSONObject(names.get(j).toString());
-                                                                    // Log.d("asdf",names.get(j).toString());
-                                                                    // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
-                                                                    String url= j4.getString("url");
-                                                                    gifurl.add(url);
-                                                                    gif_adapter.notifyDataSetChanged();
 
-                                                                }
+
+                                                                JSONObject j4 = (JSONObject) j3.getJSONObject("preview_gif");
+                                                                // Log.d("asdf",names.get(j).toString());
+                                                                // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
+                                                                String url= j4.getString("url");
+                                                                gifurl.add(url);
+                                                                gif_adapter.notifyDataSetChanged();
+
+
                                                             }
 
                                                         } catch (JSONException e) {
@@ -707,6 +781,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                                 r.add(j);
                                                 break;
+
                                         }
                                     }
                                 });
@@ -753,6 +828,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                 chats.get(i).setDownloaded(106);
 
                             }
+                            else if(type.equals("gif")){
+                                chats.get(i).setDownloaded(206);
+                            }
 
                             if(!Messages.isComputingLayout())
                                 adapter.notifyItemChanged(i);
@@ -773,7 +851,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         if(chats.get(i).getFirebaseId().equals(key))
                         {
 
-                            if(!((chats.get(i).getDownloaded()==-4) || (chats.get(i).getDownloaded()==5) || (chats.get(i).getDownloaded()==105))) {
+                            if(!((chats.get(i).getDownloaded()==-4) || (chats.get(i).getDownloaded()==5) || (chats.get(i).getDownloaded()==105) || (chats.get(i).getDownloaded() == 205))) {
                                 if (type.equals("text")) {
 
                                     chats.get(i).setDownloaded(-4);
@@ -786,6 +864,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                     chats.get(i).setDownloaded(105);
 
+                                }
+                                else if(type.equals("gif")){
+                                    chats.get(i).setDownloaded(205);
                                 }
 
                                 if (!Messages.isComputingLayout())
@@ -824,6 +905,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                 chats.get(i).setDownloaded(106);
 
                             }
+                            else if(type.equals("gif")){
+                                chats.get(i).setDownloaded(206);
+                            }
 
                             if (!Messages.isComputingLayout())
                                 adapter.notifyItemChanged(i);
@@ -840,7 +924,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                         if (chats.get(i).getFirebaseId().equals(key)) {
 
-                            if (!((chats.get(i).getDownloaded() == -4) || (chats.get(i).getDownloaded() == 5) || (chats.get(i).getDownloaded() == 105))) {
+                            if (!((chats.get(i).getDownloaded() == -4) || (chats.get(i).getDownloaded() == 5) || (chats.get(i).getDownloaded() == 105) || (chats.get(i).getDownloaded() == 205))) {
                                 if (type.equals("text")) {
 
                                     chats.get(i).setDownloaded(-4);
@@ -853,6 +937,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                     chats.get(i).setDownloaded(105);
 
+                                }
+                                else if(type.equals("gif")){
+                                    chats.get(i).setDownloaded(205);
                                 }
 
                                 if (!Messages.isComputingLayout())
@@ -1068,7 +1155,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         ).addChildEventListener(videoreceiver);
 
 
-        chreceiver = new ChildEventListener() {
+        gifreceiver = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
@@ -1105,7 +1192,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 //
 //                        reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
 //
-                        MessageModel messageModel = new MessageModel(435, sender, "null", dataSnapshot.getValue().toString().substring(34), "text", -1,time,date,groupname,"null");
+                        MessageModel messageModel = new MessageModel(435, sender, "null", dataSnapshot.getValue().toString().substring(34), "gif", 203,time,date,groupname,"null");
 
                         if(chats.size()!=0) {
                             if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
@@ -1161,9 +1248,108 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         };
 
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("gif").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).addChildEventListener(gifreceiver);
+
+
+        chreceiver = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+
+                final String time, date,sender;
+
+//                if (!(dataSnapshot.getKey().equals("message"))) {
+//                    if (dataSnapshot.getKey().equals("info")) {
+//                        if (!(dataSnapshot.child("friend").exists())) {
+//                            reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
+//                        }
+//                    } else if (!(dataSnapshot.getKey().equals("info"))) {
+//
+                time=dataSnapshot.getValue().toString().substring(0,11);
+                date=dataSnapshot.getValue().toString().substring(11,21);
+                sender = dataSnapshot.getValue(String.class).substring(21,34);
+                set2= new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                .setValue(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("m")))-1
+                                        + dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m")));
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                .removeEventListener(set2);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                };
+                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                        .addListenerForSingleValueEvent(set2);
+//
+//                        reference.child("users").child(sender).child(RecieverPhone).child("info").child("friend").setValue("yes");
+//
+                MessageModel messageModel = new MessageModel(435, sender, "null", dataSnapshot.getValue().toString().substring(34), "text", -1,time,date,groupname,"null");
+
+                if(chats.size()!=0) {
+                    if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
+                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date,groupname,"null");
+                        int id = Handler.addMessage(message);
+                        message.setId(id);
+                        chats.add(message);
+                    }
+                }
+                else {
+                    if(!(defaultvalue.equals("private"))) {
+                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date, groupname,"null");
+                        int id = Handler.addMessage(message);
+                        message.setId(id);
+                        chats.add(message);
+                    }
+                }
+
+                int id = Handler.addMessage(messageModel);
+                messageModel.setId(id);
+
+                chats.add(messageModel);
+                dataSnapshot.getRef().removeValue();
+
+                adapter.notifyItemInserted(chats.size()-1);
+                // adapter.notifyItemRangeInserted(chats.size()-1,1);
+                if(messagecount==2)
+                    received.play();
+                else
+                    messagecount--;
+//                    }
+//                }
+                dataSnapshot.getRef().removeValue();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).addChildEventListener(chreceiver);
+
 
 
         ivSend.setOnClickListener(new View.OnClickListener() {
@@ -1426,6 +1612,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("videos").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).addChildEventListener(videoreceiver);
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("gif").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).addChildEventListener(gifreceiver);
+
         if(ApplicationClass.RenameGroup!=null)
         {
             tvTitle.setText(ApplicationClass.RenameGroup);
@@ -1660,6 +1851,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(videoreceiver);
 
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("gif").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).removeEventListener(gifreceiver);
+
 
         overridePendingTransition(0, 0);
     }
@@ -1771,11 +1966,73 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     @Override
     public void sendGIF(int index) {
-
+        SendGIF(index,chats.get(index));
     }
 
     @Override
     public void downloadGIF(int index) {
+        new DownloadGIF(index,chats.get(index)).execute(chats.get(index).getMessage());
+    }
+
+    public void SendGIF(final int index,final MessageModel model)
+    {
+        ApplicationClass.PendingRequests.add(groupKey);
+        final int[] x = {0};
+
+        model.setDownloaded(201);
+        Handler.UpdateMessage(model);
+
+        chats.get(index).setDownloaded(201);
+
+        if(!Messages.isComputingLayout())
+            adapter.notifyItemChanged(index);
+
+        final String push= FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("gif")
+                .child(membernumber.get(0)).push().getKey();
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(FirebaseAuth
+                .getInstance().getCurrentUser().getPhoneNumber()).child(push).setValue(membernumber.size()+"mgif");
+
+        final String message = chats.get(index).getMessage();
+
+        for(int i=0;i<membernumber.size();i++) {
+            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("gif").child(membernumber.get(i)).
+
+                    child(push).setValue(model.getTime() + model.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + model.getMessage().substring(model.getMessage().lastIndexOf(" ")+1))
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            if (x[0] == 0) {
+                                x[0] = 1;
+                                model.setMessage(message.substring(0,message.lastIndexOf(" ")));
+                                model.setFirebaseId(push);
+                                model.setDownloaded(202);
+                                Handler.UpdateMessage(model);
+
+                                if (!MessageActivity2.this.isDestroyed()) {
+                                    chats.get(index).setMessage(message.substring(0,message.lastIndexOf(" ")));
+                                    chats.get(index).setFirebaseId(push);
+                                    chats.get(index).setDownloaded(202);
+                                    sent.play();
+
+                                    if (!Messages.isComputingLayout())
+                                        adapter.notifyItemChanged(index);
+                                }
+
+                                if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
+                                    if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
+                                        Intent intent = getIntent();
+                                        ((Activity) ApplicationClass.MessageActivity2Context).finish();
+                                        startActivity(intent);
+                                        sent.play();
+
+                                        overridePendingTransition(0, 0);
+                                    }
+                                }
+                            }
+                            ApplicationClass.PendingRequests.remove(groupKey);
+                        }
+                    });
+        }
 
     }
 
@@ -1847,6 +2104,91 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 .setAllowRotation(true)
                 .setAspectRatio(25,25)
                 .start(this);
+    }
+
+    @Override
+    public void ImageClicked(final int index) {
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("Please wait");
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+        Glide.with(MessageActivity2.this)
+                .download(gifurl.get(index))
+                .listener(new RequestListener<File>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<File> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
+
+                        File imagesFolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Sent");
+                        if(!imagesFolder.exists())
+                            imagesFolder.mkdirs();
+
+                        File file = new File(imagesFolder,System.currentTimeMillis()+".gif");
+
+                        try{
+                            InputStream in = new FileInputStream(resource);
+                            OutputStream out = new FileOutputStream(file);
+                            // Transfer bytes from in to out
+                            byte[] buf = new byte[1024];
+                            int len;
+                            while ((len = in.read(buf)) > 0) {
+                                out.write(buf, 0, len);
+                            }
+                            in.close();
+                            dialog.dismiss();
+                            prepareGif(Uri.fromFile(file),gifurl.get(index));
+
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            out.close();
+                        }
+
+                        return false;
+                    }
+                }).submit();
+    }
+
+    public void prepareGif(Uri uri, String url)
+    {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+
+        long millis = System.currentTimeMillis();
+        java.sql.Date date1 = new java.sql.Date(millis);
+
+        MessageModel model = new MessageModel(-349,sender,"null",uri+" "+url,
+                "gif",200,simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupname,"null");
+
+        if (chats.size() != 0) {
+            if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname,"null");
+                int id = Handler.addMessage(messageModel);
+                messageModel.setId(id);
+                chats.add(messageModel);
+            }
+        } else {
+            if ((!(defaultvalue.equals("private")))) {
+                MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname,"null");
+                int id = Handler.addMessage(messageModel);
+                messageModel.setId(id);
+                chats.add(messageModel);
+            }
+        }
+
+        int id = Handler.addMessage(model);
+        model.setId(id);
+        chats.add(model);
+
+        adapter.notifyItemInserted(chats.size()-1);
     }
 
     class CompressImage extends AsyncTask<Uri,Void,Uri>
@@ -2007,6 +2349,150 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 adapter.notifyItemInserted(chats.size() - 1);
             }
         }
+
+    private class DownloadGIF extends AsyncTask<String, Void, Uri>
+    {
+        int index;
+        MessageModel message;
+
+        DownloadGIF(int position,MessageModel message)
+        {
+            index = position;
+            this.message = message;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            ApplicationClass.PendingRequests.add(groupKey);
+
+            message.setDownloaded(204);
+            Handler.UpdateMessage(message);
+
+            chats.get(index).setDownloaded(204);
+            if(!Messages.isComputingLayout())
+                adapter.notifyItemChanged(index);
+
+        }
+
+        @Override
+        protected Uri doInBackground(String... strings) {
+            InputStream urlInputStream = null;
+
+            URLConnection urlConnection;
+
+            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+
+            if(!imagesfolder.exists())
+                imagesfolder.mkdirs();
+
+            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".gif");
+
+            try{
+                //Form a new URL
+                URL finalUrl = new URL(strings[0]);
+
+                urlConnection = finalUrl.openConnection();
+
+                //Get the size of the (file) inputstream from server..
+                int contentLength = urlConnection.getContentLength();
+
+                DataInputStream stream = new DataInputStream(finalUrl.openStream());
+
+                byte[] buffer = new byte[contentLength];
+                stream.readFully(buffer);
+                stream.close();
+
+                if (buffer.length > 0) {
+                    try {
+                        FileOutputStream fos = new FileOutputStream(file);
+                        Log.d("5FILE", "Writing from buffer to the new file..");
+                        fos.write(buffer);
+                        fos.flush();
+                        fos.close();
+
+                        return Uri.fromFile(file);
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        /*Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();*/
+                    }
+                } else {
+                    //Could not download the file...
+                    Log.e("8ERROR", "Buffer size is zero ! & returning 'false'.......");
+
+                }
+            }catch (FileNotFoundException e){
+
+                return null;
+            }
+            catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Uri uri) {
+            super.onPostExecute(uri);
+
+            if (uri != null) {
+
+                message.setDownloaded(202);
+                message.setMessage(uri.toString());
+
+                Handler.UpdateMessage(message);
+
+                if(!MessageActivity2.this.isDestroyed())
+                {
+                    chats.get(index).setDownloaded(202);
+                    chats.get(index).setMessage(uri.toString());
+
+                    if(!Messages.isComputingLayout())
+                    {
+                        adapter.notifyItemChanged(index);
+                    }
+                }
+
+                if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
+                    if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
+                        Intent intent = getIntent();
+                        ((Activity) ApplicationClass.MessageActivityContext).finish();
+                        startActivity(intent);
+
+                        overridePendingTransition(0, 0);
+                    }
+                }
+
+            }
+            else {
+                message.setDownloaded(203);
+                Handler.UpdateMessage(message);
+
+                if (!MessageActivity2.this.isDestroyed()) {
+                    chats.get(index).setDownloaded(203);
+                    adapter.notifyItemChanged(index);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
+                    builder.setTitle("Could not download gif");
+                    builder.setMessage("Please ask " + pref.getString(message.getSender(), message.getSender()) +
+                            " to resend the gif")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            }
+            ApplicationClass.PendingRequests.remove(groupKey);
+        }
+    }
 
     private class DownloadVideo extends AsyncTask<String, Void, Uri>
     {
@@ -2495,6 +2981,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(chreceiver);
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("gif").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).removeEventListener(gifreceiver);
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(FirebaseAuth
                 .getInstance().getCurrentUser().getPhoneNumber()).removeEventListener(seenmessages);

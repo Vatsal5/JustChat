@@ -264,7 +264,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         if(messages.get(holder.getAdapterPosition()).getDownloaded()==200) // when sender sends gif
         {
             String message = messages.get(holder.getAdapterPosition()).getMessage();
-            Glide.with(context).load(message.substring(0,message.lastIndexOf(" "))).into(holder.ivImage);
+//            Glide.with(context).load(message.substring(0,message.lastIndexOf(" "))).into(holder.ivImage);
+
+            holder.ivImage.setImageURI(Uri.parse(message.substring(0,message.lastIndexOf(" "))));
+
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivGIF.setVisibility(View.GONE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
@@ -277,7 +280,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         else if(messages.get(holder.getAdapterPosition()).getDownloaded()==201) // when request has been sent to upload gif
         {
             String message = messages.get(holder.getAdapterPosition()).getMessage();
-            Glide.with(context).load(message.substring(0,message.lastIndexOf(" "))).into(holder.ivImage);
+//            Glide.with(context).load(message.substring(0,message.lastIndexOf(" "))).into(holder.ivImage);
+
+            holder.ivImage.setImageURI(Uri.parse(message.substring(0,message.lastIndexOf(" "))));
+
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setBackgroundResource(R.drawable.orange2);
             holder.ivGIF.setVisibility(View.GONE);
@@ -307,28 +313,45 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             options.skipMemoryCache(true);
 
             if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
-                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
+//                    @Override
+//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//
+//                        holder.ivGIF.setVisibility(View.GONE);
+//                        holder.tvError.setVisibility(View.VISIBLE);
+//
+//                        if(holder.getAdapterPosition()!=-1)
+//                            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null"))
+//                                Activity.OnFileDeleted(holder.getAdapterPosition());
+//
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                        holder.ivGIF.setVisibility(View.VISIBLE);
+//                        holder.tvError.setVisibility(View.GONE);
+//
+//                        return false;
+//                    }
+//                }).into(holder.ivImage);
 
-                        holder.ivGIF.setVisibility(View.GONE);
+                holder.ivImage.setImageURI(Uri.parse(messages.get(holder.getAdapterPosition()).getMessage()));
+                if(holder.ivImage.getDrawable()==null)
+                {
+                    holder.ivGIF.setVisibility(View.GONE);
                         holder.tvError.setVisibility(View.VISIBLE);
 
                         if(holder.getAdapterPosition()!=-1)
                             if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null"))
                                 Activity.OnFileDeleted(holder.getAdapterPosition());
+                }
+                else
+                {
+                    holder.ivGIF.setVisibility(View.VISIBLE);
+                    holder.tvError.setVisibility(View.GONE);
+                }
 
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        holder.ivGIF.setVisibility(View.VISIBLE);
-                        holder.tvError.setVisibility(View.GONE);
-
-                        return false;
-                    }
-                }).into(holder.ivImage);
             }
             else
             {
@@ -387,28 +410,45 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             options.skipMemoryCache(true);
 
             if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
-                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
+//                    @Override
+//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//
+//                        holder.ivGIF.setVisibility(View.GONE);
+//                        holder.tvError.setVisibility(View.VISIBLE);
+//
+//                        if(holder.getAdapterPosition()!=-1)
+//                            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null"))
+//                                Activity.OnFileDeleted(holder.getAdapterPosition());
+//
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                        holder.ivGIF.setVisibility(View.VISIBLE);
+//                        holder.tvError.setVisibility(View.GONE);
+//
+//                        return false;
+//                    }
+//                }).into(holder.ivImage);
 
-                        holder.ivGIF.setVisibility(View.GONE);
-                        holder.tvError.setVisibility(View.VISIBLE);
+                holder.ivImage.setImageURI(Uri.parse(messages.get(holder.getAdapterPosition()).getMessage()));
+                if(holder.ivImage.getDrawable()==null)
+                {
+                    holder.ivGIF.setVisibility(View.GONE);
+                    holder.tvError.setVisibility(View.VISIBLE);
 
-                        if(holder.getAdapterPosition()!=-1)
-                            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null"))
-                                Activity.OnFileDeleted(holder.getAdapterPosition());
+                    if(holder.getAdapterPosition()!=-1)
+                        if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null"))
+                            Activity.OnFileDeleted(holder.getAdapterPosition());
+                }
+                else
+                {
+                    holder.ivGIF.setVisibility(View.VISIBLE);
+                    holder.tvError.setVisibility(View.GONE);
+                }
 
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        holder.ivGIF.setVisibility(View.VISIBLE);
-                        holder.tvError.setVisibility(View.GONE);
-
-                        return false;
-                    }
-                }).into(holder.ivImage);
             }
             else
             {

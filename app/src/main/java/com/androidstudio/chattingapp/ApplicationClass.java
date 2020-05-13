@@ -56,6 +56,21 @@ public class ApplicationClass extends Application
                     break;
 
                 final MessageModel model = messages.get(i);
+
+                if(messages.get(i).getDownloaded() ==204)
+                {
+                    model.setDownloaded(203);
+                    Handler.UpdateMessage(model);
+                    check=0;
+                }
+
+                if(messages.get(i).getDownloaded() ==201)
+                {
+                    model.setDownloaded(200);
+                    Handler.UpdateMessage(model);
+                    check=0;
+                }
+
                 if(messages.get(i).getDownloaded() ==3)
                 {
                     model.setDownloaded(2);

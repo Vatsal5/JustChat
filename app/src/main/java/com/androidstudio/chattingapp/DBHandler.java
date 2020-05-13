@@ -388,6 +388,8 @@ public class DBHandler
                 return "null";
             else if(model.getType().equals("video"))
                 return "  ";
+            else if(model.getType().equals("gif"))
+                return "   ";
         }
         else
         {
