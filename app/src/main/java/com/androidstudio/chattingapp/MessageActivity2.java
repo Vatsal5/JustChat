@@ -2278,7 +2278,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             }
                             in.close();
                             dialog.dismiss();
-                            prepareGif(Uri.fromFile(file),gifurl.get(index));
+                            prepareGif(Uri.fromFile(file),gifurl.get(index).substring(1));
 
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();

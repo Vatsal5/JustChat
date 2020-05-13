@@ -40,9 +40,11 @@
         android:textSize="10sp"
         android:layout_marginTop="15dp"
         android:layout_marginRight="12dp"
+        android:padding="2dp"
         app:layout_constraintBottom_toBottomOf="@id/ivImage"
         app:layout_constraintRight_toRightOf="@id/ivImage"
         android:layout_marginBottom="9dp"
+        android:background="@drawable/background_right"
         android:textColor="#FFFFFF"/>
 
     <ProgressBar

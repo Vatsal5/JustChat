@@ -935,8 +935,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             });
 
 
-        if (holder.tvTime != null)
-            holder.tvTime.setText(messages.get(holder.getAdapterPosition()).getTime().substring(0,5));
+        if (holder.tvTime != null) {
+            holder.tvTime.setText(messages.get(holder.getAdapterPosition()).getTime().substring(0, 5));
+            if(messages.get(holder.getAdapterPosition()).getType().equals("sticker")){
+                if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                    setBackground(holder.tvTime);
+                else
+                    holder.tvTime.setBackgroundResource(R.drawable.background_right);
+            }
+            else
+            {
+                holder.tvTime.setBackground(null);
+            }
+        }
 
         if (holder.tvDate != null) {
 
