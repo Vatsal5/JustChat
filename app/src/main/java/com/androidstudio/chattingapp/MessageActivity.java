@@ -257,7 +257,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         gifurl.add(url);
                         gif_adapter.notifyDataSetChanged();
 
-
                     }
 
 
@@ -544,6 +543,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (etMessage.getRight() - etMessage.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
 
+                        etMessage.setShowSoftInputOnFocus(false);
+
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
                         builder.setTitle("Send...")
@@ -587,17 +588,14 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 int width = LinearLayout.LayoutParams.MATCH_PARENT;
                                                 int height = LinearLayout.LayoutParams.WRAP_CONTENT;
                                                 boolean focusable = true; // lets taps outside the popup also dismiss it
-                                                popupWindow = new PopupWindow(popupView, width, height);
+                                                popupWindow = new PopupWindow(popupView, width, height,focusable);
 
                                                 popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
-                                                popupWindow.setOutsideTouchable(true);
 
                                                 popupWindow.setAnimationStyle(R.style.DialogTheme);
 
                                                 popupWindow.showAsDropDown(ll,0,-5*ll.getHeight()-25,Gravity.TOP);
                                                 searchview=popupView.findViewById(R.id.SearchView);
-
-
 
                                                 RecyclerView rvgif= popupView.findViewById(R.id.rvgif);
                                                 rvgif.setHasFixedSize(true);
@@ -669,8 +667,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         AlertDialog dialog = builder.create();
                         dialog.show();
                     }
-//                    else
-//                        etMessage.setShowSoftInputOnFocus(true);
+                    else
+                        etMessage.setShowSoftInputOnFocus(true);
                 }
                 return false;
             }
