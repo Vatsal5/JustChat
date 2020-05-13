@@ -13,7 +13,7 @@
         android:layout_marginRight="16dp"
         android:background="#00ffffff"
         android:clickable="false"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:cropToPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -44,23 +44,6 @@
         app:layout_constraintRight_toRightOf="@id/ivImage"
         android:layout_marginBottom="9dp"
         android:textColor="#FFFFFF"/>
-
-    <TextView
-        android:id="@+id/tvError"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Sorry,this image does not exist on your phone anymore"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:gravity="center"
-        android:clickable="false"
-        app:layout_constraintTop_toTopOf="@+id/ivImage"
-        app:layout_constraintLeft_toLeftOf="@+id/ivImage"
-        app:layout_constraintRight_toRightOf="@+id/ivImage"
-        app:layout_constraintBottom_toBottomOf="@+id/ivImage"
-        android:paddingLeft="10dp"
-        android:visibility="gone"
-        android:paddingRight="10dp"/>
 
     <ProgressBar
         android:id="@+id/progress"

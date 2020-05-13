@@ -173,7 +173,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             holder.time.setText("");
         }
 
-        if(  !(list.get(position).getLastmessage().equals(" ")) &&!(list.get(position).getLastmessage().equals("null")) &&!(list.get(position).getLastmessage().equals("  ")) &&!(list.get(position).getLastmessage().equals("   ")))
+        if(  !(list.get(position).getLastmessage().equals(" ")) &&!(list.get(position).getLastmessage().equals("null")) &&!(list.get(position).getLastmessage().equals("  ")) &&!(list.get(position).getLastmessage().equals("   "))
+                &&!(list.get(position).getLastmessage().equals("    ")))
         {
             holder.tvlastmessage.setVisibility(View.VISIBLE);
 
@@ -203,6 +204,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             holder.ivImage.setImageResource(R.drawable.gif);
 
             holder.tvlastmessage.setText("GIF");
+
+        }
+        else if(list.get(position).getLastmessage().equals("    "))
+        {
+            holder.ivImage.setVisibility(View.VISIBLE);
+            holder.tvlastmessage.setVisibility(View.VISIBLE);
+            holder.ivImage.setImageResource(R.drawable.gif);
+
+            holder.tvlastmessage.setText("Sticker");
 
         }
 

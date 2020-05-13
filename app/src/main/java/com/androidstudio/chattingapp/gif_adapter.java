@@ -26,6 +26,7 @@ public class gif_adapter extends RecyclerView.Adapter<gif_adapter.viewholder> {
     public interface ItemSelected
     {
         public void ImageClicked(int index);
+        public void StickerClicked(int index);
     }
 
     public gif_adapter(Context context, ArrayList<String> url) {
@@ -72,6 +73,8 @@ public class gif_adapter extends RecyclerView.Adapter<gif_adapter.viewholder> {
 
                 if(url.get(holder.getAdapterPosition()).substring(0,1).equals("g"))
                     Activity.ImageClicked(holder.getAdapterPosition());
+                else
+                    Activity.StickerClicked(holder.getAdapterPosition());
             }
         });
 

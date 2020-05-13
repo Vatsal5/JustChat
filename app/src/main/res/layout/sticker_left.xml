@@ -25,7 +25,7 @@
         android:background="#00ffffff"
         android:padding="6dp"
         android:clickable="false"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:cropToPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/ivProfile"
@@ -43,53 +43,6 @@
         app:layout_constraintRight_toRightOf="@id/ivImage"
         android:layout_marginBottom="9dp"
         android:textColor="#FFFFFF"/>
-
-    <LinearLayout
-        android:id="@+id/llDownload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="@+id/ivImage"
-        app:layout_constraintLeft_toLeftOf="@+id/ivImage"
-        app:layout_constraintRight_toRightOf="@+id/ivImage"
-        app:layout_constraintBottom_toBottomOf="@+id/ivImage"
-        android:paddingRight="10dp"
-        android:clickable="true"
-        android:background="@drawable/black1">
-
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/download"
-            android:padding="7dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="IMAGE"
-            android:textStyle="bold"
-            android:layout_gravity="center_vertical"
-            android:textColor="#FFFFFF"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvError"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Sorry,this image does not exist on your phone anymore"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:gravity="center"
-        android:clickable="false"
-        app:layout_constraintTop_toTopOf="@+id/ivImage"
-        app:layout_constraintLeft_toLeftOf="@+id/ivImage"
-        app:layout_constraintRight_toRightOf="@+id/ivImage"
-        app:layout_constraintBottom_toBottomOf="@+id/ivImage"
-        android:paddingLeft="10dp"
-        android:visibility="gone"
-        android:paddingRight="10dp"/>
 
     <ProgressBar
         android:id="@+id/progress"

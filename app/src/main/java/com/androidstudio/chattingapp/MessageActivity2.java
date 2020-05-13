@@ -2100,6 +2100,16 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         new DownloadGIF(index,chats.get(index)).execute(chats.get(index).getMessage());
     }
 
+    @Override
+    public void sendSticker(int index) {
+
+    }
+
+    @Override
+    public void downloadSticker(int index) {
+
+    }
+
     public void SendGIF(final int index,final MessageModel model)
     {
         ApplicationClass.PendingRequests.add(groupKey);
@@ -2241,7 +2251,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         dialog.show();
 
         Glide.with(MessageActivity2.this)
-                .download(gifurl.get(index))
+                .download(gifurl.get(index).substring(1))
                 .listener(new RequestListener<File>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<File> target, boolean isFirstResource) {
@@ -2281,6 +2291,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         return false;
                     }
                 }).submit();
+    }
+
+    @Override
+    public void StickerClicked(int index) {
+
     }
 
     public void prepareGif(Uri uri, String url)

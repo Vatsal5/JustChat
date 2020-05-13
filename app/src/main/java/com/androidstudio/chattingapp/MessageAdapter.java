@@ -65,6 +65,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int GIF_RIGHT = 12;
     public static final int GIF_LEFT = 13;
     public static final int GIF_LEFT_GRP = 14;
+    public static final int STICK_RIGHT = 15;
+    public static final int STICK_LEFT = 16;
+    public static final int STICK_LEFT_GRP = 17;
 
     FirebaseUser user;
     Context context;
@@ -84,6 +87,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public void OnFileDeleted(int index);
         public void sendGIF(int index);
         public void downloadGIF(int index);
+        public void sendSticker(int index);
+        public void downloadSticker(int index);
     }
 
     static ImageSelected Activity;
@@ -179,6 +184,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }else if(viewType == GIF_LEFT_GRP){
             View v = LayoutInflater.from(context).inflate(R.layout.gif_left2, parent, false);
             return new ViewHolder(v);
+        }else if(viewType == STICK_RIGHT){
+            View v = LayoutInflater.from(context).inflate(R.layout.sticker_right, parent, false);
+            return new ViewHolder(v);
+        }else if(viewType == STICK_LEFT){
+            View v = LayoutInflater.from(context).inflate(R.layout.sticker_left, parent, false);
+            return new ViewHolder(v);
+        }else if(viewType == STICK_LEFT_GRP){
+            View v = LayoutInflater.from(context).inflate(R.layout.sticker_left2, parent, false);
+            return new ViewHolder(v);
         }
         else {
             View v = LayoutInflater.from(context).inflate(R.layout.message_right, parent, false);
@@ -259,6 +273,106 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
 
 
+        if(messages.get(holder.getAdapterPosition()).getDownloaded()==300) //when sender sends sticker
+        {
+
+            String message = messages.get(holder.getAdapterPosition()).getMessage();
+
+            holder.progress.setVisibility(View.VISIBLE);
+            holder.ivSeen.setVisibility(View.GONE);
+
+            Glide.with(context).load(message.substring(0,message.lastIndexOf(" "))).into(holder.ivImage);
+            Activity.sendSticker(holder.getAdapterPosition());
+        }
+
+        if(messages.get(holder.getAdapterPosition()).getDownloaded()==301) // when request has been sent to listener to upload sticker
+        {
+            String message = messages.get(holder.getAdapterPosition()).getMessage();
+
+            holder.progress.setVisibility(View.VISIBLE);
+            holder.ivSeen.setVisibility(View.GONE);
+
+            Glide.with(context).load(message.substring(0,message.lastIndexOf(" "))).into(holder.ivImage);
+        }
+
+        if(messages.get(holder.getAdapterPosition()).getDownloaded()==302) //when sticker is sent or downloaded successfully
+        {
+            holder.progress.setVisibility(View.GONE);
+
+            RequestOptions options = new RequestOptions();
+            options.diskCacheStrategy(DiskCacheStrategy.NONE);
+            options.skipMemoryCache(true);
+
+                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                        if(holder.getAdapterPosition()!=-1)
+                                Activity.OnFileDeleted(holder.getAdapterPosition());
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+
+
+                        return false;
+                    }
+                }).into(holder.ivImage);
+
+                if(messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                    holder.ivSeen.setVisibility(View.GONE);
+        }
+
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==303) // when sticker is received and yet to be downloaded
+        {
+            holder.ivImage.setImageResource(0);
+            holder.progress.setVisibility(View.GONE);
+
+            Activity.downloadSticker(holder.getAdapterPosition());
+        }
+
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==304) // when request has been sent to download sticker
+        {
+            holder.progress.setVisibility(View.VISIBLE);
+            holder.ivImage.setImageResource(0);
+        }
+
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==305  || messages.get(holder.getAdapterPosition()).getDownloaded()==306) //when gif has been "seen"
+        {
+            holder.progress.setVisibility(View.GONE);
+
+            if(messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                holder.ivSeen.setVisibility(View.VISIBLE);
+
+            if(messages.get(holder.getAdapterPosition()).getDownloaded()==306)
+                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.red));
+            else
+                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.white));
+
+            RequestOptions options = new RequestOptions();
+            options.diskCacheStrategy(DiskCacheStrategy.NONE);
+            options.skipMemoryCache(true);
+
+                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+
+                        if(holder.getAdapterPosition()!=-1)
+                                Activity.OnFileDeleted(holder.getAdapterPosition());
+
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+
+                        return false;
+                    }
+                }).into(holder.ivImage);
+
+        }
 
 
         if(messages.get(holder.getAdapterPosition()).getDownloaded()==200) // when sender sends gif
@@ -870,6 +984,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 return MSG_VIDEO_RIGHT;
             }else if(messages.get(position).getType().equals("gif")){
                 return GIF_RIGHT;
+            }else if(messages.get(position).getType().equals("sticker")){
+                return STICK_RIGHT;
             }
         }
 
@@ -883,6 +999,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     return MSG_VIDEO_LEFT;
                 }else if(messages.get(position).getType().equals("gif")){
                     return GIF_LEFT;
+                }else if(messages.get(position).getType().equals("sticker")){
+                    return STICK_LEFT;
                 }
             }
         }
@@ -897,6 +1015,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     return GRP_VIDEO_LEFT;
                 }else if(messages.get(position).getType().equals("gif")){
                     return GIF_LEFT_GRP;
+                }else if(messages.get(position).getType().equals("sticker")){
+                    return STICK_LEFT_GRP;
                 }
             }
         }

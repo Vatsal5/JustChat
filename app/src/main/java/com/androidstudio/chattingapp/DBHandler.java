@@ -214,6 +214,8 @@ public class DBHandler
                 values.put(KEY_ISDOWNLOADED, 106);
             else if (type.equals("gif"))
                 values.put(KEY_ISDOWNLOADED, 206);
+            else if (type.equals("sticker"))
+                values.put(KEY_ISDOWNLOADED, 306);
         }
         else{
             if (type.equals("text"))
@@ -224,6 +226,8 @@ public class DBHandler
                 values.put(KEY_ISDOWNLOADED, 105);
             else if (type.equals("gif"))
                 values.put(KEY_ISDOWNLOADED, 205);
+            else if (type.equals("sticker"))
+                values.put(KEY_ISDOWNLOADED, 305);
         }
 
         return database.update(DATABASE_TABLE,values,KEY_FIREBASEID+"=?",new String[] {firebaseId+""});
@@ -270,6 +274,8 @@ public class DBHandler
                 return "  ";
             else if(model.getType().equals("gif"))
                 return "   ";
+            else if(model.getType().equals("sticker"))
+                return "    ";
         }
         else
         {
@@ -390,6 +396,8 @@ public class DBHandler
                 return "  ";
             else if(model.getType().equals("gif"))
                 return "   ";
+            else if(model.getType().equals("sticker"))
+                return "    ";
         }
         else
         {

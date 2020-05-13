@@ -173,7 +173,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     LinearLayoutManager manager;
     MessageAdapter adapter;
     ArrayList<MessageModel> chats;
-    ChildEventListener chreceiver,videoreceiver,gifreceiver,messageseen;
+    ChildEventListener chreceiver,videoreceiver,gifreceiver,stickerreceiver,messageseen;
 
     gif_adapter gif_adapter;
     DBHandler Handler;
@@ -1233,6 +1233,100 @@ if(getIntent().getIntExtra("path",1)==2) {
 
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").addChildEventListener(imagereceiver);
 
+        stickerreceiver = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                String time,date;
+
+                time=dataSnapshot.getValue(String.class).substring(0,5);
+                date=dataSnapshot.getValue(String.class).substring(5,15);
+
+                Log.d("Received","Image");
+
+
+                MessageModel messageModel = new MessageModel(-1, RecieverPhone, sender, dataSnapshot.getValue(String.class).substring(15), "sticker", 303,time,date,"null","null");
+                //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
+
+                if(chats.size()!=0) {
+                    if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
+                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date,"null","null");
+                        int id = Handler.addMessage(message);
+                        message.setId(id);
+                        chats.add(message);
+                    }
+                }
+                else {
+                    if(!(defaultvalue.equals("private")))
+                    {
+                        MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date,"null","null");
+                        int id = Handler.addMessage(message);
+                        message.setId(id);
+                        chats.add(message);
+                    }
+                }
+
+                if(chats.size()>0 && chats.get(chats.size()-1).getType().equals("typing")) {
+
+
+                    int id = Handler.addMessage(messageModel);
+                    messageModel.setId(id);
+
+                    reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                            child(RecieverPhone).child("info").
+                            child("seenmessages").child(dataSnapshot.getKey()).setValue("sticker");
+
+                    dataSnapshot.getRef().removeValue();
+
+                    chats.add(chats.size()-1,messageModel);
+
+//                adapter.notifyDataSetChanged();
+                    adapter.notifyItemInserted(chats.size() - 1);
+                }
+                else
+                {
+                    int id = Handler.addMessage(messageModel);
+                    messageModel.setId(id);
+                    reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                            child(RecieverPhone).child("info").
+                            child("seenmessages").child(dataSnapshot.getKey()).setValue("sticker");
+
+
+
+                    dataSnapshot.getRef().removeValue();
+
+                    chats.add(messageModel);
+
+//                adapter.notifyDataSetChanged();
+                    adapter.notifyItemInserted(chats.size() - 1);
+                }
+                if(messagecount==2)
+                    received.play();
+                else messagecount--;
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("sticker").addChildEventListener(stickerreceiver);
+
 
         gifreceiver = new ChildEventListener() {
             @Override
@@ -1455,6 +1549,11 @@ if(getIntent().getIntExtra("path",1)==2) {
                         else if(type.equals("gif")){
 
                             chats.get(i).setDownloaded(206);
+
+                        }
+                        else if(type.equals("sticker")){
+
+                            chats.get(i).setDownloaded(306);
 
                         }
 
@@ -1731,6 +1830,8 @@ if(getIntent().getIntExtra("path",1)==2) {
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").removeEventListener(imagereceiver);
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("videos").removeEventListener(videoreceiver);
         FirebaseDatabase.getInstance().getReference("users").child(sender).child("profile").removeEventListener(dp);
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("sticker").removeEventListener(stickerreceiver);
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("gif").removeEventListener(gifreceiver);
     }
 
     @Override
@@ -1935,6 +2036,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").removeEventListener(imagereceiver);
         reference.child("users").child(RecieverPhone).child(sender).removeEventListener(chreceiver);
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("gif").removeEventListener(gifreceiver);
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("sticker").removeEventListener(stickerreceiver);
 
 
         reference.child("users").child(sender).child(RecieverPhone).child("info").child("seenmessages").removeEventListener(messageseen);
@@ -1963,6 +2065,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").addChildEventListener(imagereceiver);
         reference.child("users").child(RecieverPhone).child(sender).addChildEventListener(chreceiver);
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("gif").addChildEventListener(gifreceiver);
+        reference.child("users").child(RecieverPhone).child(sender).child("info").child("sticker").addChildEventListener(stickerreceiver);
 
 
         reference.child("users").child(sender).child(RecieverPhone).child("info").child("seenmessages").addChildEventListener(messageseen);
@@ -2148,7 +2251,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         dialog.show();
 
         Glide.with(MessageActivity.this)
-                .download(gifurl.get(index))
+                .download(gifurl.get(index).substring(1))
                 .listener(new RequestListener<File>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<File> target, boolean isFirstResource) {
@@ -2175,7 +2278,58 @@ if(getIntent().getIntExtra("path",1)==2) {
                                 }
                             in.close();
                                 dialog.dismiss();
-                                prepareGif(Uri.fromFile(file),gifurl.get(index));
+                                prepareGif(Uri.fromFile(file),gifurl.get(index).substring(1));
+
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            out.close();
+                        }
+
+                        return false;
+                    }
+                }).submit();
+    }
+
+    @Override
+    public void StickerClicked(final int index) {
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("Please wait");
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+        Glide.with(MessageActivity.this)
+                .download(gifurl.get(index).substring(1))
+                .listener(new RequestListener<File>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<File> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
+
+                        File imagesFolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Sent");
+                        if(!imagesFolder.exists())
+                            imagesFolder.mkdirs();
+
+                        File file = new File(imagesFolder,System.currentTimeMillis()+".png");
+
+                        try{
+                            InputStream in = new FileInputStream(resource);
+                            OutputStream out = new FileOutputStream(file);
+                            // Transfer bytes from in to out
+                            byte[] buf = new byte[1024];
+                            int len;
+                            while ((len = in.read(buf)) > 0) {
+                                out.write(buf, 0, len);
+                            }
+                            in.close();
+                            dialog.dismiss();
+                            prepareSticker(Uri.fromFile(file),gifurl.get(index).substring(1));
 
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
@@ -2511,6 +2665,104 @@ if(getIntent().getIntExtra("path",1)==2) {
         });
     }
 
+    public void prepareSticker(Uri uri,String url)
+    {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+
+        long millis = System.currentTimeMillis();
+        java.sql.Date date1 = new java.sql.Date(millis);
+
+        MessageModel model = new MessageModel(-349,sender,RecieverPhone,uri+" "+url,
+                "sticker",300,simpleDateFormat.format(date).substring(0, 5), date1.toString(), "null","null");
+
+        if (chats.size() != 0) {
+            if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
+                int id = Handler.addMessage(messageModel);
+                messageModel.setId(id);
+                chats.add(messageModel);
+            }
+        } else {
+            if ((!(defaultvalue.equals("private")))) {
+                MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(), "null","null");
+                int id = Handler.addMessage(messageModel);
+                messageModel.setId(id);
+                chats.add(messageModel);
+            }
+        }
+
+        int id = Handler.addMessage(model);
+        model.setId(id);
+        if(chats.size()>0 && chats.get(chats.size()-1).getType().equals("typing")) {
+            if(flag1==true)
+                chats.add(chats.size() - 1, model);
+        }
+        else
+            chats.add(model);
+
+        adapter.notifyItemInserted(chats.size()-1);
+    }
+
+    public void SendSticker(final int index, final MessageModel model)
+    {
+        ApplicationClass.PendingRequests.add(RecieverPhone);
+        model.setDownloaded(301);
+        Handler.UpdateMessage(model);
+
+        chats.get(index).setDownloaded(301);
+
+        if(!Messages.isComputingLayout())
+            adapter.notifyItemChanged(index);
+
+        long millis=System.currentTimeMillis();
+        java.sql.Date date=new java.sql.Date(millis);
+
+
+        SendMesage = new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+
+                String message = chats.get(index).getMessage();
+                Log.d("asdf",message);
+
+                model.setMessage(message.substring(0,message.lastIndexOf(" ")));
+                model.setDownloaded(302);
+                Handler.UpdateMessage(model);
+
+                if(!MessageActivity.this.isDestroyed())
+                {
+                    chats.get(index).setMessage(message.substring(0,message.lastIndexOf(" ")));
+                    chats.get(index).setDownloaded(302);
+                    sent.play();
+
+                    if(!Messages.isComputingLayout())
+                        adapter.notifyItemChanged(index);
+                }
+
+                if(MessageActivity.this.isDestroyed()  && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
+                    if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
+                        Intent intent = getIntent();
+                        ((Activity) ApplicationClass.MessageActivityContext).finish();
+                        startActivity(intent);
+                        sent.play();
+
+                        overridePendingTransition(0, 0);
+                    }
+                }
+                ApplicationClass.PendingRequests.remove(RecieverPhone);
+            }
+        };
+
+        String push= reference.child("users").child(sender).child(RecieverPhone).child("info").child("sticker").push().getKey();
+        model.setFirebaseId(push);
+        chats.get(index).setFirebaseId(push);
+
+        reference.child("users").child(sender).child(RecieverPhone).child("info").child("sticker").child(push).setValue(model.getTime()+date.toString() +model.getMessage().substring(model.getMessage().lastIndexOf(" ")+1)).addOnCompleteListener(SendMesage);
+    }
+
+
+
     public void prepareGif(Uri uri, String url)
     {
         Date date = new Date();
@@ -2730,12 +2982,22 @@ if(getIntent().getIntExtra("path",1)==2) {
     @Override
     public void OnFileDeleted(int index) {
 
-        chats.get(index).setMessage("null");
+        if(chats.get(index).getType().equals("sticker"))
+        {
+            Handler.DeleteMessage(chats.get(index));
+            chats.remove(index);
 
-        Handler.UpdateMessage(chats.get(index));
+            if (!Messages.isComputingLayout())
+                adapter.notifyItemChanged(index);
 
-        if(!Messages.isComputingLayout())
-            adapter.notifyItemChanged(index);
+        }else {
+            chats.get(index).setMessage("null");
+
+            Handler.UpdateMessage(chats.get(index));
+
+            if (!Messages.isComputingLayout())
+                adapter.notifyItemChanged(index);
+        }
 
     }
 
@@ -2749,7 +3011,162 @@ if(getIntent().getIntExtra("path",1)==2) {
         new DownloadGIF(index,chats.get(index)).execute(chats.get(index).getMessage());
     }
 
+    @Override
+    public void sendSticker(int index) {
+        SendSticker(index,chats.get(index));
+    }
+
+    @Override
+    public void downloadSticker(int index) {
+        new DownloadSticker(index,chats.get(index)).execute(chats.get(index).getMessage());
+    }
+
     //***********************************************************************************************************************************************
+
+    private class DownloadSticker extends AsyncTask<String, Void, Uri>
+    {
+        int index;
+        MessageModel message;
+
+        DownloadSticker(int position,MessageModel message)
+        {
+            index = position;
+            this.message = message;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            ApplicationClass.PendingRequests.add(RecieverPhone);
+
+            message.setDownloaded(304);
+            Handler.UpdateMessage(message);
+
+            chats.get(index).setDownloaded(304);
+            if(!Messages.isComputingLayout())
+                adapter.notifyItemChanged(index);
+
+        }
+
+        @Override
+        protected Uri doInBackground(String... strings) {
+            InputStream urlInputStream = null;
+
+            URLConnection urlConnection;
+
+            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+
+            if(!imagesfolder.exists())
+                imagesfolder.mkdirs();
+
+            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".png");
+
+            try{
+                //Form a new URL
+                URL finalUrl = new URL(strings[0]);
+
+                urlConnection = finalUrl.openConnection();
+
+                //Get the size of the (file) inputstream from server..
+                int contentLength = urlConnection.getContentLength();
+
+                DataInputStream stream = new DataInputStream(finalUrl.openStream());
+
+                byte[] buffer = new byte[contentLength];
+                stream.readFully(buffer);
+                stream.close();
+
+                if (buffer.length > 0) {
+                    try {
+                        FileOutputStream fos = new FileOutputStream(file);
+                        Log.d("5FILE", "Writing from buffer to the new file..");
+                        fos.write(buffer);
+                        fos.flush();
+                        fos.close();
+
+                        return Uri.fromFile(file);
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        /*Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();*/
+                    }
+                } else {
+                    //Could not download the file...
+                    Log.e("8ERROR", "Buffer size is zero ! & returning 'false'.......");
+
+                }
+            }catch (FileNotFoundException e){
+
+                return null;
+            }
+            catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Uri uri) {
+            super.onPostExecute(uri);
+
+            if (uri != null) {
+
+                message.setDownloaded(302);
+                message.setMessage(uri.toString());
+
+                Handler.UpdateMessage(message);
+
+                if(!MessageActivity.this.isDestroyed())
+                {
+                    chats.get(index).setDownloaded(302);
+                    chats.get(index).setMessage(uri.toString());
+
+                    if(!Messages.isComputingLayout())
+                    {
+                        adapter.notifyItemChanged(index);
+                    }
+                }
+
+                if (MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
+                    if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
+                        Intent intent = getIntent();
+                        ((Activity) ApplicationClass.MessageActivityContext).finish();
+                        startActivity(intent);
+
+                        overridePendingTransition(0, 0);
+                    }
+                }
+
+            }
+            else {
+                message.setDownloaded(303);
+                Handler.UpdateMessage(message);
+
+                if (!MessageActivity.this.isDestroyed()) {
+                    chats.get(index).setDownloaded(303);
+                    adapter.notifyItemChanged(index);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+                    builder.setTitle("Could not download Sticker");
+                    builder.setMessage("Please ask " + pref1.getString(getIntent().getStringExtra("title"), getIntent().getStringExtra("title")) +
+                            " to resend the sticker")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            }
+            ApplicationClass.PendingRequests.remove(RecieverPhone);
+        }
+    }
+
 
     private class DownloadGIF extends AsyncTask<String, Void, Uri>
     {
