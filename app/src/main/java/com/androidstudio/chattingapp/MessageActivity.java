@@ -659,7 +659,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                                                     @Override
                                                     public boolean onQueryTextChange(String newText) {
-                                                        gifSearch(newText);
+
                                                         return false;
                                                     }
                                                 });
@@ -742,7 +742,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                                                     @Override
                                                     public boolean onQueryTextChange(String newText) {
-                                                        stickerSearch(newText);
+
                                                         return false;
                                                     }
                                                 });
