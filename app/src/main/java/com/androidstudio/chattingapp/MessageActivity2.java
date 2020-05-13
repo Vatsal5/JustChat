@@ -1512,7 +1512,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             for(int i = chats.size()-1;i>=0;i--)
             {
                 if(chats.get(i).getDownloaded()==2 || chats.get(i).getDownloaded()==3 || chats.get(i).getDownloaded()==4 || chats.get(i).getDownloaded()==-2
-                        || chats.get(i).getDownloaded()==-3 || chats.get(i).getDownloaded()==100 || chats.get(i).getDownloaded()==103 || chats.get(i).getDownloaded()==104) {
+                        || chats.get(i).getDownloaded()==-3 || chats.get(i).getDownloaded()==100 || chats.get(i).getDownloaded()==103 || chats.get(i).getDownloaded()==104
+                ||chats.get(i).getDownloaded()==204 || chats.get(i).getDownloaded()==201) {
                     flag2 = false;
                     break;
                 }
@@ -1579,7 +1580,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             int swipeFlags;
             if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3 ||
-                    chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 60)){
+                    chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 204|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 201||
+                    chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 60 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -3
+            || chats.get(viewHolder.getAdapterPosition()).getType().equals("unread"))){
 
                 if(!chats.get(viewHolder.getAdapterPosition()).getSender().equals(sender)) {
                     swipeFlags = ItemTouchHelper.END;

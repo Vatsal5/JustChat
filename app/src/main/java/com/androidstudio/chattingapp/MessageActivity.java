@@ -1487,7 +1487,8 @@ if(getIntent().getIntExtra("path",1)==2) {
             for(int i = chats.size()-1;i>=0;i--)
             {
                 if(chats.get(i).getDownloaded()==2 || chats.get(i).getDownloaded()==3 || chats.get(i).getDownloaded()==4 || chats.get(i).getDownloaded()==-2
-                    || chats.get(i).getDownloaded()==-3 || chats.get(i).getDownloaded()==100 || chats.get(i).getDownloaded()==103 || chats.get(i).getDownloaded()==104) {
+                    || chats.get(i).getDownloaded()==-3 || chats.get(i).getDownloaded()==100 || chats.get(i).getDownloaded()==103 || chats.get(i).getDownloaded()==104
+                || chats.get(i).getDownloaded()==201 || chats.get(i).getDownloaded()==204) {
                     flag2 = false;
                     break;
                 }
