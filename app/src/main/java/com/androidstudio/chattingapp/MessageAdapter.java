@@ -569,28 +569,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             options.skipMemoryCache(true);
 
             if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
-//                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
-//                    @Override
-//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//
-//                        holder.ivGIF.setVisibility(View.GONE);
-//                        holder.tvError.setVisibility(View.VISIBLE);
-//
-//                        if(holder.getAdapterPosition()!=-1)
-//                            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null"))
-//                                Activity.OnFileDeleted(holder.getAdapterPosition());
-//
-//                        return false;
-//                    }
-//
-//                    @Override
-//                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                        holder.ivGIF.setVisibility(View.VISIBLE);
-//                        holder.tvError.setVisibility(View.GONE);
-//
-//                        return false;
-//                    }
-//                }).into(holder.ivImage);
 
                 holder.ivImage.setImageURI(Uri.parse(messages.get(holder.getAdapterPosition()).getMessage()));
                 if(holder.ivImage.getDrawable()==null)
