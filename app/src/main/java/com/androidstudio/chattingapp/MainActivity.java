@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     FirebaseDatabase database1;
     DatabaseReference reference1;
     DatabaseReference UserStatus;
-    ChildEventListener chreceiver,gifreceiver;
+    ChildEventListener chreceiver,gifreceiver,stickerreceiver;
     ValueEventListener dataCreater,deleteimage,deletevideo;
     DBHandler Handler;
     LinearLayoutManager linearLayoutManager;
@@ -145,69 +145,85 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             String theme = preftheme.getString("theme", "red");
 
 
-            if (theme.equals("orange")) {
+        switch (theme) {
+            case "orange":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
 
                 btnContacts.setBackgroundColor(getResources().getColor(R.color.Orange));
-            } else if (theme.equals("blue")) {
+                break;
+            case "blue":
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.blue));
 
-            } else if (theme.equals("bluish")) {
+                break;
+            case "bluish":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.bluish));
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.bluish)));
 
-            } else if (theme.equals("deepred")) {
+                break;
+            case "deepred":
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.deepred)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
 
-            } else if (theme.equals("faintpink")) {
+                break;
+            case "faintpink":
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.faintpink)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
 
-            } else if (theme.equals("darkblue")) {
+                break;
+            case "darkblue":
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkblue)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.darkblue));
 
-            } else if (theme.equals("green")) {
+                break;
+            case "green":
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.green));
 
-            } else if (theme.equals("lightorange")) {
+                break;
+            case "lightorange":
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightorange)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
 
-            } else if (theme.equals("lightred")) {
+                break;
+            case "lightred":
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightred)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
 
-            } else if (theme.equals("mustard")) {
+                break;
+            case "mustard":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.mustard)));
 
-            } else if (theme.equals("pink")) {
+                break;
+            case "pink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pink)));
 
-            } else if (theme.equals("pureorange")) {
+                break;
+            case "pureorange":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pureorange)));
 
-            } else if (theme.equals("purepink")) {
+                break;
+            case "purepink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(
                         getResources().getColor(R.color.purepink)));
 
-            } else if (theme.equals("purple")) {
+                break;
+            case "purple":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.purple)));
 
-            } else {
+                break;
+            default:
                 toolbar.setBackgroundColor(getResources().getColor(R.color.red));
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
 
 
-            }
+                break;
+        }
 
 
             Handler = new DBHandler(MainActivity.this);
@@ -401,7 +417,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                      //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
 
-//                     contacts1.get(index).setLastmessage("  ");
+                     contacts1.get(index).setLastmessage("   ");
+                     contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
                      contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                      userAdapter.notifyDataSetChanged();
 
@@ -443,7 +460,59 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
              reference.child("users").child(contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("info").child("gif").addChildEventListener(gifreceiver);
          }
 
-         public void VideoListener()
+        public void stickerlistener()
+        {
+            stickerreceiver= new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+
+
+                     contacts1.get(index).setLastmessage("    ");
+                    contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                    contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                    userAdapter.notifyDataSetChanged();
+
+
+
+//                     if (contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
+//                         model = new MessageModel(1110, contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+//                                 , dataSnapshot.getValue(String.class).substring(15), "video", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
+//                     }
+//                     else
+//                     {
+//                         model = new MessageModel(1110,"+91"+contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+//                                 , dataSnapshot.getValue(String.class).substring(15), "video", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
+//                     }
+//                     Handler.addMessage(model);
+
+
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            };
+            reference.child("users").child(contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("info").child("sticker").addChildEventListener(stickerreceiver);
+        }
+
+
+        public void VideoListener()
          {
              chreceiver = new ChildEventListener() {
                  @Override
@@ -452,6 +521,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
                          contacts1.get(index).setLastmessage("  ");
+                     contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
                          contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                          userAdapter.notifyDataSetChanged();
 
@@ -571,6 +641,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
                          contacts1.get(index).setLastmessage(" ");
+                     contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
                          contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                          userAdapter.notifyDataSetChanged();
 
@@ -634,6 +705,76 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                             contacts1.get(index).setLastmessage("  ");
+                            contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                            contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                            userAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+
+        public void gifListener()
+        {
+            reference.child("groups").child(contacts1.get(index).getGroupkey()).child("gif")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                    .addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            contacts1.get(index).setLastmessage("   ");
+                            contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                            contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                            userAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+
+        public void stickerListener()
+        {
+            reference.child("groups").child(contacts1.get(index).getGroupkey()).child("sticker")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                    .addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            contacts1.get(index).setLastmessage("    ");
                             contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
                             contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                             userAdapter.notifyDataSetChanged();
@@ -892,6 +1033,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         new listener(contacts1.size() - 1).piclistener();
                         new listener(contacts1.size() - 1).VideoListener();
                         new listener(contacts1.size() - 1).giflistener();
+                        new listener(contacts1.size() - 1).stickerlistener();
                         new listener(contacts1.size() - 1).child();
 
 
@@ -941,6 +1083,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     new grouplistener(contacts1.size() - 1).piclistener();
                     new grouplistener(contacts1.size() - 1).VideoListener();
                     new grouplistener(contacts1.size() - 1).child();
+                    new grouplistener(contacts1.size() - 1).gifListener();
+                    new grouplistener(contacts1.size() - 1).stickerListener();
+
                     (new GroupDp(contacts1.size() - 1)).ProfileListener();
 
 
@@ -952,6 +1097,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     new grouplistener(contacts1.size() - 1).piclistener();
                     new grouplistener(contacts1.size() - 1).VideoListener();
                     new grouplistener(contacts1.size() - 1).child();
+                    new grouplistener(contacts1.size() - 1).gifListener();
+                    new grouplistener(contacts1.size() - 1).stickerListener();
                     (new GroupDp(contacts1.size() - 1)).ProfileListener();
                 }
 
@@ -1379,84 +1526,70 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onRestart() {
         super.onRestart();
         String theme=preftheme.getString("theme","red");
-        if(theme.equals("orange"))
-        {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
+        switch (theme) {
+            case "orange":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
 
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.Orange)));
-        }
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.Orange)));
+                break;
+            case "blue":
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.blue));
+                break;
+            case "bluish":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.bluish));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.bluish)));
+                break;
+            case "deepred":
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.deepred)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
+                break;
+            case "faintpink":
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.faintpink)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
+                break;
+            case "darkblue":
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkblue)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.darkblue));
+                break;
+            case "green":
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.green));
+                break;
+            case "lightorange":
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightorange)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
+                break;
+            case "lightred":
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightred)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
+                break;
+            case "mustard":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.mustard)));
+                break;
+            case "pink":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pink)));
+                break;
+            case "pureorange":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pureorange)));
+                break;
+            case "purepink":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(
+                        getResources().getColor(R.color.purepink)));
+                break;
+            case "purple":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.purple)));
+                break;
+            default:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.red));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
 
-        else if(theme.equals("blue"))
-        {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.blue));}
-
-
-        else if(theme.equals("bluish")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.bluish));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.bluish)));
-        }
-
-        else if(theme.equals("deepred")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.deepred)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
-        }
-
-        else if(theme.equals("faintpink")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.faintpink)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
-        }
-
-        else if(theme.equals("darkblue")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkblue)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.darkblue));
-        }
-
-        else if (theme.equals("green")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.green));
-        }
-
-        else if (theme.equals("lightorange")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightorange)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
-        }
-
-        else  if (theme.equals("lightred")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightred)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
-        }
-
-        else if(theme.equals( "mustard")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.mustard)));
-        }
-
-        else if (theme.equals("pink")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pink)));
-        }
-
-        else if(theme.equals("pureorange")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pureorange)));
-        }
-
-        else if(theme.equals( "purepink")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(
-                    getResources().getColor(R.color.purepink)));
-        }
-
-        else if(theme.equals( "purple")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.purple)));
-        }
-
-        else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.red));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
-
+                break;
         }
 
 

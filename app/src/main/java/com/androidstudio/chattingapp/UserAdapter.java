@@ -256,7 +256,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
                 @Override
                 public void onClick(View view) {
 
-                    Activity.onImageSelected(position);
+                    Activity.onImageSelected(holder.getAdapterPosition());
                 }
             });
         }
@@ -317,7 +317,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         holder.innerConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Activity.onItemSelected(position);
+                Activity.onItemSelected(holder.getAdapterPosition());
             }
         });
 
