@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -295,85 +296,92 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         pref  = getSharedPreferences("Names",0);
 
-
-
         String theme=preftheme.getString("theme","red");
 
-        if(theme.equals("orange"))
-        {
-            ll.setBackgroundColor(getResources().getColor(R.color.Orange));
-        }
+        ivSend = findViewById(R.id.ivSend);
 
-        else if(theme.equals("blue"))
-        {
-            ll.setBackgroundColor(getResources().getColor(R.color.blue));
-        }
+        Drawable mDrawable = getResources().getDrawable(R.drawable.attachment); //Your drawable image
+        mDrawable = DrawableCompat.wrap(mDrawable);
 
+        switch (theme) {
+            case "orange":
+                ll.setBackgroundColor(getResources().getColor(R.color.Orange));
+                mDrawable.setTint(getResources().getColor(R.color.Orange));
+                ivSend.setColorFilter(getResources().getColor(R.color.Orange));
+                break;
+            case "blue":
+                ll.setBackgroundColor(getResources().getColor(R.color.blue));
+                mDrawable.setTint(getResources().getColor(R.color.blue));
+                ivSend.setColorFilter(getResources().getColor(R.color.blue));
+                break;
+            case "bluish":
+                ll.setBackgroundColor(getResources().getColor(R.color.bluish));
+                mDrawable.setTint(getResources().getColor(R.color.bluish));
+                ivSend.setColorFilter(getResources().getColor(R.color.bluish));
+                break;
+            case "deepred":
+                ll.setBackgroundColor(getResources().getColor(R.color.deepred));
+                mDrawable.setTint(getResources().getColor(R.color.deepred));
+                ivSend.setColorFilter(getResources().getColor(R.color.deepred));
+                break;
+            case "faintpink":
+                ll.setBackgroundColor(getResources().getColor(R.color.faintpink));
+                mDrawable.setTint(getResources().getColor(R.color.faintpink));
+                ivSend.setColorFilter(getResources().getColor(R.color.faintpink));
+                break;
+            case "darkblue":
+                ll.setBackgroundColor(getResources().getColor(R.color.darkblue));
+                mDrawable.setTint(getResources().getColor(R.color.darkblue));
+                ivSend.setColorFilter(getResources().getColor(R.color.darkblue));
+                break;
+            case "green":
+                ll.setBackgroundColor(getResources().getColor(R.color.green));
+                mDrawable.setTint(getResources().getColor(R.color.green));
+                ivSend.setColorFilter(getResources().getColor(R.color.green));
+                break;
+            case "lightorange":
+                ll.setBackgroundColor(getResources().getColor(R.color.lightorange));
+                mDrawable.setTint(getResources().getColor(R.color.lightorange));
+                ivSend.setColorFilter(getResources().getColor(R.color.lightorange));
+                break;
+            case "lightred":
+                ll.setBackgroundColor(getResources().getColor(R.color.lightred));
+                mDrawable.setTint(getResources().getColor(R.color.lightred));
+                ivSend.setColorFilter(getResources().getColor(R.color.lightred));
+                break;
+            case "mustard":
+                ll.setBackgroundColor(getResources().getColor(R.color.mustard));
+                mDrawable.setTint(getResources().getColor(R.color.mustard));
+                ivSend.setColorFilter(getResources().getColor(R.color.mustard));
+                break;
+            case "pink":
+                ll.setBackgroundColor(getResources().getColor(R.color.pink));
+                mDrawable.setTint(getResources().getColor(R.color.pink));
+                ivSend.setColorFilter(getResources().getColor(R.color.pink));
+                break;
+            case "pureorange":
+                ll.setBackgroundColor(getResources().getColor(R.color.pureorange));
+                mDrawable.setTint(getResources().getColor(R.color.pureorange));
+                ivSend.setColorFilter(getResources().getColor(R.color.pureorange));
 
-        else if(theme.equals("bluish")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.bluish));
+                break;
+            case "purepink":
+                ll.setBackgroundColor(getResources().getColor(R.color.purepink));
+                mDrawable.setTint(getResources().getColor(R.color.purepink));
+                ivSend.setColorFilter(getResources().getColor(R.color.purepink));
+                break;
+            case "purple":
+                ll.setBackgroundColor(getResources().getColor(R.color.purple));
+                mDrawable.setTint(getResources().getColor(R.color.purple));
+                ivSend.setColorFilter(getResources().getColor(R.color.purple));
 
-        }
+                break;
+            default:
+                ll.setBackgroundColor(getResources().getColor(R.color.red));
+                mDrawable.setTint(getResources().getColor(R.color.red));
+                ivSend.setColorFilter(getResources().getColor(R.color.red));
 
-        else if(theme.equals("deepred")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.deepred));
-
-        }
-
-        else if(theme.equals("faintpink")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.faintpink));
-
-        }
-
-        else if(theme.equals("darkblue")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.darkblue));
-
-        }
-
-        else if (theme.equals("green")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.green));
-
-        }
-
-        else if (theme.equals("lightorange")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.lightorange));
-
-        }
-
-        else  if (theme.equals("lightred")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.lightred));
-
-        }
-
-        else if(theme.equals( "mustard")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.mustard));
-
-        }
-
-        else if (theme.equals("pink")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.pink));
-
-        }
-
-        else if(theme.equals("pureorange")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.pureorange));
-
-        }
-
-        else if(theme.equals( "purepink")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.purepink));
-
-        }
-
-        else if(theme.equals( "purple")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.purple));
-
-        }
-
-        else {
-            ll.setBackgroundColor(getResources().getColor(R.color.red));
-
-
+                break;
         }
 
         profile=getIntent().getStringExtra("profile");
@@ -386,9 +394,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         groupname = getIntent().getStringExtra("groupname");
         sender = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
-        ivSend = findViewById(R.id.ivSend);
         rf = FirebaseStorage.getInstance().getReference("docs/");
         etMessage = findViewById(R.id.etMessage);
+
+        etMessage.setCompoundDrawablesWithIntrinsicBounds(null,null,mDrawable,null);
+
         llMessageActivity2 = findViewById(R.id.llMessageActivity2);
 
         EmojIconActions emojIcon=new EmojIconActions(this,llMessageActivity2,etMessage,emojibtn);
