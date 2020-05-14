@@ -6,21 +6,45 @@
     android:layout_height="match_parent"
     tools:context=".ShowImage">
 
+    <LinearLayout
+        android:id="@+id/llInfo"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="#212121"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:clickable="true"
+            android:layout_width="40dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="7dp"
+            app:srcCompat="@drawable/back"/>
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:layout_marginLeft="25dp"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:layout_gravity="center_vertical"/>
+
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/ivShowImage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000"/>
-
-    <ImageView
-        android:id="@+id/ivBack"
-        android:clickable="true"
-        android:layout_width="40dp"
-        android:layout_height="25dp"
-        app:layout_constraintLeft_toLeftOf="@id/ivShowImage"
-        app:layout_constraintTop_toTopOf="@id/ivShowImage"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="7dp"
-        app:srcCompat="@drawable/back"/>
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llInfo"
+        android:background="#212121"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,6 +12,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bogdwellers.pinchtozoom.ImageMatrixTouchHandler;
 import com.bumptech.glide.Glide;
@@ -26,6 +27,7 @@ public class ShowImage extends AppCompatActivity{
 
     ImageView ivShowImage;
     ImageView ivBack;
+    TextView tvName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,12 @@ public class ShowImage extends AppCompatActivity{
 
         ivShowImage = findViewById(R.id.ivShowImage);
         ivBack = findViewById(R.id.ivBack);
+        tvName = findViewById(R.id.tvName);
+
+        if(getIntent().getStringExtra("title")!=null)
+            tvName.setText(getIntent().getStringExtra("title"));
+        else
+            tvName.setText(null);
 
         String source = getIntent().getStringExtra("source");
 

@@ -1397,6 +1397,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         if(!contacts1.get(index).getUrl().equals("null")) {
             Intent intent = new Intent(MainActivity.this, ShowImage.class);
             intent.putExtra("source", contacts1.get(index).getUrl());
+            intent.putExtra("title", contacts1.get(index).getuID());
             startActivity(intent);
         }
     }
