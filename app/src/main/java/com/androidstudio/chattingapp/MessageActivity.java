@@ -1018,24 +1018,19 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         getMessages();
 
-        Date date2 = new Date();
-        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("HH:mm");
-        long millis1 = System.currentTimeMillis();
-        java.sql.Date date3 = new java.sql.Date(millis1);
-
         if(messagecount>2) {
-            if (chats.size()>0 && chats.get(chats.size() - 1).getDate().equals(date3.toString())) {
+            if (chats.size() == 0) {
                 if (flag1)
-                    chats.add(chats.size() - 1, new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 5), date3.toString(), "null","null"));
+                    chats.add(chats.size() - 1, new MessageModel(-65, "null", "null", "null123", "unread", 1234, "null", "null", "null", "null"));
                 else
-                    chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, simpleDateFormat1.format(date2).substring(0, 5), date3.toString(), "null","null"));
+                    chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, "null","null", "null", "null"));
             }
             else
             {
                 if (flag1)
-                    chats.add(chats.size() - 1, new MessageModel(-65, "null", "null", "null123", "unread", 1234, "null", "null", "null","null"));
+                    chats.add(chats.size() - 1, new MessageModel(-65, "null", "null", "null123", "unread", 1234, "null", chats.get(chats.size()-1).getDate(), "null", "null"));
                 else
-                    chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, "null", "null", "null","null"));
+                    chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, "null",chats.get(chats.size()-1).getDate(), "null", "null"));
             }
         }
 
