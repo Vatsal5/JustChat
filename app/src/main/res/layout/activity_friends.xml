@@ -27,11 +27,10 @@
             android:id="@+id/tvhead"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/aclonica"
             android:gravity="center|start|left"
             android:text="Contacts"
             android:textColor="#ffffff"
-            android:textSize="23sp"
+            android:textSize="26sp"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="13dp" />
 
