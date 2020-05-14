@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     FirebaseDatabase database1;
     DatabaseReference reference1;
     DatabaseReference UserStatus;
-    ChildEventListener chreceiver,gifreceiver;
+    ChildEventListener chreceiver,gifreceiver,stickerreceiver;
     ValueEventListener dataCreater,deleteimage,deletevideo;
     DBHandler Handler;
     LinearLayoutManager linearLayoutManager;
@@ -401,7 +401,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                      //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
 
-//                     contacts1.get(index).setLastmessage("  ");
+                     contacts1.get(index).setLastmessage("   ");
+                     contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
                      contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                      userAdapter.notifyDataSetChanged();
 
@@ -443,7 +444,59 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
              reference.child("users").child(contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("info").child("gif").addChildEventListener(gifreceiver);
          }
 
-         public void VideoListener()
+        public void stickerlistener()
+        {
+            stickerreceiver= new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+
+
+                     contacts1.get(index).setLastmessage("    ");
+                    contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                    contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                    userAdapter.notifyDataSetChanged();
+
+
+
+//                     if (contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
+//                         model = new MessageModel(1110, contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+//                                 , dataSnapshot.getValue(String.class).substring(15), "video", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
+//                     }
+//                     else
+//                     {
+//                         model = new MessageModel(1110,"+91"+contacts1.get(index).getPh_number(), FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+//                                 , dataSnapshot.getValue(String.class).substring(15), "video", 0, dataSnapshot.getValue(String.class).substring(0, 5), dataSnapshot.getValue(String.class).substring(5, 15));
+//                     }
+//                     Handler.addMessage(model);
+
+
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            };
+            reference.child("users").child(contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("info").child("sticker").addChildEventListener(stickerreceiver);
+        }
+
+
+        public void VideoListener()
          {
              chreceiver = new ChildEventListener() {
                  @Override
@@ -452,6 +505,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
                          contacts1.get(index).setLastmessage("  ");
+                     contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
                          contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                          userAdapter.notifyDataSetChanged();
 
@@ -571,6 +625,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
                          contacts1.get(index).setLastmessage(" ");
+                     contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
                          contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                          userAdapter.notifyDataSetChanged();
 
@@ -634,6 +689,76 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                             contacts1.get(index).setLastmessage("  ");
+                            contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                            contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                            userAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+
+        public void gifListener()
+        {
+            reference.child("groups").child(contacts1.get(index).getGroupkey()).child("gif")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                    .addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            contacts1.get(index).setLastmessage("   ");
+                            contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                            contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
+                            userAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+
+        public void stickerListener()
+        {
+            reference.child("groups").child(contacts1.get(index).getGroupkey()).child("sticker")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                    .addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            contacts1.get(index).setLastmessage("    ");
                             contacts1.get(index).setTime(dataSnapshot.getValue().toString().substring(0, 5));
                             contacts1.get(index).setMessagenum(contacts1.get(index).getMessagenum() + 1);
                             userAdapter.notifyDataSetChanged();
@@ -892,6 +1017,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         new listener(contacts1.size() - 1).piclistener();
                         new listener(contacts1.size() - 1).VideoListener();
                         new listener(contacts1.size() - 1).giflistener();
+                        new listener(contacts1.size() - 1).stickerlistener();
                         new listener(contacts1.size() - 1).child();
 
 
@@ -941,6 +1067,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     new grouplistener(contacts1.size() - 1).piclistener();
                     new grouplistener(contacts1.size() - 1).VideoListener();
                     new grouplistener(contacts1.size() - 1).child();
+                    new grouplistener(contacts1.size() - 1).gifListener();
+                    new grouplistener(contacts1.size() - 1).stickerListener();
+
                     (new GroupDp(contacts1.size() - 1)).ProfileListener();
 
 
@@ -952,6 +1081,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     new grouplistener(contacts1.size() - 1).piclistener();
                     new grouplistener(contacts1.size() - 1).VideoListener();
                     new grouplistener(contacts1.size() - 1).child();
+                    new grouplistener(contacts1.size() - 1).gifListener();
+                    new grouplistener(contacts1.size() - 1).stickerListener();
                     (new GroupDp(contacts1.size() - 1)).ProfileListener();
                 }
 
