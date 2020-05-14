@@ -30,8 +30,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:text="Create Your Privacy Account"
-                android:textColor="#d6514a"
+                android:text="Create Your Private Account"
+                android:textColor="#212121"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -42,7 +42,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="15dp"
                 android:text="**Please fill up your complete details"
-                android:textColor="#d6514a"
+                android:textColor="#212121"
                 android:textSize="18sp"
                 tools:visibility="gone" />
 
@@ -54,8 +54,8 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="20dp"
                 android:hint="Enter Username "
-                android:textColor="#d6514a"
-                android:textColorHint="#d6514a"
+                android:textColor="#212121"
+                android:textColorHint="#40212121"
                 android:textSize="18dp"></EditText>
 
             <EditText
@@ -66,8 +66,8 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="20dp"
                 android:hint="Enter password "
-                android:textColor="#d6514a"
-                android:textColorHint="#d6514a"
+                android:textColor="#212121"
+                android:textColorHint="#40212121"
                 android:textSize="18dp"></EditText>
 
             <Button
@@ -77,7 +77,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
 
-                android:background="@drawable/button_background"
+                android:background="@drawable/button_background2"
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="5dp"
                 android:text="Done"
@@ -199,13 +199,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/button_background"
+                android:background="@drawable/button_background1"
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="5dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="confirm"
-                android:textColor="#ffffff"
+                android:textColor="#212121"
                 android:textSize="14dp"></Button>
         </LinearLayout>
 
@@ -257,12 +257,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/button_background"
+                android:background="@drawable/button_background1"
 
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="5dp"
                 android:text="get password"
-                android:textColor="#ffffff"
+                android:textColor="#212121"
                 android:textSize="14dp"></Button>
 
         </LinearLayout>
@@ -296,9 +296,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:background="@drawable/button_background"
+            android:background="@drawable/button_background1"
             android:text="go back"
-            android:textColor="#ffffff" />
+            android:textColor="#212121" />
     </LinearLayout>
 
     <LinearLayout
@@ -350,9 +350,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:background="@drawable/button_background"
+            android:background="@drawable/button_background1"
             android:text="go back"
-            android:textColor="#ffffff" />
+            android:textColor="#212121" />
     </LinearLayout>
 
 
