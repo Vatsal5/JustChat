@@ -202,7 +202,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         JSONObject j3 = (JSONObject) j2.getJSONObject("images");
 
 
-                        JSONObject j4 = (JSONObject) j3.getJSONObject("preview_gif");
+                        JSONObject j4 = (JSONObject) j3.getJSONObject("fixed_width_downsampled");
                         // Log.d("asdf",names.get(j).toString());
                         // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
                         String url= j4.getString("url");
@@ -781,7 +781,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                                     @Override
                                                     public boolean onQueryTextChange(String newText) {
-                                                        gifSearch(newText);
+
                                                         return false;
                                                     }
                                                 });
@@ -800,7 +800,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                                                 JSONObject j3 = (JSONObject) j2.getJSONObject("images");
 
 
-                                                                JSONObject j4 = (JSONObject) j3.getJSONObject("preview_gif");
+                                                                JSONObject j4 = (JSONObject) j3.getJSONObject("fixed_width_downsampled");
                                                                 // Log.d("asdf",names.get(j).toString());
                                                                 // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
                                                                 String url= j4.getString("url");
@@ -862,7 +862,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                                     @Override
                                                     public boolean onQueryTextChange(String newText) {
-                                                        stickerSearch(newText);
+
                                                         return false;
                                                     }
                                                 });
