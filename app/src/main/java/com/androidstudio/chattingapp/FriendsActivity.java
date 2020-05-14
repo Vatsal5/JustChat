@@ -66,9 +66,15 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         tvtitle=findViewById(R.id.tvhead);
         cvCreate=findViewById(R.id.ivCreate);
         ivBack=findViewById(R.id.ivBack);
+        if (getIntent().getIntExtra("path", 2) == 1) {
+
+            tvtitle.setText("Forward");
+
+        }
 
 
-         toolbar = findViewById(R.id.toolbar);
+
+        toolbar = findViewById(R.id.toolbar);
         SharedPreferences preftheme;
         preftheme=getSharedPreferences("theme",0);
 
@@ -104,6 +110,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             case "deepred":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
                 ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#e24a3c")));
+                break;
 
             case "faintpink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
@@ -119,6 +126,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             case "green":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.green));
                 ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#f2a37a")));
+                break;
 
             case "lightorange":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
@@ -128,12 +136,12 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             case "lightred":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
                 ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#e9776c")));
-
+                break;
 
             case "mustard":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
                 ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#eba54d")));
-
+                break;
             case "pink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
                 ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#e91e63")));
@@ -143,14 +151,15 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                 toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
                 ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#ff5722")));
 
+                break;
             case "purepink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
                 ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#f57268")));
-
+                break;
             case "purple":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
                 ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#49264e")));
-
+                break;
             default:
                 toolbar.setBackgroundColor(getResources().getColor(R.color.red));
                 ViewCompat.setBackgroundTintList(cvCreate,ColorStateList.valueOf(Color.parseColor("#d6514a")));
@@ -496,6 +505,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                     }
                 };
         if (getIntent().getIntExtra("path", 2) == 1) {
+
+            tvtitle.setText("Forward");
             reference.child("users").child(currentUserNumber).addChildEventListener(childEvent);
         }
 

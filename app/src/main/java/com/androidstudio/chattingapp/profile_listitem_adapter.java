@@ -60,12 +60,14 @@ public class profile_listitem_adapter extends ArrayAdapter
 
                 ivImage.setColorFilter(context.getResources().getColor(R.color.Orange));
                 tvData.setTextColor(context.getResources().getColor(R.color.Orange));
+                tvHeading.setTextColor(context.getResources().getColor(R.color.Orange));
                 break;
 
             case "blue":
 
                 ivImage.setColorFilter(context.getResources().getColor(R.color.blue));
                 tvData.setTextColor(context.getResources().getColor(R.color.blue));
+                tvHeading.setTextColor(context.getResources().getColor(R.color.blue));
 
                 break;
 
@@ -73,71 +75,84 @@ public class profile_listitem_adapter extends ArrayAdapter
             case "bluish":
                 ivImage.setColorFilter(context.getResources().getColor(R.color.bluish));
                 tvData.setTextColor(context.getResources().getColor(R.color.bluish));
+                tvHeading.setTextColor(context.getResources().getColor(R.color.bluish));
                 break;
 
 
             case "deepred":
                 ivImage.setColorFilter(context.getResources().getColor(R.color.deepred));
                 tvData.setTextColor(context.getResources().getColor(R.color.deepred));
+                tvHeading.setTextColor(context.getResources().getColor(R.color.deepred));
                 break;
 
             case "faintpink":
                 ivImage.setColorFilter(context.getResources().getColor(R.color.faintpink));
                 tvData.setTextColor(context.getResources().getColor(R.color.faintpink));
+                tvHeading.setTextColor(context.getResources().getColor(R.color.faintpink));
 
                 break;
 
             case "darkblue":
                 ivImage.setColorFilter(context.getResources().getColor(R.color.darkblue));
                 tvData.setTextColor(context.getResources().getColor(R.color.darkblue));
+                tvHeading.setTextColor(context.getResources().getColor(R.color.darkblue));
                 break;
 
 
             case "green":
                 ivImage.setColorFilter(context.getResources().getColor(R.color.green));
                 tvData.setTextColor(context.getResources().getColor(R.color.green));
+                tvHeading.setTextColor(context.getResources().getColor(R.color.green));
                 break;
 
             case "lightorange":
                 ivImage.setColorFilter(context.getResources().getColor(R.color.lightorange));
                 tvData.setTextColor(context.getResources().getColor(R.color.lightorange));
+                tvHeading.setTextColor(context.getResources().getColor(R.color.lightorange));
 
                 break;
 
             case "lightred":
                 ivImage.setColorFilter(context.getResources().getColor(R.color.lightred));
                 tvData.setTextColor(context.getResources().getColor(R.color.lightred));
+                tvHeading.setTextColor(context.getResources().getColor(R.color.lightred));
                 break;
 
 
             case "mustard":
                 ivImage.setColorFilter(context.getResources().getColor(R.color.mustard));
                 tvData.setTextColor(context.getResources().getColor(R.color.mustard));
+                tvHeading.setTextColor(context.getResources().getColor(R.color.mustard));
                 break;
 
             case "pink":
                 ivImage.setColorFilter(context.getResources().getColor(R.color.pink));
                 tvData.setTextColor(context.getResources().getColor(R.color.pink));
+                tvHeading.setTextColor(context.getResources().getColor(R.color.pink));
                 break;
 
             case "pureorange":
                 ivImage.setColorFilter(context.getResources().getColor(R.color.pureorange));
                 tvData.setTextColor(context.getResources().getColor(R.color.pureorange));
+                tvHeading.setTextColor(context.getResources().getColor(R.color.pureorange));
                 break;
 
             case "purepink":
                 ivImage.setColorFilter(context.getResources().getColor(R.color.purepink));
                 tvData.setTextColor(context.getResources().getColor(R.color.purepink));
+                tvHeading.setTextColor(context.getResources().getColor(R.color.purepink));
                 break;
 
             case "purple":
                 ivImage.setColorFilter(context.getResources().getColor(R.color.purple));
                 tvData.setTextColor(context.getResources().getColor(R.color.purple));
+                tvHeading.setTextColor(context.getResources().getColor(R.color.purple));
                 break;
 
             default:
                 ivImage.setColorFilter(context.getResources().getColor(R.color.red));
                 tvData.setTextColor(context.getResources().getColor(R.color.red));
+                tvHeading.setTextColor(context.getResources().getColor(R.color.red));
         }
 
 
