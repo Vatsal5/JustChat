@@ -249,7 +249,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
         else
         {
-
             holder.iv.setColorFilter(context.getResources().getColor(R.color.iOrange));
             Glide.with(context).load(list.get(position).getUrl()).into(holder.iv);
             holder.iv.setOnClickListener(new View.OnClickListener() {
