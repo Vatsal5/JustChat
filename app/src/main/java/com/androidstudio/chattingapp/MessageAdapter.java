@@ -311,13 +311,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                         holder.ivImage.setImageResource(0);
                         holder.tvError.setVisibility(View.VISIBLE);
 
-                        if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
-                           setBackground(holder.tvError);
-                        else
-                            holder.tvError.setBackgroundResource(R.drawable.background_right);
+                        if (holder.getAdapterPosition() != -1) {
 
-                        if (holder.getAdapterPosition() != -1)
+                            if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                                setBackground(holder.tvError);
+                            else
+                                holder.tvError.setBackgroundResource(R.drawable.background_right);
+
                             Activity.OnFileDeleted(holder.getAdapterPosition());
+                        }
                         return false;
                     }
 
@@ -382,13 +384,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                         holder.ivImage.setImageResource(0);
                         holder.tvError.setVisibility(View.VISIBLE);
 
-                        if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
-                            setBackground(holder.tvError);
-                        else
-                            holder.tvError.setBackgroundResource(R.drawable.background_right);
+                        if (holder.getAdapterPosition() != -1) {
 
-                        if (holder.getAdapterPosition() != -1)
+                            if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                                setBackground(holder.tvError);
+                            else
+                                holder.tvError.setBackgroundResource(R.drawable.background_right);
+
                             Activity.OnFileDeleted(holder.getAdapterPosition());
+                        }
                         return false;
                     }
 

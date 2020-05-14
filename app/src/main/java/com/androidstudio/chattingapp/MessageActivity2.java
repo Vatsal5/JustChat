@@ -1481,7 +1481,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             }
         };
 
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("gif").child(
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("sticker").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).addChildEventListener(stickerreceiver);
 
@@ -1853,7 +1853,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).addChildEventListener(gifreceiver);
 
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("gif").child(
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("sticker").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).addChildEventListener(stickerreceiver);
 
@@ -2095,7 +2095,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(gifreceiver);
 
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("gif").child(
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("sticker").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(stickerreceiver);
 
@@ -3531,7 +3531,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(gifreceiver);
 
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("gif").child(
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("sticker").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(stickerreceiver);
 
