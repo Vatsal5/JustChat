@@ -303,12 +303,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             options.diskCacheStrategy(DiskCacheStrategy.NONE);
             options.skipMemoryCache(true);
 
+            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
                 Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
-                        if(holder.getAdapterPosition()!=-1)
-                                Activity.OnFileDeleted(holder.getAdapterPosition());
+                        holder.ivImage.setImageResource(0);
+                        holder.tvError.setVisibility(View.VISIBLE);
+
+                        if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                           setBackground(holder.tvError);
+                        else
+                            holder.tvError.setBackgroundResource(R.drawable.background_right);
+
+                        if (holder.getAdapterPosition() != -1)
+                            Activity.OnFileDeleted(holder.getAdapterPosition());
                         return false;
                     }
 
@@ -319,6 +328,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                         return false;
                     }
                 }).into(holder.ivImage);
+            }
+            else
+            {
+                holder.ivImage.setImageResource(0);
+                holder.tvError.setVisibility(View.VISIBLE);
+
+                if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                    setBackground(holder.tvError);
+                else
+                    holder.tvError.setBackgroundResource(R.drawable.background_right);
+            }
 
                 if(messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
                     holder.ivSeen.setVisibility(View.GONE);
@@ -327,7 +347,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         else if(messages.get(holder.getAdapterPosition()).getDownloaded()==303) // when sticker is received and yet to be downloaded
         {
             holder.ivImage.setImageResource(0);
-            holder.progress.setVisibility(View.GONE);
+            holder.progress.setVisibility(View.VISIBLE);
 
             Activity.downloadSticker(holder.getAdapterPosition());
         }
@@ -338,7 +358,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.ivImage.setImageResource(0);
         }
 
-        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==305  || messages.get(holder.getAdapterPosition()).getDownloaded()==306) //when gif has been "seen"
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==305  || messages.get(holder.getAdapterPosition()).getDownloaded()==306) //when sticker has been "seen"
         {
             holder.progress.setVisibility(View.GONE);
 
@@ -354,23 +374,42 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             options.diskCacheStrategy(DiskCacheStrategy.NONE);
             options.skipMemoryCache(true);
 
+            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
                 Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
+                        holder.ivImage.setImageResource(0);
+                        holder.tvError.setVisibility(View.VISIBLE);
 
-                        if(holder.getAdapterPosition()!=-1)
-                                Activity.OnFileDeleted(holder.getAdapterPosition());
+                        if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                            setBackground(holder.tvError);
+                        else
+                            holder.tvError.setBackgroundResource(R.drawable.background_right);
 
+                        if (holder.getAdapterPosition() != -1)
+                            Activity.OnFileDeleted(holder.getAdapterPosition());
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
 
+
                         return false;
                     }
                 }).into(holder.ivImage);
+            }
+            else
+            {
+                holder.ivImage.setImageResource(0);
+                holder.tvError.setVisibility(View.VISIBLE);
+
+                if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                    setBackground(holder.tvError);
+                else
+                    holder.tvError.setBackgroundResource(R.drawable.background_right);
+            }
 
         }
 
@@ -453,6 +492,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 holder.ivImage.setImageURI(Uri.parse(messages.get(holder.getAdapterPosition()).getMessage()));
                 if(holder.ivImage.getDrawable()==null)
                 {
+                    holder.ivImage.setImageURI(null);
                     holder.ivGIF.setVisibility(View.GONE);
                         holder.tvError.setVisibility(View.VISIBLE);
 
@@ -469,6 +509,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
             else
             {
+                holder.ivImage.setImageURI(null);
                 holder.ivGIF.setVisibility(View.GONE);
                 holder.tvError.setVisibility(View.VISIBLE);
             }
@@ -550,6 +591,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 holder.ivImage.setImageURI(Uri.parse(messages.get(holder.getAdapterPosition()).getMessage()));
                 if(holder.ivImage.getDrawable()==null)
                 {
+                    holder.ivImage.setImageURI(null);
                     holder.ivGIF.setVisibility(View.GONE);
                     holder.tvError.setVisibility(View.VISIBLE);
 
@@ -566,6 +608,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
             else
             {
+                holder.ivImage.setImageURI(null);
                 holder.ivGIF.setVisibility(View.GONE);
                 holder.tvError.setVisibility(View.VISIBLE);
             }
@@ -613,6 +656,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         holder.ivImage.setClickable(false);
+                        holder.ivImage.setImageURI(null);
                         holder.tvError.setVisibility(View.VISIBLE);
 
                         if(holder.getAdapterPosition()!=-1)
@@ -629,6 +673,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
             else
             {
+                holder.ivImage.setImageURI(null);
                 holder.tvError.setVisibility(View.VISIBLE);
             }
 
@@ -659,6 +704,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         holder.ivImage.setClickable(false);
+                        holder.ivImage.setImageURI(null);
                         holder.tvError.setVisibility(View.VISIBLE);
 
                         if(holder.getAdapterPosition()!=-1)
@@ -675,6 +721,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
             else
             {
+                holder.ivImage.setImageURI(null);
                 holder.tvError.setVisibility(View.VISIBLE);
             }
             holder.ivImage.setBackgroundResource(R.drawable.background_right);
@@ -824,6 +871,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
+                        holder.ivImage.setImageURI(null);
                         holder.ivPlay.setVisibility(View.GONE);
                         holder.tvError.setVisibility(View.VISIBLE);
 
@@ -851,6 +899,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
             else
             {
+                holder.ivImage.setImageURI(null);
                 holder.ivPlay.setVisibility(View.GONE);
                 holder.tvError.setVisibility(View.VISIBLE);
             }
@@ -882,6 +931,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
+                        holder.ivImage.setImageURI(null);
                         holder.ivPlay.setVisibility(View.GONE);
                         holder.tvError.setVisibility(View.VISIBLE);
 
@@ -909,6 +959,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
             else
             {
+                holder.ivImage.setImageURI(null);
                 holder.ivPlay.setVisibility(View.GONE);
                 holder.tvError.setVisibility(View.VISIBLE);
             }
@@ -987,47 +1038,50 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
 
         if(messages.get(position).getSender().equals(user.getPhoneNumber())) {
-            if (messages.get(position).getType().equals("image")) {
-                return MSG_IMG_RIGHT;
-            } else if (messages.get(position).getType().equals("text")) {
-                return MSG_TXT_RIGHT;
-            }else if(messages.get(position).getType().equals("video")){
-                return MSG_VIDEO_RIGHT;
-            }else if(messages.get(position).getType().equals("gif")){
-                return GIF_RIGHT;
-            }else if(messages.get(position).getType().equals("sticker")){
-                return STICK_RIGHT;
+            switch (messages.get(position).getType()) {
+                case "image":
+                    return MSG_IMG_RIGHT;
+                case "text":
+                    return MSG_TXT_RIGHT;
+                case "video":
+                    return MSG_VIDEO_RIGHT;
+                case "gif":
+                    return GIF_RIGHT;
+                case "sticker":
+                    return STICK_RIGHT;
             }
         }
 
         if(messages.get(position).getGroupName().equals("null")) {
             if (!messages.get(position).getSender().equals(user.getPhoneNumber()) && !messages.get(position).getSender().equals("null")) {
-                if (messages.get(position).getType().equals("image")) {
-                    return MSG_IMG_LEFT;
-                } else if (messages.get(position).getType().equals("text")) {
-                    return MSG_TXT_LEFT;
-                } else if (messages.get(position).getType().equals("video")) {
-                    return MSG_VIDEO_LEFT;
-                }else if(messages.get(position).getType().equals("gif")){
-                    return GIF_LEFT;
-                }else if(messages.get(position).getType().equals("sticker")){
-                    return STICK_LEFT;
+                switch (messages.get(position).getType()) {
+                    case "image":
+                        return MSG_IMG_LEFT;
+                    case "text":
+                        return MSG_TXT_LEFT;
+                    case "video":
+                        return MSG_VIDEO_LEFT;
+                    case "gif":
+                        return GIF_LEFT;
+                    case "sticker":
+                        return STICK_LEFT;
                 }
             }
         }
         else
         {
             if (!messages.get(position).getSender().equals(user.getPhoneNumber()) && !messages.get(position).getSender().equals("null")) {
-                if (messages.get(position).getType().equals("image")) {
-                    return GRP_IMAGE_LEFT;
-                } else if (messages.get(position).getType().equals("text")) {
-                    return GRP_MSG_LEFT;
-                } else if (messages.get(position).getType().equals("video")) {
-                    return GRP_VIDEO_LEFT;
-                }else if(messages.get(position).getType().equals("gif")){
-                    return GIF_LEFT_GRP;
-                }else if(messages.get(position).getType().equals("sticker")){
-                    return STICK_LEFT_GRP;
+                switch (messages.get(position).getType()) {
+                    case "image":
+                        return GRP_IMAGE_LEFT;
+                    case "text":
+                        return GRP_MSG_LEFT;
+                    case "video":
+                        return GRP_VIDEO_LEFT;
+                    case "gif":
+                        return GIF_LEFT_GRP;
+                    case "sticker":
+                        return STICK_LEFT_GRP;
                 }
             }
         }

@@ -1713,7 +1713,7 @@ if(getIntent().getIntExtra("path",1)==2) {
             {
                 if(chats.get(i).getDownloaded()==2 || chats.get(i).getDownloaded()==3 || chats.get(i).getDownloaded()==4 || chats.get(i).getDownloaded()==-2
                     || chats.get(i).getDownloaded()==-3 || chats.get(i).getDownloaded()==100 || chats.get(i).getDownloaded()==103 || chats.get(i).getDownloaded()==104
-                || chats.get(i).getDownloaded()==201 || chats.get(i).getDownloaded()==204) {
+                || chats.get(i).getDownloaded()==201 || chats.get(i).getDownloaded()==204 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 304|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 301) {
                     flag2 = false;
                     break;
                 }
@@ -1782,7 +1782,8 @@ if(getIntent().getIntExtra("path",1)==2) {
             int swipeFlags;
             if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3
                     || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 60 || chats.get(viewHolder.getAdapterPosition()).getType().equals("typing")
-            || chats.get(viewHolder.getAdapterPosition()).getType().equals("unread") || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -3)){
+            || chats.get(viewHolder.getAdapterPosition()).getType().equals("unread") || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -3 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 204||
+                    chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 201 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 304|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 301)){
 
                 if(chats.get(viewHolder.getAdapterPosition()).getSender().equals(RecieverPhone)) {
                     swipeFlags = ItemTouchHelper.END;
@@ -2917,11 +2918,13 @@ if(getIntent().getIntExtra("path",1)==2) {
         Log.d("LONGCLICK",chats.get(index).getMessage()+"");
         Log.d("LONGCLICK",chats.get(index).getDownloaded()+"");
 
-        if (!chats.get(index).getMessage().equals("null") && chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4) {
+        if (!chats.get(index).getMessage().equals("null") && chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4
+            && chats.get(index).getDownloaded()!=104 && chats.get(index).getDownloaded()!=101 &&chats.get(index).getDownloaded()!=203 && chats.get(index).getDownloaded()!=204
+         && chats.get(index).getDownloaded()!=303 && chats.get(index).getDownloaded()!=304) {
 
             Log.d("LONGCLICK","INSIDE");
 
-            if (!(chats.get(index).getType().equals("video") || chats.get(index).getType().equals("image"))) {
+            if (!(chats.get(index).getType().equals("video") || chats.get(index).getType().equals("image") || chats.get(index).getType().equals("gif") || chats.get(index).getType().equals("sticker"))) {
                 String[] choices = {"Copy", "Forward"};
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
@@ -2981,16 +2984,6 @@ if(getIntent().getIntExtra("path",1)==2) {
 
     @Override
     public void OnFileDeleted(int index) {
-
-        if(chats.get(index).getType().equals("sticker"))
-        {
-            Handler.DeleteMessage(chats.get(index));
-            chats.remove(index);
-
-            if (!Messages.isComputingLayout())
-                adapter.notifyItemChanged(index);
-
-        }else {
             chats.get(index).setMessage("null");
 
             Handler.UpdateMessage(chats.get(index));
@@ -2998,8 +2991,6 @@ if(getIntent().getIntExtra("path",1)==2) {
             if (!Messages.isComputingLayout())
                 adapter.notifyItemChanged(index);
         }
-
-    }
 
     @Override
     public void sendGIF(int index) {
