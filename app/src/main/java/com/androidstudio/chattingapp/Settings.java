@@ -139,81 +139,66 @@ public class Settings extends AppCompatActivity {
 
         String theme1=preftheme.getString("theme","red");
 
-        if(theme1.equals("orange"))
-        {
-            ll.setBackgroundColor(getResources().getColor(R.color.Orange));
-        }
+        switch (theme1) {
+            case "orange":
+                ll.setBackgroundColor(getResources().getColor(R.color.Orange));
+                break;
+            case "blue":
+                ll.setBackgroundColor(getResources().getColor(R.color.blue));
+                break;
+            case "bluish":
+                ll.setBackgroundColor(getResources().getColor(R.color.bluish));
 
-        else if(theme1.equals("blue"))
-        {
-            ll.setBackgroundColor(getResources().getColor(R.color.blue));
-        }
+                break;
+            case "deepred":
+                ll.setBackgroundColor(getResources().getColor(R.color.deepred));
 
+                break;
+            case "faintpink":
+                ll.setBackgroundColor(getResources().getColor(R.color.faintpink));
 
-        else if(theme1.equals("bluish")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.bluish));
+                break;
+            case "darkblue":
+                ll.setBackgroundColor(getResources().getColor(R.color.darkblue));
 
-        }
+                break;
+            case "green":
+                ll.setBackgroundColor(getResources().getColor(R.color.green));
 
-        else if(theme1.equals("deepred")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.deepred));
+                break;
+            case "lightorange":
+                ll.setBackgroundColor(getResources().getColor(R.color.lightorange));
 
-        }
+                break;
+            case "lightred":
+                ll.setBackgroundColor(getResources().getColor(R.color.lightred));
 
-        else if(theme1.equals("faintpink")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.faintpink));
+                break;
+            case "mustard":
+                ll.setBackgroundColor(getResources().getColor(R.color.mustard));
 
-        }
+                break;
+            case "pink":
+                ll.setBackgroundColor(getResources().getColor(R.color.pink));
 
-        else if(theme1.equals("darkblue")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.darkblue));
+                break;
+            case "pureorange":
+                ll.setBackgroundColor(getResources().getColor(R.color.pureorange));
 
-        }
+                break;
+            case "purepink":
+                ll.setBackgroundColor(getResources().getColor(R.color.purepink));
 
-        else if (theme1.equals("green")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.green));
+                break;
+            case "purple":
+                ll.setBackgroundColor(getResources().getColor(R.color.purple));
 
-        }
-
-        else if (theme1.equals("lightorange")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.lightorange));
-
-        }
-
-        else  if (theme1.equals("lightred")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.lightred));
-
-        }
-
-        else if(theme1.equals( "mustard")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.mustard));
-
-        }
-
-        else if (theme1.equals("pink")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.pink));
-
-        }
-
-        else if(theme1.equals("pureorange")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.pureorange));
-
-        }
-
-        else if(theme1.equals( "purepink")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.purepink));
-
-        }
-
-        else if(theme1.equals( "purple")) {
-            ll.setBackgroundColor(getResources().getColor(R.color.purple));
-
-        }
-
-        else {
-            ll.setBackgroundColor(getResources().getColor(R.color.red));
+                break;
+            default:
+                ll.setBackgroundColor(getResources().getColor(R.color.red));
 
 
+                break;
         }
 
         details = new ValueEventListener() {

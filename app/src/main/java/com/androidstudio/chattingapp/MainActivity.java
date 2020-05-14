@@ -145,69 +145,85 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             String theme = preftheme.getString("theme", "red");
 
 
-            if (theme.equals("orange")) {
+        switch (theme) {
+            case "orange":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
 
                 btnContacts.setBackgroundColor(getResources().getColor(R.color.Orange));
-            } else if (theme.equals("blue")) {
+                break;
+            case "blue":
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.blue));
 
-            } else if (theme.equals("bluish")) {
+                break;
+            case "bluish":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.bluish));
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.bluish)));
 
-            } else if (theme.equals("deepred")) {
+                break;
+            case "deepred":
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.deepred)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
 
-            } else if (theme.equals("faintpink")) {
+                break;
+            case "faintpink":
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.faintpink)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
 
-            } else if (theme.equals("darkblue")) {
+                break;
+            case "darkblue":
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkblue)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.darkblue));
 
-            } else if (theme.equals("green")) {
+                break;
+            case "green":
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.green));
 
-            } else if (theme.equals("lightorange")) {
+                break;
+            case "lightorange":
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightorange)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
 
-            } else if (theme.equals("lightred")) {
+                break;
+            case "lightred":
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightred)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
 
-            } else if (theme.equals("mustard")) {
+                break;
+            case "mustard":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.mustard)));
 
-            } else if (theme.equals("pink")) {
+                break;
+            case "pink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pink)));
 
-            } else if (theme.equals("pureorange")) {
+                break;
+            case "pureorange":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pureorange)));
 
-            } else if (theme.equals("purepink")) {
+                break;
+            case "purepink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(
                         getResources().getColor(R.color.purepink)));
 
-            } else if (theme.equals("purple")) {
+                break;
+            case "purple":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.purple)));
 
-            } else {
+                break;
+            default:
                 toolbar.setBackgroundColor(getResources().getColor(R.color.red));
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
 
 
-            }
+                break;
+        }
 
 
             Handler = new DBHandler(MainActivity.this);
@@ -1510,84 +1526,70 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onRestart() {
         super.onRestart();
         String theme=preftheme.getString("theme","red");
-        if(theme.equals("orange"))
-        {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
+        switch (theme) {
+            case "orange":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
 
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.Orange)));
-        }
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.Orange)));
+                break;
+            case "blue":
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.blue));
+                break;
+            case "bluish":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.bluish));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.bluish)));
+                break;
+            case "deepred":
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.deepred)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
+                break;
+            case "faintpink":
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.faintpink)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
+                break;
+            case "darkblue":
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkblue)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.darkblue));
+                break;
+            case "green":
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.green));
+                break;
+            case "lightorange":
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightorange)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
+                break;
+            case "lightred":
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightred)));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
+                break;
+            case "mustard":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.mustard)));
+                break;
+            case "pink":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pink)));
+                break;
+            case "pureorange":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pureorange)));
+                break;
+            case "purepink":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(
+                        getResources().getColor(R.color.purepink)));
+                break;
+            case "purple":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.purple)));
+                break;
+            default:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.red));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
 
-        else if(theme.equals("blue"))
-        {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.blue));}
-
-
-        else if(theme.equals("bluish")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.bluish));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.bluish)));
-        }
-
-        else if(theme.equals("deepred")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.deepred)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
-        }
-
-        else if(theme.equals("faintpink")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.faintpink)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
-        }
-
-        else if(theme.equals("darkblue")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkblue)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.darkblue));
-        }
-
-        else if (theme.equals("green")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.green));
-        }
-
-        else if (theme.equals("lightorange")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightorange)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
-        }
-
-        else  if (theme.equals("lightred")) {
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightred)));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
-        }
-
-        else if(theme.equals( "mustard")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.mustard)));
-        }
-
-        else if (theme.equals("pink")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pink)));
-        }
-
-        else if(theme.equals("pureorange")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pureorange)));
-        }
-
-        else if(theme.equals( "purepink")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(
-                    getResources().getColor(R.color.purepink)));
-        }
-
-        else if(theme.equals( "purple")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.purple)));
-        }
-
-        else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.red));
-            btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
-
+                break;
         }
 
 
