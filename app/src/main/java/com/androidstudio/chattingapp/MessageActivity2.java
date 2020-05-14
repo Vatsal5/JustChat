@@ -49,6 +49,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -3507,5 +3508,22 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         }
 
         return inSampleSize;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // Check if the key event was the Back button
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+
+            if(popupWindow!=null && popupWindow.isShowing())
+                popupWindow.dismiss();
+            else
+                MessageActivity2.this.finish();
+            return true;
+        }
+
+        // If it wasn't the Back key, bubble up to the default
+        // system behavior
+        return super.onKeyDown(keyCode, event);
     }
 }
