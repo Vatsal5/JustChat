@@ -3,6 +3,8 @@ package com.androidstudio.chattingapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -51,6 +53,7 @@ public class Mode extends AppCompatActivity {
         llShowPassword=findViewById(R.id.Showpassword);
         etConfirm=findViewById(R.id.etConfirmUsername);
         tvIncompleteDetails=findViewById(R.id.textView3);
+
 
         final String number = getIntent().getStringExtra("number");
 

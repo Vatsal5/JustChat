@@ -180,7 +180,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
 
                         final AlertDialog.Builder builder = new AlertDialog.Builder(GroupDetails.this);
                         final EditText edittext = new EditText(GroupDetails.this);
-                        builder.setIcon(R.drawable.title);
+
                         builder.setTitle("Title");
 
                         final EditText etGroupTitle = v.findViewById(R.id.etGroupTitle);
