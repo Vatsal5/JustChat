@@ -157,9 +157,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     }
 
     public void getMessages() {
-        long millis = System.currentTimeMillis();
-        java.sql.Date date1 = new java.sql.Date(millis);
-
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Mode", 0);
         defaultvalue = pref.getString("mode" + groupKey, "null");
 
