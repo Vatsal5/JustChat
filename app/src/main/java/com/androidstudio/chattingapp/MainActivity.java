@@ -386,6 +386,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                          } else {
                              contacts1.get(index).setStatus("offline");
                          }
+                         userAdapter.notifyDataSetChanged();
                      }
                  }
 
