@@ -37,6 +37,7 @@ import android.media.ExifInterface;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
+import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -145,7 +146,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     DBHandler Handler;
     int y=0,z=0;
      String sender;
-    ChildEventListener imagereceiver, videoreceiver, chreceiver,seenmessages,gifreceiver,stickerreceiver;
+    ChildEventListener imagereceiver, videoreceiver, chreceiver,seenmessages,gifreceiver,stickerreceiver,Group;
     ValueEventListener deletevideo,deleteimage,set,set1,set2;
     String defaultvalue;
     SharedPreferences pref,wallpaper;
@@ -384,6 +385,41 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 break;
         }
+        Group = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+
+
+            }
+
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                Toast.makeText(getApplicationContext(),"This Group Has Been Deleted By The Admin",Toast.LENGTH_LONG).show();
+                MessageActivity2.this.finish();
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(Group);
+
+
 
         profile=getIntent().getStringExtra("profile");
 
@@ -1847,6 +1883,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).addChildEventListener(imagereceiver);
+        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(Group);
+
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).addChildEventListener(chreceiver);
@@ -2089,6 +2127,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(imagereceiver);
+        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").removeEventListener(Group);
+
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(chreceiver);
@@ -3527,6 +3567,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("videos").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(videoreceiver);
+        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").removeEventListener(Group);
+
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()

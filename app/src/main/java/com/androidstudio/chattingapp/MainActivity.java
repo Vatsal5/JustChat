@@ -1598,7 +1598,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
 
-
+        if(l<=(contacts1.size()-1))
+        {
             if(contacts1.get(l).getGroupname()==null) {
 
                     contacts1.get(l).setLastmessage(Handler.getLastMessage(contacts1.get(l).getPh_number()));
@@ -1606,9 +1607,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
             }
             else {
+                if(l<=(contacts1.size()-1))
+
                 if(Handler.getGroupMessages(contacts1.get(l).getGroupname(),0).first.size()>0) {
                     contacts1.get(l).setLastmessage(Handler.getLastMessageGroup(contacts1.get(l).getGroupname()));
                     contacts1.get(l).setTime(Handler.getLastGroupMessageTime(contacts1.get(l).getGroupname()).substring(0, 5));
+                }
                 }
             }
         userAdapter.notifyDataSetChanged();
@@ -1621,9 +1625,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         }
         if(flag2==true)
         {
-            flag2=false;
-            contacts1.get(l).setMessagenum(2);
-            userAdapter.notifyDataSetChanged();
+            if(l<=(contacts1.size()-1)) {
+                flag2 = false;
+                contacts1.get(l).setMessagenum(2);
+                userAdapter.notifyDataSetChanged();
+            }
 
         }
 
