@@ -28,7 +28,7 @@ public class ApplicationClass extends Application
     public static Context MessageActivity2Context;
     public static String url;
     public static DBHandler Handler;
-    public static ArrayList<String>members;
+    public static ArrayList<String>members,groupmembers;
     public static ArrayList<String>PendingRequests;
     public static ArrayList<UserDetail>Contacts;
     public static String Groupname,GroupDp,groupkey,RenameGroup,CurrentReceiver;
@@ -146,6 +146,7 @@ public class ApplicationClass extends Application
 
         Handler = new DBHandler(this);
         Handler.Open();
+        groupmembers=new ArrayList<>();
 
         new ChangeStatus().execute();
 

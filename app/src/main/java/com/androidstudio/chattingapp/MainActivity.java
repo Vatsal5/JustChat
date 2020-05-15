@@ -1511,26 +1511,26 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             ApplicationClass.RenameGroup=null;
         }
 
-        if(ApplicationClass.create==1)
-        {
-
-            final android.os.Handler handler= new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    for (int i = 0; i < contacts1.size(); i++) {
-                        if (!(contacts1.get(i).getGroupname() == null)) {
-                            (new GroupDp(i)).ProfileListener();
-                        }
-                    }
-                    ApplicationClass.groupkey = null;
-
-                }
-            },1000);
-        }
-
-        else
-            ApplicationClass.members.clear();
+//        if(ApplicationClass.create==1)
+//        {
+//
+//            final android.os.Handler handler= new Handler();
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    for (int i = 0; i < contacts1.size(); i++) {
+//                        if (!(contacts1.get(i).getGroupname() == null)) {
+//                            (new GroupDp(i)).ProfileListener();
+//                        }
+//                    }
+//                    ApplicationClass.groupkey = null;
+//
+//                }
+//            },1000);
+//        }
+//
+//        else
+//            ApplicationClass.members.clear();
 
     }
 

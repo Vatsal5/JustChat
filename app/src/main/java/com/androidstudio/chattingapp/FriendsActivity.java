@@ -235,15 +235,17 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                         ApplicationClass.addmembers=0;
                         for(int index=0; index<contacts1.size();index++) {
                             if(contacts1.get(index).getSelected()==1) {
-                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupkey).child("layout").setValue("addedmember "+contacts1.get(index));
 
+                                for(int i=0; i<ApplicationClass.groupmembers.size();i++) {
+                                    FirebaseDatabase.getInstance().getReference().child("groups").child(groupkey).child("layout").child(ApplicationClass.groupmembers.get(i) ).push().setValue("addedmember " + contacts1.get(index).getPh_number());
+                                }
                                 FirebaseDatabase.getInstance().getReference().child("groups").child(getIntent().getStringExtra("groupkey"))
                                    .child("members").push().setValue(contacts1.get(index).getPh_number());
                                     FirebaseDatabase.getInstance().getReference().child("users").child(contacts1.get(index).getPh_number()).child("groups").
                                             child(groupkey).setValue(getIntent().getStringExtra("groupname"));
                             }
                         }
-                        tvCreateGroup.setText("Create Group");
+
                         Intent intent=new Intent(FriendsActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         FriendsActivity.this.finish();

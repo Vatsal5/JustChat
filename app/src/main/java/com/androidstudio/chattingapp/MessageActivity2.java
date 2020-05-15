@@ -149,7 +149,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     DBHandler Handler;
     int y=0,z=0;
      String sender;
-    ChildEventListener imagereceiver, videoreceiver, chreceiver,seenmessages,gifreceiver,stickerreceiver,Group;
+    ChildEventListener imagereceiver, videoreceiver, chreceiver,seenmessages,gifreceiver,stickerreceiver,Group,layoutreceiver;
     ValueEventListener deletevideo,deleteimage,set,set1,set2;
     String defaultvalue;
     SharedPreferences pref,wallpaper;
@@ -1142,6 +1142,39 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(FirebaseAuth
                 .getInstance().getCurrentUser().getPhoneNumber()).addChildEventListener(seenmessages);
 
+        layoutreceiver=new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                String status=dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf(" "));
+                String detail=dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf(" ")+1);
+                dataSnapshot.getRef().removeValue();
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(FirebaseAuth
+                .getInstance().getCurrentUser().getPhoneNumber()).addChildEventListener(layoutreceiver);
+
         imagereceiver = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -1884,6 +1917,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).addChildEventListener(chreceiver);
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(FirebaseAuth
+                .getInstance().getCurrentUser().getPhoneNumber()).addChildEventListener(layoutreceiver);
+
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("videos").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).addChildEventListener(videoreceiver);
@@ -2123,6 +2159,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(imagereceiver);
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(FirebaseAuth
+                .getInstance().getCurrentUser().getPhoneNumber()).removeEventListener(layoutreceiver);
+
         FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").removeEventListener(Group);
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
@@ -3559,6 +3598,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(imagereceiver);
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(FirebaseAuth
+                .getInstance().getCurrentUser().getPhoneNumber()).removeEventListener(layoutreceiver);
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("videos").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
