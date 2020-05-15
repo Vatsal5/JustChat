@@ -948,7 +948,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             editor.apply();
         }
 
-        Log.d("mode",defaultvalue);
+       // Log.d("mode",defaultvalue);
 
         observer = new RecyclerView.AdapterDataObserver() {
             @Override
