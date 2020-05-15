@@ -168,6 +168,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             if (chats.size() != 0) {
                 chats.clear();
             }
+            HandlerIndex = -1;
             if (!Messages.isComputingLayout())
                 adapter.notifyDataSetChanged();
         } else {
