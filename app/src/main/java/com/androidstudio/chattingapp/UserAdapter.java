@@ -260,25 +260,33 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             });
         }
 
-        if(list.get(position).getGroupname()==null) {
+//        if(list.get(position).getGroupname()==null) {
+//
+//            dbreference.child("UserStatus").child(Check(list.get(position).getPh_number())).addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    if (dataSnapshot.getValue() != null) {
+//                        if (dataSnapshot.getValue(String.class).equals("online") || dataSnapshot.getValue(String.class).substring(0, 6).equals("typing")) {
+//                            holder.ivBackground.setBackgroundResource(R.drawable.orange);
+//                        } else {
+//                            holder.ivBackground.setBackground(null);
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                }
+//            });
+//        }
 
-            dbreference.child("UserStatus").child(Check(list.get(position).getPh_number())).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getValue() != null) {
-                        if (dataSnapshot.getValue(String.class).equals("online") || dataSnapshot.getValue(String.class).substring(0, 6).equals("typing")) {
-                            holder.ivBackground.setBackgroundResource(R.drawable.orange);
-                        } else {
-                            holder.ivBackground.setBackground(null);
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
+        if(list.get(position).getStatus()!=null)
+        {
+            if(list.get(position).getStatus().equals("online"))
+                holder.ivBackground.setBackgroundResource(R.drawable.orange);
+            else
+                holder.ivBackground.setBackground(null);
         }
 
         if(list.get(position).getuID().equals(""))

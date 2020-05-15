@@ -8,6 +8,7 @@ public class UserDetailwithUrl {
     String lastmessage;
     String time,groupkey, groupname;
     int messagenum;
+    String Status;
 
     public UserDetailwithUrl(String ph_number, String uID,String url,int messagenum,String lastmessage,String time,String groupkey, String groupname) {
         this.ph_number = ph_number;
@@ -18,6 +19,7 @@ public class UserDetailwithUrl {
         this.time=time;
         this.groupkey=groupkey;
         this.groupname=groupname;
+        Status = null;
 
     }
 
@@ -83,5 +85,13 @@ public class UserDetailwithUrl {
 
     public void setMessagenum(int messagenum) {
         this.messagenum = messagenum;
+    }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
     }
 }

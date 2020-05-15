@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     DatabaseReference reference1;
     DatabaseReference UserStatus;
     ChildEventListener chreceiver,gifreceiver,stickerreceiver;
-    ValueEventListener dataCreater,deleteimage,deletevideo;
+    ValueEventListener dataCreater,deleteimage,deletevideo,Status;
     DBHandler Handler;
     LinearLayoutManager linearLayoutManager;
 
@@ -374,6 +374,30 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
          {
             this.index=index;
          }
+
+         public void statusListener()
+         {
+             Status = new ValueEventListener() {
+                 @Override
+                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                     if (dataSnapshot.getValue() != null) {
+                         if (dataSnapshot.getValue(String.class).equals("online") || dataSnapshot.getValue(String.class).substring(0, 6).equals("typing")) {
+                             contacts1.get(index).setStatus("online");
+                         } else {
+                             contacts1.get(index).setStatus("offline");
+                         }
+                     }
+                 }
+
+                 @Override
+                 public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                 }
+             };
+
+             reference.child("UserStatus").child(contacts1.get(index).getPh_number()).addValueEventListener(Status);
+         }
+
 
          public void profilelistener()
          {
@@ -1031,6 +1055,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 , Handler.getLastMessage(dataSnapshot.getKey()), Handler.getLastMessageTime(dataSnapshot.getKey()), null, null));
                         userAdapter.notifyItemInserted(contacts1.size() - 1);
                         new listener(contacts1.size() - 1).profilelistener();
+                        new listener(contacts1.size()-1).statusListener();
                         new listener(contacts1.size() - 1).piclistener();
                         new listener(contacts1.size() - 1).VideoListener();
                         new listener(contacts1.size() - 1).giflistener();
