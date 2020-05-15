@@ -200,6 +200,8 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                                             FirebaseDatabase.getInstance().getReference().child("users").
                                                     child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).setValue(etGroupTitle.getText().toString());
+                                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").setValue("rename "+etGroupTitle.getText().toString());
+
 
                                         }
 
@@ -421,6 +423,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
 //                        StorageReference file1;
 //                        file1=FirebaseStorage.getInstance().getReferenceFromUrl(FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members"));
 //                        file1.delete();
+
                                 FirebaseDatabase.getInstance().getReference().child("groups").
                                         child(groupKey).getRef().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -464,6 +467,8 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                     FirebaseDatabase.getInstance().getReference().child("users")
                                             .child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
                                             .child("groups").child(groupKey).getRef().removeValue();
+                                    FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").setValue("exit "+FirebaseAuth.getInstance().getCurrentUser());
+
                                     Intent intent=new Intent(GroupDetails.this,MainActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     GroupDetails.this.finish();
@@ -555,6 +560,8 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                                                             new OnSuccessListener<Void>() {
                                                                                 @Override
                                                                                 public void onSuccess(Void aVoid) {
+                                                                                    FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").setValue("remove "+users.get(index).getPh_number());
+
                                                                                     FirebaseDatabase.getInstance().getReference().child("users")
                                                                                             .child(users.get(index).getPh_number())
                                                                                             .child("groups").child(groupKey).getRef().removeValue().addOnSuccessListener(
@@ -831,6 +838,8 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                         Glide.with(GroupDetails.this)
                                                 .load(uri.toString())
                                                 .into(ivGroupDP);
+                                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").setValue("dpchanged "+FirebaseAuth.getInstance().getCurrentUser());
+
 
 
 

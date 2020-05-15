@@ -896,7 +896,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         public void onCancelled(@NonNull DatabaseError databaseError) {
 
                         }
-                        
+
                     });
         }
 

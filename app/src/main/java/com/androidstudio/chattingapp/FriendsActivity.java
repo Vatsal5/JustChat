@@ -235,7 +235,9 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                         ApplicationClass.addmembers=0;
                         for(int index=0; index<contacts1.size();index++) {
                             if(contacts1.get(index).getSelected()==1) {
-                                   FirebaseDatabase.getInstance().getReference().child("groups").child(getIntent().getStringExtra("groupkey"))
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupkey).child("layout").setValue("addedmember "+contacts1.get(index));
+
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(getIntent().getStringExtra("groupkey"))
                                    .child("members").push().setValue(contacts1.get(index).getPh_number());
                                     FirebaseDatabase.getInstance().getReference().child("users").child(contacts1.get(index).getPh_number()).child("groups").
                                             child(groupkey).setValue(getIntent().getStringExtra("groupname"));
