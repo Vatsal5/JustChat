@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.util.Pair;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -231,6 +232,18 @@ public class DBHandler
         }
 
         return database.update(DATABASE_TABLE,values,KEY_FIREBASEID+"=?",new String[] {firebaseId+""});
+    }
+
+    public void DeleteMessagesofReceiver(String receiver)
+    {
+        String query = "DELETE FROM "+DATABASE_TABLE+" where "+KEY_SENDER+" = '"+receiver+"' OR "+KEY_RECEIVER+" = '"+receiver+"';";
+        database.execSQL(query);
+    }
+
+    public void DeleteMessagesofGroup(String grpname)
+    {
+        String query = "DELETE FROM "+DATABASE_TABLE+" where "+KEY_GROUPNAME+" = '"+grpname+"';";
+        database.execSQL(query);
     }
 
     public long DeleteMessage(MessageModel message)

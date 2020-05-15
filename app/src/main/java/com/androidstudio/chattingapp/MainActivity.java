@@ -1635,11 +1635,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             }
             else {
                 if(l<=(contacts1.size()-1))
-
-                if(Handler.getGroupMessages(contacts1.get(l).getGroupname(),0).first.size()>0) {
                     contacts1.get(l).setLastmessage(Handler.getLastMessageGroup(contacts1.get(l).getGroupname()));
+                if(Handler.getGroupMessages(contacts1.get(l).getGroupname(),0).first.size()>0)
                     contacts1.get(l).setTime(Handler.getLastGroupMessageTime(contacts1.get(l).getGroupname()).substring(0, 5));
-                }
+                else
+                    contacts1.get(l).setTime(Handler.getLastGroupMessageTime(contacts1.get(l).getGroupname()));
                 }
             }
         userAdapter.notifyDataSetChanged();

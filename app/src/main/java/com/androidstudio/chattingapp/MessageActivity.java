@@ -48,6 +48,7 @@ import android.util.Pair;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -170,7 +171,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     PopupWindow popupWindow;
 
-    TextView title,tvMode;
+    TextView title;
     String to = "";
     RecyclerView Messages;
     String sender;
@@ -208,7 +209,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     //    Log.d("mode", defaultvalue);
 
         if (defaultvalue.equals("private")) {
-            tvMode.setText("Private");
             if (chats.size() != 0) {
                 chats.clear();
             }
@@ -216,7 +216,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             if (!Messages.isComputingLayout())
                 adapter.notifyDataSetChanged();
         } else {
-            tvMode.setText("Public");
             if (chats.size() != 0) {
                 chats.clear();
                 if(!Messages.isComputingLayout())
@@ -459,6 +458,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         setSupportActionBar(toolbar);
         setTitle(null);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            toolbar.setOverflowIcon(getDrawable(R.drawable.overflow));
+        }
+
         final int[] index = new int[1];
 
         title = findViewById(R.id.title);
@@ -488,22 +491,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         ivProfile = findViewById(R.id.ivProfile);
         ivBack = findViewById(R.id.ivBack);
         ivStatus = findViewById(R.id.ivStatus);
-        tvMode = findViewById(R.id.tvMode);
         llMessageActivity = findViewById(R.id.llMessageActivity);
 
         EmojIconActions  emojIcon=new EmojIconActions(this,llMessageActivity,etMessage,emojibtn);
         emojIcon.ShowEmojIcon();
         emojIcon.setIconsIds(R.drawable.ic_action_keyboard,R.drawable.smiley);
-
-        tvMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MessageActivity.this,Mode.class);
-                intent.putExtra("number",RecieverPhone);
-                startActivityForResult(intent,1500);
-            }
-        });
-
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1844,18 +1836,6 @@ if(getIntent().getIntExtra("path",1)==2) {
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("sticker").removeEventListener(stickerreceiver);
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("gif").removeEventListener(gifreceiver);
     }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                MessageActivity.this.finish();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 //*****************************************************************************************************************************************************
 
     private void sendFCMPush(String message) {
@@ -4063,5 +4043,61 @@ if(getIntent().getIntExtra("path",1)==2) {
         // If it wasn't the Back key, bubble up to the default
         // system behavior
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.messageactivity,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id)
+        {
+            case R.id.Mode:
+                Intent intent = new Intent(MessageActivity.this,Mode.class);
+                intent.putExtra("number",RecieverPhone);
+                startActivityForResult(intent,1500);
+                break;
+
+            case R.id.Delete:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Are you sure you want to delete all messages?")
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                defaultvalue = pref.getString("mode" + RecieverPhone, "null");
+
+                                if(defaultvalue.equals("public"))
+                                {
+                                    if(chats.size()>0) {
+                                        Handler.DeleteMessagesofReceiver(RecieverPhone);
+                                        chats.clear();
+                                        adapter.notifyDataSetChanged();
+                                        Toast.makeText(MessageActivity.this, "All Messages deleted", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else
+                                        Toast.makeText(MessageActivity.this, "There are no messages to be deleted", Toast.LENGTH_SHORT).show();
+                                }
+                                else
+                                    Toast.makeText(MessageActivity.this, "You cannot delete messages in private mode", Toast.LENGTH_SHORT).show();
+                            }
+                        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

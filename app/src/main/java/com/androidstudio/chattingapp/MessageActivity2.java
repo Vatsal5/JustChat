@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -53,6 +54,8 @@ import android.util.Pair;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -118,7 +121,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     String groupKey, groupname,profile;
     ImageView ivSend,ivBack,ivProfile;
     RecyclerView Messages;
-    TextView tvTitle,tvMode;
+    TextView tvTitle;
     ArrayList<String> membernumber;
     EmojiconEditText etMessage;
     ConstraintLayout llMessageActivity2;
@@ -162,7 +165,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
 
         if (defaultvalue.equals("private")) {
-            tvMode.setText("Private");
             if (chats.size() != 0) {
                 chats.clear();
             }
@@ -170,7 +172,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             if (!Messages.isComputingLayout())
                 adapter.notifyDataSetChanged();
         } else {
-            tvMode.setText("Public");
             if (chats.size() != 0) {
                 chats.clear();
                 if(!Messages.isComputingLayout())
@@ -282,6 +283,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         ivProfile=findViewById(R.id.ivProfile);
         ll=findViewById(R.id.ll);
         messageActivity2=this;
+
+        final Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle(null);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            toolbar.setOverflowIcon(getDrawable(R.drawable.overflow));
+        }
 
         messagecount=getIntent().getIntExtra("messagecount",2);
 
@@ -441,20 +450,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         tvTitle = findViewById(R.id.title);
         ivBack = findViewById(R.id.ivBack);
-        tvMode = findViewById(R.id.tvMode);
         rl = findViewById(R.id.rl);
 
 
         tvTitle.setText(groupname);
-
-        tvMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MessageActivity2.this,Mode.class);
-                intent.putExtra("number",groupKey);
-                startActivityForResult(intent,1500);
-            }
-        });
 
         wallpaper = getSharedPreferences("Wallpaper",0);
 
@@ -3976,5 +3975,60 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         // If it wasn't the Back key, bubble up to the default
         // system behavior
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.messageactivity,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id)
+        {
+            case R.id.Mode:
+                Intent intent = new Intent(MessageActivity2.this,Mode.class);
+                intent.putExtra("number",groupKey);
+                startActivityForResult(intent,1500);
+                break;
+
+            case R.id.Delete:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Are you sure you want to delete all messages?")
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                defaultvalue = pref.getString("mode" + groupKey, "null");
+
+                                if(defaultvalue.equals("public"))
+                                {
+                                    if(chats.size()>0) {
+                                        Handler.DeleteMessagesofGroup(groupname);
+                                        chats.clear();
+                                        adapter.notifyDataSetChanged();
+                                        Toast.makeText(MessageActivity2.this, "All Messages deleted", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else
+                                        Toast.makeText(MessageActivity2.this, "There are no messages to be deleted", Toast.LENGTH_SHORT).show();
+                                }
+                                else
+                                    Toast.makeText(MessageActivity2.this, "You cannot delete messages in private mode", Toast.LENGTH_SHORT).show();
+                            }
+                        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
