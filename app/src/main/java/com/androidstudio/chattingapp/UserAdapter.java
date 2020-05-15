@@ -323,6 +323,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
     }
 
     @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
     public int getItemCount() {
         return list.size();
     }

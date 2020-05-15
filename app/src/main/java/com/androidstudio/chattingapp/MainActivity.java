@@ -261,6 +261,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             lv.setHasFixedSize(true);
             lv.setLayoutManager(linearLayoutManager);
             userAdapter = new UserAdapter(MainActivity.this, contacts1);
+            userAdapter.setHasStableIds(true);
             lv.setAdapter(userAdapter);
 
             if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
