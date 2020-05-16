@@ -1172,10 +1172,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         break;
                     case "rename":
                         messageModel.setMessage("Group title has been changed to '" + detail + "'");
+                        tvTitle.setText(detail);
                         break;
                     case "dpchanged":
                         messageModel.setMessage(Names.getString(detail, detail) + " changed the group icon");
-                        tvTitle.setText(detail);
                         break;
                     case "exit":
                         messageModel.setMessage(Names.getString(detail, detail) + " exited the group");
