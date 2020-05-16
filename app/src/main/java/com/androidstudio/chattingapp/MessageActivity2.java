@@ -2207,7 +2207,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     @Override
     public void showImage(int index) {
 
-        if(chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4 && !chats.get(index).getType().equals("video")) {
+        if(chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4 && chats.get(index).getDownloaded()!=203 && chats.get(index).getDownloaded()!=204 && !chats.get(index).getType().equals("video")) {
 
             Intent intent = new Intent(MessageActivity2.this, ShowImage.class);
 

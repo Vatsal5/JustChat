@@ -2915,7 +2915,7 @@ if(getIntent().getIntExtra("path",1)==2) {
     @Override
     public void showImage(int index) {
 
-        if(chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4 && !chats.get(index).getType().equals("video") && !chats.get(index).getType().equals("sticker")) {
+        if(chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4 && chats.get(index).getDownloaded()!=203 && chats.get(index).getDownloaded()!=204 && !chats.get(index).getType().equals("video") && !chats.get(index).getType().equals("sticker")) {
           //  Log.d("URIURI",index +" "+ chats.get(index).getMessage())
 
             Intent intent = new Intent(MessageActivity.this, ShowImage.class);
