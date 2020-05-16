@@ -166,9 +166,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         if(!(list.get(position).getTime().equals("null")))
         {
             if(list.get(holder.getAdapterPosition()).getGroupname()!=null)
-                holder.time.setText(list.get(position).getTime());
+                holder.time.setText(list.get(holder.getAdapterPosition()).getTime().substring(0,5));
             else
-                holder.time.setText(list.get(position).getTime().substring(0,5));
+                holder.time.setText(list.get(holder.getAdapterPosition()).getTime());
         }
         else
         {
@@ -227,11 +227,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
         }
         else{
-          //  holder.tvlastmessage.setText("");
             holder.ivImage.setVisibility(View.GONE);
             holder.tvlastmessage.setVisibility(View.GONE);
             holder.tvUserName.setPadding(0,13,0,0);
-
         }
        // Log.d("asdf",list.get(position).getUrl());
 

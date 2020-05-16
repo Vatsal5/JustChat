@@ -891,7 +891,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     int id = Handler.addMessage(model);
                     model.setId(id);
                     chats.add(model);
-                    adapter.notifyItemInserted(chats.size() - 1);}
+
+                    if(!Messages.isComputingLayout())
+                        adapter.notifyItemInserted(chats.size() - 1);}
+
                     sendFCMPush(model.getMessage());
                 }
             }
@@ -1082,7 +1085,8 @@ if(getIntent().getIntExtra("path",1)==2) {
             int id = Handler.addMessage(model);
             model.setId(id);
             chats.add(model);
-            adapter.notifyItemInserted(chats.size() - 1);
+            if(!Messages.isComputingLayout())
+                adapter.notifyItemInserted(chats.size() - 1);
 
 
         } else if (type.equals("image")) {
@@ -1111,6 +1115,60 @@ if(getIntent().getIntExtra("path",1)==2) {
             chats.add(messageModel);
 
             adapter.notifyItemInserted(chats.size() - 1);
+        }else if (type.equals("gif")) {
+
+            MessageModel messageModel = new MessageModel(-1, sender, RecieverPhone, message1, "gif", 200, simpleDateFormat.format(date).substring(0, 5), date1.toString(),"null","null");
+
+            if (chats.size() != 0) {
+                if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate()) || chats.size() == 0) {
+                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
+                    int id = Handler.addMessage(message);
+                    message.setId(id);
+                    chats.add(message);
+                }
+            } else {
+                if (!(defaultvalue.equals("private"))) {
+                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
+                    int id = Handler.addMessage(message);
+                    message.setId(id);
+                    chats.add(message);
+                }
+            }
+
+            int id = Handler.addMessage(messageModel);
+            messageModel.setId(id);
+
+            chats.add(messageModel);
+
+            if(!Messages.isComputingLayout())
+                adapter.notifyItemInserted(chats.size() - 1);
+        }else if (type.equals("sticker")) {
+
+            MessageModel messageModel = new MessageModel(-1, sender, RecieverPhone, message1, "sticker", 300, simpleDateFormat.format(date).substring(0, 5), date1.toString(),"null","null");
+
+            if (chats.size() != 0) {
+                if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate()) || chats.size() == 0) {
+                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
+                    int id = Handler.addMessage(message);
+                    message.setId(id);
+                    chats.add(message);
+                }
+            } else {
+                if (!(defaultvalue.equals("private"))) {
+                    MessageModel message = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
+                    int id = Handler.addMessage(message);
+                    message.setId(id);
+                    chats.add(message);
+                }
+            }
+
+            int id = Handler.addMessage(messageModel);
+            messageModel.setId(id);
+
+            chats.add(messageModel);
+
+            if(!Messages.isComputingLayout())
+                adapter.notifyItemInserted(chats.size() - 1);
         } else {
             MessageModel model = new MessageModel(1190, sender, RecieverPhone, message1, "video", 100, simpleDateFormat.format(date).substring(0, 5), date1.toString(),"null","null");
 
@@ -1134,7 +1192,8 @@ if(getIntent().getIntExtra("path",1)==2) {
             model.setId(id);
             chats.add(model);
 
-            adapter.notifyItemInserted(chats.size() - 1);
+            if(!Messages.isComputingLayout())
+                adapter.notifyItemInserted(chats.size() - 1);
         }
     }
 }
@@ -1205,7 +1264,8 @@ if(getIntent().getIntExtra("path",1)==2) {
                     chats.add(messageModel);
 
 //                adapter.notifyDataSetChanged();
-                    adapter.notifyItemInserted(chats.size() - 1);
+                    if(!Messages.isComputingLayout())
+                        adapter.notifyItemInserted(chats.size() - 1);
                 }
                 if(messagecount==2)
                     received.play();
@@ -1282,7 +1342,8 @@ if(getIntent().getIntExtra("path",1)==2) {
                     chats.add(chats.size()-1,messageModel);
 
 //                adapter.notifyDataSetChanged();
-                    adapter.notifyItemInserted(chats.size() - 1);
+                    if(!Messages.isComputingLayout())
+                        adapter.notifyItemInserted(chats.size() - 1);
                 }
                 else
                 {
@@ -1299,7 +1360,8 @@ if(getIntent().getIntExtra("path",1)==2) {
                     chats.add(messageModel);
 
 //                adapter.notifyDataSetChanged();
-                    adapter.notifyItemInserted(chats.size() - 1);
+                    if(!Messages.isComputingLayout())
+                        adapter.notifyItemInserted(chats.size() - 1);
                 }
                 if(messagecount==2)
                     received.play();
@@ -1393,7 +1455,8 @@ if(getIntent().getIntExtra("path",1)==2) {
                 }
 
 //                adapter.notifyDataSetChanged();
-                adapter.notifyItemInserted(chats.size()-1);
+                if(!Messages.isComputingLayout())
+                    adapter.notifyItemInserted(chats.size()-1);
                 if(messagecount==2)
                     received.play();
                 else messagecount--;
@@ -1486,7 +1549,8 @@ if(getIntent().getIntExtra("path",1)==2) {
                 }
 
 //                adapter.notifyDataSetChanged();
-                adapter.notifyItemInserted(chats.size()-1);
+                if(!Messages.isComputingLayout())
+                    adapter.notifyItemInserted(chats.size()-1);
                 if(messagecount==2)
                     received.play();
                 else messagecount--;
@@ -1656,8 +1720,8 @@ if(getIntent().getIntExtra("path",1)==2) {
                             dataSnapshot.getRef().removeValue();
                         }
 
-
-                        adapter.notifyItemInserted(chats.size()-1);
+                        if(!Messages.isComputingLayout())
+                            adapter.notifyItemInserted(chats.size()-1);
                         // adapter.notifyItemRangeInserted(chats.size()-1,1);
                         if(messagecount==2)
                             received.play();
@@ -2157,7 +2221,8 @@ if(getIntent().getIntExtra("path",1)==2) {
                             } else
                                 chats.add(model);
 
-                                adapter.notifyItemInserted(chats.size()-1);
+                                if(!Messages.isComputingLayout())
+                                    adapter.notifyItemInserted(chats.size()-1);
 
 
                           }
@@ -2218,7 +2283,8 @@ if(getIntent().getIntExtra("path",1)==2) {
                     else
                         chats.add(model);
 
-                        adapter.notifyItemInserted(chats.size()-1);
+                        if(!Messages.isComputingLayout())
+                            adapter.notifyItemInserted(chats.size()-1);
 
 
                     }
@@ -2496,7 +2562,8 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                     chats.add(chats.size() - 1, messageModel);
 
-                    adapter.notifyItemInserted(chats.size() - 1);
+                    if(!Messages.isComputingLayout())
+                        adapter.notifyItemInserted(chats.size() - 1);
                 }
             }
             else
@@ -2506,7 +2573,8 @@ if(getIntent().getIntExtra("path",1)==2) {
 
                 chats.add(messageModel);
 
-                adapter.notifyItemInserted(chats.size() - 1);
+                if(!Messages.isComputingLayout())
+                    adapter.notifyItemInserted(chats.size() - 1);
             }
         }
     }
@@ -2692,7 +2760,8 @@ if(getIntent().getIntExtra("path",1)==2) {
         else
             chats.add(model);
 
-        adapter.notifyItemInserted(chats.size()-1);
+        if(!Messages.isComputingLayout())
+            adapter.notifyItemInserted(chats.size()-1);
     }
 
     public void SendSticker(final int index, final MessageModel model)
@@ -2714,16 +2783,11 @@ if(getIntent().getIntExtra("path",1)==2) {
             @Override
             public void onComplete(@NonNull Task task) {
 
-                String message = chats.get(index).getMessage();
-                Log.d("asdf",message);
-
-                model.setMessage(message.substring(0,message.lastIndexOf(" ")));
                 model.setDownloaded(302);
                 Handler.UpdateMessage(model);
 
                 if(!MessageActivity.this.isDestroyed())
                 {
-                    chats.get(index).setMessage(message.substring(0,message.lastIndexOf(" ")));
                     chats.get(index).setDownloaded(302);
                     sent.play();
 
@@ -2790,7 +2854,8 @@ if(getIntent().getIntExtra("path",1)==2) {
         else
             chats.add(model);
 
-        adapter.notifyItemInserted(chats.size()-1);
+        if(!Messages.isComputingLayout())
+            adapter.notifyItemInserted(chats.size()-1);
     }
 
     public void SendGIF(final int index, final MessageModel model)
@@ -2812,15 +2877,12 @@ if(getIntent().getIntExtra("path",1)==2) {
             @Override
             public void onComplete(@NonNull Task task) {
 
-                String message = chats.get(index).getMessage();
 
-                model.setMessage(message.substring(0,message.lastIndexOf(" ")));
                 model.setDownloaded(202);
                 Handler.UpdateMessage(model);
 
                 if(!MessageActivity.this.isDestroyed())
                 {
-                    chats.get(index).setMessage(message.substring(0,message.lastIndexOf(" ")));
                     chats.get(index).setDownloaded(202);
                     sent.play();
 
@@ -2854,11 +2916,14 @@ if(getIntent().getIntExtra("path",1)==2) {
     public void showImage(int index) {
 
         if(chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4 && !chats.get(index).getType().equals("video") && !chats.get(index).getType().equals("sticker")) {
-          //  Log.d("URIURI",index +" "+ chats.get(index).getMessage());
+          //  Log.d("URIURI",index +" "+ chats.get(index).getMessage())
 
             Intent intent = new Intent(MessageActivity.this, ShowImage.class);
 
-            intent.putExtra("source", chats.get(index).getMessage());
+            if(!chats.get(index).getType().equals("gif"))
+                intent.putExtra("source", chats.get(index).getMessage());
+            else
+                intent.putExtra("source", chats.get(index).getMessage().substring(0,chats.get(index).getMessage().lastIndexOf(" ")));
 
             startActivity(intent);
         }
@@ -2989,7 +3054,8 @@ if(getIntent().getIntExtra("path",1)==2) {
 
     @Override
     public void downloadGIF(int index) {
-        new DownloadGIF(index,chats.get(index)).execute(chats.get(index).getMessage());
+        String message = chats.get(index).getMessage();
+        new DownloadGIF(index,chats.get(index)).execute(message);
     }
 
     @Override
@@ -2999,7 +3065,8 @@ if(getIntent().getIntExtra("path",1)==2) {
 
     @Override
     public void downloadSticker(int index) {
-        new DownloadSticker(index,chats.get(index)).execute(chats.get(index).getMessage());
+        String message = chats.get(index).getMessage();
+        new DownloadSticker(index,chats.get(index)).execute(message);
     }
 
     //***********************************************************************************************************************************************
@@ -3094,16 +3161,17 @@ if(getIntent().getIntExtra("path",1)==2) {
             super.onPostExecute(uri);
 
             if (uri != null) {
+                String message1 = chats.get(index).getMessage();
 
                 message.setDownloaded(302);
-                message.setMessage(uri.toString());
+                message.setMessage(uri.toString()+" "+message1);
 
                 Handler.UpdateMessage(message);
 
                 if(!MessageActivity.this.isDestroyed())
                 {
                     chats.get(index).setDownloaded(302);
-                    chats.get(index).setMessage(uri.toString());
+                    chats.get(index).setMessage(message.getMessage());
 
                     if(!Messages.isComputingLayout())
                     {
@@ -3240,15 +3308,17 @@ if(getIntent().getIntExtra("path",1)==2) {
 
             if (uri != null) {
 
+                String message1 = chats.get(index).getMessage();
+
                 message.setDownloaded(202);
-                message.setMessage(uri.toString());
+                message.setMessage(uri.toString()+" "+message1);
 
                 Handler.UpdateMessage(message);
 
                 if(!MessageActivity.this.isDestroyed())
                 {
                     chats.get(index).setDownloaded(202);
-                    chats.get(index).setMessage(uri.toString());
+                    chats.get(index).setMessage(message.getMessage());
 
                     if(!Messages.isComputingLayout())
                     {

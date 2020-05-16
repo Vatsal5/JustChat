@@ -1139,8 +1139,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                 } else {
                     contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
-                            , "",
-                            "", dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
+                            , "null",
+                            "null", dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
                     userAdapter.notifyItemInserted(contacts1.size() - 1);
                     new grouplistener(contacts1.size() - 1).piclistener();
                     new grouplistener(contacts1.size() - 1).VideoListener();

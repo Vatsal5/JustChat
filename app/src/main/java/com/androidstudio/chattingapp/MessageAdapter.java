@@ -306,14 +306,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         if(messages.get(holder.getAdapterPosition()).getDownloaded()==302) //when sticker is sent or downloaded successfully
         {
+            String message = messages.get(holder.getAdapterPosition()).getMessage();
             holder.progress.setVisibility(View.GONE);
 
             RequestOptions options = new RequestOptions();
             options.diskCacheStrategy(DiskCacheStrategy.NONE);
             options.skipMemoryCache(true);
 
-            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
-                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
+            if(!message.equals("null")) {
+                Glide.with(context).load(message.substring(0,message.lastIndexOf(" "))).apply(options).addListener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
@@ -371,6 +372,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         else if(messages.get(holder.getAdapterPosition()).getDownloaded()==305  || messages.get(holder.getAdapterPosition()).getDownloaded()==306) //when sticker has been "seen"
         {
+            String message = messages.get(holder.getAdapterPosition()).getMessage();
             holder.progress.setVisibility(View.GONE);
 
             if(messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
@@ -385,8 +387,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             options.diskCacheStrategy(DiskCacheStrategy.NONE);
             options.skipMemoryCache(true);
 
-            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
-                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
+            if(!message.equals("null")) {
+                Glide.with(context).load(message.substring(0,message.lastIndexOf(" "))).apply(options).addListener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
@@ -459,6 +461,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         else if(messages.get(holder.getAdapterPosition()).getDownloaded()==202) // when gif has been sent or downloaded successfully
         {
+            String message = messages.get(holder.getAdapterPosition()).getMessage();
             holder.progress.setVisibility(View.GONE);
 
             if(holder.llDownload!=null)
@@ -478,7 +481,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             options.diskCacheStrategy(DiskCacheStrategy.NONE);
             options.skipMemoryCache(true);
 
-            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
+            if(!message.equals("null")) {
 //                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
 //                    @Override
 //                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -502,7 +505,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 //                    }
 //                }).into(holder.ivImage);
 
-                holder.ivImage.setImageURI(Uri.parse(messages.get(holder.getAdapterPosition()).getMessage()));
+                holder.ivImage.setImageURI(Uri.parse(message.substring(0,message.lastIndexOf(" "))));
                 if(holder.ivImage.getDrawable()==null)
                 {
                     holder.ivImage.setImageURI(null);
@@ -560,6 +563,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         else if(messages.get(holder.getAdapterPosition()).getDownloaded()==205  || messages.get(holder.getAdapterPosition()).getDownloaded()==206) //when gif has been "seen"
         {
+            String message = messages.get(holder.getAdapterPosition()).getMessage();
             holder.progress.setVisibility(View.GONE);
 
             if(holder.llDownload!=null)
@@ -577,9 +581,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             options.diskCacheStrategy(DiskCacheStrategy.NONE);
             options.skipMemoryCache(true);
 
-            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
+            if(!message.equals("null")) {
 
-                holder.ivImage.setImageURI(Uri.parse(messages.get(holder.getAdapterPosition()).getMessage()));
+                holder.ivImage.setImageURI(Uri.parse(message.substring(0,message.lastIndexOf(" "))));
                 if(holder.ivImage.getDrawable()==null)
                 {
                     holder.ivImage.setImageURI(null);

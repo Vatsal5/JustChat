@@ -1286,7 +1286,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 chats.add(messageModel);
 
-                adapter.notifyItemInserted(chats.size()-1);
+                if(!Messages.isComputingLayout())
+                    adapter.notifyItemInserted(chats.size()-1);
 
                 if(messagecount==2)
                     received.play();
@@ -1381,7 +1382,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     chats.add(messageModel);
 
 //                adapter.notifyDataSetChanged();
-                adapter.notifyItemInserted(chats.size()-1);
+                if(!Messages.isComputingLayout())
+                    adapter.notifyItemInserted(chats.size()-1);
 
                 if(messagecount==2)
                     received.play();
@@ -1479,6 +1481,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             chats.add(messageModel);
                             dataSnapshot.getRef().removeValue();
 
+                if(!Messages.isComputingLayout())
                         adapter.notifyItemInserted(chats.size()-1);
                         // adapter.notifyItemRangeInserted(chats.size()-1,1);
                 if(messagecount==2)
@@ -1576,7 +1579,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 chats.add(messageModel);
                 dataSnapshot.getRef().removeValue();
 
-                adapter.notifyItemInserted(chats.size()-1);
+                if(!Messages.isComputingLayout())
+                    adapter.notifyItemInserted(chats.size()-1);
                 // adapter.notifyItemRangeInserted(chats.size()-1,1);
                 if(messagecount==2)
                     received.play();
@@ -1674,7 +1678,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 chats.add(messageModel);
                 dataSnapshot.getRef().removeValue();
 
-                adapter.notifyItemInserted(chats.size()-1);
+                if(!Messages.isComputingLayout())
+                    adapter.notifyItemInserted(chats.size()-1);
                 // adapter.notifyItemRangeInserted(chats.size()-1,1);
                 if(messagecount==2)
                     received.play();
@@ -1746,7 +1751,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     int id = Handler.addMessage(model);
                     model.setId(id);
                     chats.add(model);
-                    adapter.notifyItemInserted(chats.size() - 1);
+                    if(!Messages.isComputingLayout())
+                        adapter.notifyItemInserted(chats.size() - 1);
 
 
                 }
@@ -2136,7 +2142,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                 int id = Handler.addMessage(model);
                                 model.setId(id);
                                 chats.add(model);
-                                adapter.notifyItemInserted(chats.size() - 1);
+                                if(!Messages.isComputingLayout())
+                                    adapter.notifyItemInserted(chats.size() - 1);
                             }
                         }
                     } else {
@@ -2183,7 +2190,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         int id = Handler.addMessage(model);
                         model.setId(id);
                         chats.add(model);
-                        adapter.notifyItemInserted(chats.size() - 1);
+                        if(!Messages.isComputingLayout())
+                            adapter.notifyItemInserted(chats.size() - 1);
                     }
                 }
             }
@@ -2203,7 +2211,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             Intent intent = new Intent(MessageActivity2.this, ShowImage.class);
 
-            intent.putExtra("source", chats.get(index).getMessage());
+            if(!chats.get(index).getType().equals("gif"))
+                intent.putExtra("source", chats.get(index).getMessage());
+            else
+                intent.putExtra("source", chats.get(index).getMessage().substring(0,chats.get(index).getMessage().lastIndexOf(" ")));
 
             startActivity(intent);
         }
@@ -2384,7 +2395,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(FirebaseAuth
                 .getInstance().getCurrentUser().getPhoneNumber()).child(push).setValue(membernumber.size()+"msticker");
 
-        final String message = chats.get(index).getMessage();
 
         for(int i=0;i<membernumber.size();i++) {
             FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("sticker").child(membernumber.get(i)).
@@ -2395,13 +2405,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         public void onSuccess(Void aVoid) {
                             if (x[0] == 0) {
                                 x[0] = 1;
-                                model.setMessage(message.substring(0,message.lastIndexOf(" ")));
                                 model.setFirebaseId(push);
                                 model.setDownloaded(302);
                                 Handler.UpdateMessage(model);
 
                                 if (!MessageActivity2.this.isDestroyed()) {
-                                    chats.get(index).setMessage(message.substring(0,message.lastIndexOf(" ")));
                                     chats.get(index).setFirebaseId(push);
                                     chats.get(index).setDownloaded(302);
                                     sent.play();
@@ -2445,7 +2453,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(FirebaseAuth
                 .getInstance().getCurrentUser().getPhoneNumber()).child(push).setValue(membernumber.size()+"mgif");
 
-        final String message = chats.get(index).getMessage();
 
         for(int i=0;i<membernumber.size();i++) {
             FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("gif").child(membernumber.get(i)).
@@ -2456,13 +2463,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         public void onSuccess(Void aVoid) {
                             if (x[0] == 0) {
                                 x[0] = 1;
-                                model.setMessage(message.substring(0,message.lastIndexOf(" ")));
                                 model.setFirebaseId(push);
                                 model.setDownloaded(202);
                                 Handler.UpdateMessage(model);
 
                                 if (!MessageActivity2.this.isDestroyed()) {
-                                    chats.get(index).setMessage(message.substring(0,message.lastIndexOf(" ")));
                                     chats.get(index).setFirebaseId(push);
                                     chats.get(index).setDownloaded(202);
                                     sent.play();
@@ -2691,7 +2696,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         model.setId(id);
         chats.add(model);
 
-        adapter.notifyItemInserted(chats.size()-1);
+        if(!Messages.isComputingLayout())
+            adapter.notifyItemInserted(chats.size()-1);
     }
 
     public void prepareGif(Uri uri, String url)
@@ -2725,7 +2731,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         model.setId(id);
         chats.add(model);
 
-        adapter.notifyItemInserted(chats.size()-1);
+        if(!Messages.isComputingLayout())
+            adapter.notifyItemInserted(chats.size()-1);
     }
 
     class CompressImage extends AsyncTask<Uri,Void,Uri>
@@ -2883,6 +2890,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 chats.add(messageModel);
 
+            if(!Messages.isComputingLayout())
                 adapter.notifyItemInserted(chats.size() - 1);
             }
         }
@@ -2978,15 +2986,17 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             if (uri != null) {
 
+                String message1 = chats.get(index).getMessage();
+
                 message.setDownloaded(302);
-                message.setMessage(uri.toString());
+                message.setMessage(uri.toString()+" "+message1);
 
                 Handler.UpdateMessage(message);
 
                 if(!MessageActivity2.this.isDestroyed())
                 {
                     chats.get(index).setDownloaded(302);
-                    chats.get(index).setMessage(uri.toString());
+                    chats.get(index).setMessage(message.getMessage());
 
                     if(!Messages.isComputingLayout())
                     {
@@ -3122,15 +3132,17 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             if (uri != null) {
 
+                String message1 = chats.get(index).getMessage();
+
                 message.setDownloaded(202);
-                message.setMessage(uri.toString());
+                message.setMessage(uri.toString()+" "+message1);
 
                 Handler.UpdateMessage(message);
 
                 if(!MessageActivity2.this.isDestroyed())
                 {
                     chats.get(index).setDownloaded(202);
-                    chats.get(index).setMessage(uri.toString());
+                    chats.get(index).setMessage(message.getMessage());
 
                     if(!Messages.isComputingLayout())
                     {
