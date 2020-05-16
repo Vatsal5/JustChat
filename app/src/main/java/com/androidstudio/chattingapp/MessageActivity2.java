@@ -1244,11 +1244,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 set= new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
-                                .setValue(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("m")))-1
-                                + dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m")));
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
-                                .removeEventListener(set);
+                        if(dataSnapshot.getValue()!=null) {
+
+                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                    .setValue(Integer.parseInt(dataSnapshot.getValue().toString().substring(0, dataSnapshot.getValue().toString().indexOf("m"))) - 1
+                                            + dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m")));
+                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                    .removeEventListener(set);
+                        }
                     }
 
                     @Override
@@ -1338,11 +1341,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 set1= new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
-                                .setValue(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("m")))-1
-                                        + dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m")));
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
-                                .removeEventListener(set1);
+                        if(dataSnapshot.getValue()!=null) {
+
+                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                    .setValue(Integer.parseInt(dataSnapshot.getValue().toString().substring(0, dataSnapshot.getValue().toString().indexOf("m"))) - 1
+                                            + dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m")));
+                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                    .removeEventListener(set1);
+                        }
                     }
 
                     @Override
@@ -1439,11 +1445,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 set2= new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
-                                .setValue(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("m")))-1
-                                        + dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m")));
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
-                                .removeEventListener(set2);
+                        if(dataSnapshot.getValue()!=null) {
+
+                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                    .setValue(Integer.parseInt(dataSnapshot.getValue().toString().substring(0, dataSnapshot.getValue().toString().indexOf("m"))) - 1
+                                            + dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m")));
+                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                    .removeEventListener(set2);
+                        }
                     }
 
                     @Override
@@ -1537,11 +1546,13 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 set2= new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
-                                .setValue(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("m")))-1
-                                        + dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m")));
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
-                                .removeEventListener(set2);
+                        if(dataSnapshot.getValue()!=null) {
+                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                    .setValue(Integer.parseInt(dataSnapshot.getValue().toString().substring(0, dataSnapshot.getValue().toString().indexOf("m"))) - 1
+                                            + dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m")));
+                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                    .removeEventListener(set2);
+                        }
                     }
 
                     @Override
@@ -1618,7 +1629,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         chreceiver = new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
                 //  Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
                 final String time, date,sender;
@@ -1635,12 +1646,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 sender = dataSnapshot.getValue(String.class).substring(21,34);
                 set2= new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
-                                .setValue(Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("m")))-1
-                                        + dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m")));
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
-                                .removeEventListener(set2);
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot1) {
+                        if(dataSnapshot1.getValue()!=null) {
+                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot1.getKey())
+                                    .setValue(Integer.parseInt(dataSnapshot1.getValue().toString().substring(0, dataSnapshot1.getValue().toString().indexOf("m"))) - 1
+                                            + dataSnapshot1.getValue().toString().substring(dataSnapshot1.getValue().toString().indexOf("m")));
+                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                    .removeEventListener(set2);
+                        }
                     }
 
                     @Override

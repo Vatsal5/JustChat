@@ -907,7 +907,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         contacts1.get(index).setUrl(dataSnapshot.getValue().toString());
+
+
                         userAdapter.notifyItemChanged(index);
+
                     }
 
 
@@ -1151,34 +1154,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 }
 
 
-                //   userAdapter.notifyDataSetChanged();
 
-
-                num++;
-                reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
-                        new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.exists()) {
-                                    contacts1.get(contacts1.size() - 1).setUrl(dataSnapshot.getValue().toString());
-                                    userAdapter.notifyItemChanged(contacts1.size()-1);
-
-                                    //   userAdapter.notifyDataSetChanged();
-                                } else {
-                                    contacts1.get(contacts1.size() - 1).setUrl("null");
-                                    userAdapter.notifyItemChanged(contacts1.size()-1);
-
-
-                                    //  userAdapter.notifyDataSetChanged();
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        }
-                );
                 final String key = dataSnapshot.getKey();
                 deleteGroupimages = new ChildEventListener() {
                     @Override
@@ -1507,7 +1483,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         {
 
             contacts1.get(l).setuID(ApplicationClass.RenameGroup);
-            userAdapter.notifyItemChanged(contacts1.size()-1);
+            userAdapter.notifyItemChanged(l);
             ApplicationClass.RenameGroup=null;
         }
 
@@ -1534,34 +1510,34 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
     }
 
-    public class GroupDp
-    {
-        int index;
-        GroupDp(int index)
-        {
-            this.index=index;
-        }
-
-        public void ProfileListener()
-        {
-            FirebaseDatabase.getInstance().getReference().child("groups").child(contacts1.get(index).getGroupkey()).child("profile").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        contacts1.get(index).setUrl(dataSnapshot.getValue().toString());
-                        userAdapter.notifyItemChanged(index);
-                    }
-
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }
-    }
+//    public class GroupDp
+//    {
+//        int index;
+//        GroupDp(int index)
+//        {
+//            this.index=index;
+//        }
+//
+//        public void ProfileListener()
+//        {
+//            FirebaseDatabase.getInstance().getReference().child("groups").child(contacts1.get(index).getGroupkey()).child("profile").addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    if (dataSnapshot.exists()) {
+//                        contacts1.get(index).setUrl(dataSnapshot.getValue().toString());
+//                        userAdapter.notifyItemChanged(index);
+//                    }
+//
+//
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                }
+//            });
+//        }
+//    }
 
     @Override
     protected void onDestroy() {
@@ -1665,21 +1641,22 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 else
                     contacts1.get(l).setTime(Handler.getLastGroupMessageTime(contacts1.get(l).getGroupname()));
                 }
-            }
-        userAdapter.notifyItemChanged(contacts1.size()-1);
+            userAdapter.notifyItemChanged(l);
+
+        }
 
         if(flag==true)
         {
             flag=false;
             contacts1.get(l).setMessagenum(2);
-            userAdapter.notifyItemChanged(contacts1.size()-1);
+            userAdapter.notifyItemChanged(l);
         }
         if(flag2==true)
         {
             if(l<=(contacts1.size()-1)) {
                 flag2 = false;
                 contacts1.get(l).setMessagenum(2);
-                userAdapter.notifyItemChanged(contacts1.size()-1);
+                userAdapter.notifyItemChanged(l);
             }
 
         }

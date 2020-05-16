@@ -59,6 +59,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         SharedPreferences preftheme;
         preftheme=context.getSharedPreferences("theme",0);
 
+
         String theme=preftheme.getString("theme","red");
 
         switch (theme)
@@ -250,7 +251,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         else
         {
             holder.iv.setColorFilter(context.getResources().getColor(R.color.iOrange));
-            Glide.with(context).load(list.get(position).getUrl()).into(holder.iv);
+
+
+
+            Glide.with(context).load(list.get(holder.getAdapterPosition()).getUrl()).into(holder.iv);
             holder.iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -312,6 +316,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             }
         }
         else {
+            holder.ivBackground.setBackgroundColor(context.getResources().getColor(R.color.white1));
             if (list.get(position).getMessagenum() > 2) {
                 holder.tvMessageNum.setText(list.get(position).getMessagenum()-2 + "");
                 holder.tvMessageNum.setVisibility(View.VISIBLE);
