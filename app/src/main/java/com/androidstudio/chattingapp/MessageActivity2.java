@@ -132,6 +132,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     int messagecount;
     int numberOfMembers=-1;
     SharedPreferences preftheme;
+    SharedPreferences Names;
 
     ArrayList<String > gifurl;
     gif_adapter gif_adapter;
@@ -279,6 +280,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         sent = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/sharp"));
         received = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/received"));
+
+        Names = getSharedPreferences("Names",0);
 
         ivProfile=findViewById(R.id.ivProfile);
         ll=findViewById(R.id.ll);
@@ -1149,6 +1152,59 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 String detail=dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf(" ")+1);
                 dataSnapshot.getRef().removeValue();
 
+                Date date = new Date();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+
+                long millis = System.currentTimeMillis();
+                java.sql.Date date1 = new java.sql.Date(millis);
+
+                MessageModel messageModel = new MessageModel(-347,"null","null","","grpinfo",9876,"null","null",groupname,"null");
+
+                if(chats.size()!=0)
+                    messageModel.setDate(chats.get(chats.size()-1).getDate());
+
+                switch (status) {
+                    case "remove":
+                        messageModel.setMessage("Admin removed " + Names.getString(detail, detail));
+                        break;
+                    case "addedmember":
+                        messageModel.setMessage("Admin added " + Names.getString(detail, detail));
+                        break;
+                    case "rename":
+                        messageModel.setMessage("Group title has been changed to '" + detail + "'");
+                        break;
+                    case "dpchanged":
+                        messageModel.setMessage(Names.getString(detail, detail) + " changed the group icon");
+                        tvTitle.setText(detail);
+                        break;
+                    case "exit":
+                        messageModel.setMessage(Names.getString(detail, detail) + " exited the group");
+                        break;
+                }
+
+//                if(chats.size()!=0) {
+//                    if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
+//                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupname,"null");
+//                        int id = Handler.addMessage(message);
+//                        message.setId(id);
+//                        chats.add(message);
+//                    }
+//                }
+//                else {
+//                    if(!(defaultvalue.equals("private"))) {
+//                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupname,"null");
+//                        int id = Handler.addMessage(message);
+//                        message.setId(id);
+//                        chats.add(message);
+//                    }
+//                }
+                int id = Handler.addMessage(messageModel);
+                messageModel.setId(id);
+
+                chats.add(messageModel);
+                if(!Messages.isComputingLayout())
+                    adapter.notifyItemInserted(chats.size()-1);
+
             }
 
             @Override
@@ -1885,7 +1941,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3 ||
                     chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 204|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 201||
                     chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 60 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -3
-            || chats.get(viewHolder.getAdapterPosition()).getType().equals("unread") || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 304|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 301)){
+            || chats.get(viewHolder.getAdapterPosition()).getType().equals("unread") || chats.get(viewHolder.getAdapterPosition()).getType().equals("grpinfo") || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 304|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 301)){
 
                 if(!chats.get(viewHolder.getAdapterPosition()).getSender().equals(sender)) {
                     swipeFlags = ItemTouchHelper.END;

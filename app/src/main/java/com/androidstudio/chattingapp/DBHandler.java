@@ -403,7 +403,7 @@ public class DBHandler
                 return model.getMessage();
             else if (model.getType().equals("image"))
                 return " ";
-            else if(model.getType().equals("Date"))
+            else if(model.getType().equals("Date") || model.getType().equals("grpinfo"))
                 return "null";
             else if(model.getType().equals("video"))
                 return "  ";
@@ -446,7 +446,7 @@ public class DBHandler
             }
         }
 
-        if(model !=null) {
+        if(model !=null && !model.getType().equals("grpinfo")) {
             return model.getTime();
         }
         else

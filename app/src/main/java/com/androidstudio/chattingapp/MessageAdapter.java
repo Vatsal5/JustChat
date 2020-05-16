@@ -68,6 +68,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int STICK_RIGHT = 15;
     public static final int STICK_LEFT = 16;
     public static final int STICK_LEFT_GRP = 17;
+    public static final int MSG_GRP_INFO = 18;
 
     FirebaseUser user;
     Context context;
@@ -103,7 +104,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTime,tvDate,tvSender,tvError;
+        TextView tvTime,tvDate,tvSender,tvError,tvGroupInfo;
         EmojiconTextView tvMessage;
         ImageView ivImage,ivPlay,ivProfile,ivTyping,ivSeen,ivGIF;
         ProgressBar progress;
@@ -129,6 +130,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             tvError = itemView.findViewById(R.id.tvError);
             ivSeen = itemView.findViewById(R.id.ivSeen);
             ivGIF = itemView.findViewById(R.id.ivGIF);
+            tvGroupInfo = itemView.findViewById(R.id.tvGroupInfo);
         }
     }
 
@@ -193,6 +195,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }else if(viewType == STICK_LEFT_GRP){
             View v = LayoutInflater.from(context).inflate(R.layout.sticker_left2, parent, false);
             return new ViewHolder(v);
+        }else if(viewType == MSG_GRP_INFO){
+            View v = LayoutInflater.from(context).inflate(R.layout.group_info_layout, parent, false);
+            return new ViewHolder(v);
         }
         else {
             View v = LayoutInflater.from(context).inflate(R.layout.message_right, parent, false);
@@ -202,6 +207,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull final MessageAdapter.ViewHolder holder, final int position) {
+
+        if(holder.tvGroupInfo!=null)
+            holder.tvGroupInfo.setText(messages.get(holder.getAdapterPosition()).getMessage());
 
         if(holder.tvError!=null)
             holder.tvError.setVisibility(View.GONE);
@@ -1004,6 +1012,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public int getItemViewType(int position) {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(messages.get(position).getType().equals("grpinfo"))
+        {
+            return MSG_GRP_INFO;
+        }
 
         if(messages.get(position).getType().equals("unread"))
         {

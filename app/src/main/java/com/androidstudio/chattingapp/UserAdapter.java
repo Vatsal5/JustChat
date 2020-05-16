@@ -162,11 +162,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         }
 
         database=FirebaseDatabase.getInstance();
-        DatabaseReference dbreference=database.getReference();
 
         if(!(list.get(position).getTime().equals("null")))
         {
-            holder.time.setText(list.get(position).getTime());
+            if(list.get(holder.getAdapterPosition()).getGroupname()!=null)
+                holder.time.setText(list.get(position).getTime());
+            else
+                holder.time.setText(list.get(position).getTime().substring(0,5));
         }
         else
         {

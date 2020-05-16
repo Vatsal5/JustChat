@@ -1126,7 +1126,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 if (Handler.getGroupMessages(dataSnapshot.getValue().toString(), 0).first.size() > 0) {
                     contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
                             , Handler.getLastMessageGroup(dataSnapshot.getValue().toString()),
-                            Handler.getLastGroupMessageTime(dataSnapshot.getValue().toString()).substring(0, 5), dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
+                            Handler.getLastGroupMessageTime(dataSnapshot.getValue().toString()), dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
                     userAdapter.notifyItemInserted(contacts1.size() - 1);
                     new grouplistener(contacts1.size() - 1).piclistener();
                     new grouplistener(contacts1.size() - 1).VideoListener();
@@ -1661,7 +1661,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 if(l<=(contacts1.size()-1))
                     contacts1.get(l).setLastmessage(Handler.getLastMessageGroup(contacts1.get(l).getGroupname()));
                 if(Handler.getGroupMessages(contacts1.get(l).getGroupname(),0).first.size()>0)
-                    contacts1.get(l).setTime(Handler.getLastGroupMessageTime(contacts1.get(l).getGroupname()).substring(0, 5));
+                    contacts1.get(l).setTime(Handler.getLastGroupMessageTime(contacts1.get(l).getGroupname()));
                 else
                     contacts1.get(l).setTime(Handler.getLastGroupMessageTime(contacts1.get(l).getGroupname()));
                 }
