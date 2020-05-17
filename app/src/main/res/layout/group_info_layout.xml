@@ -15,6 +15,7 @@
         android:layout_marginBottom="5dp"
         android:background="@drawable/date"
         android:gravity="center"
+        android:maxWidth="250dp"
         android:paddingLeft="9dp"
         android:paddingTop="4dp"
         android:paddingRight="9dp"
