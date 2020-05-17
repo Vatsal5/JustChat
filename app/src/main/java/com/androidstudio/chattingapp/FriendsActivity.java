@@ -57,7 +57,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     ArrayList<String> number1,membersToadd;
     int yes=0;
     int c=0;
-    int k=0,z;
+    int k=0,z,z1;
     String groupkey;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -598,17 +598,29 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
         if (getIntent().getIntExtra("createGroup", 2) == 1) {
             yes=1;
-            tvCreateGroup.setVisibility(View.VISIBLE);
+
             tvCreateGroup.setText("Create Group");
-            cvCreate.setVisibility(View.VISIBLE);
 
 
-            if(contacts1.get(index).getSelected()==0)
-            contacts1.get(index).setSelected(1);
-            else
+
+            if(contacts1.get(index).getSelected()==0) {
+                contacts1.get(index).setSelected(1);
+                z++;
+            }
+            else {
                 contacts1.get(index).setSelected(0);
+                z--;
+            }
             userAdapter.notifyDataSetChanged();
 
+            if(z>=2) {
+                tvCreateGroup.setVisibility(View.VISIBLE);
+                cvCreate.setVisibility(View.VISIBLE);
+            }
+            else {
+                tvCreateGroup.setVisibility(View.GONE);
+                cvCreate.setVisibility(View.GONE);
+            }
 
         }
         else if(ApplicationClass.addmembers==1)
@@ -627,28 +639,32 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     if(x==0) {
         if (contacts1.get(index).getSelected() == 0) {
             contacts1.get(index).setSelected(1);
-            z++;
+
+            z1++;
         }
         else {
             contacts1.get(index).setSelected(0);
-            z--;
+z1--;
         }
         userAdapter.notifyDataSetChanged();
         tvCreateGroup.setText("ADD");
     }
     else{
+        Toast.makeText(getApplicationContext(),"Already a member of this group",Toast.LENGTH_LONG).show();
         x=0;
     }
             tvCreateGroup.setText("ADD");
-    if(z>=2) {
+    if(z1>=1) {
         tvCreateGroup.setVisibility(View.VISIBLE);
         cvCreate.setVisibility(View.VISIBLE);
     }
-    else
-    {
+    else {
         tvCreateGroup.setVisibility(View.GONE);
         cvCreate.setVisibility(View.GONE);
     }
+
+
+
 
         }
 

@@ -39,6 +39,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivGroupDP"
+            android:singleLine="true"
             android:textColor="#000000"
             android:textStyle="bold"
             android:textSize="28dp"
