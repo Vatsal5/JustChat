@@ -1648,7 +1648,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot1) {
                         if(dataSnapshot1.getValue()!=null) {
                             FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot1.getKey())
-                                    .setValue(Integer.parseInt(dataSnapshot1.getValue().toString().substring(0, dataSnapshot1.getValue().toString().indexOf("m"))) - 1
+                                    .setValue(Integer.parseInt(dataSnapshot1.getValue(String.class).substring(0, dataSnapshot1.getValue().toString().indexOf("m"))) - 1
                                             + dataSnapshot1.getValue().toString().substring(dataSnapshot1.getValue().toString().indexOf("m")));
                             FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
                                     .removeEventListener(set2);
