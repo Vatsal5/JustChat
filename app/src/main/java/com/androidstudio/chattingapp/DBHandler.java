@@ -392,7 +392,7 @@ public class DBHandler
 
         for(c.moveToLast();!c.isBeforeFirst();c.moveToPrevious())
         {
-            if(c.getString(iGroup).equals(grpName)) {
+            if(c.getString(iGroup).equals(grpName) && !c.getString(iType).equals("grpinfo")) {
                 model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate),c.getString(iGroup),c.getString(iFirebaseId));
                 break;
             }
@@ -403,7 +403,7 @@ public class DBHandler
                 return model.getMessage();
             else if (model.getType().equals("image"))
                 return " ";
-            else if(model.getType().equals("Date") || model.getType().equals("grpinfo"))
+            else if(model.getType().equals("Date"))
                 return "null";
             else if(model.getType().equals("video"))
                 return "  ";
@@ -440,13 +440,13 @@ public class DBHandler
 
         for(c.moveToLast();!c.isBeforeFirst();c.moveToPrevious())
         {
-            if(c.getString(iGroup).equals(grpName)) {
+            if(c.getString(iGroup).equals(grpName) && !c.getString(iType).equals("grpinfo")) {
                 model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate),c.getString(iGroup),c.getString(iFirebaseId));
                 break;
             }
         }
 
-        if(model !=null && !model.getType().equals("grpinfo")) {
+        if(model !=null) {
             return model.getTime();
         }
         else

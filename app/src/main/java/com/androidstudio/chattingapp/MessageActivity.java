@@ -2920,10 +2920,10 @@ if(getIntent().getIntExtra("path",1)==2) {
 
             Intent intent = new Intent(MessageActivity.this, ShowImage.class);
 
-            if(!chats.get(index).getType().equals("gif"))
-                intent.putExtra("source", chats.get(index).getMessage());
-            else
+            if(chats.get(index).getType().equals("gif") && !chats.get(index).getMessage().equals("null"))
                 intent.putExtra("source", chats.get(index).getMessage().substring(0,chats.get(index).getMessage().lastIndexOf(" ")));
+            else
+                intent.putExtra("source", chats.get(index).getMessage());
 
             startActivity(intent);
         }
