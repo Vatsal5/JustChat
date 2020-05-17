@@ -630,7 +630,10 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
 
                                             }
                                         });
+                                        if(users.size()>3)
                                         builder.show();
+                                        else
+                                            Toast.makeText(getApplicationContext(),"Group can't have less than three members",Toast.LENGTH_LONG).show();
 
 
                                 }
