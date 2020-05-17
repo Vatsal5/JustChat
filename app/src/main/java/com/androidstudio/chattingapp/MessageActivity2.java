@@ -1173,7 +1173,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         ApplicationClass.rename=detail;
                         break;
                     case "dpchanged":
-                        messageModel.setMessage(Names.getString(detail, detail) + " changed the group icon");
+                        if(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber().equals(detail))
+                            messageModel.setMessage("You Changed the group icon");
+                        else
+                            messageModel.setMessage(Names.getString(detail, detail) + " changed the group icon");
                         break;
                     case "exit":
                         messageModel.setMessage(Names.getString(detail, detail) + " exited the group");
