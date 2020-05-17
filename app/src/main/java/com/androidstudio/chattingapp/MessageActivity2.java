@@ -393,10 +393,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         Group = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(dataSnapshot.getValue()==null)
-                {
-                    ll.setVisibility(View.GONE);
-                }
+                
                 // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
 
@@ -426,7 +423,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             }
         };
-        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(Group);
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).addChildEventListener(Group);
 
 
 
