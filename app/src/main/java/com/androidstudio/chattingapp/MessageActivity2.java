@@ -1011,10 +1011,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                     for(int i=chats.size()-1;i>=0;i--)
                     {
-
                         if(chats.get(i).getFirebaseId().equals(key))
                         {
-
                             if(!((chats.get(i).getDownloaded()==-4) || (chats.get(i).getDownloaded()==5) || (chats.get(i).getDownloaded()==105) || (chats.get(i).getDownloaded()==205)   || (chats.get(i).getDownloaded() == 305))) {
                                 if (type.equals("text")) {
 
@@ -1039,8 +1037,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                 if (!Messages.isComputingLayout())
                                     adapter.notifyItemChanged(i);
                             }
+                            break;
                         }
-                        break;
                     }
                 }
             }
@@ -1118,8 +1116,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                 if (!Messages.isComputingLayout())
                                     adapter.notifyItemChanged(i);
                             }
+                            break;
                         }
-                        break;
                     }
                 }
             }
