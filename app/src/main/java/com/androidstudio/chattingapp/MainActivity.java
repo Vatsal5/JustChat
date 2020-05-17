@@ -386,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                          } else {
                              contacts1.get(index).setStatus("offline");
                          }
-                         userAdapter.notifyItemChanged(contacts1.size()-1);
+                         userAdapter.notifyItemChanged(index);
                      }
                  }
 
@@ -1127,10 +1127,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
-                if (Handler.getGroupMessages(dataSnapshot.getKey().toString(), 0).first.size() > 0) {
+                if (Handler.getGroupMessages(dataSnapshot.getKey(), 0).first.size() > 0) {
                     contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
-                            , Handler.getLastMessageGroup(dataSnapshot.getKey().toString()),
-                            Handler.getLastGroupMessageTime(dataSnapshot.getKey().toString()), dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
+                            , Handler.getLastMessageGroup(dataSnapshot.getKey()),
+                            Handler.getLastGroupMessageTime(dataSnapshot.getKey()), dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
                     userAdapter.notifyItemInserted(contacts1.size() - 1);
                     new grouplistener(contacts1.size() - 1).piclistener();
                     new grouplistener(contacts1.size() - 1).VideoListener();
@@ -1410,7 +1410,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             l=index;
             flag2=true;
             Intent intent = new Intent(MainActivity.this,MessageActivity2.class);
-            intent.putExtra("groupName",contacts1.get(index).getGroupname());
+            intent.putExtra("groupName",contacts1.get(index).getuID());
             intent.putExtra("groupkey",contacts1.get(index).getGroupkey());
             intent.putExtra("messagecount",contacts1.get(index).getMessagenum());
 
