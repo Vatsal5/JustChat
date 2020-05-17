@@ -1331,15 +1331,15 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                for (int i = 0; i < contacts1.size(); i++) {
-                    if (contacts1.get(i).getGroupname() != null) {
-                        if (contacts1.get(i).getGroupname().equals(dataSnapshot.getValue().toString())) {
-                            contacts1.remove(i);
-                            userAdapter.notifyItemRemoved(contacts1.size()-1);
-                        }
-
-                    }
-                }
+//                for (int i = 0; i < contacts1.size(); i++) {
+//                    if (contacts1.get(i).getGroupname() != null) {
+//                        if (contacts1.get(i).getGroupname().equals(dataSnapshot.getValue().toString())) {
+//                            contacts1.remove(i);
+//                            userAdapter.notifyItemRemoved(contacts1.size()-1);
+//                        }
+//
+//                    }
+//                }
 
             }
 

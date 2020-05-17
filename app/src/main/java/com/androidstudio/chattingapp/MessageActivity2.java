@@ -393,6 +393,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         Group = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.getValue()==null)
+                {
+                    ll.setVisibility(View.GONE);
+                }
                 // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
 
@@ -407,8 +411,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                Toast.makeText(getApplicationContext(),"This Group Has Been Deleted By The Admin",Toast.LENGTH_LONG).show();
-                MessageActivity2.this.finish();
+                ll.setVisibility(View.GONE);
+
 
             }
 
