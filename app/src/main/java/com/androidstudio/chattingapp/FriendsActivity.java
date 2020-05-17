@@ -57,7 +57,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     ArrayList<String> number1,membersToadd;
     int yes=0;
     int c=0;
-    int k=0;
+    int k=0,z;
     String groupkey;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -614,8 +614,6 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         else if(ApplicationClass.addmembers==1)
         {
 
-            tvCreateGroup.setVisibility(View.VISIBLE);
-            cvCreate.setVisibility(View.VISIBLE);
 
     for(int i=0;i<members.size();i++)
     {
@@ -627,16 +625,31 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         break;
     }}
     if(x==0) {
-        if (contacts1.get(index).getSelected() == 0)
+        if (contacts1.get(index).getSelected() == 0) {
             contacts1.get(index).setSelected(1);
-        else
+            z++;
+        }
+        else {
             contacts1.get(index).setSelected(0);
+            z--;
+        }
         userAdapter.notifyDataSetChanged();
         tvCreateGroup.setText("ADD");
     }
     else{
         x=0;
     }
+            tvCreateGroup.setText("ADD");
+    if(z>=2) {
+        tvCreateGroup.setVisibility(View.VISIBLE);
+        cvCreate.setVisibility(View.VISIBLE);
+    }
+    else
+    {
+        tvCreateGroup.setVisibility(View.GONE);
+        cvCreate.setVisibility(View.GONE);
+    }
+
         }
 
         else {
