@@ -1487,6 +1487,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             userAdapter.notifyItemChanged(l);
             ApplicationClass.RenameGroup=null;
         }
+        if(ApplicationClass.rename!=null) {
+            contacts1.get(l).setuID(ApplicationClass.rename);
+            ApplicationClass.rename=null;
+            userAdapter.notifyItemChanged(l);
+        }
 
 //        if(ApplicationClass.create==1)
 //        {

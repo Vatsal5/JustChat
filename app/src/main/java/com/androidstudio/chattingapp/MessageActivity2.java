@@ -1168,6 +1168,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         break;
                     case "rename":
                         messageModel.setMessage("Group title has been changed to '" + detail + "'");
+                        tvTitle.setText(detail);
+                        ApplicationClass.rename=detail;
                         break;
                     case "dpchanged":
                         messageModel.setMessage(Names.getString(detail, detail) + " changed the group icon");
@@ -2219,10 +2221,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             Intent intent = new Intent(MessageActivity2.this, ShowImage.class);
 
-            if(chats.get(index).getType().equals("gif") && !chats.get(index).getMessage().equals("null"))
-                intent.putExtra("source", chats.get(index).getMessage().substring(0,chats.get(index).getMessage().lastIndexOf(" ")));
-            else
+            if(!chats.get(index).getType().equals("gif"))
                 intent.putExtra("source", chats.get(index).getMessage());
+            else
+                intent.putExtra("source", chats.get(index).getMessage().substring(0,chats.get(index).getMessage().lastIndexOf(" ")));
+
             startActivity(intent);
         }
     }
