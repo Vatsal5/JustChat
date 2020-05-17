@@ -54,6 +54,8 @@
                 android:fontFamily="@font/aclonica"
                 android:gravity="center|start|left"
                 android:text="Vatsal"
+                android:singleLine="true"
+                android:maxWidth="150dp"
                 android:textColor="#ffffff"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"

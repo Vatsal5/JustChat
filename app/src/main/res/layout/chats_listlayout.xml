@@ -54,6 +54,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="15dp"
                 android:text="User Name"
+                android:singleLine="true"
+                android:maxWidth="200dp"
                 android:textColor="#212121"
                 android:textSize="16sp"
                 android:textStyle="bold"
