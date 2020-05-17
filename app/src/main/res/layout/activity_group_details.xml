@@ -35,15 +35,15 @@
 
         <TextView
             android:id="@+id/tvGroupTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivGroupDP"
+            android:layout_marginLeft="20dp"
             android:singleLine="true"
             android:textColor="#000000"
-            android:textStyle="bold"
             android:textSize="28dp"
-            android:layout_marginLeft="20dp"/>
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivGroupDP" />
 
         <TextView
             android:id="@+id/tvCreatedBy"
