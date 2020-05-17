@@ -76,7 +76,7 @@
         android:id="@+id/Messages"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"
         android:scrollbars="vertical"
         android:scrollbarSize="2dp"
