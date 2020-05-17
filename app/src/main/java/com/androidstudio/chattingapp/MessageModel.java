@@ -1,7 +1,5 @@
 package com.androidstudio.chattingapp;
 
-import android.net.Uri;
-
 public class MessageModel
 {
     private int id;
@@ -12,7 +10,7 @@ public class MessageModel
     private int isDownloaded;
     private String time;
     private String date;
-    private String groupName;
+    private String groupKey;
     private String firebaseId;
 
     public MessageModel(){
@@ -24,11 +22,11 @@ public class MessageModel
         this.isDownloaded = -1;
         this.time = null;
         this.date = null;
-        this.groupName = null;
+        this.groupKey = null;
         this.firebaseId = null;
     };
 
-    public MessageModel(int id,String sender, String reciever, String message,String type,int isDownloaded,String time,String date,String groupName,String firebaseId) {
+    public MessageModel(int id, String sender, String reciever, String message, String type, int isDownloaded, String time, String date, String groupKey, String firebaseId) {
         this.id = id;
         this.sender = sender;
         this.reciever = reciever;
@@ -37,7 +35,7 @@ public class MessageModel
         this.isDownloaded = isDownloaded;
         this.time = time;
         this.date=date;
-        this.groupName = groupName;
+        this.groupKey = groupKey;
         this.firebaseId = firebaseId;
     }
 
@@ -105,12 +103,12 @@ public class MessageModel
         this.time = time;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public String getGroupKey() {
+        return groupKey;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setGroupKey(String groupKey) {
+        this.groupKey = groupKey;
     }
 
     public String getFirebaseId() {

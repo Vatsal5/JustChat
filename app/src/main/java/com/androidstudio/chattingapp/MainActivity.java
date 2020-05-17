@@ -1410,7 +1410,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             l=index;
             flag2=true;
             Intent intent = new Intent(MainActivity.this,MessageActivity2.class);
-            intent.putExtra("groupname",contacts1.get(index).getGroupname());
+            intent.putExtra("groupName",contacts1.get(index).getGroupname());
             intent.putExtra("groupkey",contacts1.get(index).getGroupkey());
             intent.putExtra("messagecount",contacts1.get(index).getMessagenum());
 

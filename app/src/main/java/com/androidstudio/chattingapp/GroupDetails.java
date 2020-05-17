@@ -171,7 +171,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
         else
             Glide.with(this).load(getIntent().getStringExtra("profile")).into(ivGroupDP);
 
-        tvGroupTitle.setText(getIntent().getStringExtra("groupname"));
+        tvGroupTitle.setText(getIntent().getStringExtra("groupKey"));
 
 
         manager = new LinearLayoutManager(this);
@@ -374,7 +374,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                 Intent intent=new Intent(GroupDetails.this,FriendsActivity.class);
                 intent.putExtra("groupkey",groupKey);
                 intent.putExtra("users",users.size());
-                intent.putExtra("groupname",getIntent().getStringExtra("groupname"));
+                intent.putExtra("groupKey",getIntent().getStringExtra("groupKey"));
                 startActivity(intent);
 
             }

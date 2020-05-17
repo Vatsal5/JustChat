@@ -1,18 +1,12 @@
 package com.androidstudio.chattingapp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
@@ -245,7 +238,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
 
         if(holder.ivProfile!=null) {
-            if ((messages.get(holder.getAdapterPosition()).getGroupName().equals("null"))  ) {
+            if ((messages.get(holder.getAdapterPosition()).getGroupKey().equals("null"))  ) {
                 // holder.ivProfile.setVisibility(View.VISIBLE);
 
                 if(!ApplicationClass.url.equals("null"))
@@ -1052,7 +1045,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
         }
 
-        if(messages.get(position).getGroupName().equals("null")) {
+        if(messages.get(position).getGroupKey().equals("null")) {
             if (!messages.get(position).getSender().equals(user.getPhoneNumber()) && !messages.get(position).getSender().equals("null")) {
                 switch (messages.get(position).getType()) {
                     case "image":

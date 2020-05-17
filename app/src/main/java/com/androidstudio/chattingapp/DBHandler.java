@@ -5,10 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import android.util.Pair;
-
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
@@ -22,7 +19,7 @@ public class DBHandler
     private static final String KEY_ISDOWNLOADED = "downloaded";
     private static final String KEY_TIME = "time";
     private static final String KEY_DATE = "date";
-    private static final String KEY_GROUPNAME = "groupname";
+    private static final String KEY_GROUPKEY = "groupkey";
     private static final String KEY_FIREBASEID = "firebaseid";
 
     private static final String DATABASE_NAME = "CHATS_DATABASE";
@@ -49,7 +46,7 @@ public class DBHandler
         public void onCreate(SQLiteDatabase sqLiteDatabase)
         {
             String query = "CREATE TABLE "+DATABASE_TABLE+" ("+KEY_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+KEY_SENDER+" TEXT NOT NULL, "+
-                    KEY_RECEIVER+" TEXT NOT NULL, "+KEY_MESSAGE+" TEXT NOT NULL, "+KEY_TYPE+" TEXT NOT NULL, "+KEY_ISDOWNLOADED+" TINYINT DEFAULT NULL, "+KEY_TIME+" TEXT NOT NULL, "+KEY_DATE+" TEXT NOT NULL, "+KEY_GROUPNAME+" TEXT NOT NULL, "+KEY_FIREBASEID+" TEXT NOT NULL);";
+                    KEY_RECEIVER+" TEXT NOT NULL, "+KEY_MESSAGE+" TEXT NOT NULL, "+KEY_TYPE+" TEXT NOT NULL, "+KEY_ISDOWNLOADED+" TINYINT DEFAULT NULL, "+KEY_TIME+" TEXT NOT NULL, "+KEY_DATE+" TEXT NOT NULL, "+KEY_GROUPKEY+" TEXT NOT NULL, "+KEY_FIREBASEID+" TEXT NOT NULL);";
 
             sqLiteDatabase.execSQL(query);
         }
@@ -86,7 +83,7 @@ public class DBHandler
         contentValues.put(KEY_ISDOWNLOADED,messageModel.getDownloaded());
         contentValues.put(KEY_TIME,messageModel.getTime());
         contentValues.put(KEY_DATE,messageModel.getDate());
-        contentValues.put(KEY_GROUPNAME,messageModel.getGroupName());
+        contentValues.put(KEY_GROUPKEY,messageModel.getGroupKey());
         contentValues.put(KEY_FIREBASEID,messageModel.getFirebaseId());
 
         database.insert(DATABASE_TABLE,null,contentValues);
@@ -97,7 +94,7 @@ public class DBHandler
     public Pair<ArrayList<MessageModel>, Integer> getMessages(String receiver, int index)
     {
         ArrayList<MessageModel> messages = new ArrayList<>();
-        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPNAME,KEY_FIREBASEID};
+        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPKEY,KEY_FIREBASEID};
         Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
 
         int global;
@@ -117,7 +114,7 @@ public class DBHandler
         int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
         int iTime = c.getColumnIndex(KEY_TIME);
         int iDate = c.getColumnIndex(KEY_DATE);
-        int iGroup = c.getColumnIndex(KEY_GROUPNAME);
+        int iGroup = c.getColumnIndex(KEY_GROUPKEY);
         int iFirebaseId = c.getColumnIndex(KEY_FIREBASEID);
 
         for(c.moveToPosition(global);!c.isBeforeFirst();c.moveToPrevious())
@@ -137,10 +134,10 @@ public class DBHandler
 
     }
 
-    public Pair<ArrayList<MessageModel>,Integer> getGroupMessages(String grpName,int index)
+    public Pair<ArrayList<MessageModel>,Integer> getGroupMessages(String grpKey,int index)
     {
         ArrayList<MessageModel> messages = new ArrayList<>();
-        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPNAME,KEY_FIREBASEID};
+        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPKEY,KEY_FIREBASEID};
         Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
 
         int global;
@@ -160,7 +157,7 @@ public class DBHandler
         int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
         int iTime = c.getColumnIndex(KEY_TIME);
         int iDate = c.getColumnIndex(KEY_DATE);
-        int iGroup = c.getColumnIndex(KEY_GROUPNAME);
+        int iGroup = c.getColumnIndex(KEY_GROUPKEY);
         int iFirebaseId = c.getColumnIndex(KEY_FIREBASEID);
 
         MessageModel model = null;
@@ -169,7 +166,7 @@ public class DBHandler
         {
             global--;
             model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate),c.getString(iGroup),c.getString(iFirebaseId));
-            if(model.getGroupName().equals(grpName)) {
+            if(model.getGroupKey().equals(grpKey)) {
                 messages.add(0,model);
                 i++;
             }
@@ -194,7 +191,7 @@ public class DBHandler
         values.put(KEY_ISDOWNLOADED,message.getDownloaded());
         values.put(KEY_TIME,message.getTime());
         values.put(KEY_DATE,message.getDate());
-        values.put(KEY_GROUPNAME,message.getGroupName());
+        values.put(KEY_GROUPKEY,message.getGroupKey());
         values.put(KEY_FIREBASEID,message.getFirebaseId());
 
         return database.update(DATABASE_TABLE,values,KEY_ID+"=?",new String[] {message.getId()+""});
@@ -240,9 +237,9 @@ public class DBHandler
         database.execSQL(query);
     }
 
-    public void DeleteMessagesofGroup(String grpname)
+    public void DeleteMessagesofGroup(String grpkey)
     {
-        String query = "DELETE FROM "+DATABASE_TABLE+" where "+KEY_GROUPNAME+" = '"+grpname+"';";
+        String query = "DELETE FROM "+DATABASE_TABLE+" where "+KEY_GROUPKEY+" = '"+grpkey+"';";
         database.execSQL(query);
     }
 
@@ -254,7 +251,7 @@ public class DBHandler
     public String getLastMessage(String receiver)
     {
         MessageModel model=null;
-        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPNAME,KEY_FIREBASEID};
+        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPKEY,KEY_FIREBASEID};
         Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
 
         int iId = c.getColumnIndex(KEY_ID);
@@ -265,7 +262,7 @@ public class DBHandler
         int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
         int iTime = c.getColumnIndex(KEY_TIME);
         int iDate = c.getColumnIndex(KEY_DATE);
-        int iGroup = c.getColumnIndex(KEY_GROUPNAME);
+        int iGroup = c.getColumnIndex(KEY_GROUPKEY);
         int iFirebaseId = c.getColumnIndex(KEY_FIREBASEID);
 
         for(c.moveToLast();!c.isBeforeFirst();c.moveToPrevious())
@@ -301,7 +298,7 @@ public class DBHandler
     public String getLastMessageTime(String receiver)
     {
         MessageModel model=null;
-        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPNAME,KEY_FIREBASEID};
+        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPKEY,KEY_FIREBASEID};
         Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
 
         int iId = c.getColumnIndex(KEY_ID);
@@ -312,7 +309,7 @@ public class DBHandler
         int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
         int iTime = c.getColumnIndex(KEY_TIME);
         int iDate = c.getColumnIndex(KEY_TIME);
-        int iGroup = c.getColumnIndex(KEY_GROUPNAME);
+        int iGroup = c.getColumnIndex(KEY_GROUPKEY);
         int iFirebaseId = c.getColumnIndex(KEY_FIREBASEID);
 
         for(c.moveToLast();!c.isBeforeFirst();c.moveToPrevious())
@@ -350,7 +347,7 @@ public class DBHandler
     public ArrayList<MessageModel> getAllMessages()
     {
         ArrayList<MessageModel> messages = new ArrayList<>();
-        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPNAME,KEY_FIREBASEID};
+        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPKEY,KEY_FIREBASEID};
         Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
 
         int iId = c.getColumnIndex(KEY_ID);
@@ -361,7 +358,7 @@ public class DBHandler
         int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
         int iTime = c.getColumnIndex(KEY_TIME);
         int iDate = c.getColumnIndex(KEY_DATE);
-        int iGroup = c.getColumnIndex(KEY_GROUPNAME);
+        int iGroup = c.getColumnIndex(KEY_GROUPKEY);
         int iFirebaseId = c.getColumnIndex(KEY_FIREBASEID);
 
         for(c.moveToFirst();!c.isAfterLast();c.moveToNext())
@@ -374,9 +371,9 @@ public class DBHandler
     }
 
 
-    public String getLastMessageGroup(String grpName) {
+    public String getLastMessageGroup(String grpKey) {
         MessageModel model = null;
-        String[] columns = {KEY_ID, KEY_SENDER, KEY_RECEIVER, KEY_MESSAGE, KEY_TYPE, KEY_ISDOWNLOADED, KEY_TIME, KEY_DATE, KEY_GROUPNAME,KEY_FIREBASEID};
+        String[] columns = {KEY_ID, KEY_SENDER, KEY_RECEIVER, KEY_MESSAGE, KEY_TYPE, KEY_ISDOWNLOADED, KEY_TIME, KEY_DATE, KEY_GROUPKEY,KEY_FIREBASEID};
         Cursor c = database.query(true, DATABASE_TABLE, columns, null, null, null, null, null, null);
 
         int iId = c.getColumnIndex(KEY_ID);
@@ -387,12 +384,12 @@ public class DBHandler
         int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
         int iTime = c.getColumnIndex(KEY_TIME);
         int iDate = c.getColumnIndex(KEY_DATE);
-        int iGroup = c.getColumnIndex(KEY_GROUPNAME);
+        int iGroup = c.getColumnIndex(KEY_GROUPKEY);
         int iFirebaseId = c.getColumnIndex(KEY_FIREBASEID);
 
         for(c.moveToLast();!c.isBeforeFirst();c.moveToPrevious())
         {
-            if(c.getString(iGroup).equals(grpName) && !c.getString(iType).equals("grpinfo")) {
+            if(c.getString(iGroup).equals(grpKey) && !c.getString(iType).equals("grpinfo")) {
                 model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate),c.getString(iGroup),c.getString(iFirebaseId));
                 break;
             }
@@ -421,10 +418,10 @@ public class DBHandler
 
     }
 
-    public String getLastGroupMessageTime(String grpName)
+    public String getLastGroupMessageTime(String grpKey)
     {
         MessageModel model=null;
-        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPNAME,KEY_FIREBASEID};
+        String [] columns = {KEY_ID,KEY_SENDER,KEY_RECEIVER,KEY_MESSAGE,KEY_TYPE,KEY_ISDOWNLOADED,KEY_TIME,KEY_DATE,KEY_GROUPKEY,KEY_FIREBASEID};
         Cursor c = database.query(true,DATABASE_TABLE,columns,null,null,null,null,null,null);
 
         int iId = c.getColumnIndex(KEY_ID);
@@ -435,12 +432,12 @@ public class DBHandler
         int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
         int iTime = c.getColumnIndex(KEY_TIME);
         int iDate = c.getColumnIndex(KEY_TIME);
-        int iGroup = c.getColumnIndex(KEY_GROUPNAME);
+        int iGroup = c.getColumnIndex(KEY_GROUPKEY);
         int iFirebaseId = c.getColumnIndex(KEY_FIREBASEID);
 
         for(c.moveToLast();!c.isBeforeFirst();c.moveToPrevious())
         {
-            if(c.getString(iGroup).equals(grpName) && !c.getString(iType).equals("grpinfo")) {
+            if(c.getString(iGroup).equals(grpKey) && !c.getString(iType).equals("grpinfo")) {
                 model = new MessageModel(c.getInt(iId),c.getString(iSender),c.getString(iReceiver),c.getString(iMessage),c.getString(iType),c.getInt(iDownloaded),c.getString(iTime),c.getString(iDate),c.getString(iGroup),c.getString(iFirebaseId));
                 break;
             }

@@ -242,7 +242,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                 FirebaseDatabase.getInstance().getReference().child("groups").child(getIntent().getStringExtra("groupkey"))
                                    .child("members").push().setValue(contacts1.get(index).getPh_number());
                                     FirebaseDatabase.getInstance().getReference().child("users").child(contacts1.get(index).getPh_number()).child("groups").
-                                            child(groupkey).setValue(getIntent().getStringExtra("groupname"));
+                                            child(groupkey).setValue(getIntent().getStringExtra("groupKey"));
                             }
                         }
 
@@ -657,7 +657,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 //                        ("+91"+contacts1.get(index).getPh_number()).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
 //                {
 //                    Intent intent1=new Intent(FriendsActivity.this,MessageActivity2.class);
-//                    intent1.putExtra("groupname", contacts1.get(index).getuID());
+//                    intent1.putExtra("groupKey", contacts1.get(index).getuID());
 //
 //                    intent1.putExtra("groupkey",contacts1.get(index).getKey());
 //                    intent1.putExtra("type", getIntent().getStringExtra("type"));
