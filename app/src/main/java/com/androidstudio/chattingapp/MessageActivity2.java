@@ -1174,6 +1174,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         break;
                     case "rename":
                         messageModel.setMessage("Group title has been changed to '" + detail + "'");
+                        groupName = detail;
                         tvTitle.setText(detail);
                         ApplicationClass.rename=detail;
                         break;
