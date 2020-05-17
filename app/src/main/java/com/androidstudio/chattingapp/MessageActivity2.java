@@ -1015,7 +1015,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         if(chats.get(i).getFirebaseId().equals(key))
                         {
 
-                            if(!((chats.get(i).getDownloaded()==-4) || (chats.get(i).getDownloaded()==5) || (chats.get(i).getDownloaded()==105)   || (chats.get(i).getDownloaded() == 305))) {
+                            if(!((chats.get(i).getDownloaded()==-4) || (chats.get(i).getDownloaded()==5) || (chats.get(i).getDownloaded()==105) || (chats.get(i).getDownloaded()==205)   || (chats.get(i).getDownloaded() == 305))) {
                                 if (type.equals("text")) {
 
                                     chats.get(i).setDownloaded(-4);
