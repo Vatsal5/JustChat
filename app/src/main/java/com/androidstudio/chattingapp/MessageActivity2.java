@@ -1165,7 +1165,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         messageModel.setMessage("Admin removed " + Names.getString(detail, detail));
                         break;
                     case "addedmember":
-                        messageModel.setMessage("Admin added " + Names.getString(detail, detail));
+                        if(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber().equals(detail))
+                            messageModel.setMessage("Admin added You");
+                        else
+                            messageModel.setMessage("Admin added " + Names.getString(detail, detail));
                         break;
                     case "rename":
                         messageModel.setMessage("Group title has been changed to '" + detail + "'");
