@@ -109,6 +109,7 @@ import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
+import static java.lang.System.in;
 import static java.lang.System.out;
 
 public class MessageActivity2 extends AppCompatActivity implements MessageAdapter.ImageSelected, com.androidstudio.chattingapp.gif_adapter.ItemSelected {
@@ -2221,10 +2222,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             Intent intent = new Intent(MessageActivity2.this, ShowImage.class);
 
-            if(!chats.get(index).getType().equals("gif"))
-                intent.putExtra("source", chats.get(index).getMessage());
-            else
+            if(chats.get(index).getType().equals("gif") && !chats.get(index).getMessage().equals("null"))
                 intent.putExtra("source", chats.get(index).getMessage().substring(0,chats.get(index).getMessage().lastIndexOf(" ")));
+            else
+                intent.putExtra("source", chats.get(index).getMessage());
 
             startActivity(intent);
         }
