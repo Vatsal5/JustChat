@@ -248,10 +248,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         if(list.get(position).getStatus()!=null)
         {
             if(list.get(position).getStatus().equals("online"))
-                holder.iv.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.Orange)));
+                holder.iv.setBackgroundResource(R.drawable.orange);
             else
-                holder.iv.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.white1)));
-        }
+                holder.iv.setBackgroundResource(R.drawable.white);        }
 
         if(list.get(position).getuID().equals(""))
         {
@@ -276,8 +275,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             }
         }
         else {
-            holder.iv.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.white1)));
-            if (list.get(position).getMessagenum() > 2) {
+            holder.iv.setBackgroundResource(R.drawable.white);
+
+        if (list.get(position).getMessagenum() > 2) {
                 holder.tvMessageNum.setText(list.get(position).getMessagenum()-2 + "");
                 holder.tvMessageNum.setVisibility(View.VISIBLE);
             } else {
