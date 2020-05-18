@@ -190,7 +190,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         else{
             holder.ivImage.setVisibility(View.GONE);
             holder.tvlastmessage.setVisibility(View.GONE);
-            holder.tvUserName.setPadding(0,13,0,0);
+
         }
        // Log.d("asdf",list.get(position).getUrl());
 
