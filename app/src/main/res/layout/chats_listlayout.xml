@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#00ffffff"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
@@ -11,6 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl"
         android:layout_width="wrap_content"
+        android:backgroundTint="#00ffffff"
         android:layout_marginTop="9dp"
         android:layout_marginBottom="9dp"
         android:layout_height="wrap_content"

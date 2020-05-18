@@ -89,7 +89,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="30dp"
             tools:visibility="visible">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -97,6 +96,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="#00ffffff"
+                android:layout_marginTop="10dp"
                 android:layout_marginLeft="22dp"
                 android:layout_marginRight="22dp"
                 app:layout_constraintEnd_toEndOf="parent"
