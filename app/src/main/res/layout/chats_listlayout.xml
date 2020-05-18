@@ -133,8 +133,9 @@
 
                 <TextView
                     android:id="@+id/tvMessageNum"
-                    android:layout_width="14dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="14dp"
+                    android:minWidth="14dp"
                     android:layout_marginRight="5dp"
                     android:background="@drawable/countback"
                     android:gravity="center"
