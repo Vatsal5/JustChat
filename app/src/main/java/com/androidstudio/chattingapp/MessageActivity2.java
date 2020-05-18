@@ -393,7 +393,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         Group = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                
+
                 // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
 
