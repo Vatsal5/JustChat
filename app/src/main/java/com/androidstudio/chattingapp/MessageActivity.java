@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
@@ -828,6 +829,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     if (!(flag == 1)) {
                         FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("typing " + RecieverPhone);
                         flag = 1;
+                    }
+
+                    if(checkUrl(etMessage.getText().toString().trim())) {
+                        etMessage.setTypeface(etMessage.getTypeface(), Typeface.ITALIC);
+                    }
+                    else {
+                        etMessage.setTypeface(etMessage.getTypeface(), Typeface.NORMAL);
                     }
 
                 } else {
@@ -3071,6 +3079,16 @@ if(getIntent().getIntExtra("path",1)==2) {
         new DownloadSticker(index,chats.get(index)).execute(message);
     }
 
+    @Override
+    public void UrlClicked(int index) {
+        if(checkUrl(chats.get(index).getMessage()))
+        {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(chats.get(index).getMessage()));
+            startActivity(i);
+        }
+    }
+
     //***********************************************************************************************************************************************
 
     private class DownloadSticker extends AsyncTask<String, Void, Uri>
@@ -4171,5 +4189,20 @@ if(getIntent().getIntExtra("path",1)==2) {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public Boolean checkUrl(String url)
+    {
+        try {
+            new URL(url).toURI();
+            return true;
+        }
+
+        // If there was an Exception
+        // while creating URL object
+        catch (Exception e) {
+        }
+
+        return false;
     }
 }

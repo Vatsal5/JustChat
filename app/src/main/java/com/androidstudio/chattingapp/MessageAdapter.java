@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
@@ -36,6 +37,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
@@ -83,6 +85,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public void downloadGIF(int index);
         public void sendSticker(int index);
         public void downloadSticker(int index);
+        public void UrlClicked(int index);
     }
 
     static ImageSelected Activity;
@@ -233,6 +236,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 public boolean onLongClick(View v) {
                     Activity.Onlongclick(holder.getAdapterPosition());
                     return false;
+                }
+            });
+
+            holder.tvMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Activity.UrlClicked(holder.getAdapterPosition());
                 }
             });
         }
@@ -753,12 +763,31 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         else if (messages.get(holder.getAdapterPosition()).getDownloaded() == -2) // when text message is being sent
         {
+            if(checkUrl(messages.get(holder.getAdapterPosition()).getMessage())) {
+                holder.tvMessage.setTextColor(context.getResources().getColor(R.color.red));
+                holder.tvMessage.setTypeface(holder.tvMessage.getTypeface(), Typeface.BOLD_ITALIC);
+            }
+            else {
+                holder.tvMessage.setTextColor(Color.WHITE);
+                holder.tvMessage.setTypeface(holder.tvMessage.getTypeface(), Typeface.NORMAL);
+            }
+
             holder.tvMessage.setText(messages.get(holder.getAdapterPosition()).getMessage());
             holder.llMessageRight.setBackgroundResource(R.drawable.orange2);
             holder.ivSeen.setVisibility(View.GONE);
             Activity.sentTextMessage(holder.getAdapterPosition());
         } else if (messages.get(holder.getAdapterPosition()).getDownloaded() == -3) // when request has been sent to listener
         {
+
+            if(checkUrl(messages.get(holder.getAdapterPosition()).getMessage())) {
+                holder.tvMessage.setTextColor(context.getResources().getColor(R.color.red));
+                holder.tvMessage.setTypeface(holder.tvMessage.getTypeface(), Typeface.BOLD_ITALIC);
+            }
+            else {
+                holder.tvMessage.setTextColor(Color.WHITE);
+                holder.tvMessage.setTypeface(holder.tvMessage.getTypeface(), Typeface.NORMAL);
+            }
+
             holder.tvMessage.setText(messages.get(holder.getAdapterPosition()).getMessage());
 
             if (holder.llMessageRight != null) {
@@ -767,6 +796,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
         } else if (messages.get(holder.getAdapterPosition()).getDownloaded() == -1) // if text message is sent or received successfully
         {
+
+            if(checkUrl(messages.get(holder.getAdapterPosition()).getMessage())) {
+                holder.tvMessage.setTextColor(context.getResources().getColor(R.color.red));
+                holder.tvMessage.setTypeface(holder.tvMessage.getTypeface(), Typeface.BOLD_ITALIC);
+            }
+            else {
+                holder.tvMessage.setTextColor(Color.WHITE);
+                holder.tvMessage.setTypeface(holder.tvMessage.getTypeface(), Typeface.NORMAL);
+            }
+
             holder.tvMessage.setText(messages.get(holder.getAdapterPosition()).getMessage());
 
             if (holder.llMessageRight != null) {
@@ -779,6 +818,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
         else if(messages.get(holder.getAdapterPosition()).getDownloaded()==-4 || messages.get(holder.getAdapterPosition()).getDownloaded()==-5)  //when text message has been "seen"
         {
+
+            if(checkUrl(messages.get(holder.getAdapterPosition()).getMessage())) {
+                holder.tvMessage.setTextColor(context.getResources().getColor(R.color.red));
+                holder.tvMessage.setTypeface(holder.tvMessage.getTypeface(), Typeface.BOLD_ITALIC);
+            }
+            else {
+                holder.tvMessage.setTextColor(Color.WHITE);
+                holder.tvMessage.setTypeface(holder.tvMessage.getTypeface(), Typeface.NORMAL);
+            }
+
             holder.tvMessage.setText(messages.get(holder.getAdapterPosition()).getMessage());
             holder.llMessageRight.setBackgroundResource(R.drawable.background_right);
             holder.ivSeen.setVisibility(View.VISIBLE);
@@ -1224,6 +1273,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             default:
                 ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#d6514a")));
         }
+    }
+
+    public Boolean checkUrl(String url)
+    {
+        try {
+            new URL(url).toURI();
+            return true;
+        }
+
+        // If there was an Exception
+        // while creating URL object
+        catch (Exception e) {
+        }
+
+        return false;
     }
 
 }
