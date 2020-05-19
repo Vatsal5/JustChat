@@ -17,6 +17,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.media.ExifInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -237,20 +239,24 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                                         switch (i)
                                         {
                                             case 0:
-                                            FirebaseStorage.getInstance().getReferenceFromUrl(source).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
-                                                                        .child("profile").removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                    @Override
-                                                                    public void onSuccess(Void aVoid) {
-                                                                        ivProfile.setImageResource(R.drawable.person);
-                                                                        source=null;
-                                                                        Toast.makeText(Profile.this, "Profile Image Removed", Toast.LENGTH_SHORT).show();
-                                                                    }
-                                                                });
-                                                            }
-                                                });
+                                                if(isConnected()) {
+                                                    FirebaseStorage.getInstance().getReferenceFromUrl(source).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                                                                    .child("profile").removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    ivProfile.setImageResource(R.drawable.person);
+                                                                    source = null;
+                                                                    Toast.makeText(Profile.this, "Profile Image Removed", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                                else
+                                                    showInternetWarning();
                                                 break;
                                             case 1:
                                                 CropImage.startPickImageActivity(Profile.this);
@@ -365,10 +371,16 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                 builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        data.remove(index);
-                        databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("name").setValue(etTitle.getText().toString().trim());
-                        data.add(index, etTitle.getText().toString().trim());
-                        adapter.notifyDataSetChanged();
+
+                        if(isConnected()) {
+
+                            data.remove(index);
+                            databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("name").setValue(etTitle.getText().toString().trim());
+                            data.add(index, etTitle.getText().toString().trim());
+                            adapter.notifyDataSetChanged();
+                        }
+                        else
+                            showInternetWarning();
                     }
                 })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -397,10 +409,15 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                 builder1.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        data.remove(index);
-                        databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("status").setValue(etStatus.getText().toString().trim());
-                        data.add(index, etStatus.getText().toString().trim());
-                        adapter.notifyDataSetChanged();
+
+                        if (isConnected()) {
+                            data.remove(index);
+                            databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("status").setValue(etStatus.getText().toString().trim());
+                            data.add(index, etStatus.getText().toString().trim());
+                            adapter.notifyDataSetChanged();
+                        }
+                        else
+                            showInternetWarning();
                     }
                 })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -476,11 +493,14 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if(resultCode == RESULT_OK)
             {
-                progress.setVisibility(View.VISIBLE);
-                uri = result.getUri();
+                if(isConnected()) {
+                    progress.setVisibility(View.VISIBLE);
+                    uri = result.getUri();
 
-                new CompressImage().execute(uri);
-
+                    new CompressImage().execute(uri);
+                }
+                else
+                    showInternetWarning();
             }
         }
     }
@@ -691,6 +711,35 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
         }
 
         return inSampleSize;
+    }
+
+    public boolean isConnected() {
+        boolean connected = false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo nInfo = cm.getActiveNetworkInfo();
+            connected = nInfo != null && nInfo.isAvailable() && nInfo.isConnected();
+            return connected;
+        } catch (Exception e) {
+            Log.e("Connectivity Exception", e.getMessage());
+        }
+        return connected;
+    }
+
+    public void showInternetWarning()
+    {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(Profile.this);
+        builder.setTitle("No Internet Connection")
+                .setMessage("Check your internet connection and try again")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }

@@ -23,6 +23,8 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.media.ExifInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -263,53 +265,53 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                         builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                if(etGroupTitle.getText().toString().trim().length()>0) {
-                                    ApplicationClass.RenameGroup=etGroupTitle.getText().toString();
-                                    tvGroupTitle.setText(etGroupTitle.getText().toString());
-                                    for (int f=0;f<users.size();f++) {
-                                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(users.get(f).getPh_number()).push().setValue(  "rename " + etGroupTitle.getText().toString());
+                                if(isConnected()) {
+                                    if (etGroupTitle.getText().toString().trim().length() > 0) {
+                                        ApplicationClass.RenameGroup = etGroupTitle.getText().toString();
+                                        tvGroupTitle.setText(etGroupTitle.getText().toString());
+                                        for (int f = 0; f < users.size(); f++) {
+                                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(users.get(f).getPh_number()).push().setValue("rename " + etGroupTitle.getText().toString());
+                                        }
+                                        newname = new ChildEventListener() {
+                                            @Override
+                                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                                FirebaseDatabase.getInstance().getReference().child("users").
+                                                        child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).setValue(etGroupTitle.getText().toString());
+
+
+                                            }
+
+
+                                            @Override
+                                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                                            }
+
+                                            @Override
+                                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                                            }
+
+                                            @Override
+                                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        };
+                                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(newname);
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Please anter a valid name", Toast.LENGTH_LONG).show();
                                     }
-                                    newname = new ChildEventListener() {
-                                        @Override
-                                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                                            FirebaseDatabase.getInstance().getReference().child("users").
-                                                    child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).setValue(etGroupTitle.getText().toString());
 
 
-
-                                        }
-
-
-                                        @Override
-                                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                                        }
-
-                                        @Override
-                                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                                        }
-
-                                        @Override
-                                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    };
-                                    FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(newname);
                                 }
-                                else
-                                {
-                                    Toast.makeText(getApplicationContext(),"Please anter a valid name",Toast.LENGTH_LONG).show();
+                                else{
+                                    showInternetWarning();
                                 }
-
-
-
-
                             }
                         })
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -369,14 +371,18 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
         llAddMembers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ApplicationClass.addmembers=1;
-                ApplicationClass.activity=1;
-                Intent intent=new Intent(GroupDetails.this,FriendsActivity.class);
-                intent.putExtra("groupkey",groupKey);
-                intent.putExtra("users",users.size());
-                intent.putExtra("groupKey",getIntent().getStringExtra("groupKey"));
-                startActivity(intent);
 
+                if(isConnected()) {
+                    ApplicationClass.addmembers = 1;
+                    ApplicationClass.activity = 1;
+                    Intent intent = new Intent(GroupDetails.this, FriendsActivity.class);
+                    intent.putExtra("groupkey", groupKey);
+                    intent.putExtra("users", users.size());
+                    intent.putExtra("groupKey", getIntent().getStringExtra("groupKey"));
+                    startActivity(intent);
+                }
+                else
+                    showInternetWarning();
             }
         });
 
@@ -389,9 +395,10 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        final ProgressDialog progressDialog=new ProgressDialog(GroupDetails.this);
-                        progressDialog.setMessage("Please Wait");
-                        progressDialog.show();
+                        if(isConnected()) {
+                            final ProgressDialog progressDialog = new ProgressDialog(GroupDetails.this);
+                            progressDialog.setMessage("Please Wait");
+                            progressDialog.show();
 
 //                        DeleteGroup = new ChildEventListener() {
 //                            @Override
@@ -432,19 +439,21 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
 //                        file1=FirebaseStorage.getInstance().getReferenceFromUrl(FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members"));
 //                        file1.delete();
 
-                                FirebaseDatabase.getInstance().getReference().child("groups").
-                                        child(groupKey).getRef().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Intent intent=new Intent(GroupDetails.this,MainActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        progressDialog.cancel();
-                                        GroupDetails.this.finish();
-                                        startActivity(intent);
-                                    }
-                                });
+                            FirebaseDatabase.getInstance().getReference().child("groups").
+                                    child(groupKey).getRef().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Intent intent = new Intent(GroupDetails.this, MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    progressDialog.cancel();
+                                    GroupDetails.this.finish();
+                                    startActivity(intent);
+                                }
+                            });
 
-
+                        }
+                        else
+                            showInternetWarning();
                     }
                 });
                 builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -466,54 +475,58 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        if (isConnected()) {
 
-                        exitGroup = new ChildEventListener() {
-                            @Override
-                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                                if (dataSnapshot.getValue(String.class).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
-                                    dataSnapshot.getRef().removeValue();
-                                    FirebaseDatabase.getInstance().getReference().child("users")
-                                            .child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
-                                            .child("groups").child(groupKey).getRef().removeValue();
-                                    for (int i=0;i<users.size();i++) {
+                            exitGroup = new ChildEventListener() {
+                                @Override
+                                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                    if (dataSnapshot.getValue(String.class).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
+                                        dataSnapshot.getRef().removeValue();
+                                        FirebaseDatabase.getInstance().getReference().child("users")
+                                                .child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                                                .child("groups").child(groupKey).getRef().removeValue();
+                                        for (int i = 0; i < users.size(); i++) {
 
-                                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(users.get(i).getPh_number()).push().setValue( "exit " + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+                                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(users.get(i).getPh_number()).push().setValue("exit " + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+                                        }
+                                        Intent intent = new Intent(GroupDetails.this, MainActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        GroupDetails.this.finish();
+                                        MessageActivity2.getInstance().finish();
+
+                                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey)
+                                                .child("members").removeEventListener(exitGroup);
+                                        startActivity(intent);
+
                                     }
-                                    Intent intent=new Intent(GroupDetails.this,MainActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    GroupDetails.this.finish();
-                                    MessageActivity2.getInstance().finish();
+                                }
 
-                                    FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey)
-                                            .child("members").removeEventListener(exitGroup);
-                                    startActivity(intent);
+                                @Override
+                                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                                 }
-                            }
 
-                            @Override
-                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                @Override
+                                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                            }
+                                }
 
-                            @Override
-                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                                @Override
+                                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                            }
+                                }
 
-                            @Override
-                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                            }
+                                }
+                            };
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        };
-
-                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey)
-                                .child("members").addChildEventListener(exitGroup);
+                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey)
+                                    .child("members").addChildEventListener(exitGroup);
+                        }
+                        else
+                            showInternetWarning();
                     }
                 });
                 builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -557,71 +570,73 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
+                                                if (isConnected()) {
 
-                                                adapter.notifyDataSetChanged();
+                                                    adapter.notifyDataSetChanged();
 
 
+                                                    remove = new ChildEventListener() {
+                                                        @Override
+                                                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                                            if (dataSnapshot.getValue().toString().equals(users.get(index).getPh_number())) {
+                                                                dataSnapshot.getRef().removeValue().addOnSuccessListener(
+                                                                        new OnSuccessListener<Void>() {
+                                                                            @Override
+                                                                            public void onSuccess(Void aVoid) {
+                                                                                for (int i = 0; i < users.size(); i++) {
 
-                                                     remove=   new ChildEventListener() {
-                                                            @Override
-                                                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                                                                if (dataSnapshot.getValue().toString().equals(users.get(index).getPh_number())) {
-                                                                    dataSnapshot.getRef().removeValue().addOnSuccessListener(
-                                                                            new OnSuccessListener<Void>() {
-                                                                                @Override
-                                                                                public void onSuccess(Void aVoid) {
-                                                                                    for (int i=0;i<users.size();i++) {
-
-                                                                                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(users.get(i).getPh_number()).push().setValue("remove " + users.get(index).getPh_number());
-                                                                                    }
-                                                                                    FirebaseDatabase.getInstance().getReference().child("users")
-                                                                                            .child(users.get(index).getPh_number())
-                                                                                            .child("groups").child(groupKey).getRef().removeValue().addOnSuccessListener(
-                                                                                            new OnSuccessListener<Void>() {
-                                                                                                @Override
-                                                                                                public void onSuccess(Void aVoid) {
-                                                                                                    users.remove(index);
-                                                                                                    adapter.notifyItemRemoved(index);
-                                                                                                    FirebaseDatabase.getInstance().getReference().child("groups")
-                                                                                                            .child(groupKey).child("members").removeEventListener(remove);
-
-                                                                                                }
-                                                                                            }
-                                                                                    );
+                                                                                    FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(users.get(i).getPh_number()).push().setValue("remove " + users.get(index).getPh_number());
                                                                                 }
+                                                                                FirebaseDatabase.getInstance().getReference().child("users")
+                                                                                        .child(users.get(index).getPh_number())
+                                                                                        .child("groups").child(groupKey).getRef().removeValue().addOnSuccessListener(
+                                                                                        new OnSuccessListener<Void>() {
+                                                                                            @Override
+                                                                                            public void onSuccess(Void aVoid) {
+                                                                                                users.remove(index);
+                                                                                                adapter.notifyItemRemoved(index);
+                                                                                                FirebaseDatabase.getInstance().getReference().child("groups")
+                                                                                                        .child(groupKey).child("members").removeEventListener(remove);
+
+                                                                                            }
+                                                                                        }
+                                                                                );
                                                                             }
-                                                                    );
+                                                                        }
+                                                                );
 
-
-                                                                }
 
                                                             }
 
-                                                            @Override
-                                                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                                        }
 
-                                                            }
+                                                        @Override
+                                                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                                                            @Override
-                                                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                                                        }
 
-                                                            }
+                                                        @Override
+                                                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                                                            @Override
-                                                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                                        }
 
-                                                            }
+                                                        @Override
+                                                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                                                            @Override
-                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                        }
 
-                                                            }
-                                                        };
-                                                FirebaseDatabase.getInstance().getReference().child("groups")
-                                                        .child(groupKey).child("members").addChildEventListener(remove);
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                        }
+                                                    };
+                                                    FirebaseDatabase.getInstance().getReference().child("groups")
+                                                            .child(groupKey).child("members").addChildEventListener(remove);
 
 
-
+                                                }
+                                                else
+                                                    showInternetWarning();
                                             }
                                         });
                                         builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -689,9 +704,13 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
         if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                Uri uri = result.getUri();
-                new CompressImage().execute(uri);
-
+                if(isConnected()) {
+                    Uri uri = result.getUri();
+                    new CompressImage().execute(uri);
+                }
+                else{
+                    showInternetWarning();
+                }
             }
         }
     }
@@ -917,5 +936,34 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
         }
 
         return inSampleSize;
+    }
+
+    public boolean isConnected() {
+        boolean connected = false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo nInfo = cm.getActiveNetworkInfo();
+            connected = nInfo != null && nInfo.isAvailable() && nInfo.isConnected();
+            return connected;
+        } catch (Exception e) {
+            Log.e("Connectivity Exception", e.getMessage());
+        }
+        return connected;
+    }
+
+    public void showInternetWarning()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(GroupDetails.this);
+        builder.setTitle("No Internet Connection")
+                .setMessage("Check your internet connection and try again")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

@@ -2,12 +2,15 @@ package com.androidstudio.chattingapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -20,6 +23,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.media.ExifInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,6 +37,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -104,48 +110,51 @@ public class CreateGroup extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                ApplicationClass.Groupname=etGroupName.getText().toString();
+                if (isConnected()) {
 
-                reference[0] = FirebaseDatabase.getInstance().getReference();
+                    ApplicationClass.Groupname = etGroupName.getText().toString();
 
-                if(etGroupName.getText().toString().trim().length()>0)
-                {
+                    reference[0] = FirebaseDatabase.getInstance().getReference();
 
-                    ApplicationClass.groupkey=FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").push().getKey();
+                    if (etGroupName.getText().toString().trim().length() > 0) {
 
-                    ApplicationClass.create=0;
-                    reference[0].child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).child("groupName").setValue(ApplicationClass.Groupname);
-                    reference[0].child("groups").child(ApplicationClass.groupkey).child("members").push().setValue(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+                        ApplicationClass.groupkey = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").push().getKey();
 
-                    for(int i=0;i<ApplicationClass.members.size();i++)
-                    {
-                        reference[0].child("groups").child(ApplicationClass.groupkey).child("members").push().setValue(ApplicationClass.members.get(i));
-                        reference[0].child("users").child(ApplicationClass.members.get(i)).child("groups").child(ApplicationClass.groupkey).setValue(ApplicationClass.Groupname);
+                        ApplicationClass.create = 0;
+                        reference[0].child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).child("groupName").setValue(ApplicationClass.Groupname);
+                        reference[0].child("groups").child(ApplicationClass.groupkey).child("members").push().setValue(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
 
-                    }
-                    ApplicationClass.members.clear();
-                    reference[0].child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).setValue(ApplicationClass.Groupname);
+                        for (int i = 0; i < ApplicationClass.members.size(); i++) {
+                            reference[0].child("groups").child(ApplicationClass.groupkey).child("members").push().setValue(ApplicationClass.members.get(i));
+                            reference[0].child("users").child(ApplicationClass.members.get(i)).child("groups").child(ApplicationClass.groupkey).setValue(ApplicationClass.Groupname);
 
-
-                    reference[0].child("groups").child(ApplicationClass.groupkey).child("admin").setValue(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            btnCreate.setVisibility(View.GONE);
-                            etGroupName.setVisibility(View.GONE);
-                            tvInstruct.setVisibility(View.GONE);
-
-                            ivGroupDP.setVisibility(View.VISIBLE);
-                            ivClick.setVisibility(View.VISIBLE);
-                            btnSkip.setVisibility(View.VISIBLE);
                         }
-                    });
+                        ApplicationClass.members.clear();
+                        reference[0].child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).setValue(ApplicationClass.Groupname);
+
+
+                        reference[0].child("groups").child(ApplicationClass.groupkey).child("admin").setValue(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                btnCreate.setVisibility(View.GONE);
+                                etGroupName.setVisibility(View.GONE);
+                                tvInstruct.setVisibility(View.GONE);
+
+                                ivGroupDP.setVisibility(View.VISIBLE);
+                                ivClick.setVisibility(View.VISIBLE);
+                                btnSkip.setVisibility(View.VISIBLE);
+                            }
+                        });
+
+                    } else {
+                        tvInstruct.setVisibility(View.VISIBLE);
+                    }
 
                 }
                 else
                 {
-                    tvInstruct.setVisibility(View.VISIBLE);
+                    showInternetWarning();
                 }
-
             }
         });
 
@@ -183,13 +192,14 @@ public class CreateGroup extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
 
-
-                Uri uri = result.getUri();
-                progress.setVisibility(View.VISIBLE);
-                new CompressImage().execute( uri);
-
-
-
+                if(isConnected()) {
+                    Uri uri = result.getUri();
+                    progress.setVisibility(View.VISIBLE);
+                    new CompressImage().execute(uri);
+                }
+                else{
+                    showInternetWarning();
+                }
 
             }
         }
@@ -202,6 +212,7 @@ public class CreateGroup extends AppCompatActivity {
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setMultiTouchEnabled(true)
                 .setAllowRotation(true)
+                .setActivityTitle("Choose Group icon")
                 .setAspectRatio(25,25)
                 .start(CreateGroup.this);
     }
@@ -478,6 +489,35 @@ public class CreateGroup extends AppCompatActivity {
             default:
                 ViewCompat.setBackgroundTintList(view,ColorStateList.valueOf(Color.parseColor("#d6514a")));
         }
+    }
+
+    public boolean isConnected() {
+        boolean connected = false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo nInfo = cm.getActiveNetworkInfo();
+            connected = nInfo != null && nInfo.isAvailable() && nInfo.isConnected();
+            return connected;
+        } catch (Exception e) {
+            Log.e("Connectivity Exception", e.getMessage());
+        }
+        return connected;
+    }
+
+    public void showInternetWarning()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateGroup.this);
+        builder.setTitle("No Internet Connection")
+                .setMessage("Check your internet connection and try again")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }

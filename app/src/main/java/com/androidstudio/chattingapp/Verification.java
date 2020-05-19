@@ -1,8 +1,12 @@
 package com.androidstudio.chattingapp;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -72,13 +76,19 @@ public class Verification extends AppCompatActivity {
         btnVerify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String OTP = etOTP.getText().toString().trim();
 
-                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(VerificationId,OTP);
-                signInWithPhoneAuthCredential(credential);
+                if (isConnected()) {
 
-                dialog.setTitle("Verifying");
-                dialog.show();
+                    String OTP = etOTP.getText().toString().trim();
+
+                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(VerificationId, OTP);
+                    signInWithPhoneAuthCredential(credential);
+
+                    dialog.setTitle("Verifying");
+                    dialog.show();
+                }
+                else
+                    showInternetWarning();
             }
         });
 
@@ -162,5 +172,34 @@ public class Verification extends AppCompatActivity {
                 tvResend.setVisibility(View.VISIBLE);
             }
         },60000);
+    }
+
+    public boolean isConnected() {
+        boolean connected = false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo nInfo = cm.getActiveNetworkInfo();
+            connected = nInfo != null && nInfo.isAvailable() && nInfo.isConnected();
+            return connected;
+        } catch (Exception e) {
+            Log.e("Connectivity Exception", e.getMessage());
+        }
+        return connected;
+    }
+
+    public void showInternetWarning()
+    {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(Verification.this);
+        builder.setTitle("No Internet Connection")
+                .setMessage("Check your internet connection and try again")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

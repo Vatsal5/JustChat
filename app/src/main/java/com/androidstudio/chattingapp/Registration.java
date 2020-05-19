@@ -5,8 +5,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -99,25 +103,29 @@ public class Registration extends AppCompatActivity {
         btnVerify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                phone = "+91"+etPhone.getText().toString();
 
-                if(phone.isEmpty())
-                    Toast.makeText(Registration.this, "Please enter phone number", Toast.LENGTH_LONG).show();
-                if(phone.length() !=13)
-                    Toast.makeText(Registration.this, "Enter Valid Phone number", Toast.LENGTH_LONG).show();
+                if(isConnected()) {
+                    phone = "+91" + etPhone.getText().toString();
 
-                if(!phone.isEmpty() && phone.length() ==13)
-                {
-                    dialog.setTitle("Sending OTP");
-                    dialog.setMessage("Please Wait");
-                    dialog.show();
-                    PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                            phone,        // Phone number to verify
-                            60,                 // Timeout duration
-                            TimeUnit.SECONDS,   // Unit of timeout
-                            Registration.this,               // Activity (for callback binding)
-                            mCallbacks);        // OnVerificationStateChangedCallbacks
+                    if (phone.isEmpty())
+                        Toast.makeText(Registration.this, "Please enter phone number", Toast.LENGTH_LONG).show();
+                    if (phone.length() != 13)
+                        Toast.makeText(Registration.this, "Enter Valid Phone number", Toast.LENGTH_LONG).show();
+
+                    if (!phone.isEmpty() && phone.length() == 13) {
+                        dialog.setTitle("Sending OTP");
+                        dialog.setMessage("Please Wait");
+                        dialog.show();
+                        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                                phone,        // Phone number to verify
+                                60,                 // Timeout duration
+                                TimeUnit.SECONDS,   // Unit of timeout
+                                Registration.this,               // Activity (for callback binding)
+                                mCallbacks);        // OnVerificationStateChangedCallbacks
+                    }
                 }
+                else
+                    showInternetWarning();
             }
         });
     }
@@ -159,5 +167,33 @@ public class Registration extends AppCompatActivity {
         super.onPause();
 
         overridePendingTransition(0,0);
+    }
+    public boolean isConnected() {
+        boolean connected = false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo nInfo = cm.getActiveNetworkInfo();
+            connected = nInfo != null && nInfo.isAvailable() && nInfo.isConnected();
+            return connected;
+        } catch (Exception e) {
+            Log.e("Connectivity Exception", e.getMessage());
+        }
+        return connected;
+    }
+
+    public void showInternetWarning()
+    {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(Registration.this);
+        builder.setTitle("No Internet Connection")
+                .setMessage("Check your internet connection and try again")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
