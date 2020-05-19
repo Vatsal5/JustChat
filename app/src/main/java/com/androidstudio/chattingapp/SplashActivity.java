@@ -36,6 +36,8 @@ public class SplashActivity extends AppCompatActivity {
 
     SharedPreferences pref;
     SharedPreferences.Editor edit;
+    ValueEventListener datecheck;
+    DatabaseReference offsetRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +49,8 @@ public class SplashActivity extends AppCompatActivity {
 
         if(isConnected()) {
 
-            DatabaseReference offsetRef = FirebaseDatabase.getInstance().getReference(".info/serverTimeOffset");
-            offsetRef.addValueEventListener(new ValueEventListener() {
+             offsetRef = FirebaseDatabase.getInstance().getReference(".info/serverTimeOffset");
+                    datecheck=new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     long offset = snapshot.getValue(Long.class);
@@ -113,7 +115,9 @@ public class SplashActivity extends AppCompatActivity {
                 public void onCancelled(DatabaseError error) {
                     // System.err.println("Listener was cancelled");
                 }
-            });
+            };
+            offsetRef.addValueEventListener(datecheck);
+
 
 
         }
@@ -274,5 +278,12 @@ public class SplashActivity extends AppCompatActivity {
             Log.e("Connectivity Exception", e.getMessage());
         }
         return connected;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        offsetRef.removeEventListener(datecheck);
+
     }
 }

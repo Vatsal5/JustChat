@@ -35,13 +35,29 @@
 
 <!--        </androidx.cardview.widget.CardView>-->
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivback"
+
+            android:clickable="true"
+            android:scaleType="centerCrop"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@id/cl"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </de.hdodenhof.circleimageview.CircleImageView>
+
 
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@id/imageView"
                 android:clickable="true"
                 android:scaleType="centerCrop"
-                android:padding="2dp"
+                android:padding="1dp"
+                android:background="@drawable/white"
                 android:layout_width="51dp"
                 android:layout_height="51dp"
                 app:layout_constraintBottom_toBottomOf="parent"

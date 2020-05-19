@@ -252,9 +252,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         if(list.get(position).getStatus()!=null)
         {
             if(list.get(position).getStatus().equals("online"))
-                holder.iv.setBackgroundResource(R.drawable.orange);
+                holder.ivBackground.setBackgroundResource(R.drawable.orange);
             else
-                holder.iv.setBackgroundResource(R.drawable.white);        }
+                holder.ivBackground.setBackgroundResource(R.drawable.white);        }
 
         if(list.get(position).getuID().equals(""))
         {
@@ -279,7 +279,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             }
         }
         else {
-            holder.iv.setBackgroundResource(R.drawable.white);
+            holder.ivBackground.setBackgroundResource(R.drawable.white);
 
         if (list.get(position).getMessagenum() > 2) {
                 holder.tvMessageNum.setText(list.get(position).getMessagenum()-2 + "");
@@ -328,7 +328,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
     {
 
        final ImageView ivStatus,ivImage;
-       ImageView iv;
+       ImageView iv,ivBackground;
         TextView tvMessageNum,tvUserName,time;
         EmojiconTextView tvlastmessage;
         ConstraintLayout innerConstraintLayout;
@@ -342,7 +342,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
             ivStatus = itemView.findViewById(R.id.ivStatus);
             ivImage = itemView.findViewById(R.id.ivImage);
-          //  ivBackground = itemView.findViewById(R.id.ivBackground);
+            ivBackground = itemView.findViewById(R.id.ivback);
             tvlastmessage=itemView.findViewById(R.id.lastmessage);
             tvMessageNum = itemView.findViewById(R.id.tvMessageNum);
             tvUserName= itemView.findViewById(R.id.tv_username);
