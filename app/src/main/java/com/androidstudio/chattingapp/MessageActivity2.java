@@ -1160,7 +1160,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 switch (status) {
                     case "remove":
-                        messageModel.setMessage("Admin removed " + Names.getString(detail, detail));
+                        if(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber().equals(detail))
+                            messageModel.setMessage("Admin removed You");
+                        else
+                            messageModel.setMessage("Admin removed " + Names.getString(detail, detail));
                         break;
                     case "addedmember":
                         if(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber().equals(detail))
@@ -1181,7 +1184,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             messageModel.setMessage(Names.getString(detail, detail) + " changed the group icon");
                         break;
                     case "exit":
-                        messageModel.setMessage(Names.getString(detail, detail) + " exited the group");
+                        if(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber().equals(detail))
+                            messageModel.setMessage("You exited the group");
+                        else
+                            messageModel.setMessage(Names.getString(detail, detail) + " exited the group");
                         break;
                 }
 
