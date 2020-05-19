@@ -29,8 +29,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
      Context context;
     itemSelected Activity;
     FirebaseDatabase database;
+    String defaultvalue;
 
      final ArrayList<UserDetailwithUrl> list;
+
+     SharedPreferences mode;
 
     @NonNull
     @Override
@@ -136,61 +139,60 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             holder.time.setText("");
         }
 
-        if(  !(list.get(position).getLastmessage().equals(" ")) &&!(list.get(position).getLastmessage().equals("null")) &&!(list.get(position).getLastmessage().equals("  ")) &&!(list.get(position).getLastmessage().equals("   "))
-                &&!(list.get(position).getLastmessage().equals("    ")))
-        {
-            holder.tvlastmessage.setVisibility(View.VISIBLE);
 
-            if(list.get(position).getLastmessage().length()>20) {
-                holder.tvlastmessage.setText(list.get(position).getLastmessage().substring(0,20)+"..");
+        if(list.get(holder.getAdapterPosition()).getGroupname()==null)
+            defaultvalue = mode.getString("mode" + list.get(holder.getAdapterPosition()).getPh_number(), "null");
+        else
+            defaultvalue = mode.getString("mode" + list.get(holder.getAdapterPosition()).getGroupkey(), "null");
+
+
+        if(!defaultvalue.equals("private") && !defaultvalue.equals("null")) {
+            if (!(list.get(position).getLastmessage().equals(" ")) && !(list.get(position).getLastmessage().equals("null")) && !(list.get(position).getLastmessage().equals("  ")) && !(list.get(position).getLastmessage().equals("   "))
+                    && !(list.get(position).getLastmessage().equals("    "))) {
+                holder.tvlastmessage.setVisibility(View.VISIBLE);
+
+                if (list.get(position).getLastmessage().length() > 20) {
+                    holder.tvlastmessage.setText(list.get(position).getLastmessage().substring(0, 20) + "..");
+                } else {
+                    holder.tvlastmessage.setText(list.get(position).getLastmessage());
+                }
+                holder.ivImage.setVisibility(View.GONE);
+            } else if (list.get(position).getLastmessage().equals(" ")) {
+                holder.ivImage.setVisibility(View.VISIBLE);
+                holder.tvlastmessage.setVisibility(View.VISIBLE);
+                holder.ivImage.setImageResource(R.drawable.image);
+
+                holder.tvlastmessage.setText("Image");
+
+            } else if (list.get(position).getLastmessage().equals("   ")) {
+                holder.ivImage.setVisibility(View.VISIBLE);
+                holder.tvlastmessage.setVisibility(View.VISIBLE);
+                holder.ivImage.setImageResource(R.drawable.gif);
+
+                holder.tvlastmessage.setText("GIF");
+
+            } else if (list.get(position).getLastmessage().equals("    ")) {
+                holder.ivImage.setVisibility(View.VISIBLE);
+                holder.tvlastmessage.setVisibility(View.VISIBLE);
+                holder.ivImage.setImageResource(R.drawable.gif);
+
+                holder.tvlastmessage.setText("Sticker");
+
+            } else if (list.get(position).getLastmessage().equals("  ")) {
+                holder.tvlastmessage.setVisibility(View.VISIBLE);
+                holder.ivImage.setImageResource(R.drawable.video);
+                holder.tvlastmessage.setText("Video");
+                holder.ivImage.setVisibility(View.VISIBLE);
+
+            }else{
+                holder.ivImage.setVisibility(View.GONE);
+                holder.tvlastmessage.setVisibility(View.GONE);
             }
-            else
-            {
-                holder.tvlastmessage.setText(list.get(position).getLastmessage());
-            }
-            holder.ivImage.setVisibility(View.GONE);
         }
-        else if(list.get(position).getLastmessage().equals(" "))
+        else
         {
-            holder.ivImage.setVisibility(View.VISIBLE);
-            holder.tvlastmessage.setVisibility(View.VISIBLE);
-            holder.ivImage.setImageResource(R.drawable.image);
-
-            holder.tvlastmessage.setText("Image");
-
-        }
-
-        else if(list.get(position).getLastmessage().equals("   "))
-        {
-            holder.ivImage.setVisibility(View.VISIBLE);
-            holder.tvlastmessage.setVisibility(View.VISIBLE);
-            holder.ivImage.setImageResource(R.drawable.gif);
-
-            holder.tvlastmessage.setText("GIF");
-
-        }
-        else if(list.get(position).getLastmessage().equals("    "))
-        {
-            holder.ivImage.setVisibility(View.VISIBLE);
-            holder.tvlastmessage.setVisibility(View.VISIBLE);
-            holder.ivImage.setImageResource(R.drawable.gif);
-
-            holder.tvlastmessage.setText("Sticker");
-
-        }
-
-        else if(list.get(position).getLastmessage().equals("  "))
-        {
-            holder.tvlastmessage.setVisibility(View.VISIBLE);
-            holder.ivImage.setImageResource(R.drawable.video);
-            holder.tvlastmessage.setText("Video");
-            holder.ivImage.setVisibility(View.VISIBLE);
-
-        }
-        else{
             holder.ivImage.setVisibility(View.GONE);
             holder.tvlastmessage.setVisibility(View.GONE);
-
         }
        // Log.d("asdf",list.get(position).getUrl());
 
@@ -317,6 +319,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         this.context = context;
         this.list = list;
         Activity = (itemSelected) context;
+
+        mode = context.getSharedPreferences("Mode", 0);
     }
     public  class viewholder extends RecyclerView.ViewHolder
     {
