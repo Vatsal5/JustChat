@@ -393,6 +393,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         Group = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                 // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
 
@@ -407,8 +408,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                Toast.makeText(getApplicationContext(),"This Group Has Been Deleted By The Admin",Toast.LENGTH_LONG).show();
-                MessageActivity2.this.finish();
+                ll.setVisibility(View.GONE);
+
 
             }
 
@@ -422,7 +423,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             }
         };
-        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(Group);
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).addChildEventListener(Group);
 
 
 

@@ -2,6 +2,7 @@ package com.androidstudio.chattingapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -17,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
@@ -42,105 +47,78 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         preftheme=context.getSharedPreferences("theme",0);
 
 
+
         String theme=preftheme.getString("theme","red");
 
         switch (theme)
         { case "orange":
 
-            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.Orange));
+            holder.tvMessageNum.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.Orange)));
 
-            holder.time.setTextColor(context.getResources().getColor(R.color.Orange));
+
             break;
 
             case "blue":
 
-              holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.blue));
-
-                holder.time.setTextColor(context.getResources().getColor(R.color.blue));
+                holder.tvMessageNum.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.blue)));
 
             break;
 
 
             case "bluish":
-                holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.bluish));
-
-                holder.time.setTextColor(context.getResources().getColor(R.color.bluish));
+                holder.tvMessageNum.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.bluish)));
             break;
 
 
         case "deepred":
-            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.deepred));
-
-            holder.time.setTextColor(context.getResources().getColor(R.color.deepred));
+            holder.tvMessageNum.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.deepred)));
         break;
 
         case "faintpink":
-            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.faintpink));
-
-            holder.time.setTextColor(context.getResources().getColor(R.color.faintpink));
+            holder.tvMessageNum.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.faintpink)));
 
         break;
 
             case "darkblue":
-                holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.darkblue));
-
-                holder.time.setTextColor(context.getResources().getColor(R.color.darkblue));
+                holder.tvMessageNum.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.darkblue)));
         break;
 
 
         case "green":
-            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.green));
-
-            holder.time.setTextColor(context.getResources().getColor(R.color.green));
+            holder.tvMessageNum.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.green)));
         break;
 
         case "lightorange":
-            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.lightorange));
-
-            holder.time.setTextColor(context.getResources().getColor(R.color.lightorange));
+            holder.tvMessageNum.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.lightorange)));
         break;
 
         case "lightred":
-            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.lightred));
-
-            holder.time.setTextColor(context.getResources().getColor(R.color.lightred));
+            holder.tvMessageNum.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.lightred)));
         break;
 
 
         case "mustard":
-            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.mustard));
-
-            holder.time.setTextColor(context.getResources().getColor(R.color.mustard));
+            holder.tvMessageNum.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.mustard)));
         break;
 
         case "pink":
-            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.pink));
-
-            holder.time.setTextColor(context.getResources().getColor(R.color.pink));
+            holder.tvMessageNum.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.pink)));
         break;
 
         case "pureorange":
-            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.pureorange));
-
-            holder.time.setTextColor(context.getResources().getColor(R.color.pureorange));
+            holder.tvMessageNum.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.pureorange)));
         break;
 
             case "purepink":
-                holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.purepink));
-
-                holder.time.setTextColor(context.getResources().getColor(R.color.purepink));
+                holder.tvMessageNum.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.purepink)));
         break;
 
         case "purple":
-            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.purple));
-
-            holder.time.setTextColor(context.getResources().getColor(R.color.purple));
+            holder.tvMessageNum.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.purple)));
         break;
 
         default:
-            holder.tvlastmessage.setTextColor(context.getResources().getColor(R.color.red));
-
-            holder.time.setTextColor(context.getResources().getColor(R.color.red));
+            holder.tvMessageNum.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.red)));
 
         }
 
@@ -212,7 +190,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         else{
             holder.ivImage.setVisibility(View.GONE);
             holder.tvlastmessage.setVisibility(View.GONE);
-            holder.tvUserName.setPadding(0,13,0,0);
+
         }
        // Log.d("asdf",list.get(position).getUrl());
 
@@ -270,10 +248,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
         if(list.get(position).getStatus()!=null)
         {
             if(list.get(position).getStatus().equals("online"))
-                holder.ivBackground.setBackgroundResource(R.drawable.orange);
+                holder.iv.setBackgroundResource(R.drawable.orange);
             else
-                holder.ivBackground.setBackground(null);
-        }
+                holder.iv.setBackgroundResource(R.drawable.white);        }
 
         if(list.get(position).getuID().equals(""))
         {
@@ -298,8 +275,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             }
         }
         else {
-            holder.ivBackground.setBackgroundColor(context.getResources().getColor(R.color.white1));
-            if (list.get(position).getMessagenum() > 2) {
+            holder.iv.setBackgroundResource(R.drawable.white);
+
+        if (list.get(position).getMessagenum() > 2) {
                 holder.tvMessageNum.setText(list.get(position).getMessagenum()-2 + "");
                 holder.tvMessageNum.setVisibility(View.VISIBLE);
             } else {
@@ -343,7 +321,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
     public  class viewholder extends RecyclerView.ViewHolder
     {
 
-       final ImageView iv,ivStatus,ivImage,ivBackground;
+       final ImageView ivStatus,ivImage;
+       ImageView iv;
         TextView tvMessageNum,tvUserName,time;
         EmojiconTextView tvlastmessage;
         ConstraintLayout innerConstraintLayout;
@@ -357,7 +336,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
             ivStatus = itemView.findViewById(R.id.ivStatus);
             ivImage = itemView.findViewById(R.id.ivImage);
-            ivBackground = itemView.findViewById(R.id.ivBackground);
+          //  ivBackground = itemView.findViewById(R.id.ivBackground);
             tvlastmessage=itemView.findViewById(R.id.lastmessage);
             tvMessageNum = itemView.findViewById(R.id.tvMessageNum);
             tvUserName= itemView.findViewById(R.id.tv_username);
