@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,9 +52,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     ArrayList<UserDetail> contacts;
     ChildEventListener childEvent,Group;
     ArrayList<UserDetailWithStatus> contacts1;
-    Toolbar toolbar;
+    LinearLayout toolbar;
     CardView cvCreate;
-    ImageView ivBack;
     ArrayList<String> number1,membersToadd;
     int yes=0;
     int c=0;
@@ -65,7 +65,6 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         setContentView(R.layout.activity_friends);
         tvtitle=findViewById(R.id.tvhead);
         cvCreate=findViewById(R.id.ivCreate);
-        ivBack=findViewById(R.id.ivBack);
         if (getIntent().getIntExtra("path", 2) == 1) {
 
             tvtitle.setText("Forward");
@@ -81,12 +80,6 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         String theme=preftheme.getString("theme","red");
 
 
-        ivBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FriendsActivity.this.finish();
-            }
-        });
 
         switch (theme)
         { case "orange":
