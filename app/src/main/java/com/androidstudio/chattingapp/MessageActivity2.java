@@ -33,6 +33,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.media.Ringtone;
@@ -46,7 +47,9 @@ import android.os.Handler;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
@@ -519,6 +522,34 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         }
                     }, 1);
                 }
+            }
+        });
+
+        etMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if (etMessage.getText().toString().trim().length() > 0) {
+
+                    if(checkUrl(etMessage.getText().toString().trim())) {
+                        etMessage.setTypeface(etMessage.getTypeface(), Typeface.ITALIC);
+                    }
+                    else {
+                        etMessage.setTypeface(etMessage.getTypeface(), Typeface.NORMAL);
+                    }
+
+                }
+
             }
         });
 
@@ -2386,6 +2417,16 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         new DownloadSticker(index,chats.get(index)).execute(chats.get(index).getMessage());
     }
 
+    @Override
+    public void UrlClicked(int index) {
+        if(checkUrl(chats.get(index).getMessage()))
+        {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(chats.get(index).getMessage()));
+            startActivity(i);
+        }
+    }
+
     public void SendSticker(final int index,final MessageModel model)
     {
         ApplicationClass.PendingRequests.add(groupKey);
@@ -4149,5 +4190,20 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public Boolean checkUrl(String url)
+    {
+        try {
+            new URL(url).toURI();
+            return true;
+        }
+
+        // If there was an Exception
+        // while creating URL object
+        catch (Exception e) {
+        }
+
+        return false;
     }
 }
