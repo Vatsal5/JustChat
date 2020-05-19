@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +38,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -79,7 +81,7 @@ import java.util.concurrent.TimeUnit;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-public class MainActivity extends AppCompatActivity implements UserAdapter.itemSelected
+public class MainActivity extends AppCompatActivity implements UserAdapter.itemSelected, PopupMenu.OnMenuItemClickListener
 {
 
     ArrayList<UserDetail> contacts;
@@ -107,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
     SharedPreferences pref;
     SharedPreferences.Editor editor;
+
+    ImageView ivOptions;
 
     ChildEventListener Group;
     ValueEventListener profile,check;
@@ -140,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         //    toolbar = findViewById(R.id.toolbar);
             btnContacts = findViewById(R.id.btnContacts);
+            ivOptions = findViewById(R.id.ivOptions);
             preftheme = getSharedPreferences("theme", 0);
 
             pref = getApplicationContext().getSharedPreferences("Names", 0);
@@ -225,6 +230,16 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                 break;
         }
+
+        ivOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu menu = new PopupMenu(MainActivity.this,ivOptions, Gravity.END);
+                menu.inflate(R.menu.profile);
+                menu.setOnMenuItemClickListener(MainActivity.this);
+                menu.show();
+            }
+        });
 
 
             Handler = new DBHandler(MainActivity.this);
@@ -367,6 +382,25 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         }
     };
 
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.Settings:
+                startActivity(new Intent(MainActivity.this,Settings.class));
+                return true;
+
+            case R.id.CreateGroup:
+                Intent intent=new Intent(MainActivity.this,FriendsActivity.class);
+                intent.putExtra("createGroup",1);
+                startActivity(intent);
+                return true;
+
+            default:
+                return false;
+
+        }
+    }
 
 
     public class listener
@@ -1430,32 +1464,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             intent.putExtra("title", contacts1.get(index).getuID());
             startActivity(intent);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.profile,menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        int id = item.getItemId();
-
-        switch (id)
-        {
-            case R.id.Settings:
-                startActivity(new Intent(MainActivity.this,Settings.class));
-                break;
-
-            case R.id.CreateGroup:
-                Intent intent=new Intent(MainActivity.this,FriendsActivity.class);
-                intent.putExtra("createGroup",1);
-                startActivity(intent);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public int IsValid(String number)

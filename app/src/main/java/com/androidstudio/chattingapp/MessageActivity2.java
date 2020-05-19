@@ -1192,22 +1192,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         break;
                 }
 
-//                if(chats.size()!=0) {
-//                    if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
-//                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupKey,"null");
-//                        int id = Handler.addMessage(message);
-//                        message.setId(id);
-//                        chats.add(message);
-//                    }
-//                }
-//                else {
-//                    if(!(defaultvalue.equals("private"))) {
-//                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
-//                        int id = Handler.addMessage(message);
-//                        message.setId(id);
-//                        chats.add(message);
-//                    }
-//                }
                 int id = Handler.addMessage(messageModel);
                 messageModel.setId(id);
 

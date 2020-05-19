@@ -717,33 +717,33 @@ z1--;
         ApplicationClass.addmembers=0;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.profile,menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        int id = item.getItemId();
-
-        switch (id)
-        {
-            case R.id.Settings:
-                startActivity(new Intent(FriendsActivity.this,Settings.class));
-                break;
-
-            case android.R.id.home:
-                FriendsActivity.this.finish();
-                break;
-
-            case R.id.CreateGroup:
-                startActivity(new Intent(FriendsActivity.this,CreateGroup.class));
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.profile,menu);
+//        return super.onCreateOptionsMenu(menu);
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//
+//        int id = item.getItemId();
+//
+//        switch (id)
+//        {
+//            case R.id.Settings:
+//                startActivity(new Intent(FriendsActivity.this,Settings.class));
+//                break;
+//
+//            case android.R.id.home:
+//                FriendsActivity.this.finish();
+//                break;
+//
+//            case R.id.CreateGroup:
+//                startActivity(new Intent(FriendsActivity.this,CreateGroup.class));
+//                break;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     protected void onRestart() {

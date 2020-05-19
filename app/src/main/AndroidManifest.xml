@@ -75,7 +75,8 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.MyTheme">
+            android:theme="@style/Theme.MyTheme"
+            android:windowSoftInputMode="adjustNothing">
 
         </activity>
         <activity
