@@ -655,6 +655,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 rvgif.setLayoutManager(manager);
 
                                                 gif_adapter=new gif_adapter(MessageActivity.this,gifurl);
+                                                gif_adapter.setHasStableIds(true);
                                                 rvgif.setAdapter(gif_adapter);
 
                                                 searchview.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
@@ -738,6 +739,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 rvgif1.setLayoutManager(manager1);
 
                                                 gif_adapter=new gif_adapter(MessageActivity.this,gifurl);
+                                                gif_adapter.setHasStableIds(true);
                                                 rvgif1.setAdapter(gif_adapter);
 
                                                 searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
