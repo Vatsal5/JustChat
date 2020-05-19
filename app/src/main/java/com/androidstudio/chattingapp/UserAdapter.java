@@ -127,23 +127,25 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
         database=FirebaseDatabase.getInstance();
 
-        if(!(list.get(position).getTime().equals("null")))
-        {
-            if(list.get(holder.getAdapterPosition()).getGroupname()!=null)
-                holder.time.setText(list.get(holder.getAdapterPosition()).getTime().substring(0,5));
-            else
-                holder.time.setText(list.get(holder.getAdapterPosition()).getTime());
+        if(list.get(holder.getAdapterPosition()).getGroupname()==null)
+            defaultvalue = mode.getString("mode" + list.get(holder.getAdapterPosition()).getPh_number(), "null");
+        else
+            defaultvalue = mode.getString("mode" + list.get(holder.getAdapterPosition()).getGroupkey(), "null");
+
+        if(!defaultvalue.equals("private") && !defaultvalue.equals("null")) {
+            if (!(list.get(position).getTime().equals("null"))) {
+                if (list.get(holder.getAdapterPosition()).getGroupname() != null)
+                    holder.time.setText(list.get(holder.getAdapterPosition()).getTime().substring(0, 5));
+                else
+                    holder.time.setText(list.get(holder.getAdapterPosition()).getTime());
+            } else {
+                holder.time.setText("");
+            }
         }
         else
         {
             holder.time.setText("");
         }
-
-
-        if(list.get(holder.getAdapterPosition()).getGroupname()==null)
-            defaultvalue = mode.getString("mode" + list.get(holder.getAdapterPosition()).getPh_number(), "null");
-        else
-            defaultvalue = mode.getString("mode" + list.get(holder.getAdapterPosition()).getGroupkey(), "null");
 
 
         if(!defaultvalue.equals("private") && !defaultvalue.equals("null")) {
