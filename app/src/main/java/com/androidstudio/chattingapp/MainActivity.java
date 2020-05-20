@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     ValueEventListener dataCreater,deleteimage,deletevideo,Status;
     DBHandler Handler;
     ArrayList<String> keyid;
+    String keyid2;
     LinearLayoutManager linearLayoutManager;
 
     ArrayList<MessageModel> chats;
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     ValueEventListener profile,check;
     ChildEventListener childEvent,deleteGroupimages,deleteGroupvideos;
 
-    int l, pos;
+    int  pos;
     boolean flag=false,flag2=false;
 
     UserAdapter userAdapter;
@@ -1582,10 +1583,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     @Override
     public void onItemSelected(int index) {
 
+        keyid2=keyid.get(index);
+
         if(contacts1.get(index).getGroupname() == null)
         {
             flag=true;
-            l=index;
+
 
 
         Intent intent = new Intent(MainActivity.this,MessageActivity.class);
@@ -1608,10 +1611,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         if(!contacts1.get(index).getUrl().equals("null"))
             intent.putExtra("profile",contacts1.get(index).getUrl());
-        startActivity(intent);}
+        startActivity(intent);
+        }
         else
         {
-            l=index;
+
             flag2=true;
             Intent intent = new Intent(MainActivity.this,MessageActivity2.class);
             intent.putExtra("groupName",contacts1.get(index).getuID());
@@ -1658,17 +1662,18 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onResume() {
         super.onResume();
         Status("online");
+
         if(ApplicationClass.RenameGroup!=null)
         {
 
-            contacts1.get(l).setuID(ApplicationClass.RenameGroup);
-            userAdapter.notifyItemChanged(l);
+            contacts1.get(keyid.indexOf(keyid2)).setuID(ApplicationClass.RenameGroup);
+            userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
             ApplicationClass.RenameGroup=null;
         }
         if(ApplicationClass.rename!=null) {
-            contacts1.get(l).setuID(ApplicationClass.rename);
+            contacts1.get(keyid.indexOf(keyid2)).setuID(ApplicationClass.rename);
             ApplicationClass.rename=null;
-            userAdapter.notifyItemChanged(l);
+            userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
         }
 
 
@@ -1742,6 +1747,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     @Override
     protected void onRestart() {
         super.onRestart();
+
         String theme=preftheme.getString("theme","red");
         switch (theme) {
             case "orange":
@@ -1838,23 +1844,23 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
 
-        if(l<=(contacts1.size()-1))
+        if(keyid.indexOf(keyid2)<=(contacts1.size()-1))
         {
-            if(contacts1.get(l).getGroupname()==null) {
+            if(contacts1.get(keyid.indexOf(keyid2)).getGroupname()==null) {
 
-                    contacts1.get(l).setLastmessage(Handler.getLastMessage(contacts1.get(l).getPh_number()));
-                    contacts1.get(l).setTime(Handler.getLastMessageTime(contacts1.get(l).getPh_number()));
+                    contacts1.get(keyid.indexOf(keyid2)).setLastmessage(Handler.getLastMessage(contacts1.get(keyid.indexOf(keyid2)).getPh_number()));
+                    contacts1.get(keyid.indexOf(keyid2)).setTime(Handler.getLastMessageTime(contacts1.get(keyid.indexOf(keyid2)).getPh_number()));
 
             }
             else {
-                if(l<=(contacts1.size()-1))
-                    contacts1.get(l).setLastmessage(Handler.getLastMessageGroup(contacts1.get(l).getGroupkey()));
-                if(Handler.getGroupMessages(contacts1.get(l).getGroupname(),0).first.size()>0)
-                    contacts1.get(l).setTime(Handler.getLastGroupMessageTime(contacts1.get(l).getGroupkey()));
+                if(keyid.indexOf(keyid2)<=(contacts1.size()-1))
+                    contacts1.get(keyid.indexOf(keyid2)).setLastmessage(Handler.getLastMessageGroup(contacts1.get(keyid.indexOf(keyid2)).getGroupkey()));
+                if(Handler.getGroupMessages(contacts1.get(keyid.indexOf(keyid2)).getGroupname(),0).first.size()>0)
+                    contacts1.get(keyid.indexOf(keyid2)).setTime(Handler.getLastGroupMessageTime(contacts1.get(keyid.indexOf(keyid2)).getGroupkey()));
                 else
-                    contacts1.get(l).setTime(Handler.getLastGroupMessageTime(contacts1.get(l).getGroupkey()));
+                    contacts1.get(keyid.indexOf(keyid2)).setTime(Handler.getLastGroupMessageTime(contacts1.get(keyid.indexOf(keyid2)).getGroupkey()));
                 }
-            userAdapter.notifyItemChanged(l);
+            userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
 
         }
 
@@ -1863,10 +1869,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             ApplicationClass.messagesent=0;
             UserDetailwithUrl userDetailwithUrl;
 
-            userDetailwithUrl=contacts1.get(l);
-            String key=keyid.get(l);
-            contacts1.remove(l);
-            keyid.remove(l);
+            userDetailwithUrl=contacts1.get(keyid.indexOf(keyid2));
+            String key=keyid.get(keyid.indexOf(keyid2));
+            contacts1.remove(keyid.indexOf(keyid2));
+            keyid.remove(keyid.indexOf(keyid2));
             userAdapter.notifyDataSetChanged();
             contacts1.add(0,userDetailwithUrl);
             keyid.add(0,key);
@@ -1877,15 +1883,15 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         if(flag==true)
         {
             flag=false;
-            contacts1.get(l).setMessagenum(2);
-            userAdapter.notifyItemChanged(l);
+            contacts1.get(keyid.indexOf(keyid2)).setMessagenum(2);
+            userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
         }
         if(flag2==true)
         {
-            if(l<=(contacts1.size()-1)) {
+            if(keyid.indexOf(keyid2)<=(contacts1.size()-1)) {
                 flag2 = false;
-                contacts1.get(l).setMessagenum(2);
-                userAdapter.notifyItemChanged(l);
+                contacts1.get(keyid.indexOf(keyid2)).setMessagenum(2);
+                userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
             }
 
         }
@@ -1924,20 +1930,22 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onStop() {
         super.onStop();
 
-        if(flag==true)
-        {
-            contacts1.get(l).setMessagenum(2);
-            userAdapter.notifyItemChanged(l);
-        }
-        if(flag2==true)
-        {
-            if(l<=(contacts1.size()-1)) {
-
-                contacts1.get(l).setMessagenum(2);
-                userAdapter.notifyItemChanged(l);
-            }
-
-        }
+//        int l=keyid.indexOf(keyid2);
+//        if(flag==true)
+//        {
+//
+//            contacts1.get(l).setMessagenum(2);
+//            userAdapter.notifyItemChanged(l);
+//        }
+//        if(flag2==true)
+//        {
+//            if(l<=(contacts1.size()-1)) {
+//
+//                contacts1.get(l).setMessagenum(2);
+//                userAdapter.notifyItemChanged(l);
+//            }
+//
+//        }
 
     }
 }
