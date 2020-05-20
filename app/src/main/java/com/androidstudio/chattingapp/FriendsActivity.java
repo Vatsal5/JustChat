@@ -298,12 +298,14 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                             if (dataSnapshot.child("profile").exists()) {
                                 contacts1.add(new UserDetailWithStatus(contacts.get(index).getPh_number(), contacts.get(index).getuID(), dataSnapshot.child("profile").getValue(String.class),
                                         dataSnapshot.child("status").getValue(String.class),0,null));
+                                keyid.add(contacts.get(index).getPh_number());
                                 userAdapter.notifyDataSetChanged();
 
                             } else {
 
                                 contacts1.add(new UserDetailWithStatus(contacts.get(index).getPh_number(), contacts.get(index).getuID(), "null",
                                         dataSnapshot.child("status").getValue(String.class),0,null));
+                                keyid.add(contacts.get(index).getPh_number());
                                 userAdapter.notifyDataSetChanged();
 
                             }
@@ -323,12 +325,14 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                   //  Log.d("myapp", dataSnapshot.child("profile").getValue(String.class));
                                     contacts1.add(new UserDetailWithStatus(contacts.get(index).getPh_number(), contacts.get(index).getuID(), dataSnapshot.child("profile").getValue(String.class),
                                             dataSnapshot.child("status").getValue(String.class),0,null));
+                                    keyid.add(contacts.get(index).getPh_number());
                                     userAdapter.notifyDataSetChanged();
 
                                 } else {
 
                                     contacts1.add(new UserDetailWithStatus(contacts.get(index).getPh_number(), contacts.get(index).getuID(), "null", dataSnapshot.child("status").getValue(String.class),0,null));
                                     userAdapter.notifyDataSetChanged();
+                                    keyid.add(contacts.get(index).getPh_number());
 
                                 }
                           //      (reference.child("users").child(currentUserNumber).child(contacts.get(index).getPh_number()).child("message")).setValue("/null");
@@ -421,7 +425,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                 if (number.substring(0, 3).equals("+91")) {
                     if (!(number.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
                         contacts.add(new UserDetail(number, name));
-                        keyid.add(number);
+
                         number1.add(number);
 
 //                        if(!pref.getString(number,number).equals(name)) {
@@ -435,7 +439,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                     if (!(("+91" + number).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
 
                         contacts.add(new UserDetail("+91"+number, name));
-                        keyid.add(number);
+
                         number1.add("+91"+number);
 
 //                        if(!pref.getString("+91"+number,"+91"+number).equals(name)) {
