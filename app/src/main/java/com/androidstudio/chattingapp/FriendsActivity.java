@@ -22,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
@@ -55,6 +56,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     LinearLayout toolbar;
     CardView cvCreate;
     ArrayList<String> number1,membersToadd;
+    ArrayList<String> keyid;
+    androidx.appcompat.widget.SearchView searchView;
     int yes=0;
     int c=0;
     int k=0,z,z1;
@@ -65,6 +68,9 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         setContentView(R.layout.activity_friends);
         tvtitle=findViewById(R.id.tvhead);
         cvCreate=findViewById(R.id.ivCreate);
+
+        keyid = new ArrayList<>();
+        searchView = findViewById(R.id.SearchView);
         if (getIntent().getIntExtra("path", 2) == 1) {
 
             tvtitle.setText("Forward");
@@ -160,6 +166,20 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         tvCreateGroup=findViewById(R.id.tvCreate);
         members=new ArrayList<>();
         groupkey=getIntent().getStringExtra("groupkey");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                userAdapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                userAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
 
 
         setTitle(null);
@@ -401,6 +421,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                 if (number.substring(0, 3).equals("+91")) {
                     if (!(number.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
                         contacts.add(new UserDetail(number, name));
+                        keyid.add(number);
                         number1.add(number);
 
 //                        if(!pref.getString(number,number).equals(name)) {
@@ -414,6 +435,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                     if (!(("+91" + number).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
 
                         contacts.add(new UserDetail("+91"+number, name));
+                        keyid.add(number);
                         number1.add("+91"+number);
 
 //                        if(!pref.getString("+91"+number,"+91"+number).equals(name)) {
@@ -587,7 +609,9 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     }
 
     @Override
-    public void onItemSelected(int index) {
+    public void onItemSelected(String key) {
+
+        int index = keyid.indexOf(key);
 
         if (getIntent().getIntExtra("createGroup", 2) == 1) {
             yes=1;

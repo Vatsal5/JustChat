@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,20 +25,19 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> {
-
-
+public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> implements Filterable {
 
         private final Context context;
         CircleImageView iv;
         ImageView ivSelected;
         FirebaseDatabase database;
         DatabaseReference reference;
-        private ArrayList<UserDetailWithStatus> list;
+        private ArrayList<UserDetailWithStatus> Filteredlist;
+        ArrayList<UserDetailWithStatus> list;
 
         public interface itemSelected
         {
-            public void onItemSelected(int index);
+            public void onItemSelected(String key);
         }
 
         itemSelected Activity;
@@ -45,6 +46,7 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> {
             super(context, R.layout.friends_list_layout,list);
 
             this.context = context;
+            this.Filteredlist = list;
             this.list = list;
             Activity = (itemSelected) context;
         }
@@ -63,39 +65,39 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> {
            // Log.d("tag",FilteredList.get(position).getUrl());
 
 
-            if(list.get(position).getSelected()==1)
+            if(Filteredlist.get(position).getSelected()==1)
             {
                 ivSelected.setVisibility(View.VISIBLE);
             }
-            if(list.get(position).getUrl().equals("null"))
+            if(Filteredlist.get(position).getUrl().equals("null"))
             {
                 iv.setImageResource(R.drawable.person);
 //
             }
             else
             {
-                Glide.with(context).load(list.get(position).getUrl()).into(iv);}
+                Glide.with(context).load(Filteredlist.get(position).getUrl()).into(iv);}
 
 
 
             TextView tvUserName= v.findViewById(R.id.tv_username);
 
 
-            if((list.get(position).getuID().equals("")))
-            tvUserName.setText(list.get(position).getPh_number());
+            if((Filteredlist.get(position).getuID().equals("")))
+            tvUserName.setText(Filteredlist.get(position).getPh_number());
             else
-                tvUserName.setText(list.get(position).getuID());
-            if(list.get(position).getStatus().equals(""))
+                tvUserName.setText(Filteredlist.get(position).getuID());
+            if(Filteredlist.get(position).getStatus().equals(""))
             {
                 tvStatus.setVisibility(View.GONE);
             }
             else
-            tvStatus.setText(list.get(position).getStatus());
+            tvStatus.setText(Filteredlist.get(position).getStatus());
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Activity.onItemSelected(position);
+                    Activity.onItemSelected(Filteredlist.get(position).getPh_number());
 
                 }
             });
@@ -103,5 +105,38 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> {
             return v;
         }
 
+    @NonNull
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence charSequence) {
+                    String query = charSequence.toString();
+
+                    ArrayList<UserDetailWithStatus> filtered = new ArrayList<>();
+
+                    if (query.isEmpty()) {
+                        filtered = list;
+                    } else {
+                        for (UserDetailWithStatus user : list) {
+                            if (user.getuID().toLowerCase().contains(query.toLowerCase()) || user.getPh_number().contains(query)) {
+                                filtered.add(user);
+                            }
+                        }
+                    }
+
+                    FilterResults results = new FilterResults();
+                    results.count = filtered.size();
+                    results.values = filtered;
+                    return results;
+                }
+
+                @Override
+                protected void publishResults(CharSequence charSequence, FilterResults results) {
+                    Filteredlist = (ArrayList<UserDetailWithStatus>) results.values;
+                    notifyDataSetChanged();
+                }
+            };
+        }
     }
 

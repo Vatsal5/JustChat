@@ -55,7 +55,9 @@
             android:name=".VideoActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ShowImage" />
-        <activity android:name=".FriendsActivity" />
+        <activity android:name=".FriendsActivity"
+            android:windowSoftInputMode="adjustNothing"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Profile"
             android:screenOrientation="portrait"
