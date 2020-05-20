@@ -1945,7 +1945,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 }else if (type.equals("gif")) {
 
-                    MessageModel model = new MessageModel(-349,sender,"null",Uri.parse(getIntent().getStringExtra("message"))+" "+getIntent().getStringExtra("message"),
+                    MessageModel model = new MessageModel(-349,sender,"null",getIntent().getStringExtra("message"),
                             "gif",200,simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
 
                     if (chats.size() != 0) {
@@ -1973,7 +1973,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 }else if (type.equals("sticker")) {
 
-                    MessageModel model = new MessageModel(-349,sender,"null",Uri.parse(getIntent().getStringExtra("message"))+" "+getIntent().getStringExtra("message"),
+                    MessageModel model = new MessageModel(-349,sender,"null",getIntent().getStringExtra("message"),
                             "sticker",300,simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
 
                     if (chats.size() != 0) {
@@ -1999,18 +1999,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     if(!Messages.isComputingLayout())
                         adapter.notifyItemInserted(chats.size()-1);
                 } else {
-                    Uri videoURI = Uri.parse(getIntent().getStringExtra("message"));
-                    File file = new File(getPath(MessageActivity2.this, videoURI));
-
-                    long fileSizeInBytes = file.length();
-                    long fileSizeInKB = fileSizeInBytes / 1024;
-                    long fileSizeInMB = fileSizeInKB / 1024;
-
-
-                    if (fileSizeInMB >= 15) {
-                        Toast.makeText(this, "Video files lesser than 15MB are allowed", Toast.LENGTH_LONG).show();
-
-                    } else {
                         Uri uri = Uri.parse(getIntent().getStringExtra("message"));
 
 
@@ -2030,7 +2018,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                 messageModel.setId(id);
                                 chats.add(messageModel);
                             }
-                        }
                         int id = Handler.addMessage(model);
                         model.setId(id);
                         chats.add(model);
