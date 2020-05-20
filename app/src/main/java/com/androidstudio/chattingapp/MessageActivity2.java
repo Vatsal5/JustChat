@@ -1903,142 +1903,182 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         // to forward a message
 
         if(getIntent().getIntExtra("path",1)==2) {
-            String type = getIntent().getStringExtra("type");
-            String message1 = getIntent().getStringExtra("message");
-            ApplicationClass.messagesent=1;
 
-            if (!(type.equals(" "))) {
-                Date date = new Date();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
-                long millis = System.currentTimeMillis();
-                java.sql.Date date1 = new java.sql.Date(millis);
+            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(
+                    new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            //  Log.d("asdf","hi");
 
-                if (type.equals("text")) {
-                    MessageModel model = new MessageModel(-1, sender, "null", getIntent().getStringExtra("message"), "text", -2, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
-                    etMessage.setText(null);
-
-                    if (chats.size() != 0) {
-                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
-                            int id = Handler.addMessage(messageModel);
-                            messageModel.setId(id);
-                            chats.add(messageModel);
+                            if(!(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())))
+                                membernumber.add(dataSnapshot.getValue(String.class));
+                            numberOfMembers++;
                         }
-                    } else {
-                        if((!(defaultvalue.equals("private")))) {
-                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
-                            int id = Handler.addMessage(messageModel);
-                            messageModel.setId(id);
-                            chats.add(messageModel);
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                         }
-                    }
 
-                    int id = Handler.addMessage(model);
-                    model.setId(id);
-                    chats.add(model);
-                    if(!Messages.isComputingLayout())
-                        adapter.notifyItemInserted(chats.size() - 1);
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                } else if (type.equals("image")) {
-
-                    new MessageActivity2.CompressImage().execute(Uri.parse(getIntent().getStringExtra("message")));
-
-                }else if (type.equals("gif")) {
-
-                    MessageModel model = new MessageModel(-349,sender,"null",Uri.parse(getIntent().getStringExtra("message"))+" "+getIntent().getStringExtra("message"),
-                            "gif",200,simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
-
-                    if (chats.size() != 0) {
-                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
-                            int id = Handler.addMessage(messageModel);
-                            messageModel.setId(id);
-                            chats.add(messageModel);
                         }
-                    } else {
-                        if ((!(defaultvalue.equals("private")))) {
-                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
-                            int id = Handler.addMessage(messageModel);
-                            messageModel.setId(id);
-                            chats.add(messageModel);
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
                         }
                     }
+            );
+            Handler handler=new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    String type = getIntent().getStringExtra("type");
+                    String message1 = getIntent().getStringExtra("message");
+                    ApplicationClass.messagesent=1;
 
-                    int id = Handler.addMessage(model);
-                    model.setId(id);
-                    chats.add(model);
+                    if (!(type.equals(" "))) {
+                        Date date = new Date();
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+                        long millis = System.currentTimeMillis();
+                        java.sql.Date date1 = new java.sql.Date(millis);
 
-                    if(!Messages.isComputingLayout())
-                        adapter.notifyItemInserted(chats.size()-1);
+                        if (type.equals("text")) {
+                            MessageModel model = new MessageModel(-1, sender, "null", getIntent().getStringExtra("message"), "text", -2, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
+                            etMessage.setText(null);
 
-                }else if (type.equals("sticker")) {
-
-                    MessageModel model = new MessageModel(-349,sender,"null",Uri.parse(getIntent().getStringExtra("message"))+" "+getIntent().getStringExtra("message"),
-                            "sticker",300,simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
-
-                    if (chats.size() != 0) {
-                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
-                            int id = Handler.addMessage(messageModel);
-                            messageModel.setId(id);
-                            chats.add(messageModel);
-                        }
-                    } else {
-                        if ((!(defaultvalue.equals("private")))) {
-                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
-                            int id = Handler.addMessage(messageModel);
-                            messageModel.setId(id);
-                            chats.add(messageModel);
-                        }
-                    }
-
-                    int id = Handler.addMessage(model);
-                    model.setId(id);
-                    chats.add(model);
-
-                    if(!Messages.isComputingLayout())
-                        adapter.notifyItemInserted(chats.size()-1);
-                } else {
-                    Uri videoURI = Uri.parse(getIntent().getStringExtra("message"));
-                    File file = new File(getPath(MessageActivity2.this, videoURI));
-
-                    long fileSizeInBytes = file.length();
-                    long fileSizeInKB = fileSizeInBytes / 1024;
-                    long fileSizeInMB = fileSizeInKB / 1024;
-
-
-                    if (fileSizeInMB >= 15) {
-                        Toast.makeText(this, "Video files lesser than 15MB are allowed", Toast.LENGTH_LONG).show();
-
-                    } else {
-                        Uri uri = Uri.parse(getIntent().getStringExtra("message"));
-
-
-                        MessageModel model = new MessageModel(1190, sender, "null", uri.toString(), "video", 100, simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
-
-                        if (chats.size() != 0) {
-                            if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                                MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
-                                int id = Handler.addMessage(messageModel);
-                                messageModel.setId(id);
-                                chats.add(messageModel);
+                            if (chats.size() != 0) {
+                                if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                                    MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                                    int id = Handler.addMessage(messageModel);
+                                    messageModel.setId(id);
+                                    chats.add(messageModel);
+                                }
+                            } else {
+                                if((!(defaultvalue.equals("private")))) {
+                                    MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                                    int id = Handler.addMessage(messageModel);
+                                    messageModel.setId(id);
+                                    chats.add(messageModel);
+                                }
                             }
+
+                            int id = Handler.addMessage(model);
+                            model.setId(id);
+                            chats.add(model);
+                            if(!Messages.isComputingLayout())
+                                adapter.notifyItemInserted(chats.size() - 1);
+
+                        } else if (type.equals("image")) {
+
+                            new MessageActivity2.CompressImage().execute(Uri.parse(getIntent().getStringExtra("message")));
+
+                        }else if (type.equals("gif")) {
+
+                            MessageModel model = new MessageModel(-349,sender,"null",Uri.parse(getIntent().getStringExtra("message"))+" "+getIntent().getStringExtra("message"),
+                                    "gif",200,simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
+
+                            if (chats.size() != 0) {
+                                if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                                    MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                                    int id = Handler.addMessage(messageModel);
+                                    messageModel.setId(id);
+                                    chats.add(messageModel);
+                                }
+                            } else {
+                                if ((!(defaultvalue.equals("private")))) {
+                                    MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                                    int id = Handler.addMessage(messageModel);
+                                    messageModel.setId(id);
+                                    chats.add(messageModel);
+                                }
+                            }
+
+                            int id = Handler.addMessage(model);
+                            model.setId(id);
+                            chats.add(model);
+
+                            if(!Messages.isComputingLayout())
+                                adapter.notifyItemInserted(chats.size()-1);
+
+                        }else if (type.equals("sticker")) {
+
+                            MessageModel model = new MessageModel(-349,sender,"null",Uri.parse(getIntent().getStringExtra("message"))+" "+getIntent().getStringExtra("message"),
+                                    "sticker",300,simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
+
+                            if (chats.size() != 0) {
+                                if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                                    MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                                    int id = Handler.addMessage(messageModel);
+                                    messageModel.setId(id);
+                                    chats.add(messageModel);
+                                }
+                            } else {
+                                if ((!(defaultvalue.equals("private")))) {
+                                    MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                                    int id = Handler.addMessage(messageModel);
+                                    messageModel.setId(id);
+                                    chats.add(messageModel);
+                                }
+                            }
+
+                            int id = Handler.addMessage(model);
+                            model.setId(id);
+                            chats.add(model);
+
+                            if(!Messages.isComputingLayout())
+                                adapter.notifyItemInserted(chats.size()-1);
                         } else {
-                            if ((!(defaultvalue.equals("private")))) {
-                                MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
-                                int id = Handler.addMessage(messageModel);
-                                messageModel.setId(id);
-                                chats.add(messageModel);
+                            Uri videoURI = Uri.parse(getIntent().getStringExtra("message"));
+                            File file = new File(getPath(MessageActivity2.this, videoURI));
+
+                            long fileSizeInBytes = file.length();
+                            long fileSizeInKB = fileSizeInBytes / 1024;
+                            long fileSizeInMB = fileSizeInKB / 1024;
+
+
+                            if (fileSizeInMB >= 15) {
+                                Toast.makeText(MessageActivity2.this, "Video files lesser than 15MB are allowed", Toast.LENGTH_LONG).show();
+
+                            } else {
+                                Uri uri = Uri.parse(getIntent().getStringExtra("message"));
+
+
+                                MessageModel model = new MessageModel(1190, sender, "null", uri.toString(), "video", 100, simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
+
+                                if (chats.size() != 0) {
+                                    if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                                        MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                                        int id = Handler.addMessage(messageModel);
+                                        messageModel.setId(id);
+                                        chats.add(messageModel);
+                                    }
+                                } else {
+                                    if ((!(defaultvalue.equals("private")))) {
+                                        MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                                        int id = Handler.addMessage(messageModel);
+                                        messageModel.setId(id);
+                                        chats.add(messageModel);
+                                    }
+                                }
+                                int id = Handler.addMessage(model);
+                                model.setId(id);
+                                chats.add(model);
+                                if(!Messages.isComputingLayout())
+                                    adapter.notifyItemInserted(chats.size() - 1);
                             }
                         }
-                        int id = Handler.addMessage(model);
-                        model.setId(id);
-                        chats.add(model);
-                        if(!Messages.isComputingLayout())
-                            adapter.notifyItemInserted(chats.size() - 1);
                     }
                 }
-            }
+            },1000);
+
         }
 
     }

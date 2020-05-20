@@ -85,7 +85,7 @@
             android:layout_height="match_parent"
             tools:visibility="visible">
 
-            <ListView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/lv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -99,7 +99,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-            </ListView>
+            </androidx.recyclerview.widget.RecyclerView>
 
             <TextView
                 android:id="@+id/tvCreate"

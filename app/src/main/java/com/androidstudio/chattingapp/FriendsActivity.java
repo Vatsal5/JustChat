@@ -28,6 +28,8 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -41,7 +43,7 @@ import java.util.ArrayList;
 
 public class FriendsActivity extends AppCompatActivity implements FriendsAdapter.itemSelected{
 
-    ListView lv;
+    RecyclerView lv;
     FirebaseDatabase database;
     String currentUserNumber;
     TextView tvCreateGroup,tvtitle;
@@ -196,6 +198,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             currentUserNumber= FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
             lv=findViewById(R.id.lv);
+            LinearLayoutManager layoutManager=new LinearLayoutManager(this);
+            lv.setLayoutManager(layoutManager);
         userAdapter = new FriendsAdapter(FriendsActivity.this,contacts1 );
         lv.setAdapter(userAdapter);
 
@@ -299,14 +303,14 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                 contacts1.add(new UserDetailWithStatus(contacts.get(index).getPh_number(), contacts.get(index).getuID(), dataSnapshot.child("profile").getValue(String.class),
                                         dataSnapshot.child("status").getValue(String.class),0,null));
                                 keyid.add(contacts.get(index).getPh_number());
-                                userAdapter.notifyDataSetChanged();
+                                userAdapter.notifyItemInserted(contacts1.size()-1);
 
                             } else {
 
                                 contacts1.add(new UserDetailWithStatus(contacts.get(index).getPh_number(), contacts.get(index).getuID(), "null",
                                         dataSnapshot.child("status").getValue(String.class),0,null));
                                 keyid.add(contacts.get(index).getPh_number());
-                                userAdapter.notifyDataSetChanged();
+                                userAdapter.notifyItemInserted(contacts1.size()-1);
 
                             }
                         //    (reference.child("users").child(currentUserNumber).child(contacts.get(index).getPh_number()).child("message")).setValue("/null");
@@ -326,13 +330,13 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                     contacts1.add(new UserDetailWithStatus(contacts.get(index).getPh_number(), contacts.get(index).getuID(), dataSnapshot.child("profile").getValue(String.class),
                                             dataSnapshot.child("status").getValue(String.class),0,null));
                                     keyid.add(contacts.get(index).getPh_number());
-                                    userAdapter.notifyDataSetChanged();
+                                    userAdapter.notifyItemInserted(contacts1.size()-1);
 
                                 } else {
 
                                     contacts1.add(new UserDetailWithStatus(contacts.get(index).getPh_number(), contacts.get(index).getuID(), "null", dataSnapshot.child("status").getValue(String.class),0,null));
-                                    userAdapter.notifyDataSetChanged();
                                     keyid.add(contacts.get(index).getPh_number());
+                                    userAdapter.notifyItemInserted(contacts1.size()-1);
 
                                 }
                           //      (reference.child("users").child(currentUserNumber).child(contacts.get(index).getPh_number()).child("message")).setValue("/null");
@@ -392,7 +396,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                         //   userAdapter.notifyItemInserted(contacts1.size()-1);
 
 
-                        userAdapter.notifyDataSetChanged();
+                        userAdapter.notifyItemChanged(contacts1.size()-1);
 
 
                         //   Log.d("asdf",contacts1.get(contacts1.size()-1).getUrl());
@@ -460,7 +464,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
 
                           new num().checkauth(contacts.get(i).getPh_number(),i);
-                          userAdapter.notifyDataSetChanged();
+
 
 
 
@@ -493,7 +497,9 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                 if (dataSnapshot.child("info").child("friend").exists() && dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
                                         contacts1.add(new UserDetailWithStatus(dataSnapshot.getKey(), "", "null",
                                                 "",0,null));
-                                        userAdapter.notifyDataSetChanged();
+
+                                        userAdapter.notifyItemInserted(contacts1.size()-1);
+                                        keyid.add(dataSnapshot.getKey());
                                         new listener(contacts1.size()-1).profilelistener();
                                     }
 
@@ -543,6 +549,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                             contacts1.add(new UserDetailWithStatus(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", ""
                                     , 0,dataSnapshot.getKey()));
                             keyid.add(dataSnapshot.getKey());
+                            userAdapter.notifyItemInserted(contacts1.size()-1);
+
 
                             reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
                                     new ValueEventListener() {
@@ -551,7 +559,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                             if(dataSnapshot.exists())
                                             {
                                                 contacts1.get(contacts1.size()-1).setUrl(dataSnapshot.getValue().toString());
-                                                userAdapter.notifyDataSetChanged();}
+                                                userAdapter.notifyItemChanged(contacts1.size()-1);
+                                            }
                                         }
 
                                         @Override
@@ -617,6 +626,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     public void onItemSelected(String key) {
 
         int index = keyid.indexOf(key);
+
 
         if (getIntent().getIntExtra("createGroup", 2) == 1) {
             yes=1;
@@ -734,6 +744,7 @@ z1--;
             }
             else
             {
+                Log.d("asdf",key+"");
                 //   ******  To forward a message in messageactivity2 ****
                 Intent intent = new Intent(FriendsActivity.this, MessageActivity2.class);
                 intent.putExtra("title", contacts1.get(index).getPh_number());

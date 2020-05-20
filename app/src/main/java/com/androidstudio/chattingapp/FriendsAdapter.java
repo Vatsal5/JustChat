@@ -1,21 +1,18 @@
 package com.androidstudio.chattingapp;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
@@ -25,90 +22,111 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> implements Filterable {
+public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.viewholder>  implements Filterable {
 
-        private final Context context;
+    private final Context context;
+    FirebaseDatabase database;
+    DatabaseReference reference;
+    private ArrayList<UserDetailWithStatus> Filteredlist;
+    ArrayList<UserDetailWithStatus> Originallist;
+
+    FriendsAdapter.ValueFilter valueFilter;
+
+    public interface itemSelected
+    {
+        public void onItemSelected(String key);
+    }
+
+    FriendsAdapter.itemSelected Activity;
+
+    public FriendsAdapter(@NonNull Context context, ArrayList<UserDetailWithStatus>list) {
+
+        this.context = context;
+        this.Filteredlist = list;
+        this.Originallist = list;
+        Activity = (FriendsAdapter.itemSelected) context;
+    }
+
+    public  class  viewholder extends RecyclerView.ViewHolder
+    {
+
         CircleImageView iv;
         ImageView ivSelected;
-        FirebaseDatabase database;
-        DatabaseReference reference;
-        private ArrayList<UserDetailWithStatus> Filteredlist;
-        ArrayList<UserDetailWithStatus> Originallist;
+        TextView tvStatus;
+        LinearLayout llfl;
+        TextView tvUserName;
 
-    ValueFilter valueFilter;
-
-        public interface itemSelected
-        {
-            public void onItemSelected(String key);
-        }
-
-        itemSelected Activity;
-
-        public FriendsAdapter(@NonNull Context context, ArrayList<UserDetailWithStatus>list) {
-            super(context, R.layout.friends_list_layout,list);
-
-            this.context = context;
-            this.Filteredlist = list;
-            this.Originallist = list;
-            Activity = (itemSelected) context;
-        }
-
-        @NonNull
-        @Override
-        public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
-            LayoutInflater inflater= (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            final View v= inflater.inflate(R.layout.friends_list_layout,parent,false);
-            iv=v.findViewById(R.id.imageView);
+        public viewholder(@NonNull View itemView) {
+            super(itemView);
+            iv=itemView.findViewById(R.id.imageView);
             database=FirebaseDatabase.getInstance();
             reference=database.getReference();
-            TextView tvStatus= v.findViewById(R.id.tvstatus);
-            ivSelected=v.findViewById(R.id.ivSelected);
+            llfl=itemView.findViewById(R.id.llfl);
+             tvStatus= itemView.findViewById(R.id.tvstatus);
+            ivSelected=itemView.findViewById(R.id.ivSelected);
+             tvUserName = itemView.findViewById(R.id.tv_username);}
+    }
 
-           // Log.d("tag",FilteredList.get(position).getUrl());
+    @NonNull
+    @Override
+    public viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
+        LayoutInflater inflater= (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View v= inflater.inflate(R.layout.friends_list_layout,parent,false);
+        return new viewholder(v);
+    }
 
-            if(position<Filteredlist.size()) {
-                if (Filteredlist.get(position).getSelected() == 1) {
-                    ivSelected.setVisibility(View.VISIBLE);
-                }
-                if (Filteredlist.get(position).getUrl().equals("null")) {
-                    iv.setImageResource(R.drawable.person);
-//
-                } else {
-                    Glide.with(context).load(Filteredlist.get(position).getUrl()).into(iv);
-                }
+    @Override
+    public void onBindViewHolder(@NonNull final viewholder holder, int position) {
 
-
-                TextView tvUserName = v.findViewById(R.id.tv_username);
-
-
-                if ((Filteredlist.get(position).getuID().equals("")))
-                    tvUserName.setText(Filteredlist.get(position).getPh_number());
-                else
-                    tvUserName.setText(Filteredlist.get(position).getuID());
-                if (Filteredlist.get(position).getStatus().equals("")) {
-                    tvStatus.setVisibility(View.GONE);
-                } else
-                    tvStatus.setText(Filteredlist.get(position).getStatus());
-
-                v.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(Filteredlist.get(position).getKey()==null)
-                        Activity.onItemSelected(Filteredlist.get(position).getPh_number());
-                        else
-                            Activity.onItemSelected(Filteredlist.get(position).getKey());
-                    }
-                });
+        Log.d("asdf",position+"");
+        if(position<Filteredlist.size()) {
+            if (Filteredlist.get(position).getSelected() == 1) {
+                holder.ivSelected.setVisibility(View.VISIBLE);
             }
-                return v;
+            if (Filteredlist.get(position).getUrl().equals("null")) {
+                holder.iv.setImageResource(R.drawable.person);
+//
+            } else {
+                Glide.with(context).load(Filteredlist.get(position).getUrl()).into(holder.iv);
+            }
+
+
+
+
+
+            if ((Filteredlist.get(position).getuID().equals("")))
+                holder.tvUserName.setText(Filteredlist.get(position).getPh_number());
+            else
+                holder.tvUserName.setText(Filteredlist.get(position).getuID());
+            if (Filteredlist.get(position).getStatus().equals("")) {
+                holder.tvStatus.setVisibility(View.GONE);
+            } else
+                holder.tvStatus.setText(Filteredlist.get(position).getStatus());
+
+            holder.llfl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(Filteredlist.get(holder.getAdapterPosition()).getKey()==null)
+                        Activity.onItemSelected(Filteredlist.get(holder.getAdapterPosition()).getPh_number());
+                    else
+                        Activity.onItemSelected(Filteredlist.get(holder.getAdapterPosition()).getKey());
+                }
+            });
         }
+
+    }
+
+
+    @Override
+    public int getItemCount() {
+        return Filteredlist.size();
+    }
 
     @Override
     public Filter getFilter() {
         if (valueFilter == null) {
-            valueFilter = new ValueFilter();
+            valueFilter = new FriendsAdapter.ValueFilter();
         }
         return valueFilter;
     }
@@ -142,8 +160,5 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> implement
             Filteredlist = (ArrayList<UserDetailWithStatus>) results.values;
             notifyDataSetChanged();
         }
-
     }
-
 }
-
