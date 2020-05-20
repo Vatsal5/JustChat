@@ -798,7 +798,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         {
 
             if(checkUrl(messages.get(holder.getAdapterPosition()).getMessage())) {
-                holder.tvMessage.setTextColor(context.getResources().getColor(R.color.red));
+                if(holder.llMesageLeft!=null)
+                    holder.tvMessage.setTextColor(context.getResources().getColor(R.color.lightblue));
+                else
+                    holder.tvMessage.setTextColor(context.getResources().getColor(R.color.red));
+
                 holder.tvMessage.setTypeface(holder.tvMessage.getTypeface(), Typeface.BOLD_ITALIC);
             }
             else {
