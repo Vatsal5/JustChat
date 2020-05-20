@@ -314,7 +314,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             lv.setHasFixedSize(true);
             lv.setLayoutManager(linearLayoutManager);
             userAdapter = new UserAdapter(MainActivity.this, contacts1);
-            userAdapter.setHasStableIds(true);
             lv.setAdapter(userAdapter);
             lv.addItemDecoration(new DividerItemDecoration(lv.getContext(),DividerItemDecoration.VERTICAL));
 
