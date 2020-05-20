@@ -196,6 +196,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     OnCompleteListener SendMesage;
     String defaultvalue;
 
+    public static MessageActivity messageActivity;
+
     boolean flag1 = false;
     String dpUrl ="null";
     ValueEventListener dp;
@@ -261,7 +263,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
                         String url= j4.getString("url");
                         gifurl.add("g"+url);
-                        gif_adapter.notifyDataSetChanged();
+                        gif_adapter.notifyItemInserted(gifurl.size()-1);
 
                     }
 
@@ -341,6 +343,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         received = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/received"));
 
         ll=findViewById(R.id.ll);
+
+        messageActivity=this;
 
         ivSend = findViewById(R.id.ivSend);
         preftheme=getSharedPreferences("theme",0);
@@ -694,7 +698,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                                 // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
                                                                 String url= j4.getString("url");
                                                                 gifurl.add("g"+url);
-                                                                gif_adapter.notifyDataSetChanged();
+                                                                gif_adapter.notifyItemInserted(gifurl.size()-1);
 
 
                                                             }

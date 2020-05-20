@@ -142,6 +142,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     SearchView searchview;
 
+
+
     LinearLayoutManager manager;
     MessageAdapter adapter;
     Integer HandlerIndex;
@@ -208,7 +210,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
                         String url= j4.getString("url");
                         gifurl.add("g"+url);
-                        gif_adapter.notifyDataSetChanged();
+                        gif_adapter.notifyItemInserted(gifurl.size()-1);
 
                     }
 
@@ -877,7 +879,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                                                 // JSONObject j3 = (JSONObject) j2.getJSONObject("images");
                                                                 String url= j4.getString("url");
                                                                 gifurl.add("g"+url);
-                                                                gif_adapter.notifyDataSetChanged();
+                                                                gif_adapter.notifyItemInserted(gifurl.size()-1);
 
 
                                                             }
@@ -1903,7 +1905,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         // to forward a message
 
         if(getIntent().getIntExtra("path",1)==2) {
-
+           final String type = getIntent().getStringExtra("type");
+            String message1 = getIntent().getStringExtra("message");
+            ApplicationClass.messagesent=1;
             FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(
                     new ChildEventListener() {
                         @Override
@@ -1936,14 +1940,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         }
                     }
             );
+
             Handler handler=new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    String type = getIntent().getStringExtra("type");
-                    String message1 = getIntent().getStringExtra("message");
-                    ApplicationClass.messagesent=1;
-
                     if (!(type.equals(" "))) {
                         Date date = new Date();
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
@@ -1982,7 +1983,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                         }else if (type.equals("gif")) {
 
-                            MessageModel model = new MessageModel(-349,sender,"null",Uri.parse(getIntent().getStringExtra("message"))+" "+getIntent().getStringExtra("message"),
+                            MessageModel model = new MessageModel(-349,sender,"null",getIntent().getStringExtra("message"),
                                     "gif",200,simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
 
                             if (chats.size() != 0) {
@@ -2010,7 +2011,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                         }else if (type.equals("sticker")) {
 
-                            MessageModel model = new MessageModel(-349,sender,"null",Uri.parse(getIntent().getStringExtra("message"))+" "+getIntent().getStringExtra("message"),
+                            MessageModel model = new MessageModel(-349,sender,"null",getIntent().getStringExtra("message"),
                                     "sticker",300,simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
 
                             if (chats.size() != 0) {
@@ -2078,6 +2079,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     }
                 }
             },1000);
+
 
         }
 
