@@ -95,8 +95,10 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> implement
                 v.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        if(Filteredlist.get(position).getKey()==null)
                         Activity.onItemSelected(Filteredlist.get(position).getPh_number());
-
+                        else
+                            Activity.onItemSelected(Filteredlist.get(position).getKey());
                     }
                 });
             }

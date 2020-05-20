@@ -534,59 +534,60 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         }
 
 
-//                if (getIntent().getIntExtra("path", 2) == 1) {
-//
-//                    Group = new ChildEventListener() {
-//                        @Override
-//                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                            contacts1.add(new UserDetailWithStatus(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", ""
-//                                    , 0,dataSnapshot.getKey()));
-//
-//                            reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
-//                                    new ValueEventListener() {
-//                                        @Override
-//                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                                            if(dataSnapshot.exists())
-//                                            {
-//                                                contacts1.get(contacts1.size()-1).setUrl(dataSnapshot.getValue().toString());
-//                                                userAdapter.notifyDataSetChanged();}
-//                                        }
-//
-//                                        @Override
-//                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                                        }
-//                                    }
-//                            );
-//
-//                        }
-//
-//
-//                        @Override
-//                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                        }
-//                    };
-//
-//                    reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(Group);
-//
-//                }
+                if (getIntent().getIntExtra("path", 2) == 1) {
+
+                    Group = new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                            contacts1.add(new UserDetailWithStatus(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", ""
+                                    , 0,dataSnapshot.getKey()));
+                            keyid.add(dataSnapshot.getKey());
+
+                            reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
+                                    new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if(dataSnapshot.exists())
+                                            {
+                                                contacts1.get(contacts1.size()-1).setUrl(dataSnapshot.getValue().toString());
+                                                userAdapter.notifyDataSetChanged();}
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    }
+                            );
+
+                        }
+
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    };
+
+                    reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(Group);
+
+                }
                // Log.d("tag",contacts1.get(0).getPh_number());
 
 
@@ -690,19 +691,22 @@ z1--;
         }
 
         else {
-            // tvtitle.setText("Forward To");
-            Intent intent = new Intent(FriendsActivity.this, MessageActivity.class);
+
+            if (contacts1.get(index).getKey() == null) {
+                // tvtitle.setText("Forward To");
+                //   ******  To forward a message in messageactivity ****
+                Intent intent = new Intent(FriendsActivity.this, MessageActivity.class);
                 intent.putExtra("title", contacts1.get(index).getPh_number());
 
-          //  intent.putExtra("title","+91"+contacts1.get(index).getPh_number());
-           // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+                //  intent.putExtra("title","+91"+contacts1.get(index).getPh_number());
+                // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
-            //else
-            //intent.putExtra("title", contacts1.get(index).getuID());
+                //else
+                //intent.putExtra("title", contacts1.get(index).getuID());
 
                 intent.putExtra("phone", contacts1.get(index).getPh_number());
 
-            if (getIntent().getIntExtra("path", 2) == 1) {
+                if (getIntent().getIntExtra("path", 2) == 1) {
 //                if(contacts1.get(index).getPh_number().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()) ||
 //                        ("+91"+contacts1.get(index).getPh_number()).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
 //                {
@@ -724,10 +728,28 @@ z1--;
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     this.finish();
 
+                }
+                intent.putExtra("profile", contacts1.get(index).getUrl());
+                startActivity(intent);
             }
-            intent.putExtra("profile", contacts1.get(index).getUrl());
-            startActivity(intent);
+            else
+            {
+                //   ******  To forward a message in messageactivity2 ****
+                Intent intent = new Intent(FriendsActivity.this, MessageActivity2.class);
+                intent.putExtra("title", contacts1.get(index).getPh_number());
+                intent.putExtra("path", 2);
+                intent.putExtra("groupkey",contacts1.get(index).getKey());
+                intent.putExtra("groupName",contacts1.get(index).getuID());
+                intent.putExtra("type", getIntent().getStringExtra("type"));
+                intent.putExtra("message", getIntent().getStringExtra("message"));
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                this.finish();
+                intent.putExtra("profile", contacts1.get(index).getUrl());
+                startActivity(intent);
+            }
         }
+
+
     }
 
     @Override

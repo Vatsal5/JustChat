@@ -612,6 +612,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         getMessages();
 
+
+
         if(messagecount>2) {
             if (chats.size() == 0) {
                     chats.add(new MessageModel(-65, "null", "null", "null123", "unread", 1234, "null","null", "null", "null"));
@@ -1764,6 +1766,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 } else {
 
+                    ApplicationClass.messagesent=1;
                     Date date = new Date();
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
                     long millis = System.currentTimeMillis();
@@ -1895,6 +1898,147 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         if (ContextCompat.checkSelfPermission(MessageActivity2.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MessageActivity2.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 150);
+        }
+
+        // to forward a message
+
+        if(getIntent().getIntExtra("path",1)==2) {
+            String type = getIntent().getStringExtra("type");
+            String message1 = getIntent().getStringExtra("message");
+            ApplicationClass.messagesent=1;
+
+            if (!(type.equals(" "))) {
+                Date date = new Date();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+                long millis = System.currentTimeMillis();
+                java.sql.Date date1 = new java.sql.Date(millis);
+
+                if (type.equals("text")) {
+                    MessageModel model = new MessageModel(-1, sender, "null", getIntent().getStringExtra("message"), "text", -2, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
+                    etMessage.setText(null);
+
+                    if (chats.size() != 0) {
+                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    } else {
+                        if((!(defaultvalue.equals("private")))) {
+                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    }
+
+                    int id = Handler.addMessage(model);
+                    model.setId(id);
+                    chats.add(model);
+                    if(!Messages.isComputingLayout())
+                        adapter.notifyItemInserted(chats.size() - 1);
+
+                } else if (type.equals("image")) {
+
+                    new MessageActivity2.CompressImage().execute(Uri.parse(getIntent().getStringExtra("message")));
+
+                }else if (type.equals("gif")) {
+
+                    MessageModel model = new MessageModel(-349,sender,"null",Uri.parse(getIntent().getStringExtra("message"))+" "+getIntent().getStringExtra("message"),
+                            "gif",200,simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
+
+                    if (chats.size() != 0) {
+                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    } else {
+                        if ((!(defaultvalue.equals("private")))) {
+                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    }
+
+                    int id = Handler.addMessage(model);
+                    model.setId(id);
+                    chats.add(model);
+
+                    if(!Messages.isComputingLayout())
+                        adapter.notifyItemInserted(chats.size()-1);
+
+                }else if (type.equals("sticker")) {
+
+                    MessageModel model = new MessageModel(-349,sender,"null",Uri.parse(getIntent().getStringExtra("message"))+" "+getIntent().getStringExtra("message"),
+                            "sticker",300,simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
+
+                    if (chats.size() != 0) {
+                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    } else {
+                        if ((!(defaultvalue.equals("private")))) {
+                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                            int id = Handler.addMessage(messageModel);
+                            messageModel.setId(id);
+                            chats.add(messageModel);
+                        }
+                    }
+
+                    int id = Handler.addMessage(model);
+                    model.setId(id);
+                    chats.add(model);
+
+                    if(!Messages.isComputingLayout())
+                        adapter.notifyItemInserted(chats.size()-1);
+                } else {
+                    Uri videoURI = Uri.parse(getIntent().getStringExtra("message"));
+                    File file = new File(getPath(MessageActivity2.this, videoURI));
+
+                    long fileSizeInBytes = file.length();
+                    long fileSizeInKB = fileSizeInBytes / 1024;
+                    long fileSizeInMB = fileSizeInKB / 1024;
+
+
+                    if (fileSizeInMB >= 15) {
+                        Toast.makeText(this, "Video files lesser than 15MB are allowed", Toast.LENGTH_LONG).show();
+
+                    } else {
+                        Uri uri = Uri.parse(getIntent().getStringExtra("message"));
+
+
+                        MessageModel model = new MessageModel(1190, sender, "null", uri.toString(), "video", 100, simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
+
+                        if (chats.size() != 0) {
+                            if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                                MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                                int id = Handler.addMessage(messageModel);
+                                messageModel.setId(id);
+                                chats.add(messageModel);
+                            }
+                        } else {
+                            if ((!(defaultvalue.equals("private")))) {
+                                MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                                int id = Handler.addMessage(messageModel);
+                                messageModel.setId(id);
+                                chats.add(messageModel);
+                            }
+                        }
+                        int id = Handler.addMessage(model);
+                        model.setId(id);
+                        chats.add(model);
+                        if(!Messages.isComputingLayout())
+                            adapter.notifyItemInserted(chats.size() - 1);
+                    }
+                }
+            }
         }
 
     }
@@ -2139,6 +2283,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 if (data.getClipData() != null) {
 
                     if (data.getClipData().getItemCount() <= 5) {
+                        ApplicationClass.messagesent=1;
 
                         for (int i = 0; i < data.getClipData().getItemCount(); i++) {
 
@@ -2191,6 +2336,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     }
                 } else {
 
+                    ApplicationClass.messagesent=1;
                     Uri videoURI = data.getData();
                     File file = new File(getPath(MessageActivity2.this, videoURI));
 
@@ -2723,6 +2869,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         long millis = System.currentTimeMillis();
         java.sql.Date date1 = new java.sql.Date(millis);
 
+        ApplicationClass.messagesent=1;
         MessageModel model = new MessageModel(-349,sender,"null",uri+" "+url,
                 "sticker",300,simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
 
@@ -2757,6 +2904,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         long millis = System.currentTimeMillis();
         java.sql.Date date1 = new java.sql.Date(millis);
+        ApplicationClass.messagesent=1;
 
         MessageModel model = new MessageModel(-349,sender,"null",uri+" "+url,
                 "gif",200,simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
@@ -2792,6 +2940,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             String filePath = getPath(MessageActivity2.this,uris[0]);
             Bitmap scaledBitmap = null;
 
+            ApplicationClass.messagesent=1;
             BitmapFactory.Options options = new BitmapFactory.Options();
 
 //      by setting this field as true, the actual bitmap pixels are not loaded in the memory. Just the bounds are loaded. If
