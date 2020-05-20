@@ -48,8 +48,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
         SharedPreferences preftheme;
         preftheme=context.getSharedPreferences("theme",0);
 
-
-
         String theme=preftheme.getString("theme","red");
 
         switch (theme)
@@ -222,7 +220,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
                 @Override
                 public void onClick(View view) {
 
-                    Activity.onImageSelected(holder.getAdapterPosition());
+                    if(listFiltered.get(holder.getAdapterPosition()).getGroupname()==null)
+                        Activity.onItemSelected(listFiltered.get(holder.getAdapterPosition()).getPh_number());
+                    else
+                        Activity.onItemSelected(listFiltered.get(holder.getAdapterPosition()).getGroupkey());
                 }
             });
         }
@@ -292,7 +293,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
         holder.innerConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Activity.onItemSelected(holder.getAdapterPosition());
+                if(listFiltered.get(holder.getAdapterPosition()).getGroupname()==null)
+                    Activity.onItemSelected(listFiltered.get(holder.getAdapterPosition()).getPh_number());
+                else
+                    Activity.onItemSelected(listFiltered.get(holder.getAdapterPosition()).getGroupkey());
             }
         });
 
@@ -343,8 +347,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
 
     public interface itemSelected
     {
-        public void onItemSelected(int index);
-        public void onImageSelected(int index);
+        public void onItemSelected(String key);
+        public void onImageSelected(String key);
     }
 
     public UserAdapter(@NonNull Context context, ArrayList<UserDetailwithUrl>list) {

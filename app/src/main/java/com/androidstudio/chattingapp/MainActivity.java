@@ -1600,7 +1600,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
    // }
 
     @Override
-    public void onItemSelected(int index) {
+    public void onItemSelected(String key) {
+
+        int index = keyid.indexOf(key);
 
         keyid2=keyid.get(index);
 
@@ -1647,7 +1649,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     }
 
     @Override
-    public void onImageSelected(int index) {
+    public void onImageSelected(String key) {
+
+        int index = keyid.indexOf(key);
 
         if(!contacts1.get(index).getUrl().equals("null")) {
             Intent intent = new Intent(MainActivity.this, ShowImage.class);
