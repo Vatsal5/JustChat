@@ -221,9 +221,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
                 public void onClick(View view) {
 
                     if(listFiltered.get(holder.getAdapterPosition()).getGroupname()==null)
-                        Activity.onItemSelected(listFiltered.get(holder.getAdapterPosition()).getPh_number());
+                        Activity.onImageSelected(listFiltered.get(holder.getAdapterPosition()).getPh_number());
                     else
-                        Activity.onItemSelected(listFiltered.get(holder.getAdapterPosition()).getGroupkey());
+                        Activity.onImageSelected(listFiltered.get(holder.getAdapterPosition()).getGroupkey());
                 }
             });
         }
