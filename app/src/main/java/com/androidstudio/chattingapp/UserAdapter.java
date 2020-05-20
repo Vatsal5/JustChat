@@ -6,14 +6,13 @@ import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -21,17 +20,17 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
+public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> implements Filterable {
 
      Context context;
     itemSelected Activity;
     FirebaseDatabase database;
     String defaultvalue;
 
-     final ArrayList<UserDetailwithUrl> list;
+     ArrayList<UserDetailwithUrl> listFiltered;
+     ArrayList<UserDetailwithUrl> list;
 
      SharedPreferences mode;
 
@@ -127,17 +126,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
         database=FirebaseDatabase.getInstance();
 
-        if(list.get(holder.getAdapterPosition()).getGroupname()==null)
-            defaultvalue = mode.getString("mode" + list.get(holder.getAdapterPosition()).getPh_number(), "null");
+        if(listFiltered.get(holder.getAdapterPosition()).getGroupname()==null)
+            defaultvalue = mode.getString("mode" + listFiltered.get(holder.getAdapterPosition()).getPh_number(), "null");
         else
-            defaultvalue = mode.getString("mode" + list.get(holder.getAdapterPosition()).getGroupkey(), "null");
+            defaultvalue = mode.getString("mode" + listFiltered.get(holder.getAdapterPosition()).getGroupkey(), "null");
 
         if(!defaultvalue.equals("private") && !defaultvalue.equals("null")) {
-            if (!(list.get(position).getTime().equals("null"))) {
-                if (list.get(holder.getAdapterPosition()).getGroupname() != null)
-                    holder.time.setText(list.get(holder.getAdapterPosition()).getTime().substring(0, 5));
+            if (!(listFiltered.get(position).getTime().equals("null"))) {
+                if (listFiltered.get(holder.getAdapterPosition()).getGroupname() != null)
+                    holder.time.setText(listFiltered.get(holder.getAdapterPosition()).getTime().substring(0, 5));
                 else
-                    holder.time.setText(list.get(holder.getAdapterPosition()).getTime());
+                    holder.time.setText(listFiltered.get(holder.getAdapterPosition()).getTime());
             } else {
                 holder.time.setText("");
             }
@@ -149,38 +148,38 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
 
         if(!defaultvalue.equals("private") && !defaultvalue.equals("null")) {
-            if (!(list.get(position).getLastmessage().equals(" ")) && !(list.get(position).getLastmessage().equals("null")) && !(list.get(position).getLastmessage().equals("  ")) && !(list.get(position).getLastmessage().equals("   "))
-                    && !(list.get(position).getLastmessage().equals("    "))) {
+            if (!(listFiltered.get(position).getLastmessage().equals(" ")) && !(listFiltered.get(position).getLastmessage().equals("null")) && !(listFiltered.get(position).getLastmessage().equals("  ")) && !(listFiltered.get(position).getLastmessage().equals("   "))
+                    && !(listFiltered.get(position).getLastmessage().equals("    "))) {
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
 
-                if (list.get(position).getLastmessage().length() > 20) {
-                    holder.tvlastmessage.setText(list.get(position).getLastmessage().substring(0, 20) + "..");
+                if (listFiltered.get(position).getLastmessage().length() > 20) {
+                    holder.tvlastmessage.setText(listFiltered.get(position).getLastmessage().substring(0, 20) + "..");
                 } else {
-                    holder.tvlastmessage.setText(list.get(position).getLastmessage());
+                    holder.tvlastmessage.setText(listFiltered.get(position).getLastmessage());
                 }
                 holder.ivImage.setVisibility(View.GONE);
-            } else if (list.get(position).getLastmessage().equals(" ")) {
+            } else if (listFiltered.get(position).getLastmessage().equals(" ")) {
                 holder.ivImage.setVisibility(View.VISIBLE);
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
                 holder.ivImage.setImageResource(R.drawable.image);
 
                 holder.tvlastmessage.setText("Image");
 
-            } else if (list.get(position).getLastmessage().equals("   ")) {
+            } else if (listFiltered.get(position).getLastmessage().equals("   ")) {
                 holder.ivImage.setVisibility(View.VISIBLE);
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
                 holder.ivImage.setImageResource(R.drawable.gif);
 
                 holder.tvlastmessage.setText("GIF");
 
-            } else if (list.get(position).getLastmessage().equals("    ")) {
+            } else if (listFiltered.get(position).getLastmessage().equals("    ")) {
                 holder.ivImage.setVisibility(View.VISIBLE);
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
                 holder.ivImage.setImageResource(R.drawable.gif);
 
                 holder.tvlastmessage.setText("Sticker");
 
-            } else if (list.get(position).getLastmessage().equals("  ")) {
+            } else if (listFiltered.get(position).getLastmessage().equals("  ")) {
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
                 holder.ivImage.setImageResource(R.drawable.video);
                 holder.tvlastmessage.setText("Video");
@@ -196,11 +195,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             holder.ivImage.setVisibility(View.GONE);
             holder.tvlastmessage.setVisibility(View.GONE);
         }
-       // Log.d("asdf",list.get(position).getUrl());
+       // Log.d("asdf",listFiltered.get(position).getUrl());
 
-        if(list.get(position).getUrl().equals("null")) {
+        if(listFiltered.get(position).getUrl().equals("null")) {
 
-            if(list.get(position).getGroupname()==null) {
+            if(listFiltered.get(position).getGroupname()==null) {
                 holder.iv.setImageResource(R.drawable.person);
 
 //
@@ -218,7 +217,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
 
 
-            Glide.with(context).load(list.get(holder.getAdapterPosition()).getUrl()).into(holder.iv);
+            Glide.with(context).load(listFiltered.get(holder.getAdapterPosition()).getUrl()).into(holder.iv);
             holder.iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -228,9 +227,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
             });
         }
 
-//        if(list.get(position).getGroupname()==null) {
+//        if(listFiltered.get(position).getGroupname()==null) {
 //
-//            dbreference.child("UserStatus").child(Check(list.get(position).getPh_number())).addValueEventListener(new ValueEventListener() {
+//            dbreference.child("UserStatus").child(Check(listFiltered.get(position).getPh_number())).addValueEventListener(new ValueEventListener() {
 //                @Override
 //                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 //                    if (dataSnapshot.getValue() != null) {
@@ -249,43 +248,43 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 //            });
 //        }
 
-        if(list.get(position).getStatus()!=null)
+        if(listFiltered.get(position).getStatus()!=null)
         {
-            if(list.get(position).getStatus().equals("online"))
+            if(listFiltered.get(position).getStatus().equals("online"))
                 holder.ivBackground.setBackgroundResource(R.drawable.orange);
             else
                 holder.ivBackground.setBackgroundResource(R.drawable.white);        }
 
-        if(list.get(position).getuID().equals(""))
+        if(listFiltered.get(position).getuID().equals(""))
         {
-            holder.tvUserName.setText(list.get(position).getPh_number());
+            holder.tvUserName.setText(listFiltered.get(position).getPh_number());
 
         }
         else{
-            holder.tvUserName.setText(list.get(position).getuID());
+            holder.tvUserName.setText(listFiltered.get(position).getuID());
 
         }
 
-        if(list.get(position).getGroupname()==null)
+        if(listFiltered.get(position).getGroupname()==null)
         {
-            if(list.get(position).getMessagenum() > 2)
+            if(listFiltered.get(position).getMessagenum() > 2)
             {
-                holder.tvMessageNum.setText(list.get(position).getMessagenum()-2+"");
+                holder.tvMessageNum.setText(listFiltered.get(position).getMessagenum()-2+"");
                 holder.tvMessageNum.setVisibility(View.VISIBLE);
             }
             else{
-                // holder.tvMessageNum.setText(list.get(position).getMessagenum()-2+"");
+                // holder.tvMessageNum.setText(listFiltered.get(position).getMessagenum()-2+"");
                 holder.tvMessageNum.setVisibility(View.GONE);
             }
         }
         else {
             holder.ivBackground.setBackgroundResource(R.drawable.white);
 
-        if (list.get(position).getMessagenum() > 2) {
-                holder.tvMessageNum.setText(list.get(position).getMessagenum()-2 + "");
+        if (listFiltered.get(position).getMessagenum() > 2) {
+                holder.tvMessageNum.setText(listFiltered.get(position).getMessagenum()-2 + "");
                 holder.tvMessageNum.setVisibility(View.VISIBLE);
             } else {
-                // holder.tvMessageNum.setText(list.get(position).getMessagenum()-2+"");
+                // holder.tvMessageNum.setText(listFiltered.get(position).getMessagenum()-2+"");
                 holder.tvMessageNum.setVisibility(View.GONE);
             }
         }
@@ -306,7 +305,40 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return listFiltered.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String query = charSequence.toString();
+
+                ArrayList<UserDetailwithUrl> filtered = new ArrayList<>();
+
+                if (query.isEmpty()) {
+                    filtered = list;
+                } else {
+                    for (UserDetailwithUrl user : list) {
+                        if (user.getuID().toLowerCase().contains(query.toLowerCase()) ||(user.getGroupname()==null && user.getPh_number().contains(query))) {
+                            filtered.add(user);
+                        }
+                    }
+                }
+
+                FilterResults results = new FilterResults();
+                results.count = filtered.size();
+                results.values = filtered;
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults results) {
+                listFiltered = (ArrayList<UserDetailwithUrl>) results.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     public interface itemSelected
@@ -319,6 +351,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> {
 
 
         this.context = context;
+        this.listFiltered = list;
         this.list = list;
         Activity = (itemSelected) context;
 

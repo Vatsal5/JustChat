@@ -60,7 +60,7 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> {
             reference=database.getReference();
             TextView tvStatus= v.findViewById(R.id.tvstatus);
             ivSelected=v.findViewById(R.id.ivSelected);
-           // Log.d("tag",list.get(position).getUrl());
+           // Log.d("tag",FilteredList.get(position).getUrl());
 
 
             if(list.get(position).getSelected()==1)
