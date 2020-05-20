@@ -28,6 +28,7 @@ public class ApplicationClass extends Application
     public static Context MessageActivity2Context;
     public static String url,rename;
     public static DBHandler Handler;
+    public  static int messagesent;
     public static ArrayList<String>members,groupmembers;
     public static ArrayList<String>PendingRequests;
     public static ArrayList<UserDetail>Contacts;
@@ -128,6 +129,7 @@ public class ApplicationClass extends Application
     public void onCreate() {
         super.onCreate();
         rename=null;
+        messagesent=0;
 
 //        if(FirebaseAuth.getInstance().getCurrentUser())
 //        {

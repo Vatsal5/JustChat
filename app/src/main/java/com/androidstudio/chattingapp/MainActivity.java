@@ -1671,6 +1671,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             userAdapter.notifyItemChanged(l);
         }
 
+
+
 //        if(ApplicationClass.create==1)
 //        {
 //
@@ -1856,6 +1858,22 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         }
 
+        if(ApplicationClass.messagesent==1)
+        {
+            ApplicationClass.messagesent=0;
+            UserDetailwithUrl userDetailwithUrl;
+
+            userDetailwithUrl=contacts1.get(l);
+            String key=keyid.get(l);
+            contacts1.remove(l);
+            keyid.remove(l);
+            userAdapter.notifyDataSetChanged();
+            contacts1.add(0,userDetailwithUrl);
+            keyid.add(0,key);
+
+            userAdapter.notifyDataSetChanged();
+        }
+
         if(flag==true)
         {
             flag=false;
@@ -1906,7 +1924,20 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onStop() {
         super.onStop();
 
+        if(flag==true)
+        {
+            contacts1.get(l).setMessagenum(2);
+            userAdapter.notifyItemChanged(l);
+        }
+        if(flag2==true)
+        {
+            if(l<=(contacts1.size()-1)) {
 
+                contacts1.get(l).setMessagenum(2);
+                userAdapter.notifyItemChanged(l);
+            }
+
+        }
 
     }
 }

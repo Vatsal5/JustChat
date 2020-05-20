@@ -283,7 +283,9 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        offsetRef.removeEventListener(datecheck);
+        if(isConnected()) {
+            offsetRef.removeEventListener(datecheck);
+        }
 
     }
 }

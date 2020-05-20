@@ -165,6 +165,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     ArrayList<String> gifurl;
 
     StorageReference rf;
+    SharedPreferences messagesent;
     int messagecount;
     ConstraintLayout llMessageActivity;
     LinearLayout ll;
@@ -331,6 +332,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+
 
         RecieverPhone = getIntent().getStringExtra("phone");
         ApplicationClass.CurrentReceiver = RecieverPhone;
@@ -860,6 +862,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     Toast.makeText(MessageActivity.this, "Please enter a message", Toast.LENGTH_LONG).show();
                 else {
 
+                    ApplicationClass.messagesent=1;
                     Date date = new Date();
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
                     long millis = System.currentTimeMillis();
@@ -2181,6 +2184,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                 if(data.getClipData() != null) {
 
                     if(data.getClipData().getItemCount()<=5) {
+                        ApplicationClass.messagesent=1;
 
                         for (int i = 0; i < data.getClipData().getItemCount(); i++) {
                             ClipData.Item videoItem = data.getClipData().getItemAt(i);
@@ -2246,6 +2250,7 @@ if(getIntent().getIntExtra("path",1)==2) {
                 else {
                     Uri videoURI = data.getData();
 
+                    ApplicationClass.messagesent=1;
 
                     File file = new File(getPath(MessageActivity.this,videoURI));
 
@@ -2417,6 +2422,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         protected Uri doInBackground(Uri... uris) {
             String filePath = getPath(MessageActivity.this,uris[0]);
             Bitmap scaledBitmap = null;
+            ApplicationClass.messagesent=1;
 
             BitmapFactory.Options options = new BitmapFactory.Options();
 
@@ -2742,6 +2748,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         long millis = System.currentTimeMillis();
         java.sql.Date date1 = new java.sql.Date(millis);
 
+        ApplicationClass.messagesent=1;
         MessageModel model = new MessageModel(-349,sender,RecieverPhone,uri+" "+url,
                 "sticker",300,simpleDateFormat.format(date).substring(0, 5), date1.toString(), "null","null");
 
@@ -2833,6 +2840,7 @@ if(getIntent().getIntExtra("path",1)==2) {
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
 
+        ApplicationClass.messagesent=1;
         long millis = System.currentTimeMillis();
         java.sql.Date date1 = new java.sql.Date(millis);
 
