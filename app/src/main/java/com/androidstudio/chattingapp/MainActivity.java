@@ -40,6 +40,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -110,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     String currentUserNumber;
     DatabaseReference reference;
 
+    SearchView searchView;
+
 
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -145,6 +148,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //
 //            } else
 //                llSplash.setVisibility(View.GONE);
+
+        searchView = findViewById(R.id.SearchView);
 
         keyid= new ArrayList<>();
             toolbar = findViewById(R.id.toolbar);
@@ -249,6 +254,20 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
                 break;
         }
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                userAdapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                userAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
 
         ivOptions.setOnClickListener(new View.OnClickListener() {
             @Override
