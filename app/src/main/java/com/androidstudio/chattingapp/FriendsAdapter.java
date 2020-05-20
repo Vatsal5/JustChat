@@ -129,12 +129,17 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> implement
                     FilterResults results = new FilterResults();
                     results.count = filtered.size();
                     results.values = filtered;
+
+                    for(int i=0;i<filtered.size();i++)
+                        Log.d("hhjj",filtered.get(i).getuID());
+
                     return results;
                 }
 
                 @Override
                 protected void publishResults(CharSequence charSequence, FilterResults results) {
-                    Filteredlist = (ArrayList<UserDetailWithStatus>) results.values;
+                    Filteredlist.clear();
+                    Filteredlist.addAll((ArrayList<UserDetailWithStatus>) results.values);
                     notifyDataSetChanged();
                 }
             };
