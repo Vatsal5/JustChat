@@ -119,7 +119,7 @@ public class FriendsAdapter extends ArrayAdapter<UserDetailWithStatus> implement
             if (constraint != null && constraint.length() > 0) {
                 ArrayList<UserDetailWithStatus> filterList = new ArrayList<>();
                 for (int i = 0; i < Originallist.size(); i++) {
-                    if ((Originallist.get(i).getuID().toUpperCase()).contains(constraint.toString().toUpperCase())) {
+                    if ((Originallist.get(i).getuID().toUpperCase()).contains(constraint.toString().toUpperCase()) || Originallist.get(i).getPh_number().contains(constraint)) {
                         filterList.add(Originallist.get(i));
                     }
                 }
