@@ -373,7 +373,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         if(isConnected()) {
-                            if(!etTitle.getText().toString().isEmpty()) {
+                            if(!etTitle.getText().toString().trim().isEmpty()) {
                                 data.remove(index);
                                 databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("name").setValue(etTitle.getText().toString().trim());
                                 data.add(index, etTitle.getText().toString().trim());
