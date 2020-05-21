@@ -79,11 +79,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.viewhold
     @Override
     public void onBindViewHolder(@NonNull final viewholder holder, int position) {
 
-        Log.d("asdf",position+"");
-            if (Filteredlist.get(position).getSelected() == 1) {
+
+            if (Filteredlist.get(holder.getAdapterPosition()).getSelected() == 1) {
                 holder.ivSelected.setVisibility(View.VISIBLE);
             }
-            if (Filteredlist.get(position).getUrl().equals("null")) {
+            if (Filteredlist.get(holder.getAdapterPosition()).getUrl().equals("null")) {
                 holder.iv.setImageResource(R.drawable.person);
 //
             } else {
@@ -98,9 +98,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.viewhold
                 holder.tvUserName.setText(Filteredlist.get(position).getPh_number());
             else
                 holder.tvUserName.setText(Filteredlist.get(position).getuID());
-            if (Filteredlist.get(position).getStatus().equals("")) {
-                holder.tvStatus.setVisibility(View.GONE);
-            } else
+//            if (Filteredlist.get(position).getStatus().equals("")) {
+//                holder.tvStatus.setVisibility(View.GONE);
+//            } else
                 holder.tvStatus.setText(Filteredlist.get(position).getStatus());
 
             holder.llfl.setOnClickListener(new View.OnClickListener() {

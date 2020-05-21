@@ -637,15 +637,17 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
 
 
-            if(contacts1.get(index).getSelected()==0) {
-                contacts1.get(index).setSelected(1);
+            if(contacts1.get(keyid.indexOf(key)).getSelected()==0) {
+                contacts1.get(keyid.indexOf(key)).setSelected(1);
                 z++;
+                userAdapter.notifyItemChanged(keyid.indexOf(key));
             }
             else {
-                contacts1.get(index).setSelected(0);
+                contacts1.get(keyid.indexOf(key)).setSelected(0);
                 z--;
+                userAdapter.notifyItemChanged(keyid.indexOf(key));
             }
-            userAdapter.notifyDataSetChanged();
+
 
             if(z>=2) {
                 tvCreateGroup.setVisibility(View.VISIBLE);
@@ -680,7 +682,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             contacts1.get(index).setSelected(0);
 z1--;
         }
-        userAdapter.notifyDataSetChanged();
+        userAdapter.notifyItemChanged(index);
         tvCreateGroup.setText("ADD");
     }
     else{
