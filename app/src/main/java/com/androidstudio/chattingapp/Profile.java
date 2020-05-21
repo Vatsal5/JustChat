@@ -373,11 +373,14 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         if(isConnected()) {
-
-                            data.remove(index);
-                            databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("name").setValue(etTitle.getText().toString().trim());
-                            data.add(index, etTitle.getText().toString().trim());
-                            adapter.notifyDataSetChanged();
+                            if(!etTitle.getText().toString().isEmpty()) {
+                                data.remove(index);
+                                databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("name").setValue(etTitle.getText().toString().trim());
+                                data.add(index, etTitle.getText().toString().trim());
+                                adapter.notifyDataSetChanged();
+                            }
+                            else
+                                Toast.makeText(Profile.this, "Please enter name", Toast.LENGTH_SHORT).show();
                         }
                         else
                             showInternetWarning();
@@ -411,10 +414,14 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         if (isConnected()) {
-                            data.remove(index);
-                            databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("status").setValue(etStatus.getText().toString().trim());
-                            data.add(index, etStatus.getText().toString().trim());
-                            adapter.notifyDataSetChanged();
+                            if(!etStatus.getText().toString().trim().isEmpty()) {
+                                data.remove(index);
+                                databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("status").setValue(etStatus.getText().toString().trim());
+                                data.add(index, etStatus.getText().toString().trim());
+                                adapter.notifyDataSetChanged();
+                            }
+                            else
+                                Toast.makeText(Profile.this, "Please enter status", Toast.LENGTH_SHORT).show();
                         }
                         else
                             showInternetWarning();

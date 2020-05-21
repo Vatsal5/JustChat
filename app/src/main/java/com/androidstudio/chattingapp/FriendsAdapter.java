@@ -80,7 +80,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.viewhold
     public void onBindViewHolder(@NonNull final viewholder holder, int position) {
 
         Log.d("asdf",position+"");
-        if(position<Filteredlist.size()) {
             if (Filteredlist.get(position).getSelected() == 1) {
                 holder.ivSelected.setVisibility(View.VISIBLE);
             }
@@ -115,7 +114,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.viewhold
             });
         }
 
-    }
 
 
     @Override
@@ -139,7 +137,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.viewhold
             if (constraint != null && constraint.length() > 0) {
                 ArrayList<UserDetailWithStatus> filterList = new ArrayList<>();
                 for (int i = 0; i < Originallist.size(); i++) {
-                    if ((Originallist.get(i).getuID().toUpperCase()).contains(constraint.toString().toUpperCase()) || Originallist.get(i).getPh_number().contains(constraint)) {
+                    if ((Originallist.get(i).getuID().toUpperCase()).contains(constraint.toString().toUpperCase()) || (Originallist.get(i).getKey() ==null &&Originallist.get(i).getPh_number().contains(constraint))) {
                         filterList.add(Originallist.get(i));
                     }
                 }
