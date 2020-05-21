@@ -100,10 +100,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.viewhold
                 holder.tvUserName.setText(Filteredlist.get(position).getPh_number());
             else
                 holder.tvUserName.setText(Filteredlist.get(position).getuID());
-//            if (Filteredlist.get(position).getStatus().equals("")) {
-//                holder.tvStatus.setVisibility(View.GONE);
-//            } else
+            if (Filteredlist.get(position).getStatus().equals("")) {
+                holder.tvStatus.setVisibility(View.GONE);
+            } else {
+                holder.tvStatus.setVisibility(View.VISIBLE);
                 holder.tvStatus.setText(Filteredlist.get(position).getStatus());
+            }
 
             holder.llfl.setOnClickListener(new View.OnClickListener() {
                 @Override
