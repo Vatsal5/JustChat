@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     String keyid2;
     LinearLayoutManager linearLayoutManager;
 
+    SharedPreferences GroupStatus;
+
     ArrayList<MessageModel> chats;
     RecyclerView lv;
     FirebaseDatabase database;
@@ -150,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                llSplash.setVisibility(View.GONE);
 
         searchView = findViewById(R.id.SearchView);
+        GroupStatus = getSharedPreferences("groupstatus",0);
 
         keyid= new ArrayList<>();
             toolbar = findViewById(R.id.toolbar);
@@ -1641,6 +1644,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             intent.putExtra("groupName",contacts1.get(index).getuID());
             intent.putExtra("groupkey",contacts1.get(index).getGroupkey());
             intent.putExtra("messagecount",contacts1.get(index).getMessagenum());
+            intent.putExtra("status",GroupStatus.getString(contacts1.get(index).getGroupkey(),"null"));
 
             intent.putExtra("profile",contacts1.get(index).getUrl());
             startActivity(intent);

@@ -142,7 +142,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     SearchView searchview;
 
-
+    SharedPreferences GroupStatus;
 
     LinearLayoutManager manager;
     MessageAdapter adapter;
@@ -283,9 +283,15 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         received = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/received"));
 
         Names = getSharedPreferences("Names",0);
+        GroupStatus = getSharedPreferences("groupstatus",0);
+
+        ll=findViewById(R.id.ll);
+
+        if(getIntent().getStringExtra("status").equals("deleted"))
+            ll.setVisibility(View.GONE);
+
 
         ivProfile=findViewById(R.id.ivProfile);
-        ll=findViewById(R.id.ll);
         messageActivity2=this;
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
@@ -413,8 +419,33 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                ll.setVisibility(View.GONE);
+                Boolean condition = false;
 
+                if(chats.size()==0)
+                    condition=true;
+                else
+                {
+                    if(!chats.get(chats.size()-1).getType().equals("grpinfo") && !chats.get(chats.size()-1).getMessage().equals("This group has been deleted"))
+                        condition=true;
+                }
+
+                if(condition) {
+
+                    ll.setVisibility(View.GONE);
+                    GroupStatus.edit().putString(groupKey, "deleted").apply();
+                    MessageModel messageModel = new MessageModel(-347, "null", "null", "This group has been deleted", "grpinfo", 9876, "null", "null", groupKey, "null");
+
+                    if (chats.size() != 0)
+                        messageModel.setDate(chats.get(chats.size() - 1).getDate());
+
+                    int id = Handler.addMessage(messageModel);
+                    messageModel.setId(id);
+
+                    chats.add(messageModel);
+
+                    if (!Messages.isComputingLayout())
+                        adapter.notifyItemInserted(chats.size() - 1);
+                }
 
             }
 
@@ -633,15 +664,21 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MessageActivity2.this,GroupDetails.class);
-                if(ApplicationClass.RenameGroup==null){
-                    intent.putExtra("groupName",groupName);
+
+                if (!GroupStatus.getString(groupKey, "null").equals("deleted")) {
+
+                    Intent intent = new Intent(MessageActivity2.this, GroupDetails.class);
+                    if (ApplicationClass.RenameGroup == null) {
+                        intent.putExtra("groupName", groupName);
+                    } else {
+                        intent.putExtra("groupName", ApplicationClass.RenameGroup);
+                    }
+                    intent.putExtra("groupkey", groupKey);
+                    intent.putExtra("profile", getIntent().getStringExtra("profile"));
+                    startActivity(intent);
                 }
                 else
-                { intent.putExtra("groupName",ApplicationClass.RenameGroup);}
-                intent.putExtra("groupkey",groupKey);
-                intent.putExtra("profile",getIntent().getStringExtra("profile"));
-                startActivity(intent);
+                    Toast.makeText(MessageActivity2.this, "No details to show", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -1184,12 +1221,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 String status=dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf(" "));
                 String detail=dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf(" ")+1);
                 dataSnapshot.getRef().removeValue();
-
-                Date date = new Date();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
-
-                long millis = System.currentTimeMillis();
-                java.sql.Date date1 = new java.sql.Date(millis);
 
                 MessageModel messageModel = new MessageModel(-347,"null","null","","grpinfo",9876,"null","null", groupKey,"null");
 
