@@ -83,6 +83,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.viewhold
             if (Filteredlist.get(holder.getAdapterPosition()).getSelected() == 1) {
                 holder.ivSelected.setVisibility(View.VISIBLE);
             }
+            else
+                holder.ivSelected.setVisibility(View.GONE);
             if (Filteredlist.get(holder.getAdapterPosition()).getUrl().equals("null")) {
                 holder.iv.setImageResource(R.drawable.person);
 //
