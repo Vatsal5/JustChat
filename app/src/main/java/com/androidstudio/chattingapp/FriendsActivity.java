@@ -548,29 +548,30 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                            contacts1.add(new UserDetailWithStatus(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", ""
-                                    , 0,dataSnapshot.getKey()));
-                            keyid.add(dataSnapshot.getKey());
-                            userAdapter.notifyItemInserted(contacts1.size()-1);
+                            if(!(dataSnapshot.getValue().toString().length()>10  &&  dataSnapshot.getValue().toString().substring(0,10).equals("/*delete*/")) ){
+                                contacts1.add(new UserDetailWithStatus(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", ""
+                                        , 0, dataSnapshot.getKey()));
+                                keyid.add(dataSnapshot.getKey());
+                                userAdapter.notifyItemInserted(contacts1.size() - 1);
 
 
-                            reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
-                                    new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            if(dataSnapshot.exists())
-                                            {
-                                                contacts1.get(contacts1.size()-1).setUrl(dataSnapshot.getValue().toString());
-                                                userAdapter.notifyItemChanged(contacts1.size()-1);
+                                reference.child("groups").child(dataSnapshot.getKey()).child("profile").addValueEventListener(
+                                        new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                if (dataSnapshot.exists()) {
+                                                    contacts1.get(contacts1.size() - 1).setUrl(dataSnapshot.getValue().toString());
+                                                    userAdapter.notifyItemChanged(contacts1.size() - 1);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
                                             }
                                         }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    }
-                            );
+                                );
+                            }
 
                         }
 

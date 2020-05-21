@@ -400,40 +400,40 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                             progressDialog.setMessage("Please Wait");
                             progressDialog.show();
 
-//                        DeleteGroup = new ChildEventListener() {
-//                            @Override
-//                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                                FirebaseDatabase.getInstance().getReference().child("users").
-//                                        child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).getRef().removeValue();
-//                                MessageActivity2.getInstance().finish();
-//
-//                               // FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").removeEventListener(DeleteGroup);
-//                            }
-//
-//
-//                            @Override
-//                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                            }
-//
-//                            @Override
-//                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//                            }
-//
-//                            @Override
-//                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                            }
-//                        };
-//
-//
-//                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(DeleteGroup);
+                        DeleteGroup = new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                FirebaseDatabase.getInstance().getReference().child("users").
+                                        child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).setValue("/*delete*/"+getIntent().getStringExtra("groupName"));
+                                MessageActivity2.getInstance().finish();
+
+                               // FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").removeEventListener(DeleteGroup);
+                            }
+
+
+                            @Override
+                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                            }
+
+                            @Override
+                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                            }
+
+                            @Override
+                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        };
+
+
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(DeleteGroup);
 
 //                        StorageReference file1;
 //                        file1=FirebaseStorage.getInstance().getReferenceFromUrl(FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members"));

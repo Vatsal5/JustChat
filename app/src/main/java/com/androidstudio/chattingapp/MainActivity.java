@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     String keyid2;
     LinearLayoutManager linearLayoutManager;
 
-    SharedPreferences GroupStatus;
+
 
     ArrayList<MessageModel> chats;
     RecyclerView lv;
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                llSplash.setVisibility(View.GONE);
 
         searchView = findViewById(R.id.SearchView);
-        GroupStatus = getSharedPreferences("groupstatus",0);
+
 
         keyid= new ArrayList<>();
             toolbar = findViewById(R.id.toolbar);
@@ -1347,40 +1347,65 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
-                if (Handler.getGroupMessages(dataSnapshot.getKey(), 0).first.size() > 0) {
-                    contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
-                            , Handler.getLastMessageGroup(dataSnapshot.getKey()),
-                            Handler.getLastGroupMessageTime(dataSnapshot.getKey()), dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
-                    userAdapter.notifyItemInserted(contacts1.size() - 1);
-                    keyid.add(dataSnapshot.getKey());
-                    grouplistener grouplistener=new grouplistener(contacts1.size()-1,dataSnapshot.getKey());
-
-                    grouplistener.piclistener();
-                    grouplistener.VideoListener();
-                    grouplistener.child();
-                    grouplistener.gifListener();
-                    grouplistener.stickerListener();
-
-                    grouplistener.ProfileListener();
+                if(dataSnapshot.getValue().toString().length()>10  &&  dataSnapshot.getValue().toString().substring(0,10).equals("/*delete*/")) {
+                    if (Handler.getGroupMessages(dataSnapshot.getKey(), 0).first.size() > 0) {
+                        contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString().substring(10), "null", 2
+                                , Handler.getLastMessageGroup(dataSnapshot.getKey()),
+                                Handler.getLastGroupMessageTime(dataSnapshot.getKey()), dataSnapshot.getKey(), dataSnapshot.getValue().toString().substring(10)));
+                        userAdapter.notifyItemInserted(contacts1.size() - 1);
+                        contacts1.get(contacts1.size()-1).setStatus("delete");
+                        keyid.add(dataSnapshot.getKey());
 
 
-                } else {
-                    contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
-                            , "null",
-                            "null", dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
-                    userAdapter.notifyItemInserted(contacts1.size() - 1);
-                    keyid.add(dataSnapshot.getKey());
-                    grouplistener grouplistener=new grouplistener(contacts1.size()-1,dataSnapshot.getKey());
-                    grouplistener.piclistener();
-                    grouplistener.VideoListener();
-                    grouplistener.child();
-                    grouplistener.gifListener();
-                    grouplistener.stickerListener();
 
-                    grouplistener.ProfileListener();
+                    } else {
+                        contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString().substring(10), "null", 2
+                                , "null",
+                                "null", dataSnapshot.getKey(), dataSnapshot.getValue().toString().substring(10)));
+                        userAdapter.notifyItemInserted(contacts1.size() - 1);
+                        contacts1.get(contacts1.size()-1).setStatus("delete");
+                        keyid.add(dataSnapshot.getKey());
+
+
+                    }
+
                 }
+                else {
+
+                    if (Handler.getGroupMessages(dataSnapshot.getKey(), 0).first.size() > 0) {
+                        contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
+                                , Handler.getLastMessageGroup(dataSnapshot.getKey()),
+                                Handler.getLastGroupMessageTime(dataSnapshot.getKey()), dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
+                        userAdapter.notifyItemInserted(contacts1.size() - 1);
+                        keyid.add(dataSnapshot.getKey());
+                        grouplistener grouplistener = new grouplistener(contacts1.size() - 1, dataSnapshot.getKey());
+
+                        grouplistener.piclistener();
+                        grouplistener.VideoListener();
+                        grouplistener.child();
+                        grouplistener.gifListener();
+                        grouplistener.stickerListener();
+
+                        grouplistener.ProfileListener();
 
 
+                    } else {
+                        contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
+                                , "null",
+                                "null", dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
+                        userAdapter.notifyItemInserted(contacts1.size() - 1);
+                        keyid.add(dataSnapshot.getKey());
+                        grouplistener grouplistener = new grouplistener(contacts1.size() - 1, dataSnapshot.getKey());
+                        grouplistener.piclistener();
+                        grouplistener.VideoListener();
+                        grouplistener.child();
+                        grouplistener.gifListener();
+                        grouplistener.stickerListener();
+
+                        grouplistener.ProfileListener();
+                    }
+
+                }
 
                 final String key = dataSnapshot.getKey();
                 deleteGroupimages = new ChildEventListener() {
@@ -1552,6 +1577,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
+                contacts1.get(keyid.indexOf(dataSnapshot.getKey())).setStatus("delete");
+
             }
 
             @Override
@@ -1643,8 +1670,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             Intent intent = new Intent(MainActivity.this,MessageActivity2.class);
             intent.putExtra("groupName",contacts1.get(index).getuID());
             intent.putExtra("groupkey",contacts1.get(index).getGroupkey());
+            intent.putExtra("status",contacts1.get(index).getStatus());
+
             intent.putExtra("messagecount",contacts1.get(index).getMessagenum());
-            intent.putExtra("status",GroupStatus.getString(contacts1.get(index).getGroupkey(),"null"));
+
 
             intent.putExtra("profile",contacts1.get(index).getUrl());
             startActivity(intent);

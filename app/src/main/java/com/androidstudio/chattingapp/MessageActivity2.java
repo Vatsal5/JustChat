@@ -125,7 +125,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     EmojiconEditText etMessage;
     ConstraintLayout llMessageActivity2;
     ConstraintLayout rl;
-    LinearLayout ll;
+    LinearLayout ll,ll1;
     static MessageActivity2 messageActivity2;
     StorageReference rf;
     int messagecount;
@@ -283,12 +283,19 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         received = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/received"));
 
         Names = getSharedPreferences("Names",0);
-        GroupStatus = getSharedPreferences("groupstatus",0);
-
+        ll1=findViewById(R.id.ll1);
         ll=findViewById(R.id.ll);
-
-        if(getIntent().getStringExtra("status").equals("deleted"))
+        GroupStatus = getSharedPreferences("groupstatus",0);
+        if(getIntent().getStringExtra("status")!=null)
+        {
             ll.setVisibility(View.GONE);
+            ll1.setVisibility(View.VISIBLE);
+        }
+
+
+
+//        if(getIntent().getStringExtra("status").equals("deleted"))
+//            ll.setVisibility(View.GONE);
 
 
         ivProfile=findViewById(R.id.ivProfile);
@@ -432,19 +439,20 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 if(condition) {
 
                     ll.setVisibility(View.GONE);
-                    GroupStatus.edit().putString(groupKey, "deleted").apply();
-                    MessageModel messageModel = new MessageModel(-347, "null", "null", "This group has been deleted", "grpinfo", 9876, "null", "null", groupKey, "null");
-
-                    if (chats.size() != 0)
-                        messageModel.setDate(chats.get(chats.size() - 1).getDate());
-
-                    int id = Handler.addMessage(messageModel);
-                    messageModel.setId(id);
-
-                    chats.add(messageModel);
-
-                    if (!Messages.isComputingLayout())
-                        adapter.notifyItemInserted(chats.size() - 1);
+                    ll1.setVisibility(View.VISIBLE);
+//                    GroupStatus.edit().putString(groupKey, "deleted").apply();
+//                    MessageModel messageModel = new MessageModel(-347, "null", "null", "This group has been deleted", "grpinfo", 9876, "null", "null", groupKey, "null");
+//
+//                    if (chats.size() != 0)
+//                        messageModel.setDate(chats.get(chats.size() - 1).getDate());
+//
+//                    int id = Handler.addMessage(messageModel);
+//                    messageModel.setId(id);
+//
+//                    chats.add(messageModel);
+//
+//                    if (!Messages.isComputingLayout())
+//                        adapter.notifyItemInserted(chats.size() - 1);
                 }
 
             }

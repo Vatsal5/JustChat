@@ -132,5 +132,36 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#d6514a"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#d6514a"
+            android:gravity="center"
+            android:text="This group has been deleted. You can no longer send messages in this group"
+            android:padding="10dp"
+            android:drawableRight="@drawable/attachment"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
+
+
+
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
