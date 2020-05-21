@@ -647,8 +647,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 boolean focusable = true; // lets taps outside the popup also dismiss it
                                                 popupWindow = new PopupWindow(popupView, width, height,focusable);
 
-                                                popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
-
                                                 popupWindow.setAnimationStyle(R.style.DialogTheme);
 
                                                 popupWindow.showAsDropDown(ll,0,-4*ll.getHeight()-24,Gravity.TOP);
@@ -730,8 +728,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 int height1 = LinearLayout.LayoutParams.WRAP_CONTENT;
                                                 boolean focusable1 = true; // lets taps outside the popup also dismiss it
                                                 popupWindow = new PopupWindow(popupView1, width1, height1,focusable1);
-
-                                                popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
 
                                                 popupWindow.setAnimationStyle(R.style.DialogTheme);
 
