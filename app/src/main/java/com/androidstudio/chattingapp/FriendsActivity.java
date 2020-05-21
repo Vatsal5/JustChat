@@ -28,6 +28,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -202,6 +203,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             lv.setLayoutManager(layoutManager);
         userAdapter = new FriendsAdapter(FriendsActivity.this,contacts1 );
         lv.setAdapter(userAdapter);
+        lv.addItemDecoration(new DividerItemDecoration(lv.getContext(),DividerItemDecoration.VERTICAL));
 
             if(ContextCompat.checkSelfPermission(FriendsActivity.this, Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED)
             {
