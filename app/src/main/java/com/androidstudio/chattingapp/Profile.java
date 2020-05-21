@@ -365,7 +365,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                     etTitle.setText("");
                 else
                 etTitle.setText(data.get(index));
-              //  etTitle.setSelection(data.get(index).length());
+                etTitle.setSelection(data.get(index).length());
 
                 builder.setView(v);
                 builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
