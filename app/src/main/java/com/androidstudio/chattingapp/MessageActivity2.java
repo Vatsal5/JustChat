@@ -832,7 +832,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                                 popupWindow.setAnimationStyle(R.style.DialogTheme);
 
-                                                popupWindow.showAsDropDown(ll,0,-5*ll.getHeight()-25,Gravity.TOP);
+                                                popupWindow.showAsDropDown(ll,0,-4*ll.getHeight()-24,Gravity.TOP);
                                                 searchview=popupView.findViewById(R.id.SearchView);
 
                                                 RecyclerView rvgif= popupView.findViewById(R.id.rvgif);
@@ -914,7 +914,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                                 popupWindow.setAnimationStyle(R.style.DialogTheme);
 
-                                                popupWindow.showAsDropDown(ll,0,-5*ll.getHeight()-25,Gravity.TOP);
+                                                popupWindow.showAsDropDown(ll,0,-4*ll.getHeight()-24,Gravity.TOP);
                                                 searchview=popupView1.findViewById(R.id.SearchView);
 
                                                 RecyclerView rvgif1= popupView1.findViewById(R.id.rvgif);
