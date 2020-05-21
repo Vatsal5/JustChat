@@ -1060,10 +1060,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         // to forward a message
 
-if(getIntent().getIntExtra("path",1)==2) {
-    String type = getIntent().getStringExtra("type");
-    String message1 = getIntent().getStringExtra("message");
-    ApplicationClass.messagesent=1;
+  if(getIntent().getIntExtra("path",1)==2) {
+      String type = getIntent().getStringExtra("type");
+      String message1 = getIntent().getStringExtra("message");
+
 
     if (!(type.equals(" "))) {
         Date date = new Date();

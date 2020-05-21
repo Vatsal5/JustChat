@@ -1942,7 +1942,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         if(getIntent().getIntExtra("path",1)==2) {
            final String type = getIntent().getStringExtra("type");
             String message1 = getIntent().getStringExtra("message");
-            ApplicationClass.messagesent=1;
+
             FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(
                     new ChildEventListener() {
                         @Override

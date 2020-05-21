@@ -167,6 +167,4 @@ public class ApplicationClass extends Application
         CurrentReceiver = null;
 
     }
-
-
 }
