@@ -1693,6 +1693,52 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         }
     }
 
+    @Override
+    public void onLongclick(final String key) {
+
+        if(contacts1.get(keyid.indexOf(key)).getStatus()!=null)
+        {
+            String []choices ={"Remove"};
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setItems(choices, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    switch (i){
+                        case 0:
+                            AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
+                            builder1.setMessage("Are you sure you want to remove this group");
+                            builder1.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                                            .child("groups").child(key).getRef().removeValue();
+                                    contacts1.remove(keyid.indexOf(key));
+
+                                    userAdapter.notifyItemRemoved(keyid.indexOf(key));
+                                    keyid.remove(keyid.indexOf(key));
+                                }
+                            });
+                            builder1.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+                            builder1.setCancelable(false);
+                            builder1.show();
+                            break;
+                    }
+
+
+                }
+            });
+            builder.show();
+
+        }
+
+    }
+
     public int IsValid(String number)
     {int c=0;
         for(int i=0; i<number.length();i++)

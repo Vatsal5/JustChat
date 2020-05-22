@@ -122,6 +122,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
 
         }
 
+        holder.innerConstraintLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                if(listFiltered.get(holder.getAdapterPosition()).getGroupname()!=null)
+                    Activity.onLongclick(listFiltered.get(holder.getAdapterPosition()).getGroupkey());
+                return false;
+            }
+        });
+
         database=FirebaseDatabase.getInstance();
 
         if(listFiltered.get(holder.getAdapterPosition()).getGroupname()==null)
@@ -349,6 +359,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
     {
         public void onItemSelected(String key);
         public void onImageSelected(String key);
+        public void onLongclick(String key);
     }
 
     public UserAdapter(@NonNull Context context, ArrayList<UserDetailwithUrl>list) {

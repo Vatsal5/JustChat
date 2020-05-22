@@ -205,6 +205,11 @@ public class CreateGroup extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ApplicationClass.members.clear();
+    }
 
     private void startCrop(Uri imageuri)
     {
