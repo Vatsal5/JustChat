@@ -19,7 +19,6 @@
         android:id="@+id/clPdfLeft"
         android:layout_width="250dp"
         android:layout_marginLeft="6dp"
-
         android:layout_height="wrap_content"
         android:background="@drawable/background_left"
         android:orientation="vertical"
@@ -35,7 +34,6 @@
 
             android:layout_marginTop="10dp"
             android:layout_marginRight="7dp"
-            android:background="@drawable/background_left"
             android:backgroundTint="#10ffffff"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -72,7 +70,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
-        android:text="Sorry,this video does not exist on your phone anymore"
+        android:text="Sorry,this PDF does not exist on your phone anymore"
         android:textStyle="bold"
 
         android:textColor="#FFFFFF"
@@ -90,23 +88,23 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:padding="5dp">
+
                 <ImageView
                     android:id="@+id/llDownload"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="30dp"
-                    android:src="@drawable/download"></ImageView>
+                    android:visibility="gone"
+                    android:src="@drawable/download"/>
 
                 <ProgressBar
                     android:id="@+id/progress"
-
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:visibility="gone"
                     android:layout_height="30dp"
                     android:indeterminate="true"
-                    android:indeterminateTint="#ffffff"
-                    ></ProgressBar>
+                    android:indeterminateTint="#ffffff" />
 
                 <ImageView
                     android:layout_width="30dp"
@@ -131,9 +129,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:text="12:12"
                     android:textColor="#ffffff"
-                    android:textSize="12dp"></TextView>
+                    android:textSize="12dp"/>
 
             </LinearLayout>
 
