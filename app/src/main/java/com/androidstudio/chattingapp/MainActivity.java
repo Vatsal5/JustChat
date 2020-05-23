@@ -97,8 +97,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     FirebaseDatabase database1;
     DatabaseReference reference1;
     DatabaseReference UserStatus;
-    ChildEventListener chreceiver,gifreceiver,stickerreceiver;
-    ValueEventListener dataCreater,deleteimage,deletevideo,Status;
+    ChildEventListener chreceiver,gifreceiver,stickerreceiver,pdfreceiver;
+    ValueEventListener dataCreater,deleteimage,deletevideo,deletepdf,Status;
     DBHandler Handler;
     ArrayList<String> keyid;
     String keyid2;
@@ -481,6 +481,55 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
              reference.child("UserStatus").child(contacts1.get(index).getPh_number()).addValueEventListener(Status);
          }
 
+         public void pdflistener()
+         {
+             pdfreceiver=new ChildEventListener() {
+                 @Override
+                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+
+                     UserDetailwithUrl userDetailwithUrl;
+                     int j=keyid.indexOf(key);
+
+                     userDetailwithUrl=contacts1.get(j);
+                     contacts1.remove(j);
+                     keyid.remove(j);
+                     userAdapter.notifyDataSetChanged();
+                     contacts1.add(0,userDetailwithUrl);
+                     keyid.add(0,key);
+
+                     userAdapter.notifyDataSetChanged();
+                     int i=contacts1.indexOf(userDetailwithUrl);
+                     contacts1.get(i).setLastmessage("     ");
+                     contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                     contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
+                     userAdapter.notifyItemChanged(keyid.indexOf(key));
+                 }
+
+                 @Override
+                 public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                 }
+
+                 @Override
+                 public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                 }
+
+                 @Override
+                 public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                 }
+
+                 @Override
+                 public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                 }
+             };
+
+             reference.child("users").child(contacts1.get(index).getPh_number()).child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("info").child("pdf").addChildEventListener(pdfreceiver);
+
+         }
 
          public void profilelistener()
          {
@@ -509,7 +558,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                          //   Log.d("asdf",contacts1.get(contacts1.size()-1).getUrl());
                      }
 
-                     reference.child("users").child(contacts1.get(index).getPh_number()).child("profile").removeEventListener(profile);
+
                  }
 
                  @Override
@@ -1289,6 +1338,53 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             .getPhoneNumber()).child("info").child("deletevideos").addListenerForSingleValueEvent(deletevideo);
 
 
+                    deletepdf=new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (final DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                long millis = System.currentTimeMillis();
+                                java.sql.Date date1 = new java.sql.Date(millis);
+                                Date date = null;
+                                try {
+                                    date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot1.getValue().toString().substring(
+                                            5, 15
+                                    ));
+                                } catch (java.text.ParseException e) {
+                                    e.printStackTrace();
+                                }
+
+                                long milliSecondsElapsed = date1.getTime() - date.getTime();
+                                //  Log.d("poiu",date1.getTime()+"");
+                                // Log.d("poiu",date.getTime()+"");
+                                // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
+                                if (milliSecondsElapsed / (24 * 60 * 60 * 1000) >= 3) {
+                                    // Log.d("poiu",diff+"");
+                                    StorageReference file1;
+                                    file1 = FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot1.getValue().toString().substring(15));
+                                    file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            dataSnapshot1.getRef().removeValue();
+
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            dataSnapshot1.getRef().removeValue();
+
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    };
+                    reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
+                            .getPhoneNumber()).child("info").child("deletepdf").addListenerForSingleValueEvent(deletepdf);
 
 //
 //
@@ -1300,13 +1396,15 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 , Handler.getLastMessage(dataSnapshot.getKey()), Handler.getLastMessageTime(dataSnapshot.getKey()), null, null));
                         userAdapter.notifyItemInserted(contacts1.size() - 1);
                         keyid.add(dataSnapshot.getKey());
-                        new listener(contacts1.size() - 1, keyid.get(keyid.size()-1)).profilelistener();
-                        new listener(contacts1.size()-1,keyid.get(keyid.size()-1)).statusListener();
-                        new listener(contacts1.size() - 1,keyid.get(keyid.size()-1)).piclistener();
-                        new listener(contacts1.size() - 1,keyid.get(keyid.size()-1)).VideoListener();
-                        new listener(contacts1.size() - 1,keyid.get(keyid.size()-1)).giflistener();
-                        new listener(contacts1.size() - 1,keyid.get(keyid.size()-1)).stickerlistener();
-                        new listener(contacts1.size() - 1,keyid.get(keyid.size()-1)).child();
+                        listener listener=new listener(contacts1.size() - 1, keyid.get(keyid.size()-1));
+                        listener.profilelistener();
+                        listener.statusListener();
+                        listener.piclistener();
+                        listener.VideoListener();
+                        listener.giflistener();
+                        listener.stickerlistener();
+                        listener.child();
+                        listener.pdflistener();
 
 
                     }

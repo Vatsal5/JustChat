@@ -3333,6 +3333,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             }
             catch (Exception e)
             {
+                Log.d("asdf",e.getMessage());
                 Toast.makeText(MessageActivity.this, "An error occured", Toast.LENGTH_SHORT).show();
             }
         }
