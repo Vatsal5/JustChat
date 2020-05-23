@@ -187,6 +187,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
 
                 holder.tvlastmessage.setText("Sticker");
 
+            }else if (listFiltered.get(position).getLastmessage().equals("     ")) {
+                holder.ivImage.setVisibility(View.VISIBLE);
+                holder.tvlastmessage.setVisibility(View.VISIBLE);
+                holder.ivImage.setImageResource(R.drawable.pdf);
+
+                holder.tvlastmessage.setText("PDF");
+
             } else if (listFiltered.get(position).getLastmessage().equals("  ")) {
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
                 holder.ivImage.setImageResource(R.drawable.video);

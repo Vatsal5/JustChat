@@ -214,6 +214,8 @@ public class DBHandler
                 values.put(KEY_ISDOWNLOADED, 206);
             else if (type.equals("sticker"))
                 values.put(KEY_ISDOWNLOADED, 306);
+            else if (type.equals("pdf"))
+                values.put(KEY_ISDOWNLOADED, 406);
         }
         else{
             if (type.equals("text"))
@@ -226,6 +228,8 @@ public class DBHandler
                 values.put(KEY_ISDOWNLOADED, 205);
             else if (type.equals("sticker"))
                 values.put(KEY_ISDOWNLOADED, 305);
+            else if (type.equals("pdf"))
+                values.put(KEY_ISDOWNLOADED, 405);
         }
 
         return database.update(DATABASE_TABLE,values,KEY_FIREBASEID+"=?",new String[] {firebaseId+""});
@@ -286,6 +290,8 @@ public class DBHandler
                 return "   ";
             else if(model.getType().equals("sticker"))
                 return "    ";
+            else if(model.getType().equals("pdf"))
+                return "     ";
         }
         else
         {
@@ -408,6 +414,8 @@ public class DBHandler
                 return "   ";
             else if(model.getType().equals("sticker"))
                 return "    ";
+            else if(model.getType().equals("pdf"))
+                return "     ";
         }
         else
         {
