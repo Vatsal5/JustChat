@@ -72,6 +72,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -3320,10 +3321,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         {
             try {
                 File file = new File(chats.get(index).getMessage());
-                Uri path = Uri.fromFile(file);
+                Uri pdfURI = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
+                        BuildConfig.APPLICATION_ID + ".fileprovider", file);
                 Intent pdfOpenintent = new Intent(Intent.ACTION_VIEW);
-                pdfOpenintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                pdfOpenintent.setDataAndType(path, "application/pdf");
+                pdfOpenintent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                pdfOpenintent.setDataAndType(pdfURI, "application/pdf");
                 startActivity(pdfOpenintent);
             }
 //
@@ -3333,6 +3335,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             }
             catch (Exception e)
             {
+                e.printStackTrace();
                 Toast.makeText(MessageActivity.this, "An error occured", Toast.LENGTH_SHORT).show();
             }
         }
