@@ -157,7 +157,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
 
         if(!defaultvalue.equals("private") && !defaultvalue.equals("null")) {
             if (!(listFiltered.get(position).getLastmessage().equals(" ")) && !(listFiltered.get(position).getLastmessage().equals("null")) && !(listFiltered.get(position).getLastmessage().equals("  ")) && !(listFiltered.get(position).getLastmessage().equals("   "))
-                    && !(listFiltered.get(position).getLastmessage().equals("    "))) {
+                    && !(listFiltered.get(position).getLastmessage().equals("    ")) && !(listFiltered.get(position).getLastmessage().equals("     "))) {
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
 
                 if (listFiltered.get(position).getLastmessage().length() > 20) {

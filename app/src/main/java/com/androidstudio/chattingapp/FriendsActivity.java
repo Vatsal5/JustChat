@@ -741,7 +741,8 @@ z1--;
                     intent.putExtra("type", getIntent().getStringExtra("type"));
                     intent.putExtra("message", getIntent().getStringExtra("message"));
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    MessageActivity2.messageActivity2.finish();
+                    if(MessageActivity2.messageActivity2!=null)
+                        MessageActivity2.messageActivity2.finish();
                     this.finish();
 
                 }
@@ -760,7 +761,8 @@ z1--;
                 intent.putExtra("type", getIntent().getStringExtra("type"));
                 intent.putExtra("message", getIntent().getStringExtra("message"));
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                MessageActivity.messageActivity.finish();
+                if(MessageActivity.messageActivity!=null)
+                    MessageActivity.messageActivity.finish();
                 this.finish();
                 intent.putExtra("profile", contacts1.get(index).getUrl());
                 startActivity(intent);

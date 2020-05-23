@@ -817,6 +817,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 Intent intent = new Intent();
                                                 intent.setType("application/pdf");
                                                 intent.setAction(Intent.ACTION_GET_CONTENT);
+                                                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                                                 startActivityForResult(intent, 55);
                                                 break;
                                         }
@@ -2519,7 +2520,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                 long millis = System.currentTimeMillis();
                                 java.sql.Date date1 = new java.sql.Date(millis);
 
-                                MessageModel model = new MessageModel(1190, sender, RecieverPhone, pdfURI.toString(), "pdf", 400, simpleDateFormat.format(date).substring(0, 5), date1.toString(), "null","null");
+                            String path = getPath(MessageActivity.this,pdfURI);
+
+                                MessageModel model = new MessageModel(1190, sender, RecieverPhone, path, "pdf", 400, simpleDateFormat.format(date).substring(0, 5), date1.toString(), "null","null");
 
                                 if (chats.size() != 0) {
                                     if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
@@ -2530,11 +2533,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                     }
                                 } else {
                                     if ((!(defaultvalue.equals("private")))) {
-                                        MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(), "null","null");
+                                        MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(), "null", "null");
                                         int id = Handler.addMessage(messageModel);
                                         messageModel.setId(id);
                                         chats.add(messageModel);
                                     }
+                                }
 
                                 int id = Handler.addMessage(model);
                                 model.setId(id);
@@ -2547,8 +2551,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                 if(!Messages.isComputingLayout())
                                     adapter.notifyItemInserted(chats.size()-1);
 
-
-                            }
                         }
                     }
                     else
@@ -2557,7 +2559,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     }
                 }
                 else {
-                    Toast.makeText(messageActivity, "hi", Toast.LENGTH_SHORT).show();
                     Uri pdfURI = data.getData();
 
                     ApplicationClass.messagesent=1;

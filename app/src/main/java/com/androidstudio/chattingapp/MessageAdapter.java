@@ -306,7 +306,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.tvTitle.setText(message.substring(message.lastIndexOf("/")+1,message.lastIndexOf(".")));
 
             holder.progress.setVisibility(View.VISIBLE);
-//            holder.ivSeen.setVisibility(View.GONE);
+            holder.ivSeen.setVisibility(View.GONE);
             holder.clPdfRight.setBackgroundResource(R.drawable.orange2);
 
             Activity.sendPdf(holder.getAdapterPosition());
@@ -318,7 +318,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.tvTitle.setText(message.substring(message.lastIndexOf("/")+1,message.lastIndexOf(".")));
 
             holder.progress.setVisibility(View.VISIBLE);
-//            holder.ivSeen.setVisibility(View.GONE);
+            holder.ivSeen.setVisibility(View.GONE);
 
             holder.clPdfRight.setBackgroundResource(R.drawable.orange2);
         }
@@ -367,7 +367,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
                 if(messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())){
                    holder.clPdfRight.setBackgroundResource(R.drawable.background_right);
-//                   holder.ivSeen.setVisibility(View.INVISIBLE);
+                   holder.ivSeen.setVisibility(View.GONE);
                 }
                 else
                 {
@@ -430,16 +430,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             String message = messages.get(holder.getAdapterPosition()).getMessage();
             holder.tvTitle.setText(message.substring(message.lastIndexOf("/") + 1, message.lastIndexOf(".")));
 
-//            if(messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
-//                holder.ivSeen.setVisibility(View.VISIBLE);
+                holder.ivSeen.setVisibility(View.VISIBLE);
 
-//            if(messages.get(holder.getAdapterPosition()).getDownloaded()==406)
-//                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.red));
-//            else
-//                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.white));
+            if(messages.get(holder.getAdapterPosition()).getDownloaded()==406)
+                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.red));
+            else
+                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.white));
 
                 holder.clPdfRight.setBackgroundResource(R.drawable.background_right);
-//                   holder.ivSeen.setVisibility(View.INVISIBLE);
         }
 
         if(messages.get(holder.getAdapterPosition()).getDownloaded()==300) //when sender sends sticker
