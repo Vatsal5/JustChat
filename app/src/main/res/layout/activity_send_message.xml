@@ -43,8 +43,9 @@
         android:background="@drawable/image_background"
         android:backgroundTint="@color/red"
         android:clickable="true"
+        android:tint="#ffffff"
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/send1" />
+        app:srcCompat="@drawable/send" />
 </androidx.constraintlayout.widget.ConstraintLayout>
