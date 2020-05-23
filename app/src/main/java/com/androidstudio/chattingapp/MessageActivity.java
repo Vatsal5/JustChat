@@ -811,6 +811,14 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                     startActivityForResult(intent, 999);
                                                 }
                                                 break;
+
+                                            case 5:
+                                                Intent intent = new Intent();
+                                                intent.setType("application/pdf");
+                                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                                startActivityForResult(intent, 55);
+
+                                                break;
                                         }
                                     }
                                 });

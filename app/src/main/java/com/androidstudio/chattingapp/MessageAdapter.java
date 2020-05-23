@@ -64,6 +64,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int STICK_LEFT = 16;
     public static final int STICK_LEFT_GRP = 17;
     public static final int MSG_GRP_INFO = 18;
+    public static final int PDF_RIGHT = 19;
+    public static final int PDF_LEFT = 20;
+    public static final int PDF_LEFT_GRP = 21;
 
     FirebaseUser user;
     Context context;
@@ -105,7 +108,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         ImageView ivImage,ivPlay,ivProfile,ivTyping,ivSeen,ivGIF;
         ProgressBar progress;
         LinearLayout llMesageLeft,llTyping,llDownload;
-        ConstraintLayout llMessageRight;
+        ConstraintLayout llMessageRight,clPdfLeft,clPdfRight;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -127,6 +130,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             ivSeen = itemView.findViewById(R.id.ivSeen);
             ivGIF = itemView.findViewById(R.id.ivGIF);
             tvGroupInfo = itemView.findViewById(R.id.tvGroupInfo);
+            clPdfLeft = itemView.findViewById(R.id.clPdfLeft);
+            clPdfRight = itemView.findViewById(R.id.clPdfRight);
         }
     }
 
@@ -193,6 +198,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             return new ViewHolder(v);
         }else if(viewType == MSG_GRP_INFO){
             View v = LayoutInflater.from(context).inflate(R.layout.group_info_layout, parent, false);
+            return new ViewHolder(v);
+        }else if(viewType == PDF_RIGHT){
+            View v = LayoutInflater.from(context).inflate(R.layout.pdf_right, parent, false);
+            return new ViewHolder(v);
+        }else if(viewType == PDF_LEFT){
+            View v = LayoutInflater.from(context).inflate(R.layout.pdf_left, parent, false);
             return new ViewHolder(v);
         }
         else {
@@ -1095,6 +1106,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     return GIF_RIGHT;
                 case "sticker":
                     return STICK_RIGHT;
+                case "pdf":
+                    return PDF_RIGHT;
             }
         }
 
@@ -1111,6 +1124,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                         return GIF_LEFT;
                     case "sticker":
                         return STICK_LEFT;
+                    case "pdf":
+                        return PDF_LEFT;
                 }
             }
         }
@@ -1128,6 +1143,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                         return GIF_LEFT_GRP;
                     case "sticker":
                         return STICK_LEFT_GRP;
+                    case "pdf":
+                        return PDF_LEFT_GRP;
                 }
             }
         }
