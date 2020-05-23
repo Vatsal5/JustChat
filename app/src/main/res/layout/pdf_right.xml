@@ -40,36 +40,97 @@
             </TextView>
 
 
-            <ImageView
-                android:id="@+id/ivImage"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-
-                android:background="#ffffff"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:padding="5dp">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/pdf"/>
+                    android:id="@+id/ivImage"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="80dp"
+
+                    android:background="#ffffff"/>
 
                 <TextView
-                    android:id="@+id/tvTitle"
-                    android:layout_width="match_parent"
+                    android:id="@+id/tvError"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:singleLine="true"
-                    android:textColor="#ffffff"
-                    android:textSize="18dp"/>
+                    android:text="Sorry,this video does not exist on your phone anymore"
+                    android:textStyle="bold"
+
+                    android:textColor="#FFFFFF"
+                    android:gravity="center"
+
+                    android:paddingLeft="10dp"
+                    android:visibility="gone"
+                    android:paddingRight="10dp"/>
+
 
             </LinearLayout>
 
+            <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+
+            <ProgressBar
+                android:id="@+id/progress"
+
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:visibility="visible"
+                android:layout_height="30dp"
+                android:indeterminate="true"
+                android:indeterminateTint="#ffffff"
+                ></ProgressBar>
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:visibility="visible"
+                android:src="@drawable/pdf"/>
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:textSize="18dp"/>
+
+                <ImageView
+                    android:id="@+id/ivSeen"
+                    android:layout_width="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="20dp"
+                    app:srcCompat="@drawable/tick"
+                    android:tint="#ffffff"
+
+                    android:visibility="gone"
+                    />
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_marginTop="5dp"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="12:12"
+                android:textColor="#ffffff"
+                android:textSize="12dp"></TextView>
+
+
+
+
+            </LinearLayout>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
