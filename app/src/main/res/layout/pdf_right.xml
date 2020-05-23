@@ -48,7 +48,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="80dp"
-
+                    android:src="@drawable/pdf_image"
                     android:background="#ffffff"/>
 
                 <TextView

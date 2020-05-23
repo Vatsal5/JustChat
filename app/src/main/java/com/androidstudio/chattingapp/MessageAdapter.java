@@ -107,7 +107,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTime,tvDate,tvSender,tvError,tvGroupInfo,tvTitle;
         EmojiconTextView tvMessage;
-        ImageView ivImage,ivPlay,ivProfile,ivTyping,ivSeen,ivGIF;
+        ImageView ivImage,ivPlay,ivProfile,ivTyping,ivSeen,ivGIF,ivDownload;
         ProgressBar progress;
         LinearLayout llMesageLeft,llTyping,llDownload;
         ConstraintLayout llMessageRight,clPdfLeft,clPdfRight;
@@ -135,6 +135,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             clPdfLeft = itemView.findViewById(R.id.clPdfLeft);
             clPdfRight = itemView.findViewById(R.id.clPdfRight);
             tvTitle = itemView.findViewById(R.id.tvTitle);
+            ivDownload = itemView.findViewById(R.id.ivDownload);
         }
     }
 
@@ -305,10 +306,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.tvTitle.setText(message.substring(message.lastIndexOf("/")+1,message.lastIndexOf(".")));
 
             holder.progress.setVisibility(View.VISIBLE);
-            holder.ivSeen.setVisibility(View.GONE);
+//            holder.ivSeen.setVisibility(View.GONE);
             holder.clPdfRight.setBackgroundResource(R.drawable.orange2);
-
-            Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).into(holder.ivImage);
 
             Activity.sendPdf(holder.getAdapterPosition());
         }
@@ -319,79 +318,81 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.tvTitle.setText(message.substring(message.lastIndexOf("/")+1,message.lastIndexOf(".")));
 
             holder.progress.setVisibility(View.VISIBLE);
-            holder.ivSeen.setVisibility(View.GONE);
+//            holder.ivSeen.setVisibility(View.GONE);
 
             holder.clPdfRight.setBackgroundResource(R.drawable.orange2);
-
-            Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).into(holder.ivImage);
         }
 
         if(messages.get(holder.getAdapterPosition()).getDownloaded()==402) //when pdf is sent or downloaded successfully
         {
             holder.progress.setVisibility(View.GONE);
 
-            RequestOptions options = new RequestOptions();
-            options.diskCacheStrategy(DiskCacheStrategy.NONE);
-            options.skipMemoryCache(true);
+            String message = messages.get(holder.getAdapterPosition()).getMessage();
+            holder.tvTitle.setText(message.substring(message.lastIndexOf("/")+1,message.lastIndexOf(".")));
 
-            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
-                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-
-                        holder.ivImage.setImageResource(0);
-                        holder.tvError.setVisibility(View.VISIBLE);
-                        holder.tvTitle.setVisibility(View.GONE);
-
-                        if (holder.getAdapterPosition() != -1) {
-
-                            if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
-                                setBackground(holder.tvError);
-                            else
-                                holder.tvError.setBackgroundResource(R.drawable.background_right);
-
-                            Activity.OnFileDeleted(holder.getAdapterPosition());
-                        }
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-
-                        String message = messages.get(holder.getAdapterPosition()).getMessage();
-                        holder.tvTitle.setText(message.substring(message.lastIndexOf("/")+1,message.lastIndexOf(".")));
-
-                        return false;
-                    }
-                }).into(holder.ivImage);
+//            RequestOptions options = new RequestOptions();
+//            options.diskCacheStrategy(DiskCacheStrategy.NONE);
+//            options.skipMemoryCache(true);
+//
+//            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
+//                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
+//                    @Override
+//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//
+//                        holder.ivImage.setImageResource(0);
+//                        holder.tvError.setVisibility(View.VISIBLE);
+//                        holder.tvTitle.setVisibility(View.GONE);
+//
+//                        if (holder.getAdapterPosition() != -1) {
+//
+//                            if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+//                                setBackground(holder.tvError);
+//                            else
+//                                holder.tvError.setBackgroundResource(R.drawable.background_right);
+//
+//                            Activity.OnFileDeleted(holder.getAdapterPosition());
+//                        }
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//
+//                        String message = messages.get(holder.getAdapterPosition()).getMessage();
+//                        holder.tvTitle.setText(message.substring(message.lastIndexOf("/")+1,message.lastIndexOf(".")));
+//
+//                        return false;
+//                    }
+//                }).into(holder.ivImage);
 
                 if(messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())){
-                   holder.clPdfRight.setBackgroundResource(R.drawable.orange2);
+                   holder.clPdfRight.setBackgroundResource(R.drawable.background_right);
+//                   holder.ivSeen.setVisibility(View.INVISIBLE);
                 }
                 else
                 {
+                    holder.ivDownload.setVisibility(View.GONE);
                     setBackground(holder.clPdfLeft);
                 }
 
-            }
-            else
-            {
-                holder.ivImage.setImageResource(0);
-                holder.tvError.setVisibility(View.VISIBLE);
-                holder.tvTitle.setVisibility(View.GONE);
-
-                if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
-                    setBackground(holder.tvError);
-                    setBackground(holder.clPdfLeft);
-                }
-                else {
-                    holder.tvError.setBackgroundResource(R.drawable.background_right);
-                    holder.clPdfRight.setBackgroundResource(R.drawable.orange2);
-                }
-            }
-
-            if(messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
-                holder.ivSeen.setVisibility(View.GONE);
+//            else
+//            {
+//                holder.ivImage.setImageResource(0);
+//                holder.tvError.setVisibility(View.VISIBLE);
+//                holder.tvTitle.setVisibility(View.GONE);
+//
+//                if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
+//                    setBackground(holder.tvError);
+//                    setBackground(holder.clPdfLeft);
+//                }
+//                else {
+//                    holder.tvError.setBackgroundResource(R.drawable.background_right);
+//                    holder.clPdfRight.setBackgroundResource(R.drawable.background_right);
+//                }
+//            }
+//
+//            if(messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+//                holder.ivSeen.setVisibility(View.GONE);
         }
 
         else if(messages.get(holder.getAdapterPosition()).getDownloaded()==403) // when pdf is received and yet to be downloaded
@@ -400,10 +401,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.tvTitle.setText(message.substring(message.lastIndexOf(" ")+1));
 
             setBackground(holder.clPdfLeft);
-            holder.ivImage.setImageResource(0);
-            holder.progress.setVisibility(View.VISIBLE);
+            holder.progress.setVisibility(View.GONE);
 
-            Activity.downloadPdf(holder.getAdapterPosition());
+            holder.ivDownload.setVisibility(View.VISIBLE);
+            holder.ivDownload.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Activity.downloadPdf(holder.getAdapterPosition());
+                }
+            });
         }
 
         else if(messages.get(holder.getAdapterPosition()).getDownloaded()==404) // when request has been sent to download pdf
@@ -412,82 +418,29 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.tvTitle.setText(message.substring(message.lastIndexOf(" ")+1));
 
             setBackground(holder.clPdfLeft);
+
+            holder.ivDownload.setVisibility(View.GONE);
             holder.progress.setVisibility(View.VISIBLE);
-            holder.ivImage.setImageResource(0);
         }
 
-        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==405  || messages.get(holder.getAdapterPosition()).getDownloaded()==406) //when sticker has been "seen"
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==405  || messages.get(holder.getAdapterPosition()).getDownloaded()==406) //when pdf has been "seen"
         {
             holder.progress.setVisibility(View.GONE);
 
-            if(messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
-                holder.ivSeen.setVisibility(View.VISIBLE);
+            String message = messages.get(holder.getAdapterPosition()).getMessage();
+            holder.tvTitle.setText(message.substring(message.lastIndexOf("/") + 1, message.lastIndexOf(".")));
 
-            if(messages.get(holder.getAdapterPosition()).getDownloaded()==406)
-                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.red));
-            else
-                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.white));
+//            if(messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+//                holder.ivSeen.setVisibility(View.VISIBLE);
 
-            RequestOptions options = new RequestOptions();
-            options.diskCacheStrategy(DiskCacheStrategy.NONE);
-            options.skipMemoryCache(true);
+//            if(messages.get(holder.getAdapterPosition()).getDownloaded()==406)
+//                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.red));
+//            else
+//                holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.white));
 
-            if(!messages.get(holder.getAdapterPosition()).getMessage().equals("null")) {
-                Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).apply(options).addListener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-
-                        holder.ivImage.setImageResource(0);
-                        holder.tvError.setVisibility(View.VISIBLE);
-
-                        if (holder.getAdapterPosition() != -1) {
-
-                            if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
-                                setBackground(holder.tvError);
-                            else
-                                holder.tvError.setBackgroundResource(R.drawable.background_right);
-
-                            Activity.OnFileDeleted(holder.getAdapterPosition());
-                        }
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-
-                        String message = messages.get(holder.getAdapterPosition()).getMessage();
-                        holder.tvTitle.setText(message.substring(message.lastIndexOf("/")+1,message.lastIndexOf(".")));
-
-                        return false;
-                    }
-                }).into(holder.ivImage);
-
-                if(messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())){
-                    holder.clPdfRight.setBackgroundResource(R.drawable.orange2);
-                }
-                else
-                {
-                    setBackground(holder.clPdfLeft);
-                }
-
-            }
-            else
-            {
-                holder.ivImage.setImageResource(0);
-                holder.tvError.setVisibility(View.VISIBLE);
-
-                if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
-                    setBackground(holder.tvError);
-                    setBackground(holder.clPdfLeft);
-                }
-                else {
-                    holder.tvError.setBackgroundResource(R.drawable.background_right);
-                    holder.clPdfRight.setBackgroundResource(R.drawable.orange2);
-                }
-            }
-
+                holder.clPdfRight.setBackgroundResource(R.drawable.background_right);
+//                   holder.ivSeen.setVisibility(View.INVISIBLE);
         }
-
 
         if(messages.get(holder.getAdapterPosition()).getDownloaded()==300) //when sender sends sticker
         {
