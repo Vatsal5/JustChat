@@ -822,7 +822,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 final int DRAWABLE_RIGHT = 2;
                 final int DRAWABLE_BOTTOM = 3;
 
-                String[] choices = {"Image", "Video","GIF","Stickers"};
+                String[] choices = {"Image", "Video","GIF","Stickers","Record Video"};
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
 
@@ -1022,6 +1022,19 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                                                 r1.add(j1);
                                                 break;
+
+                                            case 4:
+
+                                                if (ContextCompat.checkSelfPermission(MessageActivity2.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                                                    ActivityCompat.requestPermissions(MessageActivity2.this, new String[]{Manifest.permission.CAMERA}, 999);
+                                                }
+                                                else {
+                                                    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                                                    intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 15 * 1024 * 1024L);
+                                                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.5);
+                                                    startActivityForResult(intent, 999);
+                                                    break;
+                                                }
                                         }
                                     }
                                 });
@@ -2323,6 +2336,39 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 dialog.show();
             }
         }
+
+        if(requestCode==999)
+        {
+            if(grantResults[0] == PackageManager.PERMISSION_DENIED)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
+                builder.setTitle("Permission Required")
+                        .setMessage("Permission is required to Open Camera")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ActivityCompat.requestPermissions(MessageActivity2.this,new String[]{Manifest.permission.CAMERA},999);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+            else
+            {
+                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 15 * 1024 * 1024);
+                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.5);
+                startActivityForResult(intent, 999);
+            }
+        }
+
     }
 
 
@@ -2463,6 +2509,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         if(requestCode==1500)
         {
             getMessages();
+        }
+
+        if(requestCode==999 && resultCode == RESULT_OK)
+        {
+            Intent intent = new Intent(MessageActivity2.this,SendMessage.class);
+            intent.putExtra("receiver",groupName);
+            intent.putExtra("source",data.getData().toString());
+            startActivityForResult(intent,100);
         }
 
     }

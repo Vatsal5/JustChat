@@ -807,7 +807,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 else {
                                                     Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                                                     intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 15 * 1024 * 1024L);
-                                                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.7);
+                                                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.5);
                                                     startActivityForResult(intent, 999);
                                                     break;
                                                 }
@@ -2108,7 +2108,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             {
                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 15 * 1024 * 1024);
-                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.7);
+                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.5);
                 startActivityForResult(intent, 999);
             }
         }

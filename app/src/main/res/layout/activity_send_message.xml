@@ -27,7 +27,6 @@
         android:paddingBottom="10dp"
         android:paddingLeft="15dp"
         android:fontFamily="@font/fredoka_one"
-        android:text="Send To"
         android:textColor="#ffffff"
         android:textSize="24dp"
         app:layout_constraintStart_toStartOf="parent"

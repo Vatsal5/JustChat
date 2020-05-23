@@ -27,7 +27,7 @@ public class SendMessage extends AppCompatActivity {
 
         Glide.with(SendMessage.this).load(getIntent().getStringExtra("source")).into(ivVideo);
 
-        tvSendTo.setText("Send to "+getIntent().getStringExtra("receiver"));
+        tvSendTo.setText("Send Video to "+getIntent().getStringExtra("receiver"));
 
         ivSend.setOnClickListener(new View.OnClickListener() {
             @Override
