@@ -3316,7 +3316,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
             startActivity(intent);
         }
-        else if(chats.get(index).getType().equals("pdf"))
+        else if(chats.get(index).getType().equals("pdf") && chats.get(index).getDownloaded()!=403 && chats.get(index).getDownloaded()!=404)
         {
             try {
                 File file = new File(chats.get(index).getMessage());
@@ -3635,7 +3635,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     adapter.notifyItemChanged(index);
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
-                    builder.setTitle("Could not download Video");
+                    builder.setTitle("Could not download PDF");
                     builder.setMessage("Please ask " + pref1.getString(getIntent().getStringExtra("title"), getIntent().getStringExtra("title")) +
                             " to resend the PDF")
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
