@@ -35,9 +35,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginBottom="2dp"
                 android:fontFamily="@font/fredoka_one"
-                android:layout_height="wrap_content">
-
-            </TextView>
+                android:layout_height="wrap_content"/>
 
 
             <LinearLayout
@@ -60,14 +58,11 @@
                     android:layout_height="match_parent"
                     android:text="Sorry,this video does not exist on your phone anymore"
                     android:textStyle="bold"
-
                     android:textColor="#FFFFFF"
                     android:gravity="center"
-
                     android:paddingLeft="10dp"
                     android:visibility="gone"
                     android:paddingRight="10dp"/>
-
 
             </LinearLayout>
 
@@ -77,17 +72,14 @@
             android:orientation="horizontal"
             android:padding="5dp">
 
-
             <ProgressBar
                 android:id="@+id/progress"
-
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_height="30dp"
                 android:indeterminate="true"
-                android:indeterminateTint="#ffffff"
-                ></ProgressBar>
+                android:indeterminateTint="#ffffff" />
 
             <ImageView
                 android:layout_width="30dp"
@@ -113,9 +105,9 @@
                     android:layout_height="20dp"
                     app:srcCompat="@drawable/tick"
                     android:tint="#ffffff"
-
                     android:visibility="gone"
                     />
+
             <TextView
                 android:id="@+id/tvTime"
                 android:layout_marginTop="5dp"
@@ -123,9 +115,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:text="12:12"
                 android:textColor="#ffffff"
-                android:textSize="12dp"></TextView>
+                android:textSize="12dp"/>
 
 
 

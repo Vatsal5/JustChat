@@ -2538,7 +2538,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         long millis=System.currentTimeMillis();
                         java.sql.Date date1=new java.sql.Date(millis);
 
-                        MessageModel model = new MessageModel(1190,sender,RecieverPhone,pdfURI.toString(),"pdf",400,simpleDateFormat.format(date).substring(0,5),date1.toString(),"null","null");
+                    String path = getPath(MessageActivity.this,pdfURI);
+
+                        MessageModel model = new MessageModel(1190,sender,RecieverPhone,path,"pdf",400,simpleDateFormat.format(date).substring(0,5),date1.toString(),"null","null");
 
                         if (chats.size() != 0) {
                             if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
@@ -2549,26 +2551,26 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                             }
                         } else {
                             if ((!(defaultvalue.equals("private")))) {
-                                MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(), "null","null");
+                                MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(), "null", "null");
                                 int id = Handler.addMessage(messageModel);
                                 messageModel.setId(id);
                                 chats.add(messageModel);
                             }
 
-                        int id = Handler.addMessage(model);
-                        model.setId(id);
-                        if(chats.size()>0 && chats.get(chats.size()-1).getType().equals("typing")) {
-                            if(flag1==true)
-                                chats.add(chats.size() - 1, model);
+                            int id = Handler.addMessage(model);
+                            model.setId(id);
+                            if (chats.size() > 0 && chats.get(chats.size() - 1).getType().equals("typing")) {
+                                if (flag1 == true)
+                                    chats.add(chats.size() - 1, model);
+                            } else
+                                chats.add(model);
+
+                            if (!Messages.isComputingLayout())
+                                adapter.notifyItemInserted(chats.size() - 1);
+
+
                         }
-                        else
-                            chats.add(model);
 
-                        if(!Messages.isComputingLayout())
-                            adapter.notifyItemInserted(chats.size()-1);
-
-
-                    }
                 }
             }
         }
@@ -3202,6 +3204,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         if(!Messages.isComputingLayout())
             adapter.notifyItemChanged(index);
 
+        final String name = message.getMessage().substring(message.getMessage().lastIndexOf("/")+1,message.getMessage().lastIndexOf("."));
+
         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("pdf/" + Uri.parse(message.getMessage()).getLastPathSegment()).
                 putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -3217,7 +3221,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                                 reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
                                         child(message.getReciever()).child("info").
-                                        child("pdf").child(push).setValue(message.getTime()+message.getDate()+uri.toString());
+                                        child("pdf").child(push).setValue(message.getTime()+message.getDate()+uri.toString()+" "+name);
 
 
                                 message.setFirebaseId(push);
@@ -3438,7 +3442,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     @Override
     public void downloadPdf(int index) {
-        new DownloadPdf(index,chats.get(index)).execute(chats.get(index).getMessage());
+        new DownloadPdf(index,chats.get(index)).execute(chats.get(index).getMessage().substring(0,chats.get(index).getMessage().lastIndexOf(" ")));
     }
 
     //***********************************************************************************************************************************************
@@ -3475,12 +3479,15 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
             URLConnection urlConnection;
 
+            String message1 = message.getMessage();
+            String name = message1.substring(message1.lastIndexOf(" ")+1);
+
             File imagesfolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
 
             if(!imagesfolder.exists())
                 imagesfolder.mkdirs();
 
-            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".pdf");
+            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+name+".pdf");
 
             try{
                 //Form a new URL
@@ -3540,14 +3547,14 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             if (uri != null) {
 
                 message.setDownloaded(402);
-                message.setMessage(uri.toString());
+                message.setMessage(getPath(MessageActivity.this,uri));
 
                 Handler.UpdateMessage(message);
 
                 if(!MessageActivity.this.isDestroyed())
                 {
                     chats.get(index).setDownloaded(402);
-                    chats.get(index).setMessage(uri.toString());
+                    chats.get(index).setMessage(getPath(MessageActivity.this,uri));
 
                     if(!Messages.isComputingLayout())
                     {

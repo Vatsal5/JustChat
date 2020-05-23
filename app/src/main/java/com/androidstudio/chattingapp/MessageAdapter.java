@@ -301,16 +301,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         if(messages.get(holder.getAdapterPosition()).getDownloaded()==400) //when sender sends pdf
         {
+            String message = messages.get(holder.getAdapterPosition()).getMessage();
+            holder.tvTitle.setText(message.substring(message.lastIndexOf("/")+1,message.lastIndexOf(".")));
 
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivSeen.setVisibility(View.GONE);
             holder.clPdfRight.setBackgroundResource(R.drawable.orange2);
+
             Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).into(holder.ivImage);
+
             Activity.sendPdf(holder.getAdapterPosition());
         }
 
-        if(messages.get(holder.getAdapterPosition()).getDownloaded()==301) // when request has been sent to listener to upload pdf
+        if(messages.get(holder.getAdapterPosition()).getDownloaded()==401) // when request has been sent to listener to upload pdf
         {
+            String message = messages.get(holder.getAdapterPosition()).getMessage();
+            holder.tvTitle.setText(message.substring(message.lastIndexOf("/")+1,message.lastIndexOf(".")));
 
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivSeen.setVisibility(View.GONE);
@@ -320,7 +326,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             Glide.with(context).load(messages.get(holder.getAdapterPosition()).getMessage()).into(holder.ivImage);
         }
 
-        if(messages.get(holder.getAdapterPosition()).getDownloaded()==302) //when sticker is sent or downloaded successfully
+        if(messages.get(holder.getAdapterPosition()).getDownloaded()==402) //when pdf is sent or downloaded successfully
         {
             holder.progress.setVisibility(View.GONE);
 
@@ -335,6 +341,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
                         holder.ivImage.setImageResource(0);
                         holder.tvError.setVisibility(View.VISIBLE);
+                        holder.tvTitle.setVisibility(View.GONE);
 
                         if (holder.getAdapterPosition() != -1) {
 
@@ -351,6 +358,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
 
+                        String message = messages.get(holder.getAdapterPosition()).getMessage();
+                        holder.tvTitle.setText(message.substring(message.lastIndexOf("/")+1,message.lastIndexOf(".")));
 
                         return false;
                     }
@@ -369,6 +378,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             {
                 holder.ivImage.setImageResource(0);
                 holder.tvError.setVisibility(View.VISIBLE);
+                holder.tvTitle.setVisibility(View.GONE);
 
                 if(!messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                     setBackground(holder.tvError);
@@ -384,8 +394,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 holder.ivSeen.setVisibility(View.GONE);
         }
 
-        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==303) // when sticker is received and yet to be downloaded
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==403) // when pdf is received and yet to be downloaded
         {
+            String message = messages.get(holder.getAdapterPosition()).getMessage();
+            holder.tvTitle.setText(message.substring(message.lastIndexOf(" ")+1));
+
             setBackground(holder.clPdfLeft);
             holder.ivImage.setImageResource(0);
             holder.progress.setVisibility(View.VISIBLE);
@@ -393,21 +406,24 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             Activity.downloadPdf(holder.getAdapterPosition());
         }
 
-        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==304) // when request has been sent to download sticker
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==404) // when request has been sent to download pdf
         {
+            String message = messages.get(holder.getAdapterPosition()).getMessage();
+            holder.tvTitle.setText(message.substring(message.lastIndexOf(" ")+1));
+
             setBackground(holder.clPdfLeft);
             holder.progress.setVisibility(View.VISIBLE);
             holder.ivImage.setImageResource(0);
         }
 
-        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==305  || messages.get(holder.getAdapterPosition()).getDownloaded()==306) //when sticker has been "seen"
+        else if(messages.get(holder.getAdapterPosition()).getDownloaded()==405  || messages.get(holder.getAdapterPosition()).getDownloaded()==406) //when sticker has been "seen"
         {
             holder.progress.setVisibility(View.GONE);
 
             if(messages.get(holder.getAdapterPosition()).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
                 holder.ivSeen.setVisibility(View.VISIBLE);
 
-            if(messages.get(holder.getAdapterPosition()).getDownloaded()==306)
+            if(messages.get(holder.getAdapterPosition()).getDownloaded()==406)
                 holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.red));
             else
                 holder.ivSeen.setColorFilter(context.getResources().getColor(R.color.white));
@@ -439,6 +455,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
 
+                        String message = messages.get(holder.getAdapterPosition()).getMessage();
+                        holder.tvTitle.setText(message.substring(message.lastIndexOf("/")+1,message.lastIndexOf(".")));
 
                         return false;
                     }

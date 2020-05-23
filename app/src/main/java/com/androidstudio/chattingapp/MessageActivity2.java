@@ -2704,6 +2704,16 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         }
     }
 
+    @Override
+    public void sendPdf(int index) {
+
+    }
+
+    @Override
+    public void downloadPdf(int index) {
+
+    }
+
     public void SendSticker(final int index,final MessageModel model)
     {
         ApplicationClass.PendingRequests.add(groupKey);
