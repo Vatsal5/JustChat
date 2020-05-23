@@ -4,6 +4,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivProfile"
         android:layout_width="35dp"
@@ -17,9 +18,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clPdfLeft"
-        android:layout_width="250dp"
         android:layout_marginLeft="6dp"
 
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:background="@drawable/background_left"
         android:orientation="vertical"
@@ -27,13 +28,25 @@
         app:layout_constraintStart_toEndOf="@id/ivProfile"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/tvSender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sender"
+            android:textColor="#ffffff"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="5dp"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"></TextView>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="7dp"
             android:layout_marginBottom="4dp"
 
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="26dp"
             android:layout_marginRight="7dp"
             android:background="@drawable/background_left"
             android:backgroundTint="#10ffffff"
@@ -60,8 +73,7 @@
                 android:id="@+id/ivImage"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-
-                android:background="#ffffff"/>
+                android:background="#ffffff"></ImageView>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -72,7 +84,7 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/pdf"/>
+                    android:src="@drawable/pdf"></ImageView>
 
                 <TextView
                     android:id="@+id/tvTitle"
@@ -82,7 +94,7 @@
                     android:layout_marginRight="10dp"
                     android:singleLine="true"
                     android:textColor="#ffffff"
-                    android:textSize="18dp"/>
+                    android:textSize="18dp"></TextView>
 
             </LinearLayout>
 
