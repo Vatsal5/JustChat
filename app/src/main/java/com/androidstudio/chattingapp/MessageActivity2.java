@@ -1033,8 +1033,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                                     intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 15 * 1024 * 1024L);
                                                     intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.5);
                                                     startActivityForResult(intent, 999);
-                                                    break;
                                                 }
+                                                break;
                                         }
                                     }
                                 });

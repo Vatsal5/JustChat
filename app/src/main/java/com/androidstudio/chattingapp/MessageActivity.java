@@ -595,7 +595,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 final int DRAWABLE_RIGHT = 2;
                 final int DRAWABLE_BOTTOM = 3;
 
-                String [] choices = {"Image","Video","GIF","Stickers","Record Video"};
+                String [] choices = {"Image","Video","GIF","Stickers","Record Video","PDF"};
 
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (etMessage.getRight() - etMessage.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
@@ -809,8 +809,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                     intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 15 * 1024 * 1024L);
                                                     intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.5);
                                                     startActivityForResult(intent, 999);
-                                                    break;
                                                 }
+                                                break;
                                         }
                                     }
                                 });
