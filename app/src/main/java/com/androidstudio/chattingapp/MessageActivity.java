@@ -806,8 +806,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 }
                                                 else {
                                                     Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                                                    intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 15 * 1024 * 1024);
-                                                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                                                    intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 15 * 1024 * 1024L);
+                                                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.7);
                                                     startActivityForResult(intent, 999);
                                                     break;
                                                 }
@@ -2108,7 +2108,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             {
                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 15 * 1024 * 1024);
-                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.7);
                 startActivityForResult(intent, 999);
             }
         }
@@ -2358,8 +2358,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
         if(requestCode==999 && resultCode == RESULT_OK)
         {
-            File file = new File(getPath(MessageActivity.this,data.getData()));
-            Log.d("filesize",file.length()+"");
+            Intent intent = new Intent(MessageActivity.this,SendMessage.class);
+            intent.putExtra("receiver",pref1.getString(getIntent().getStringExtra("title"),getIntent().getStringExtra("title")));
+            intent.putExtra("source",data.getData().toString());
+            startActivityForResult(intent,100);
         }
     }
 
