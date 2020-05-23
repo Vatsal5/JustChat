@@ -595,7 +595,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 final int DRAWABLE_RIGHT = 2;
                 final int DRAWABLE_BOTTOM = 3;
 
-                String [] choices = {"Image","Video","GIF","Stickers"};
+                String [] choices = {"Image","Video","GIF","Stickers","Record Video"};
 
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (etMessage.getRight() - etMessage.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
@@ -799,7 +799,19 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 r1.add(j1);
                                                 break;
 
+                                            case 4:
+
+                                                if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                                                    ActivityCompat.requestPermissions(MessageActivity.this, new String[]{Manifest.permission.CAMERA}, 999);
                                                 }
+                                                else {
+                                                    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                                                    intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 15 * 1024 * 1024);
+                                                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                                                    startActivityForResult(intent, 999);
+                                                    break;
+                                                }
+                                        }
                                     }
                                 });
                         AlertDialog dialog = builder.create();
@@ -2069,6 +2081,37 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 dialog.show();
             }
         }
+        if(requestCode==999)
+        {
+            if(grantResults[0] == PackageManager.PERMISSION_DENIED)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+                builder.setTitle("Permission Required")
+                        .setMessage("Permission is required to Open Camera")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ActivityCompat.requestPermissions(MessageActivity.this,new String[]{Manifest.permission.CAMERA},999);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+            else
+            {
+                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 15 * 1024 * 1024);
+                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                startActivityForResult(intent, 999);
+            }
+        }
     }
 
     @Override
@@ -2311,6 +2354,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         if(requestCode==1500)
         {
             getMessages();
+        }
+
+        if(requestCode==999 && resultCode == RESULT_OK)
+        {
+            File file = new File(getPath(MessageActivity.this,data.getData()));
+            Log.d("filesize",file.length()+"");
         }
     }
 
