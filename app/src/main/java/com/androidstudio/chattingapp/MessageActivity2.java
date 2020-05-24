@@ -3709,14 +3709,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             if (uri != null) {
 
                 message.setDownloaded(402);
-                message.setMessage(uri.toString());
+                message.setMessage(getPath(MessageActivity2.this,uri));
 
                 Handler.UpdateMessage(message);
 
                 if(!MessageActivity2.this.isDestroyed())
                 {
                     chats.get(index).setDownloaded(402);
-                    chats.get(index).setMessage(uri.toString());
+                    chats.get(index).setMessage(getPath(MessageActivity2.this,uri));
 
                     if(!Messages.isComputingLayout())
                     {
