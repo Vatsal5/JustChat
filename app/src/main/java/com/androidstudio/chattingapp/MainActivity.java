@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
     ChildEventListener Group;
     ValueEventListener profile,check;
-    ChildEventListener childEvent,deleteGroupimages,deleteGroupvideos;
+    ChildEventListener childEvent,deleteGroupimages,deleteGroupvideos,deletegrouppdfs;
 
     int  pos;
     boolean flag=false,flag2=false;
@@ -1165,6 +1165,55 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     });
         }
 
+        public void pdflistener()
+        {
+            reference.child("groups").child(contacts1.get(index).getGroupkey()).child("pdf")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
+                    .addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                            UserDetailwithUrl userDetailwithUrl;
+                            int j=keyid.indexOf(key);
+
+                            userDetailwithUrl=contacts1.get(j);
+                            contacts1.remove(j);
+                            keyid.remove(j);
+                            userAdapter.notifyDataSetChanged();
+                            contacts1.add(0,userDetailwithUrl);
+                            keyid.add(0,key);
+
+                            userAdapter.notifyDataSetChanged();
+                            int i=contacts1.indexOf(userDetailwithUrl);
+                            contacts1.get(i).setLastmessage("     ");
+                            contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                            contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
+                            userAdapter.notifyItemChanged(keyid.indexOf(key));
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+
+                    });
+        }
+
         public void ProfileListener()
         {
             FirebaseDatabase.getInstance().getReference().child("groups").child(contacts1.get(index).getGroupkey()).child("profile").addValueEventListener(new ValueEventListener() {
@@ -1484,7 +1533,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         grouplistener.child();
                         grouplistener.gifListener();
                         grouplistener.stickerListener();
-
+                        grouplistener.pdflistener();
                         grouplistener.ProfileListener();
 
 
@@ -1500,7 +1549,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         grouplistener.child();
                         grouplistener.gifListener();
                         grouplistener.stickerListener();
-
+                        grouplistener.pdflistener();
                         grouplistener.ProfileListener();
                     }
 
@@ -1667,6 +1716,95 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                 FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletevideos").addChildEventListener(deleteGroupvideos);
 
+
+                deletegrouppdfs=new ChildEventListener() {
+
+                    @Override
+                    public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
+                        long millis = System.currentTimeMillis();
+                        java.sql.Date date1 = new java.sql.Date(millis);
+
+
+
+//                                    if(date1.toString().substring(0,4).equals(dataSnapshot.getValue().toString().substring(1,5))
+//                                     && date1.toString().substring(5,7).equals(dataSnapshot.getValue().toString().substring(6,8))
+//                                    && (Integer.parseInt(date1.toString().substring(8,10))-Integer.parseInt(dataSnapshot.getValue().toString().substring(9,11)))>=1)
+//                                    {
+//                                        dataSnapshot.getRef().removeValue();
+//                                    }
+//                                    else if(date1.toString().substring(0,4).equals(dataSnapshot.getValue().toString().substring(1,5))
+//                                            && (Integer.parseInt(date1.toString().substring(5,7))-Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8)))>=1
+//                                            && (Integer.parseInt(date1.toString().substring(0,4))-Integer.parseInt(dataSnapshot.getValue().toString().substring(9,11)))>=1)
+//                                    {
+//                                        if(Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==1 || Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==3 ||
+//                                        Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==5 || Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==7
+//                                        ||Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==8 || Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==10 ||
+//                                                Integer.parseInt(dataSnapshot.getValue().toString().substring(6,8))==12)
+//                                        {
+//                                            if(Integer.parseInt(dataSnapshot.getValue().toString().substring(9,11)==29))
+//                                                dataSnapshot.getRef().removeValue();
+//                                    }
+//
+//                                    }
+
+
+                        try {
+
+
+                            // get difference between two dates in MINUTES
+                            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dataSnapshot.getValue().toString().substring(
+                                    dataSnapshot.getValue().toString().indexOf("h") - 10, dataSnapshot.getValue().toString().indexOf("h")
+                            ));
+
+                            long milliSecondsElapsed = date1.getTime() - date.getTime();
+
+
+                            // Log.d("poiu",date.getTime()+"");
+                            // long diff = TimeUnit.MINUTES.convert(milliSecondsElapsed, TimeUnit.MILLISECONDS);
+                            if (milliSecondsElapsed / (24 * 60 * 60 * 1000) >= 3) {
+                                // Log.d("poiu",diff+"");
+
+                                StorageReference file1;
+                                file1 = FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString().substring(dataSnapshot
+                                        .getValue().toString().indexOf("h")));
+                                file1.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        dataSnapshot.getRef().removeValue();
+                                    }
+                                });
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        } catch (java.text.ParseException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                };
+
+                FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletepdf").addChildEventListener(deletegrouppdfs);
 
 //
 
