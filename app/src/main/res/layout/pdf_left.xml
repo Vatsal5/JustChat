@@ -44,6 +44,7 @@
                 android:id="@+id/llpdf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/white1"
                 android:layout_marginLeft="5dp"
                 android:orientation="horizontal">
 
@@ -62,7 +63,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:singleLine="true"
-                    android:textColor="#ffffff"
+                    android:textColor="#212121"
                     android:textSize="16dp"/>
 
 
@@ -86,7 +87,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:orientation="horizontal"
-                android:padding="5dp">
+                android:paddingLeft="5dp"
+                android:paddingBottom="5dp"
+
+                android:paddingRight="5dp">
 
                 <ImageView
                     android:id="@+id/ivDownload"

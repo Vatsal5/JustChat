@@ -81,7 +81,7 @@
         app:layout_constraintRight_toRightOf="@+id/ivImage"
         app:layout_constraintBottom_toBottomOf="@+id/ivImage"
         android:paddingRight="10dp"
-        android:background="@drawable/black1">
+        android:background="@drawable/white1">
 
         <ImageView
             android:layout_width="50dp"

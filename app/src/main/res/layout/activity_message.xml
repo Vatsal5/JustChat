@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
                 app:layout_constrainedHeight="true"
-                android:fontFamily="@font/aclonica"
+                android:fontFamily="@font/fredoka_one"
                 android:gravity="center|start|left"
                 android:text="Vatsal"
                 android:textColor="#ffffff"

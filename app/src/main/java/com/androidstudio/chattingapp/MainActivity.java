@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     ValueEventListener dataCreater,deleteimage,deletevideo,deletepdf,Status;
     DBHandler Handler;
     ArrayList<String> keyid;
-    String keyid2;
+    String keyid2=null;
     LinearLayoutManager linearLayoutManager;
 
 
@@ -2162,7 +2162,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.pureorange)));
 
-
                 break;
             case "purepink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
@@ -2203,53 +2202,50 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //            userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
 //
 //        }
+if(keyid2!=null) {
+    if (ApplicationClass.messagesent == 1) {
+        ApplicationClass.messagesent = 0;
+        UserDetailwithUrl userDetailwithUrl;
 
-        if(ApplicationClass.messagesent==1)
-        {
-            ApplicationClass.messagesent=0;
-            UserDetailwithUrl userDetailwithUrl;
+        userDetailwithUrl = contacts1.get(keyid.indexOf(keyid2));
+        String key = keyid.get(keyid.indexOf(keyid2));
+        contacts1.remove(keyid.indexOf(keyid2));
+        keyid.remove(keyid.indexOf(keyid2));
+        userAdapter.notifyDataSetChanged();
+        contacts1.add(0, userDetailwithUrl);
+        keyid.add(0, key);
 
-            userDetailwithUrl=contacts1.get(keyid.indexOf(keyid2));
-            String key=keyid.get(keyid.indexOf(keyid2));
-            contacts1.remove(keyid.indexOf(keyid2));
-            keyid.remove(keyid.indexOf(keyid2));
-            userAdapter.notifyDataSetChanged();
-            contacts1.add(0,userDetailwithUrl);
-            keyid.add(0,key);
+        userAdapter.notifyDataSetChanged();
+    }
 
-            userAdapter.notifyDataSetChanged();
-        }
-
-        if(flag==true)
-        {
-            if(keyid.indexOf(keyid2)<=(contacts1.size()-1))
-            {
-            flag=false;
+    if (flag == true) {
+        if (keyid.indexOf(keyid2) <= (contacts1.size() - 1)) {
+            flag = false;
             contacts1.get(keyid.indexOf(keyid2)).setMessagenum(2);
 
-                contacts1.get(keyid.indexOf(keyid2)).setLastmessage(Handler.getLastMessage(contacts1.get(keyid.indexOf(keyid2)).getPh_number()));
-                contacts1.get(keyid.indexOf(keyid2)).setTime(Handler.getLastMessageTime(contacts1.get(keyid.indexOf(keyid2)).getPh_number()));
+            contacts1.get(keyid.indexOf(keyid2)).setLastmessage(Handler.getLastMessage(contacts1.get(keyid.indexOf(keyid2)).getPh_number()));
+            contacts1.get(keyid.indexOf(keyid2)).setTime(Handler.getLastMessageTime(contacts1.get(keyid.indexOf(keyid2)).getPh_number()));
 
-                userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
-            }
-
+            userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
         }
-        if(flag2==true)
-        {
-            if(keyid.indexOf(keyid2)<=(contacts1.size()-1)) {
-                flag2 = false;
-                if(keyid.indexOf(keyid2)<=(contacts1.size()-1))
-                    contacts1.get(keyid.indexOf(keyid2)).setLastmessage(Handler.getLastMessageGroup(contacts1.get(keyid.indexOf(keyid2)).getGroupkey()));
-                if(Handler.getGroupMessages(contacts1.get(keyid.indexOf(keyid2)).getGroupname(),0).first.size()>0)
-                    contacts1.get(keyid.indexOf(keyid2)).setTime(Handler.getLastGroupMessageTime(contacts1.get(keyid.indexOf(keyid2)).getGroupkey()));
-                else
-                    contacts1.get(keyid.indexOf(keyid2)).setTime(Handler.getLastGroupMessageTime(contacts1.get(keyid.indexOf(keyid2)).getGroupkey()));
 
-                contacts1.get(keyid.indexOf(keyid2)).setMessagenum(2);
-                userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
-            }
+    }
+    if (flag2 == true) {
+        if (keyid.indexOf(keyid2) <= (contacts1.size() - 1)) {
+            flag2 = false;
+            if (keyid.indexOf(keyid2) <= (contacts1.size() - 1))
+                contacts1.get(keyid.indexOf(keyid2)).setLastmessage(Handler.getLastMessageGroup(contacts1.get(keyid.indexOf(keyid2)).getGroupkey()));
+            if (Handler.getGroupMessages(contacts1.get(keyid.indexOf(keyid2)).getGroupname(), 0).first.size() > 0)
+                contacts1.get(keyid.indexOf(keyid2)).setTime(Handler.getLastGroupMessageTime(contacts1.get(keyid.indexOf(keyid2)).getGroupkey()));
+            else
+                contacts1.get(keyid.indexOf(keyid2)).setTime(Handler.getLastGroupMessageTime(contacts1.get(keyid.indexOf(keyid2)).getGroupkey()));
 
+            contacts1.get(keyid.indexOf(keyid2)).setMessagenum(2);
+            userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
         }
+
+    }
+}
 
     }
     public void makecall()
