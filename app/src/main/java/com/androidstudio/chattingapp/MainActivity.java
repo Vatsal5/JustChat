@@ -2181,6 +2181,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 break;
         }
 
+Toast.makeText(getApplicationContext(),ApplicationClass.keyid,Toast.LENGTH_LONG).show();
+        if(ApplicationClass.keyid!=null)
+            keyid2=ApplicationClass.keyid;
 
 
 //        if(keyid.indexOf(keyid2)<=(contacts1.size()-1))
@@ -2202,7 +2205,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //            userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
 //
 //        }
-if(keyid2!=null) {
+if(keyid2!=null ) {
     if (ApplicationClass.messagesent == 1) {
         ApplicationClass.messagesent = 0;
         UserDetailwithUrl userDetailwithUrl;
@@ -2245,6 +2248,7 @@ if(keyid2!=null) {
         }
 
     }
+    ApplicationClass.keyid=null;
 }
 
     }

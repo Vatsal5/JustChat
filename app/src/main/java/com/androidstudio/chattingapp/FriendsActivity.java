@@ -707,6 +707,8 @@ z1--;
 
         else {
 
+            ApplicationClass.keyid=key;
+
             if (contacts1.get(index).getKey() == null) {
                 // tvtitle.setText("Forward To");
                 //   ******  To forward a message in messageactivity ****

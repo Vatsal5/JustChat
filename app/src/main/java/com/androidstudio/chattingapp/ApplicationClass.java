@@ -28,6 +28,7 @@ public class ApplicationClass extends Application
     public static Context MessageActivity2Context;
     public static String url,rename;
     public static DBHandler Handler;
+    public static String keyid;
     public  static int messagesent;
     public static ArrayList<String>members,groupmembers;
     public static ArrayList<String>PendingRequests;
@@ -172,6 +173,7 @@ public class ApplicationClass extends Application
         Contacts=new ArrayList<>();
         Groupname=null;
         GroupDp="null";
+        keyid=null;
         RenameGroup=null;
         groupkey=null;
         create=0;

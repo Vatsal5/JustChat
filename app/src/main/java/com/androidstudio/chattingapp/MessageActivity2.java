@@ -2071,6 +2071,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         // to forward a message
 
         if(getIntent().getIntExtra("path",1)==2) {
+            ApplicationClass.messagesent = 1;
            final String type = getIntent().getStringExtra("type");
             String message1 = getIntent().getStringExtra("message");
 
