@@ -108,18 +108,18 @@
 
             </androidx.recyclerview.widget.RecyclerView>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/btnContacts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="100dp"
-                android:clickable="true"
-                app:backgroundTint="#d6514a"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/lv"
-                app:srcCompat="@drawable/add" />
+<!--            <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--                android:id="@+id/btnContacts"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:layout_marginBottom="100dp"-->
+<!--                android:clickable="true"-->
+<!--                app:backgroundTint="#d6514a"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/lv"-->
+<!--                app:srcCompat="@drawable/add" />-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

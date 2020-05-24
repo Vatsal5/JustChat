@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
-            android:layout_marginLeft="7dp"
+            android:layout_marginLeft="13dp"
             android:layout_marginTop="5dp"
 
             app:layout_constraintTop_toTopOf="parent"
@@ -71,7 +71,7 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center"
+                    android:gravity="center_vertical"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
@@ -80,18 +80,18 @@
                     android:textSize="16dp"/>
 
 
-                <TextView
-                    android:id="@+id/tvError"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:text="Sorry,this video does not exist on your phone anymore"
-                    android:textStyle="bold"
-                    android:textColor="#FFFFFF"
-                    android:gravity="center"
-                    android:paddingLeft="10dp"
-                    android:visibility="gone"
-                    android:paddingRight="10dp"/>
+<!--                <TextView-->
+<!--                    android:id="@+id/tvError"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:text="Sorry,this video does not exist on your phone anymore"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:textColor="#FFFFFF"-->
+<!--                    android:gravity="center"-->
+<!--                    android:paddingLeft="10dp"-->
+<!--                    android:visibility="gone"-->
+<!--                    android:paddingRight="10dp"/>-->
 
             </LinearLayout>
 
@@ -122,10 +122,10 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:textColor="#ffffff"
-                    android:textSize="16dp"/>
+                    />
 
 
 
