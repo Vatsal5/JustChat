@@ -2,119 +2,134 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clback"
     android:layout_width="match_parent"
+    android:background="#d6514a"
     android:layout_height="match_parent"
     tools:context=".CreateGroup">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/ivGroupDP"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:background="@drawable/image_background"
-        android:clickable="true"
-        android:visibility="gone"
-        android:layout_marginTop="40dp"
-        android:src="@drawable/group"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/ivClick"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        app:srcCompat="@drawable/camera"
-        android:background="@drawable/image_background2"
-        android:padding="10dp"
-        android:visibility="gone"
-        android:clickable="true"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
-        app:layout_constraintBottom_toBottomOf="@id/ivGroupDP"
-        app:layout_constraintRight_toRightOf="@id/ivGroupDP" />
-
-    <Button
-        android:id="@+id/btnSkip"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="45dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="45dp"
-        android:background="@drawable/button_background"
-        android:text="Skip"
-        android:visibility="gone"
-        android:textColor="#ffffff"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/TextInput"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
-
-    <ProgressBar
-        android:id="@+id/progress"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="@id/ivGroupDP"
-        app:layout_constraintRight_toRightOf="@id/ivGroupDP"
-        app:layout_constraintBottom_toBottomOf="@id/ivGroupDP"
-        app:layout_constraintLeft_toLeftOf="@id/ivGroupDP"
-        android:indeterminate="true"
-        android:indeterminateTint="#fff"
-        />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/TextInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginRight="40dp"
-        android:textColorHint="#ffffff"
-        app:layout_constraintTop_toBottomOf="@id/ivGroupDP"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent">
-
-        <EditText
-            android:id="@+id/etGroupName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed"
-            android:hint="Group Name"
-            android:inputType="text"
-            android:textColor="#000000"
-            android:textColorHint="#212121"
-            android:textSize="20sp" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
-        android:id="@+id/btnCreate"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="45dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="45dp"
-        android:background="@drawable/button_background"
-        android:text="Create"
-        android:textColor="#ffffff"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/TextInput"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
-
-    <TextView
-        android:id="@+id/tvInstruct"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="**Please enter a Group name"
-        android:textColor="@color/red"
-        android:visibility="gone"
-        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingBottom="40dp"
+android:paddingTop="40dp"
+        android:background="@drawable/white1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCreate"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivGroupDP"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:background="@drawable/image_background"
+            android:clickable="true"
+            android:src="@drawable/group"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ivClick"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/image_background2"
+            android:clickable="true"
+            android:padding="10dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/ivGroupDP"
+            app:layout_constraintRight_toRightOf="@id/ivGroupDP"
+            app:srcCompat="@drawable/camera" />
+
+        <Button
+            android:id="@+id/btnSkip"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="45dp"
+            android:background="@drawable/button_background3"
+            android:text="Skip"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/TextInput" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:indeterminate="true"
+            android:indeterminateTint="#fff"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/ivGroupDP"
+            app:layout_constraintLeft_toLeftOf="@id/ivGroupDP"
+            app:layout_constraintRight_toRightOf="@id/ivGroupDP"
+            app:layout_constraintTop_toTopOf="@id/ivGroupDP" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/TextInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textColorHint="#ffffff"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivGroupDP">
+
+            <EditText
+                android:id="@+id/etGroupName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:hint="Group Name"
+                android:gravity="center"
+                android:inputType="text"
+                android:textColor="#000000"
+                android:textColorHint="#212121"
+                android:textSize="20sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btnCreate"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="45dp"
+            android:background="@drawable/button_background3"
+            android:text="Create"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/TextInput" />
+
+        <TextView
+            android:id="@+id/tvInstruct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="**Please enter a Group name"
+            android:textColor="@color/red"
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnCreate"
+            tools:visibility="gone" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

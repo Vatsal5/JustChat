@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
@@ -67,6 +68,7 @@ public class CreateGroup extends AppCompatActivity {
     ProgressBar progress;
     TextView tvInstruct;
     EditText etGroupName;
+    ConstraintLayout clback;
     Button btnCreate,btnSkip;
     SharedPreferences preftheme;
 
@@ -75,8 +77,12 @@ public class CreateGroup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
 
+        clback=findViewById(R.id.clback);
+
+
         preftheme=getSharedPreferences("theme",0);
 
+        setBackground(clback);
         ivGroupDP = findViewById(R.id.ivGroupDP);
         ivClick = findViewById(R.id.ivClick);
         setBackground(ivClick);

@@ -10,6 +10,7 @@
 
     <color name="black">#000000</color>
     <color name="green">#6ebd52</color>
+    <color name="grey">#eceff1</color>
 
     <color name="Orange">#d6514a</color>
     <color name="iOrange">#00d6514a</color>

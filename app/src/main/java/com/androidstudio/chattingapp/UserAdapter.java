@@ -221,8 +221,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
                 holder.iv.setClickable(false);
 
             }
-            else
+            else {
                 holder.iv.setImageResource(R.drawable.group);
+            }
 
         }
 

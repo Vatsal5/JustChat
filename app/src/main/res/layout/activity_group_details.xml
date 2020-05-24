@@ -10,70 +10,84 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+
         <ImageView
             android:id="@+id/ivGroupDP"
             android:layout_width="match_parent"
             android:layout_height="330dp"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:clickable="true"
             android:src="@drawable/background_right"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/ivEdit"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/edit"
-            app:layout_constraintTop_toBottomOf="@+id/ivGroupDP"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="20dp"
-            android:clickable="true"
-            android:layout_marginBottom="20dp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:paddingTop="10dp"
 
-        <TextView
-            android:id="@+id/tvGroupTitle"
-            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:singleLine="true"
-            android:textColor="#000000"
-            android:textSize="28dp"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivGroupDP" />
+            app:layout_constraintBottom_toBottomOf="@id/ivGroupDP"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:id="@+id/tvCreatedBy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvGroupTitle"
-            android:layout_marginLeft="20dp"
-            android:layout_marginBottom="5dp"
-            android:textSize="13dp"
-            android:textColor="#000000"/>
+            <ImageView
+                android:id="@+id/ivEdit"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:clickable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:srcCompat="@drawable/edit" />
 
-        <LinearLayout
+            <TextView
+                android:id="@+id/tvGroupTitle"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+android:fontFamily="@font/aladin"
+                android:textColor="#ffffff"
+                android:textSize="28dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/tvCreatedBy"
+                app:layout_constraintLeft_toLeftOf="parent"
+                tools:layout_editor_absoluteY="330dp" />
+
+            <TextView
+                android:id="@+id/tvCreatedBy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:textColor="#ffffff"
+                android:textSize="13dp"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <LinearLayout
             android:id="@+id/llAddMembers"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="15dp"
             android:clickable="true"
+        android:background="#e8c8b9"
             android:orientation="horizontal"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvCreatedBy">
+            app:layout_constraintTop_toBottomOf="@id/ivGroupDP">
 
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="18dp"
-                android:background="@drawable/tvbackground"
                 android:padding="8dp"
                 app:srcCompat="@drawable/addperson" />
 
@@ -83,27 +97,45 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="15dp"
                 android:text="Add Participants"
-                android:textColor="#212121"
+                android:textColor="#d6514a"
                 android:textSize="16sp" />
 
         </LinearLayout>
 
-        <TextView
+        <LinearLayout
             android:id="@+id/tvParticipants"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
+
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#e8c8b9"
+            android:orientation="horizontal"
             android:layout_marginTop="11dp"
-            android:paddingTop="5dp"
-            android:textColor="#d6514a"
-            android:textSize="16sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/llAddMembers" />
+
+            app:layout_constraintTop_toBottomOf="@id/llAddMembers"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="25dp"
+               android:gravity="center_vertical"
+                android:text="Group Members"
+                android:textColor="#212121"
+                android:textSize="16sp"
+                 />
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/Participants"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/white2"
+            android:paddingBottom="10dp"
             android:layout_marginTop="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -113,6 +145,7 @@
             android:id="@+id/llExitGroup"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginBottom="40dp"
             android:layout_marginTop="15dp"
             android:background="#e8c8b9"
             android:clickable="true"

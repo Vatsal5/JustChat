@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -71,7 +72,7 @@ import java.util.ArrayList;
 public class GroupDetails extends AppCompatActivity implements ParticipantsAdapter.itemSelected{
 
     ImageView ivGroupDP,ivEdit;
-    TextView tvCreatedBy,tvGroupTitle,tvParticipants;
+    TextView tvCreatedBy,tvGroupTitle;
     LinearLayout llAddMembers,llExitGroup,llDeleteGroup;
     RecyclerView Participants;
     String groupKey,admin;
@@ -90,6 +91,8 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
         setContentView(R.layout.activity_group_details);
         groupKey=getIntent().getStringExtra("groupkey");
         ApplicationClass.groupmembers.clear();
+        ivEdit = findViewById(R.id.ivEdit);
+        ivEdit.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.white1)));
 
 
         users= new ArrayList<>();
@@ -100,8 +103,8 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
         llExitGroup = findViewById(R.id.llExitGroup);
         Participants = findViewById(R.id.Participants);
         llDeleteGroup = findViewById(R.id.llDeleteGroup);
-        tvParticipants = findViewById(R.id.tvParticipants);
-        ivEdit = findViewById(R.id.ivEdit);
+
+
 
         pref= getApplicationContext().getSharedPreferences("Names",0);
 
@@ -200,7 +203,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
 
                                         }//  Log.d("USERSS",dataSnapshot1.getValue(String.class));
                                         adapter.notifyDataSetChanged();
-                                        tvParticipants.setText(users.size()+" Participants");
+
                                     }
 
                                     @Override
