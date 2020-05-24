@@ -3319,25 +3319,25 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         }
         else if(chats.get(index).getType().equals("pdf") && chats.get(index).getDownloaded()!=403 && chats.get(index).getDownloaded()!=404)
         {
-            try {
-                File file = new File(chats.get(index).getMessage());
-                Uri pdfURI = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
-                        BuildConfig.APPLICATION_ID + ".fileprovider", file);
-                Intent pdfOpenintent = new Intent(Intent.ACTION_VIEW);
-                pdfOpenintent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                pdfOpenintent.setDataAndType(pdfURI, "application/pdf");
-                startActivity(pdfOpenintent);
-            }
-//
-            catch (ActivityNotFoundException e)
-            {
-                Toast.makeText(MessageActivity.this, "You have no app to view this type of content", Toast.LENGTH_SHORT).show();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                Toast.makeText(MessageActivity.this, "An error occured", Toast.LENGTH_SHORT).show();
-            }
+                try {
+                    File file = new File(chats.get(index).getMessage());
+                        Uri pdfURI = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
+                                BuildConfig.APPLICATION_ID + ".provider", file);
+                        Intent pdfOpenintent = new Intent(Intent.ACTION_VIEW);
+                        pdfOpenintent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        pdfOpenintent.setDataAndType(pdfURI, "application/pdf");
+                        startActivity(pdfOpenintent);
+                    }
+
+                catch (ActivityNotFoundException e)
+                {
+                    Toast.makeText(MessageActivity.this, "You have no app to view this type of content", Toast.LENGTH_SHORT).show();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    Toast.makeText(MessageActivity.this, "An error occured", Toast.LENGTH_SHORT).show();
+                }
         }
     }
 
@@ -3389,8 +3389,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             && chats.get(index).getDownloaded()!=104 && chats.get(index).getDownloaded()!=101 &&chats.get(index).getDownloaded()!=203 && chats.get(index).getDownloaded()!=204
          && chats.get(index).getDownloaded()!=303 && chats.get(index).getDownloaded()!=304 && chats.get(index).getDownloaded()!=403 && chats.get(index).getDownloaded()!=404) {
 
-            Log.d("LONGCLICK","INSIDE");
-
             if (!(chats.get(index).getType().equals("video") || chats.get(index).getType().equals("image") || chats.get(index).getType().equals("gif") || chats.get(index).getType().equals("sticker") || chats.get(index).getType().equals("pdf"))) {
                 String[] choices = {"Copy", "Forward"};
 
@@ -3421,28 +3419,43 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 dialog.show();
             } else {
 
+                Boolean condition = true;
+                File file = null;
 
+                if(chats.get(index).getType().equals("pdf")) {
+                    file = new File(chats.get(index).getMessage());
 
-                String[] choices = {"Forward"};
-                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+                    Log.d("inside","inside");
 
-                builder.setItems(choices, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        switch (i) {
-                            case 0:
-                                Intent intent = new Intent(MessageActivity.this, FriendsActivity.class);
-                                intent.putExtra("type", chats.get(index).getType());
-                                intent.putExtra("path", 1);
-                                intent.putExtra("message", chats.get(index).getMessage());
-
-                                startActivity(intent);
-                                break;
-                        }
+                    if(!file.exists()) {
+                        condition = false;
+                        Log.d("inside","inside");
                     }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+
+                }
+
+                if(condition) {
+                    String[] choices = {"Forward"};
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+
+                    builder.setItems(choices, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            switch (i) {
+                                case 0:
+                                    Intent intent = new Intent(MessageActivity.this, FriendsActivity.class);
+                                    intent.putExtra("type", chats.get(index).getType());
+                                    intent.putExtra("path", 1);
+                                    intent.putExtra("message", chats.get(index).getMessage());
+
+                                    startActivity(intent);
+                                    break;
+                            }
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
 
             }
 
