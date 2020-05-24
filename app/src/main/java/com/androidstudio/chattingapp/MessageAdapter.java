@@ -209,6 +209,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }else if(viewType == PDF_LEFT){
             View v = LayoutInflater.from(context).inflate(R.layout.pdf_left, parent, false);
             return new ViewHolder(v);
+        }else if(viewType == PDF_LEFT_GRP){
+            View v = LayoutInflater.from(context).inflate(R.layout.pdf_left2, parent, false);
+            return new ViewHolder(v);
         }
         else {
             View v = LayoutInflater.from(context).inflate(R.layout.message_right, parent, false);

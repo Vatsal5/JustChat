@@ -3425,11 +3425,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 if(chats.get(index).getType().equals("pdf")) {
                     file = new File(chats.get(index).getMessage());
 
-                    Log.d("inside","inside");
 
                     if(!file.exists()) {
                         condition = false;
-                        Log.d("inside","inside");
+                        Toast.makeText(MessageActivity.this, "This file has been deleted or moved", Toast.LENGTH_SHORT).show();
                     }
 
                 }

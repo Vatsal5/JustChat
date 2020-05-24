@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentUris;
@@ -107,6 +109,7 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
@@ -151,8 +154,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     DBHandler Handler;
     int y=0,z=0;
      String sender;
-    ChildEventListener imagereceiver, videoreceiver, chreceiver,seenmessages,gifreceiver,stickerreceiver,Group,layoutreceiver;
-    ValueEventListener deletevideo,deleteimage,set,set1,set2;
+    ChildEventListener imagereceiver, videoreceiver, chreceiver,seenmessages,gifreceiver,stickerreceiver,pdfreceiver,Group,layoutreceiver;
+    ValueEventListener deletevideo,deleteimage,deletepdf,set,set1,set2;
     String defaultvalue;
     SharedPreferences pref,wallpaper;
     RecyclerView.AdapterDataObserver observer;
@@ -822,7 +825,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 final int DRAWABLE_RIGHT = 2;
                 final int DRAWABLE_BOTTOM = 3;
 
-                String[] choices = {"Image", "Video","GIF","Stickers","Record Video"};
+                String[] choices = {"Image", "Video","GIF","Stickers","Record Video","PDF"};
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
 
@@ -1034,6 +1037,14 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                                     intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.5);
                                                     startActivityForResult(intent, 999);
                                                 }
+                                                break;
+
+                                            case 5:
+                                                Intent intent = new Intent();
+                                                intent.setType("application/pdf");
+                                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                                startActivityForResult(intent, 55);
                                                 break;
                                         }
                                     }
@@ -1310,6 +1321,101 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(FirebaseAuth
                 .getInstance().getCurrentUser().getPhoneNumber()).addChildEventListener(layoutreceiver);
 
+        pdfreceiver = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                final String time, date, sender;
+
+                time = dataSnapshot.getValue(String.class).substring(0, 11);
+                date = dataSnapshot.getValue(String.class).substring(11, 21);
+
+                sender = dataSnapshot.getValue(String.class).substring(21, 34);
+
+                set= new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.getValue()!=null) {
+
+                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                    .setValue(Integer.parseInt(dataSnapshot.getValue().toString().substring(0, dataSnapshot.getValue().toString().indexOf("m"))) - 1
+                                            + dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("m")));
+                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                                    .removeEventListener(set);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                };
+                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(sender).child(dataSnapshot.getKey())
+                        .addListenerForSingleValueEvent(set);
+
+
+
+
+                MessageModel messageModel = new MessageModel(-1, sender, "null", dataSnapshot.getValue(String.class).substring(34), "pdf", 403, time, date, groupKey,"null");
+                //messageModel.setUri(Uri.parse(dataSnapshot.getValue(String.class)));
+
+                if (chats.size() != 0) {
+                    if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate())) {
+                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date, groupKey,"null");
+                        int id = Handler.addMessage(message);
+                        message.setId(id);
+                        chats.add(message);
+                    }
+                } else {
+                    if(!(defaultvalue.equals("private"))) {
+                        MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date, groupKey,"null");
+                        int id = Handler.addMessage(message);
+                        message.setId(id);
+                        chats.add(message);
+                    }
+                }
+
+                int id = Handler.addMessage(messageModel);
+                messageModel.setId(id);
+
+                chats.add(messageModel);
+
+                if(!Messages.isComputingLayout())
+                    adapter.notifyItemInserted(chats.size()-1);
+
+                if(messagecount==2)
+                    received.play();
+                else
+                    messagecount--;
+
+                dataSnapshot.getRef().removeValue();
+
+        }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("pdf").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).addChildEventListener(pdfreceiver);
+
         imagereceiver = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -1378,7 +1484,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 dataSnapshot.getRef().removeValue();
 
-        }
+            }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -2057,6 +2163,34 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             if(!Messages.isComputingLayout())
                                 adapter.notifyItemInserted(chats.size()-1);
 
+                        }else if (type.equals("pdf")) {
+
+                            MessageModel model = new MessageModel(-349,sender,"null",getIntent().getStringExtra("message"),
+                                    "pdf",400,simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
+
+                            if (chats.size() != 0) {
+                                if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                                    MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                                    int id = Handler.addMessage(messageModel);
+                                    messageModel.setId(id);
+                                    chats.add(messageModel);
+                                }
+                            } else {
+                                if ((!(defaultvalue.equals("private")))) {
+                                    MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                                    int id = Handler.addMessage(messageModel);
+                                    messageModel.setId(id);
+                                    chats.add(messageModel);
+                                }
+                            }
+
+                            int id = Handler.addMessage(model);
+                            model.setId(id);
+                            chats.add(model);
+
+                            if(!Messages.isComputingLayout())
+                                adapter.notifyItemInserted(chats.size()-1);
+
                         }else if (type.equals("sticker")) {
 
                             MessageModel model = new MessageModel(-349,sender,"null",getIntent().getStringExtra("message"),
@@ -2152,7 +2286,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             {
                 if(chats.get(i).getDownloaded()==2 || chats.get(i).getDownloaded()==3 || chats.get(i).getDownloaded()==4 || chats.get(i).getDownloaded()==-2
                         || chats.get(i).getDownloaded()==-3 || chats.get(i).getDownloaded()==100 || chats.get(i).getDownloaded()==103 || chats.get(i).getDownloaded()==104
-                ||chats.get(i).getDownloaded()==204 || chats.get(i).getDownloaded()==201 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 304|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 301) {
+                ||chats.get(i).getDownloaded()==204 || chats.get(i).getDownloaded()==201 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 304|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 301
+                        || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 404|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 401) {
                     flag2 = false;
                     break;
                 }
@@ -2221,7 +2356,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3 ||
                     chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 204|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 201||
                     chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 60 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -3
-            || chats.get(viewHolder.getAdapterPosition()).getType().equals("unread") || chats.get(viewHolder.getAdapterPosition()).getType().equals("grpinfo") || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 304|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 301)){
+            || chats.get(viewHolder.getAdapterPosition()).getType().equals("unread") || chats.get(viewHolder.getAdapterPosition()).getType().equals("grpinfo") || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 304|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 301
+                    || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 404|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 401)){
 
                 if(!chats.get(viewHolder.getAdapterPosition()).getSender().equals(sender)) {
                     swipeFlags = ItemTouchHelper.END;
@@ -2267,6 +2403,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("sticker").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).addChildEventListener(stickerreceiver);
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("pdf").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).addChildEventListener(pdfreceiver);
 
         if(ApplicationClass.RenameGroup!=null)
         {
@@ -2519,12 +2659,96 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             startActivityForResult(intent,100);
         }
 
+        if(requestCode==55) {
+            if (resultCode == RESULT_OK) {
+
+                if (data.getClipData() != null) {
+
+                    if (data.getClipData().getItemCount() <= 5) {
+                        ApplicationClass.messagesent=1;
+
+                        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+
+                            ClipData.Item pdfItem = data.getClipData().getItemAt(i);
+                            Uri pdfURI = pdfItem.getUri();
+
+
+                                Date date = new Date();
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+
+                                long millis = System.currentTimeMillis();
+                                java.sql.Date date1 = new java.sql.Date(millis);
+
+                                MessageModel model = new MessageModel(1190, sender, "null", getPath(MessageActivity2.this,pdfURI), "pdf", 400, simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
+
+                                if (chats.size() != 0) {
+                                    if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                                        MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                                        int id = Handler.addMessage(messageModel);
+                                        messageModel.setId(id);
+                                        chats.add(messageModel);
+                                    }
+                                } else {
+                                    if ((!(defaultvalue.equals("private")))) {
+                                        MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                                        int id = Handler.addMessage(messageModel);
+                                        messageModel.setId(id);
+                                        chats.add(messageModel);
+                                    }
+                                }
+                                int id = Handler.addMessage(model);
+                                model.setId(id);
+                                chats.add(model);
+                                if(!Messages.isComputingLayout())
+                                    adapter.notifyItemInserted(chats.size() - 1);
+                        }
+                    } else {
+                        Toast.makeText(this, "You cannot send more than 5 PDFs at a time", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+
+                    ApplicationClass.messagesent=1;
+
+                        Uri uri = data.getData();
+                        Date date = new Date();
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+
+                        long millis = System.currentTimeMillis();
+                        java.sql.Date date1 = new java.sql.Date(millis);
+
+                        MessageModel model = new MessageModel(1190, sender, "null", getPath(MessageActivity2.this,uri), "pdf", 400, simpleDateFormat.format(date).substring(0, 8) + simpleDateFormat.format(date).substring(9), date1.toString(), groupKey,"null");
+
+                        if (chats.size() != 0) {
+                            if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
+                                MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey,"null");
+                                int id = Handler.addMessage(messageModel);
+                                messageModel.setId(id);
+                                chats.add(messageModel);
+                            }
+                        } else {
+                            if ((!(defaultvalue.equals("private")))) {
+                                MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(), groupKey, "null");
+                                int id = Handler.addMessage(messageModel);
+                                messageModel.setId(id);
+                                chats.add(messageModel);
+                            }
+                        }
+                        int id = Handler.addMessage(model);
+                        model.setId(id);
+                        chats.add(model);
+                        if(!Messages.isComputingLayout())
+                            adapter.notifyItemInserted(chats.size() - 1);
+                }
+            }
+        }
+
     }
 
     @Override
     public void showImage(int index) {
 
-        if(chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4 && chats.get(index).getDownloaded()!=203 && chats.get(index).getDownloaded()!=204 && !chats.get(index).getType().equals("video")) {
+        if(chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4 && chats.get(index).getDownloaded()!=203 && chats.get(index).getDownloaded()!=204 && !chats.get(index).getType().equals("video")  && !chats.get(index).getType().equals("pdf")) {
+            //  Log.d("URIURI",index +" "+ chats.get(index).getMessage())
 
             Intent intent = new Intent(MessageActivity2.this, ShowImage.class);
 
@@ -2534,6 +2758,28 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 intent.putExtra("source", chats.get(index).getMessage());
 
             startActivity(intent);
+        }
+        else if(chats.get(index).getType().equals("pdf") && chats.get(index).getDownloaded()!=403 && chats.get(index).getDownloaded()!=404)
+        {
+            try {
+                File file = new File(chats.get(index).getMessage());
+                Uri pdfURI = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
+                        BuildConfig.APPLICATION_ID + ".provider", file);
+                Intent pdfOpenintent = new Intent(Intent.ACTION_VIEW);
+                pdfOpenintent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                pdfOpenintent.setDataAndType(pdfURI, "application/pdf");
+                startActivity(pdfOpenintent);
+            }
+
+            catch (ActivityNotFoundException e)
+            {
+                Toast.makeText(MessageActivity2.this, "You have no app to view this type of content", Toast.LENGTH_SHORT).show();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                Toast.makeText(MessageActivity2.this, "An error occured", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -2562,6 +2808,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("sticker").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(stickerreceiver);
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("pdf").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).removeEventListener(pdfreceiver);
 
 
         overridePendingTransition(0, 0);
@@ -2604,9 +2854,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         if (!chats.get(index).getMessage().equals("null") && chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4
                 && chats.get(index).getDownloaded()!=104 && chats.get(index).getDownloaded()!=101 &&chats.get(index).getDownloaded()!=203 && chats.get(index).getDownloaded()!=204
-                && chats.get(index).getDownloaded()!=303 && chats.get(index).getDownloaded()!=304) {
+                && chats.get(index).getDownloaded()!=303 && chats.get(index).getDownloaded()!=304 && chats.get(index).getDownloaded()!=403 && chats.get(index).getDownloaded()!=404) {
 
-            if (!(chats.get(index).getType().equals("video") || chats.get(index).getType().equals("image") || chats.get(index).getType().equals("gif") || chats.get(index).getType().equals("sticker"))) {
+            if (!(chats.get(index).getType().equals("video") || chats.get(index).getType().equals("image") || chats.get(index).getType().equals("gif") || chats.get(index).getType().equals("sticker") || chats.get(index).getType().equals("pdf"))) {
                 String[] choices = {"Copy", "Forward"};
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
@@ -2636,26 +2886,42 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 AlertDialog dialog = builder.create();
                 dialog.show();
             } else {
-                String[] choices = {"Forward"};
-                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
 
-                builder.setItems(choices, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        switch (i) {
-                            case 0:
-                                Intent intent = new Intent(MessageActivity2.this, FriendsActivity.class);
-                                intent.putExtra("type", chats.get(index).getType());
-                                intent.putExtra("path", 1);
-                                intent.putExtra("message", chats.get(index).getMessage());
+                Boolean condition = true;
+                File file = null;
 
-                                startActivity(intent);
-                                break;
-                        }
+                if(chats.get(index).getType().equals("pdf")) {
+                    file = new File(chats.get(index).getMessage());
+
+                    if(!file.exists()) {
+                        condition = false;
+                        Toast.makeText(MessageActivity2.this, "This file has been deleted or moved", Toast.LENGTH_SHORT).show();
                     }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
+
+                }
+
+                if(condition) {
+                    String[] choices = {"Forward"};
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
+
+                    builder.setItems(choices, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            switch (i) {
+                                case 0:
+                                    Intent intent = new Intent(MessageActivity2.this, FriendsActivity.class);
+                                    intent.putExtra("type", chats.get(index).getType());
+                                    intent.putExtra("path", 1);
+                                    intent.putExtra("message", chats.get(index).getMessage());
+
+                                    startActivity(intent);
+                                    break;
+                            }
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
             }
         }
 
@@ -2706,12 +2972,92 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     @Override
     public void sendPdf(int index) {
-
+        UploadPDF(index,chats.get(index));
     }
 
     @Override
     public void downloadPdf(int index) {
+        new DownloadPDF(index,chats.get(index)).execute(chats.get(index).getMessage().substring(0,chats.get(index).getMessage().lastIndexOf(" ")));
+    }
 
+    public void UploadPDF(final int index, final MessageModel message)
+    {
+        ApplicationClass.PendingRequests.add(groupKey);
+        final int[] y = {0};
+
+        message.setDownloaded(401);
+        Handler.UpdateMessage(message);
+
+        chats.get(index).setDownloaded(401);
+
+        if(!Messages.isComputingLayout())
+            adapter.notifyItemChanged(index);
+
+        File file = new File(message.getMessage());
+        final String name = message.getMessage().substring(message.getMessage().lastIndexOf("/")+1,message.getMessage().lastIndexOf("."));
+        Log.d("filename",name);
+
+        rf.child(groupKey).child("pdf/" + Uri.parse(message.getMessage()).getLastPathSegment()).
+                putFile(Uri.fromFile(file)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                rf.child(groupKey).child("pdf/" + Uri.parse(message.getMessage()).getLastPathSegment()).getDownloadUrl()
+                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletepdf").
+
+                                        child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(numberOfMembers + message.getDate()+  uri.toString());
+
+                                String push=FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("pdf").child(membernumber.get(0)).
+
+                                        push().getKey();
+
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(FirebaseAuth
+                                        .getInstance().getCurrentUser().getPhoneNumber()).child(push).setValue(membernumber.size()+"mpdf");
+
+
+                                for(int i=0;i<membernumber.size();i++) {
+
+                                    FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("pdf").child(membernumber.get(i)).
+
+                                            child(push).setValue(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + uri.toString()+" "+name);
+
+                                    if(y[0] ==0) {
+                                        y[0] =1;
+                                        message.setFirebaseId(push);
+                                        message.setDownloaded(402);
+                                        Handler.UpdateMessage(message);
+
+                                        if (!MessageActivity2.this.isDestroyed()) {
+                                            chats.get(index).setFirebaseId(push);
+                                            chats.get(index).setDownloaded(402);
+                                            sent.play();
+
+                                            if (!Messages.isComputingLayout()) {
+                                                adapter.notifyItemChanged(index);
+                                            }
+                                        }
+
+                                        if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
+                                            if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
+                                                Intent intent = getIntent();
+                                                ((Activity) ApplicationClass.MessageActivity2Context).finish();
+                                                startActivity(intent);
+
+                                                sent.play();
+
+                                                overridePendingTransition(0, 0);
+                                            }
+                                        }
+                                    }
+                                }
+                                ApplicationClass.PendingRequests.remove(groupKey);
+                            }
+                        });
+
+            }
+        });
     }
 
     public void SendSticker(final int index,final MessageModel model)
@@ -3234,6 +3580,174 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 adapter.notifyItemInserted(chats.size() - 1);
             }
         }
+
+    private class DownloadPDF extends AsyncTask<String, Void, Uri>
+    {
+        int index;
+        MessageModel message;
+
+        DownloadPDF(int position,MessageModel message)
+        {
+            index = position;
+            this.message = message;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            ApplicationClass.PendingRequests.add(groupKey);
+
+            message.setDownloaded(404);
+            Handler.UpdateMessage(message);
+
+            chats.get(index).setDownloaded(404);
+            if(!Messages.isComputingLayout())
+                adapter.notifyItemChanged(index);
+        }
+
+        @Override
+        protected Uri doInBackground(String... strings) {
+            InputStream urlInputStream = null;
+
+            URLConnection urlConnection;
+
+            String message1 = message.getMessage();
+            String name = message1.substring(message1.lastIndexOf(" ")+1);
+
+            File directory = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+            if(!directory.exists())
+                directory.mkdirs();
+
+            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+name+".pdf");
+
+            try{
+                //Form a new URL
+                URL finalUrl = new URL(strings[0]);
+
+                urlConnection = finalUrl.openConnection();
+
+                //Get the size of the (file) inputstream from server..
+                int contentLength = urlConnection.getContentLength();
+
+                DataInputStream stream = new DataInputStream(finalUrl.openStream());
+
+                byte[] buffer = new byte[contentLength];
+                stream.readFully(buffer);
+                stream.close();
+
+                if (buffer.length > 0) {
+                    try {
+                        FileOutputStream fos = new FileOutputStream(file);
+                        fos.write(buffer);
+                        fos.flush();
+                        fos.close();
+                        deletepdf=  new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletepdf").child(dataSnapshot.getKey())
+                                        .setValue(( Integer.parseInt(dataSnapshot.getValue().toString().substring(0,dataSnapshot.getValue().toString().indexOf("h")-10))-1)+dataSnapshot.getValue().toString().substring(dataSnapshot.getValue().toString().indexOf("h")-10))
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletepdf").child(message.getTime()+message.getDate()
+                                                        +message.getSender())
+                                                        .removeEventListener(deletepdf);
+
+                                            }
+                                        });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        };
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletepdf").child(message.getTime()+message.getDate()
+                                +message.getSender())
+                                .addListenerForSingleValueEvent(deletepdf);
+
+                        return Uri.fromFile(file);
+                    }
+                    catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        /*Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();*/
+                    }
+                } else {
+                    //Could not download the file...
+
+                }
+            }catch (FileNotFoundException e) {
+                return null;
+            }
+            catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Uri uri) {
+            super.onPostExecute(uri);
+
+
+            if (uri != null) {
+
+                message.setDownloaded(402);
+                message.setMessage(uri.toString());
+
+                Handler.UpdateMessage(message);
+
+                if(!MessageActivity2.this.isDestroyed())
+                {
+                    chats.get(index).setDownloaded(402);
+                    chats.get(index).setMessage(uri.toString());
+
+                    if(!Messages.isComputingLayout())
+                    {
+                        adapter.notifyItemChanged(index);
+                    }
+                }
+
+                if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
+                    if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
+                        Intent intent = getIntent();
+                        ((Activity) ApplicationClass.MessageActivity2Context).finish();
+                        startActivity(intent);
+
+                        overridePendingTransition(0, 0);
+                    }
+                }
+
+            }
+            else{
+                message.setDownloaded(403);
+                Handler.UpdateMessage(message);
+
+                if(!MessageActivity2.this.isDestroyed()) {
+                    chats.get(index).setDownloaded(403);
+                    adapter.notifyItemChanged(index);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity2.this);
+                    builder.setTitle("Could not download PDF");
+                    builder.setMessage("Please ask " + pref.getString(message.getSender(), message.getSender()) +
+                            " to resend the pdf")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            }
+            ApplicationClass.PendingRequests.remove(groupKey);
+        }
+    }
 
     private class DownloadSticker extends AsyncTask<String, Void, Uri>
     {
@@ -4027,6 +4541,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("sticker").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(stickerreceiver);
+
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("pdf").child(
+                FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+        ).removeEventListener(pdfreceiver);
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("seenmessages").child(FirebaseAuth
                 .getInstance().getCurrentUser().getPhoneNumber()).removeEventListener(seenmessages);

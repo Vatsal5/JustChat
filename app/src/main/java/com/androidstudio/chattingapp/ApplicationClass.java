@@ -58,6 +58,20 @@ public class ApplicationClass extends Application
 
                 final MessageModel model = messages.get(i);
 
+                if(messages.get(i).getDownloaded() ==404)
+                {
+                    model.setDownloaded(403);
+                    Handler.UpdateMessage(model);
+                    check=0;
+                }
+
+                if(messages.get(i).getDownloaded() ==401)
+                {
+                    model.setDownloaded(400);
+                    Handler.UpdateMessage(model);
+                    check=0;
+                }
+
                 if(messages.get(i).getDownloaded() ==304)
                 {
                     model.setDownloaded(303);
