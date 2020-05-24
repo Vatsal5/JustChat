@@ -2757,6 +2757,29 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     }
 
     @Override
+    public void pdfclicked(int index) {
+        try {
+            File file = new File(chats.get(index).getMessage());
+            Uri pdfURI = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
+                    BuildConfig.APPLICATION_ID + ".provider", file);
+            Intent pdfOpenintent = new Intent(Intent.ACTION_VIEW);
+            pdfOpenintent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            pdfOpenintent.setDataAndType(pdfURI, "application/pdf");
+            startActivity(pdfOpenintent);
+        }
+
+        catch (ActivityNotFoundException e)
+        {
+            Toast.makeText(MessageActivity2.this, "You have no app to view this type of content", Toast.LENGTH_SHORT).show();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Toast.makeText(MessageActivity2.this, "An error occured", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     public void showImage(int index) {
 
         if(chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4 && chats.get(index).getDownloaded()!=203 && chats.get(index).getDownloaded()!=204 && !chats.get(index).getType().equals("video")  && !chats.get(index).getType().equals("pdf")) {
@@ -2771,28 +2794,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             startActivity(intent);
         }
-        else if(chats.get(index).getType().equals("pdf") && chats.get(index).getDownloaded()!=403 && chats.get(index).getDownloaded()!=404)
-        {
-            try {
-                File file = new File(chats.get(index).getMessage());
-                Uri pdfURI = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
-                        BuildConfig.APPLICATION_ID + ".provider", file);
-                Intent pdfOpenintent = new Intent(Intent.ACTION_VIEW);
-                pdfOpenintent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                pdfOpenintent.setDataAndType(pdfURI, "application/pdf");
-                startActivity(pdfOpenintent);
-            }
 
-            catch (ActivityNotFoundException e)
-            {
-                Toast.makeText(MessageActivity2.this, "You have no app to view this type of content", Toast.LENGTH_SHORT).show();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                Toast.makeText(MessageActivity2.this, "An error occured", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     @Override

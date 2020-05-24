@@ -75,6 +75,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     public interface ImageSelected
     {
+        public void pdfclicked(int index);
         public void showImage(int index);
         public void downloadImage(int index);
         public void sentTextMessage(int index);
@@ -109,7 +110,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         EmojiconTextView tvMessage;
         ImageView ivImage,ivPlay,ivProfile,ivTyping,ivSeen,ivGIF,ivDownload;
         ProgressBar progress;
-        LinearLayout llMesageLeft,llTyping,llDownload;
+        LinearLayout llMesageLeft,llTyping,llDownload,llpdf;
         ConstraintLayout llMessageRight,clPdfLeft,clPdfRight;
 
         public ViewHolder(@NonNull View itemView) {
@@ -119,6 +120,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             ivImage = itemView.findViewById(R.id.ivImage);
             ivProfile = itemView.findViewById(R.id.ivProfile);
             progress = itemView.findViewById(R.id.progress);
+            llpdf=itemView.findViewById(R.id.llpdf);
             tvTime = itemView.findViewById(R.id.tvTime);
             llMessageRight = itemView.findViewById(R.id.llMessageRight);
             tvDate = itemView.findViewById(R.id.tvDate);
@@ -221,6 +223,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull final MessageAdapter.ViewHolder holder, final int position) {
+
+
+        if(holder.llpdf!=null)
+        {
+            holder.llpdf.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Activity.pdfclicked(holder.getAdapterPosition());
+                }
+            });
+        }
 
         if(holder.tvGroupInfo!=null)
             holder.tvGroupInfo.setText(messages.get(holder.getAdapterPosition()).getMessage());

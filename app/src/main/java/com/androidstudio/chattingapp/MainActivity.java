@@ -1324,7 +1324,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 }
                             }
 
-                            reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
+
+                                    reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
                                     .getPhoneNumber()).child("info").child("deletevideos").removeEventListener(deletevideo);
 
                         }
