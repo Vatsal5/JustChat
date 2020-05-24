@@ -1098,6 +1098,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             else if(type.equals("sticker")){
                                 chats.get(i).setDownloaded(306);
                             }
+                            else if(type.equals("pdf")){
+                                chats.get(i).setDownloaded(406);
+                            }
 
                             if(!Messages.isComputingLayout())
                                 adapter.notifyItemChanged(i);
@@ -1116,7 +1119,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     {
                         if(chats.get(i).getFirebaseId().equals(key))
                         {
-                            if(!((chats.get(i).getDownloaded()==-4) || (chats.get(i).getDownloaded()==5) || (chats.get(i).getDownloaded()==105) || (chats.get(i).getDownloaded()==205)   || (chats.get(i).getDownloaded() == 305))) {
+                            if(!((chats.get(i).getDownloaded()==-4) || (chats.get(i).getDownloaded()==5) || (chats.get(i).getDownloaded()==105) || (chats.get(i).getDownloaded()==205)   || (chats.get(i).getDownloaded() == 305) || (chats.get(i).getDownloaded() == 405))) {
                                 if (type.equals("text")) {
 
                                     chats.get(i).setDownloaded(-4);
@@ -1135,6 +1138,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                 }
                                 else if(type.equals("sticker")){
                                     chats.get(i).setDownloaded(305);
+                                }
+                                else if(type.equals("pdf")){
+                                    chats.get(i).setDownloaded(405);
                                 }
 
                                 if (!Messages.isComputingLayout())
@@ -1179,6 +1185,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             else if(type.equals("sticker")){
                                 chats.get(i).setDownloaded(306);
                             }
+                            else if(type.equals("pdf")){
+                                chats.get(i).setDownloaded(406);
+                            }
 
                             if (!Messages.isComputingLayout())
                                 adapter.notifyItemChanged(i);
@@ -1195,7 +1204,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                         if (chats.get(i).getFirebaseId().equals(key)) {
 
-                            if (!((chats.get(i).getDownloaded() == -4) || (chats.get(i).getDownloaded() == 5) || (chats.get(i).getDownloaded() == 105) || (chats.get(i).getDownloaded() == 205)  || (chats.get(i).getDownloaded() == 305))) {
+                            if (!((chats.get(i).getDownloaded() == -4) || (chats.get(i).getDownloaded() == 5) || (chats.get(i).getDownloaded() == 105) || (chats.get(i).getDownloaded() == 205)  || (chats.get(i).getDownloaded() == 305) || (chats.get(i).getDownloaded() == 405))) {
                                 if (type.equals("text")) {
 
                                     chats.get(i).setDownloaded(-4);
@@ -1214,6 +1223,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                 }
                                 else if(type.equals("sticker")){
                                     chats.get(i).setDownloaded(305);
+                                }
+                                else if(type.equals("pdf")){
+                                    chats.get(i).setDownloaded(405);
                                 }
 
                                 if (!Messages.isComputingLayout())
