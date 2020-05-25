@@ -157,7 +157,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
         }
 
 
-        if(!defaultvalue.equals("private") && !defaultvalue.equals("null")) {
+        if(!defaultvalue.equals("private") && (defaultvalue.equals("null") || defaultvalue.equals("public"))) {
             if (!(lastTimesubstring.equals("null"))) {
                 if(lastdate.equals(date1.toString())) {
                     if (listFiltered.get(holder.getAdapterPosition()).getGroupname() != null)
@@ -192,12 +192,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
         }
 
 
-        if(!defaultvalue.equals("private") && !defaultvalue.equals("null")) {
-
-            if(!sender.equals("null") && !sender.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
-                holder.ivSend.setVisibility(View.VISIBLE);
-            else
-                holder.ivSend.setVisibility(View.GONE);
+        if(!defaultvalue.equals("private") && (defaultvalue.equals("null") || defaultvalue.equals("public"))) {
 
             if (!(lastmessagesubstring.equals(" ")) && !(lastmessagesubstring.equals("null")) && !(lastmessagesubstring.equals("  ")) && !(lastmessagesubstring.equals("   "))
                     && !(lastmessagesubstring.equals("    ")) && !(lastmessagesubstring.equals("     "))) {
@@ -209,12 +204,23 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
                     holder.tvlastmessage.setText(lastmessagesubstring);
                 }
                 holder.ivImage.setVisibility(View.GONE);
+
+                if(!sender.equals("null") && !sender.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                    holder.ivSend.setVisibility(View.VISIBLE);
+                else
+                    holder.ivSend.setVisibility(View.GONE);
+
             } else if (lastmessagesubstring.equals(" ")) {
                 holder.ivImage.setVisibility(View.VISIBLE);
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
                 holder.ivImage.setImageResource(R.drawable.image);
 
                 holder.tvlastmessage.setText("Image");
+
+                if(!sender.equals("null") && !sender.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                    holder.ivSend.setVisibility(View.VISIBLE);
+                else
+                    holder.ivSend.setVisibility(View.GONE);
 
             } else if (lastmessagesubstring.equals("   ")) {
                 holder.ivImage.setVisibility(View.VISIBLE);
@@ -223,12 +229,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
 
                 holder.tvlastmessage.setText("GIF");
 
+                if(!sender.equals("null") && !sender.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                    holder.ivSend.setVisibility(View.VISIBLE);
+                else
+                    holder.ivSend.setVisibility(View.GONE);
+
             } else if (lastmessagesubstring.equals("    ")) {
                 holder.ivImage.setVisibility(View.VISIBLE);
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
                 holder.ivImage.setImageResource(R.drawable.gif);
 
                 holder.tvlastmessage.setText("Sticker");
+
+                if(!sender.equals("null") && !sender.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                    holder.ivSend.setVisibility(View.VISIBLE);
+                else
+                    holder.ivSend.setVisibility(View.GONE);
 
             }else if (lastmessagesubstring.equals("     ")) {
                 holder.ivImage.setVisibility(View.VISIBLE);
@@ -237,25 +253,37 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
 
                 holder.tvlastmessage.setText("PDF");
 
+                if(!sender.equals("null") && !sender.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                    holder.ivSend.setVisibility(View.VISIBLE);
+                else
+                    holder.ivSend.setVisibility(View.GONE);
+
             } else if (lastmessagesubstring.equals("  ")) {
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
                 holder.ivImage.setImageResource(R.drawable.video);
                 holder.tvlastmessage.setText("Video");
                 holder.ivImage.setVisibility(View.VISIBLE);
 
+                if(!sender.equals("null") && !sender.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                    holder.ivSend.setVisibility(View.VISIBLE);
+                else
+                    holder.ivSend.setVisibility(View.GONE);
+
             }else{
                 holder.ivImage.setVisibility(View.GONE);
                 holder.tvlastmessage.setVisibility(View.GONE);
                 holder.ivSend.setVisibility(View.GONE);
+
             }
         }
         else
         {
-            holder.ivImage.setVisibility(View.VISIBLE);
-            holder.ivImage.setImageResource(R.drawable.security);
-            holder.tvlastmessage.setVisibility(View.VISIBLE);
-            holder.tvlastmessage.setText("SECURED");
-            holder.ivSend.setVisibility(View.GONE);
+                holder.ivImage.setVisibility(View.VISIBLE);
+                holder.ivImage.setImageResource(R.drawable.security);
+                holder.tvlastmessage.setVisibility(View.VISIBLE);
+                holder.tvlastmessage.setText("SECURED");
+                holder.ivSend.setVisibility(View.GONE);
+
         }
        // Log.d("asdf",listFiltered.get(position).getUrl());
 
