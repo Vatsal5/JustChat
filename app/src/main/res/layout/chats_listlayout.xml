@@ -159,7 +159,7 @@
                     android:paddingRight="10dp"
                     android:textColor="#bdbdbd"
                     android:textSize="14sp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     />
 
 
