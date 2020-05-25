@@ -135,7 +135,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     int numberOfMembers=-1;
     SharedPreferences preftheme;
     SharedPreferences Names;
-
+    int noOfMembers=-1;
     ArrayList<String > gifurl;
     gif_adapter gif_adapter;
     PopupWindow popupWindow;
@@ -145,7 +145,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     SearchView searchview;
 
-    SharedPreferences GroupStatus;
+
 
     LinearLayoutManager manager;
     MessageAdapter adapter;
@@ -288,9 +288,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         Names = getSharedPreferences("Names",0);
         ll1=findViewById(R.id.ll1);
         ll=findViewById(R.id.ll);
-        GroupStatus = getSharedPreferences("groupstatus",0);
+
         if(getIntent().getStringExtra("status")!=null)
         {
+            noOfMembers=0;
             ll.setVisibility(View.GONE);
             ll1.setVisibility(View.VISIBLE);
         }
@@ -441,6 +442,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 if(condition) {
 
+                    noOfMembers=0;
                     ll.setVisibility(View.GONE);
                     ll1.setVisibility(View.VISIBLE);
 //                    GroupStatus.edit().putString(groupKey, "deleted").apply();
@@ -676,7 +678,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             @Override
             public void onClick(View view) {
 
-                if (!GroupStatus.getString(groupKey, "null").equals("deleted")) {
+                if (noOfMembers==-1) {
 
                     Intent intent = new Intent(MessageActivity2.this, GroupDetails.class);
                     if (ApplicationClass.RenameGroup == null) {

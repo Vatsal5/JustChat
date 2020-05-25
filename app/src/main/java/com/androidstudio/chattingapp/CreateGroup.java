@@ -120,6 +120,7 @@ public class CreateGroup extends AppCompatActivity {
 
                     ApplicationClass.Groupname = etGroupName.getText().toString();
 
+
                     reference[0] = FirebaseDatabase.getInstance().getReference();
 
                     if (etGroupName.getText().toString().trim().length() > 0) {
@@ -127,7 +128,6 @@ public class CreateGroup extends AppCompatActivity {
                         ApplicationClass.groupkey = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").push().getKey();
 
                         ApplicationClass.create = 0;
-                        reference[0].child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").child(ApplicationClass.groupkey).child("groupName").setValue(ApplicationClass.Groupname);
                         reference[0].child("groups").child(ApplicationClass.groupkey).child("members").push().setValue(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
 
                         for (int i = 0; i < ApplicationClass.members.size(); i++) {

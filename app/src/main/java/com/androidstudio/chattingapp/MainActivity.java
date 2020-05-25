@@ -1497,7 +1497,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         Group = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+
 
                 if(dataSnapshot.getValue().toString().length()>10  &&  dataSnapshot.getValue().toString().substring(0,10).equals("/*delete*/")) {
                     if (Handler.getGroupMessages(dataSnapshot.getKey(), 0).first.size() > 0) {
@@ -1546,6 +1546,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 , "null",
                                 "null", dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
                         userAdapter.notifyItemInserted(contacts1.size() - 1);
+
                         keyid.add(dataSnapshot.getKey());
                         grouplistener grouplistener = new grouplistener(contacts1.size() - 1, dataSnapshot.getKey());
                         grouplistener.piclistener();
