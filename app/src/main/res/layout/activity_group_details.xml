@@ -25,6 +25,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:paddingTop="10dp"
+            android:background="#15000000"
 
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@id/ivGroupDP"
@@ -35,6 +36,10 @@
                 android:id="@+id/ivEdit"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
+                android:elevation="10dp"
+                android:shadowColor="#50000000"
+
+
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
@@ -46,9 +51,12 @@
             <TextView
                 android:id="@+id/tvGroupTitle"
                 android:layout_width="250dp"
+                android:elevation="10dp"
+                android:shadowColor="#50000000"
+
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-android:fontFamily="@font/aladin"
+                android:fontFamily="@font/aladin"
                 android:textColor="#ffffff"
                 android:textSize="28dp"
                 android:textStyle="bold"
@@ -61,6 +69,8 @@ android:fontFamily="@font/aladin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+                android:elevation="10dp"
+                android:shadowColor="#50000000"
                 android:textColor="#ffffff"
                 android:textSize="13dp"
                 android:layout_marginBottom="5dp"

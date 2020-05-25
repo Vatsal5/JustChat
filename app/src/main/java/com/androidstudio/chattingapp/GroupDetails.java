@@ -548,7 +548,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
         if(!(users.get(index).getPh_number().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
 
             if (admin.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
-                String[] choices = {"View", "Remove"};
+                String[] choices = {"View", "Remove","Make Admin"};
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(GroupDetails.this);
 
@@ -653,6 +653,39 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                         else
                                             Toast.makeText(getApplicationContext(),"Group can't have less than three members",Toast.LENGTH_LONG).show();
 
+                                        break;
+
+                                    case 2:
+
+
+                                        AlertDialog.Builder builder2 = new AlertDialog.Builder(GroupDetails.this);
+
+                                        builder2.setTitle("Are you sure you want to make this member as admin ");
+                                        builder2.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                if (isConnected()) {
+
+                                                    FirebaseDatabase.getInstance().getReference().child("groups")
+                                                            .child(groupKey).child("admin").setValue(users.get(index).getPh_number());
+
+                                                    GroupDetails.this.finish();
+
+
+                                                }
+                                                else
+                                                    showInternetWarning();
+                                            }
+                                        });
+                                        builder2.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        });
+                                            builder2.show();
+
+                                            break;
 
                                 }
                             }
@@ -677,6 +710,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                 ApplicationClass.groupusers = 1;
                                 startActivity(intent);
                                 break;
+
                         }
                     }
                 });
