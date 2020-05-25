@@ -246,12 +246,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
             }else{
                 holder.ivImage.setVisibility(View.GONE);
                 holder.tvlastmessage.setVisibility(View.GONE);
+                holder.ivSend.setVisibility(View.GONE);
             }
         }
         else
         {
-            holder.ivImage.setVisibility(View.GONE);
-            holder.tvlastmessage.setVisibility(View.GONE);
+            holder.ivImage.setVisibility(View.VISIBLE);
+            holder.ivImage.setImageResource(R.drawable.security);
+            holder.tvlastmessage.setVisibility(View.VISIBLE);
+            holder.tvlastmessage.setText("SECURED");
+            holder.ivSend.setVisibility(View.GONE);
         }
        // Log.d("asdf",listFiltered.get(position).getUrl());
 
