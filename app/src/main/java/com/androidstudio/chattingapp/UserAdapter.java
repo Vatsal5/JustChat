@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -155,46 +156,66 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
         }
 
 
+        String lastmessage = listFiltered.get(holder.getAdapterPosition()).getLastmessage();
+        String lastmessagesubstring;
+        String sender;
+
+        if(!lastmessage.equals("null")) {
+            lastmessagesubstring = lastmessage.substring(0, lastmessage.lastIndexOf(" "));
+            sender = lastmessage.substring(lastmessage.lastIndexOf(" ")+1);
+        }
+        else {
+            lastmessagesubstring = "null";
+            sender = "null";
+        }
+
+
         if(!defaultvalue.equals("private") && !defaultvalue.equals("null")) {
-            if (!(listFiltered.get(position).getLastmessage().equals(" ")) && !(listFiltered.get(position).getLastmessage().equals("null")) && !(listFiltered.get(position).getLastmessage().equals("  ")) && !(listFiltered.get(position).getLastmessage().equals("   "))
-                    && !(listFiltered.get(position).getLastmessage().equals("    ")) && !(listFiltered.get(position).getLastmessage().equals("     "))) {
+
+            if(!sender.equals("null") && !sender.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+                holder.ivSend.setVisibility(View.VISIBLE);
+            else
+                holder.ivSend.setVisibility(View.GONE);
+
+            if (!(lastmessagesubstring.equals(" ")) && !(lastmessagesubstring.equals("null")) && !(lastmessagesubstring.equals("  ")) && !(lastmessagesubstring.equals("   "))
+                    && !(lastmessagesubstring.equals("    ")) && !(lastmessagesubstring.equals("     "))) {
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
 
-                if (listFiltered.get(position).getLastmessage().length() > 20) {
-                    holder.tvlastmessage.setText(listFiltered.get(position).getLastmessage().substring(0, 20) + "..");
+                if (lastmessagesubstring.length() > 20) {
+                    holder.tvlastmessage.setText(lastmessagesubstring.substring(0, 20) + "..");
                 } else {
-                    holder.tvlastmessage.setText(listFiltered.get(position).getLastmessage());
+                    holder.tvlastmessage.setText(lastmessagesubstring);
                 }
                 holder.ivImage.setVisibility(View.GONE);
-            } else if (listFiltered.get(position).getLastmessage().equals(" ")) {
+            } else if (lastmessagesubstring.equals(" ")) {
                 holder.ivImage.setVisibility(View.VISIBLE);
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
                 holder.ivImage.setImageResource(R.drawable.image);
 
                 holder.tvlastmessage.setText("Image");
 
-            } else if (listFiltered.get(position).getLastmessage().equals("   ")) {
+            } else if (lastmessagesubstring.equals("   ")) {
                 holder.ivImage.setVisibility(View.VISIBLE);
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
                 holder.ivImage.setImageResource(R.drawable.gif);
 
                 holder.tvlastmessage.setText("GIF");
 
-            } else if (listFiltered.get(position).getLastmessage().equals("    ")) {
+            } else if (lastmessagesubstring.equals("    ")) {
                 holder.ivImage.setVisibility(View.VISIBLE);
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
                 holder.ivImage.setImageResource(R.drawable.gif);
 
                 holder.tvlastmessage.setText("Sticker");
 
-            }else if (listFiltered.get(position).getLastmessage().equals("     ")) {
+            }else if (lastmessagesubstring.equals("     ")) {
                 holder.ivImage.setVisibility(View.VISIBLE);
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
                 holder.ivImage.setImageResource(R.drawable.pdf);
 
                 holder.tvlastmessage.setText("PDF");
 
-            } else if (listFiltered.get(position).getLastmessage().equals("  ")) {
+            } else if (lastmessagesubstring.equals("  ")) {
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
                 holder.ivImage.setImageResource(R.drawable.video);
                 holder.tvlastmessage.setText("Video");
@@ -384,7 +405,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
     {
 
        final ImageView ivStatus,ivImage;
-       ImageView iv,ivBackground;
+       ImageView iv,ivBackground,ivSend;
         TextView tvMessageNum,tvUserName,time;
         EmojiconTextView tvlastmessage;
         ConstraintLayout innerConstraintLayout;
@@ -403,6 +424,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
             tvMessageNum = itemView.findViewById(R.id.tvMessageNum);
             tvUserName= itemView.findViewById(R.id.tv_username);
             innerConstraintLayout = itemView.findViewById(R.id.innerConstraintLayout);
+            ivSend = itemView.findViewById(R.id.ivSend);
         }
     }
 

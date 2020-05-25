@@ -279,19 +279,19 @@ public class DBHandler
 
         if(model !=null) {
             if (model.getType().equals("text"))
-                return model.getMessage();
+                return model.getMessage()+" "+model.getSender();
             else if (model.getType().equals("image"))
-                return " ";
+                return " "+" "+model.getSender();
             else if(model.getType().equals("Date"))
                 return "null";
             else if(model.getType().equals("video"))
-                return "  ";
+                return "  "+" "+model.getSender();
             else if(model.getType().equals("gif"))
-                return "   ";
+                return "   "+" "+model.getSender();
             else if(model.getType().equals("sticker"))
-                return "    ";
+                return "    "+" "+model.getSender();
             else if(model.getType().equals("pdf"))
-                return "     ";
+                return "     "+" "+model.getSender();
         }
         else
         {
@@ -327,7 +327,7 @@ public class DBHandler
         }
 
         if(model !=null) {
-            return model.getTime();
+            return model.getTime()+" "+model.getDate();
         }
         else
         {
@@ -403,19 +403,19 @@ public class DBHandler
 
         if(model !=null) {
             if (model.getType().equals("text"))
-                return model.getMessage();
+                return model.getMessage()+" "+model.getSender();
             else if (model.getType().equals("image"))
-                return " ";
+                return " "+" "+model.getSender();
             else if(model.getType().equals("Date"))
-                return "null";
+                return "null"+" "+model.getSender();
             else if(model.getType().equals("video"))
-                return "  ";
+                return "  "+" "+model.getSender();
             else if(model.getType().equals("gif"))
-                return "   ";
+                return "   "+" "+model.getSender();
             else if(model.getType().equals("sticker"))
-                return "    ";
+                return "    "+" "+model.getSender();
             else if(model.getType().equals("pdf"))
-                return "     ";
+                return "     "+" "+model.getSender();
         }
         else
         {
@@ -452,7 +452,7 @@ public class DBHandler
         }
 
         if(model !=null) {
-            return model.getTime();
+            return model.getTime()+" "+model.getDate();
         }
         else
         {
