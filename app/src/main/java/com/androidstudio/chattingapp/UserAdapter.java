@@ -202,7 +202,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
 
             }else{
                 holder.ivImage.setVisibility(View.GONE);
-//                holder.tvlastmessage.setVisibility(View.GONE);
+                holder.tvlastmessage.setVisibility(View.GONE);
             }
         }
         else
