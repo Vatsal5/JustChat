@@ -22,6 +22,7 @@ public class Mode extends AppCompatActivity {
     Switch mode;
     SharedPreferences pref;
     SharedPreferences.Editor editor;
+    String defaultvalue, defaultpassword, username;
 
     LinearLayout llcreatePassword, llSelectMode, llConfirmPassword, llForgotPassword, llWrongId, llShowPassword, llWrongPassword;
 
@@ -58,9 +59,9 @@ public class Mode extends AppCompatActivity {
         final String number = getIntent().getStringExtra("number");
 
          pref= getApplicationContext().getSharedPreferences("Mode",0);
-        String defaultvalue=pref.getString("mode"+number,"null");
-        final String defaultpassword=pref.getString("password","null");
-        final String username=pref.getString("username","null");
+         defaultvalue=pref.getString("mode"+number,"null");
+          defaultpassword=pref.getString("password","null");
+          username=pref.getString("username","null");
         editor = pref.edit();
         if((defaultvalue.equals("null"))){
 
@@ -109,6 +110,7 @@ public class Mode extends AppCompatActivity {
         tvForgot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                llcreatePassword.setVisibility(View.GONE);
                 llConfirmPassword.setVisibility(View.GONE);
                 llForgotPassword.setVisibility(View.VISIBLE);
             }
@@ -117,6 +119,7 @@ public class Mode extends AppCompatActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                llcreatePassword.setVisibility(View.GONE);
 
                 if (!(defaultpassword.equals(etAcceptPassword.getText().toString().trim())))
                 {
@@ -144,6 +147,7 @@ public class Mode extends AppCompatActivity {
                     tvmode.setTextColor(getResources().getColor(R.color.black));
 
                 }
+                etAcceptPassword.setText("");
 
             }
         });
@@ -160,6 +164,7 @@ public class Mode extends AppCompatActivity {
                 else{
                     llWrongId.setVisibility(View.VISIBLE);
                 }
+                etConfirm.setText("");
             }
         });
         btnCreate.setOnClickListener(new View.OnClickListener() {
@@ -181,6 +186,9 @@ public class Mode extends AppCompatActivity {
                 {
                     tvIncompleteDetails.setVisibility(View.VISIBLE);
                 }
+                defaultvalue=pref.getString("mode"+number,"null");
+                defaultpassword=pref.getString("password","null");
+                username=pref.getString("username","null");
             }
         });
 
