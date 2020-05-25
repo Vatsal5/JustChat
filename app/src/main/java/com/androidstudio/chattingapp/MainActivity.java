@@ -1819,7 +1819,16 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                contacts1.get(keyid.indexOf(dataSnapshot.getKey())).setStatus("delete");
+                if(dataSnapshot.getValue().toString().length()>10  &&  dataSnapshot.getValue().toString().substring(0,10).equals("/*delete*/")) {
+
+
+                    contacts1.get(keyid.indexOf(dataSnapshot.getKey())).setStatus("delete");
+
+                }
+                else {
+                    contacts1.get(keyid.indexOf(dataSnapshot.getKey())).setuID(dataSnapshot.getValue().toString());
+                    userAdapter.notifyItemChanged(keyid.indexOf(dataSnapshot.getKey()));
+                }
 
             }
 
