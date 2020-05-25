@@ -85,6 +85,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
     StorageReference reference;
 
+    TextView tvNext;
     ProgressBar progress;
 
     ChildEventListener Profile;
@@ -103,6 +104,8 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
         ivBack = findViewById(R.id.ivBack);
         ivClick = findViewById(R.id.ivClick);
 
+        tvNext = findViewById(R.id.tvNext);
+
         preftheme=getSharedPreferences("theme",0);
         String theme=preftheme.getString("theme","red");
 
@@ -113,8 +116,19 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
             }
         });
 
+        if(getIntent().getBooleanExtra("Registration", false))
+            tvNext.setVisibility(View.VISIBLE);
+        else
+            tvNext.setVisibility(View.GONE);
 
-
+        tvNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Profile.this,MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         switch (theme) {
             case "orange":
@@ -365,7 +379,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                     etTitle.setText("");
                 else
                 etTitle.setText(data.get(index));
-                etTitle.setSelection(data.get(index).length());
+//                etTitle.setSelection(data.get(index).length());
 
                 builder.setView(v);
                 builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {

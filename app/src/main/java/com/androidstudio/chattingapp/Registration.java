@@ -147,7 +147,7 @@ public class Registration extends AppCompatActivity {
 
 
 
-                            startActivity(new Intent(Registration.this,MainActivity.class));
+                            startActivity(new Intent(Registration.this,Profile.class).putExtra("Registration",true));
                             Registration.this.finish();
                             // ...
                         } else {

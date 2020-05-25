@@ -149,7 +149,7 @@ public class Verification extends AppCompatActivity {
 
                             (reference.child("users").child(phone).child("status")).setValue("What's Your Status");
 
-                            startActivity(new Intent(Verification.this,MainActivity.class));
+                            startActivity(new Intent(Verification.this,Profile.class).putExtra("Registration",true));
                             Verification.this.finish();
                             // ...
                         } else {
