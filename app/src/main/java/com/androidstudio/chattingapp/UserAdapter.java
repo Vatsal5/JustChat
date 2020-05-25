@@ -3,6 +3,7 @@ package com.androidstudio.chattingapp;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,12 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
@@ -166,7 +172,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
                         holder.time.setText(lastTimesubstring);
                 }
                 else{
-                    holder.time.setText(newDate(lastdate));
+                    try {
+                        holder.time.setText(newDate(lastdate));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             } else {
                 holder.time.setText("");
@@ -320,28 +330,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
                 }
             });
         }
-
-//        if(listFiltered.get(position).getGroupname()==null) {
-//
-//            dbreference.child("UserStatus").child(Check(listFiltered.get(position).getPh_number())).addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    if (dataSnapshot.getValue() != null) {
-//                        if (dataSnapshot.getValue(String.class).equals("online") || dataSnapshot.getValue(String.class).substring(0, 6).equals("typing")) {
-//                            holder.ivBackground.setBackgroundResource(R.drawable.orange);
-//                        } else {
-//                            holder.ivBackground.setBackground(null);
-//                        }
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                }
-//            });
-//        }
-
+        
         if(listFiltered.get(holder.getAdapterPosition()).getStatus()!=null)
         {
             if(listFiltered.get(holder.getAdapterPosition()).getStatus().equals("online"))
@@ -484,18 +473,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
 
 
 
-    public String Check(String phone)
-    {
-        String newPhone;
-//        if(!phone.substring(0,3).equals("+91"))
-//        {
-//            newPhone = "+91".concat(phone);
-//            return newPhone;
-//        }
-//        else
-            return phone;
-
-    }
+    public String Check(String phone) { return phone; }
 
 //    public static Drawable changeDrawableColor(Context context, int icon, int newColor) {
 //        Drawable mDrawable = ContextCompat.getDrawable(context, icon).mutate();
@@ -503,68 +481,81 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
 //        return mDrawable;
 //    }
 
-    public String newDate(String date)
-    {
-        String newDate;
+    public String newDate(String date) throws ParseException {
 
-        newDate = date.substring(8,10);
+        long millis = System.currentTimeMillis();
+        java.sql.Date date1 = new java.sql.Date(millis);
 
-        switch (date.substring(5,7))
-        {
-            case "01":
-                newDate = newDate+"/01/";
-                break;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date firstDate = sdf.parse(date1.toString());
+        Date secondDate = sdf.parse(date);
 
-            case "02":
-                newDate = newDate+"/02/";
-                break;
+        long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
+        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
-            case "03":
-                newDate = newDate+"/03/";
-                break;
+        if(diff==1)
+            return "YESTERDAY";
 
-            case "04":
-                newDate = newDate+"/04/";
-                break;
+        else {
+            String newDate;
+            newDate = date.substring(8, 10);
 
-            case "05":
-                newDate = newDate+"/05/";
-                break;
+            switch (date.substring(5, 7)) {
+                case "01":
+                    newDate = newDate + "/01/";
+                    break;
 
-            case "06":
-                newDate = newDate+"/06/";
-                break;
+                case "02":
+                    newDate = newDate + "/02/";
+                    break;
 
-            case "07":
-                newDate = newDate+"/07/";
-                break;
+                case "03":
+                    newDate = newDate + "/03/";
+                    break;
 
-            case "08":
-                newDate = newDate+"/08/";
-                break;
+                case "04":
+                    newDate = newDate + "/04/";
+                    break;
 
-            case "09":
-                newDate = newDate+"/09/";
-                break;
+                case "05":
+                    newDate = newDate + "/05/";
+                    break;
 
-            case "10":
-                newDate = newDate+"/10/";
-                break;
+                case "06":
+                    newDate = newDate + "/06/";
+                    break;
 
-            case "11":
-                newDate = newDate+"/11/";
-                break;
+                case "07":
+                    newDate = newDate + "/07/";
+                    break;
 
-            case "12":
-                newDate = newDate+"/12/";
-                break;
+                case "08":
+                    newDate = newDate + "/08/";
+                    break;
+
+                case "09":
+                    newDate = newDate + "/09/";
+                    break;
+
+                case "10":
+                    newDate = newDate + "/10/";
+                    break;
+
+                case "11":
+                    newDate = newDate + "/11/";
+                    break;
+
+                case "12":
+                    newDate = newDate + "/12/";
+                    break;
+            }
+
+            newDate = newDate + date.substring(2, 4);
+
+            return newDate;
         }
-
-        newDate = newDate+date.substring(2,4);
-
-        return newDate;
     }
 
-    }
+}
 
 
