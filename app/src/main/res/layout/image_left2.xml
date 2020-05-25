@@ -72,7 +72,7 @@
         android:paddingRight="10dp"
         android:clickable="true"
         android:visibility="gone"
-        android:background="@drawable/white1">
+        android:background="@drawable/black1">
 
         <ImageView
             android:layout_width="50dp"

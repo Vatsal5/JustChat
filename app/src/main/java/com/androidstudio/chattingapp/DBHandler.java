@@ -314,7 +314,7 @@ public class DBHandler
         int iType = c.getColumnIndex(KEY_TYPE);
         int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
         int iTime = c.getColumnIndex(KEY_TIME);
-        int iDate = c.getColumnIndex(KEY_TIME);
+        int iDate = c.getColumnIndex(KEY_DATE);
         int iGroup = c.getColumnIndex(KEY_GROUPKEY);
         int iFirebaseId = c.getColumnIndex(KEY_FIREBASEID);
 
@@ -439,7 +439,7 @@ public class DBHandler
         int iType = c.getColumnIndex(KEY_TYPE);
         int iDownloaded = c.getColumnIndex(KEY_ISDOWNLOADED);
         int iTime = c.getColumnIndex(KEY_TIME);
-        int iDate = c.getColumnIndex(KEY_TIME);
+        int iDate = c.getColumnIndex(KEY_DATE);
         int iGroup = c.getColumnIndex(KEY_GROUPKEY);
         int iFirebaseId = c.getColumnIndex(KEY_FIREBASEID);
 

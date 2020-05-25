@@ -505,7 +505,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                      userAdapter.notifyDataSetChanged();
                      int i=contacts1.indexOf(userDetailwithUrl);
                      contacts1.get(i).setLastmessage("     "+" "+contacts1.get(index).getPh_number());
-                     contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                     contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5)+" "+dataSnapshot.getValue().toString().substring(5, 15));
                      contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
                      userAdapter.notifyItemChanged(keyid.indexOf(key));
                  }
@@ -596,7 +596,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                      userAdapter.notifyDataSetChanged();
                      int i=contacts1.indexOf(userDetailwithUrl);
                      contacts1.get(i).setLastmessage("   "+" "+contacts1.get(index).getPh_number());
-                     contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                     contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5)+" "+dataSnapshot.getValue().toString().substring(5, 15));
                      contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
                      userAdapter.notifyItemChanged(keyid.indexOf(key));
 
@@ -659,7 +659,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     userAdapter.notifyDataSetChanged();
                     int i=contacts1.indexOf(userDetailwithUrl);
                      contacts1.get(i).setLastmessage("    "+" "+contacts1.get(index).getPh_number());
-                    contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                    contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5)+" "+dataSnapshot.getValue().toString().substring(5, 15));
                     contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
                     userAdapter.notifyItemChanged(keyid.indexOf(key));
 
@@ -723,7 +723,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                      int i=contacts1.indexOf(userDetailwithUrl);
 
                          contacts1.get(i).setLastmessage("  "+" "+contacts1.get(index).getPh_number());
-                     contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                     contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5)+" "+dataSnapshot.getValue().toString().substring(5, 15));
                          contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
                      userAdapter.notifyItemChanged(keyid.indexOf(key));
 
@@ -794,7 +794,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                              int i=contacts1.indexOf(userDetailwithUrl);
 
                              contacts1.get(i).setLastmessage(dataSnapshot.getValue().toString().substring(15)+" "+contacts1.get(index).getPh_number());
-                                 contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                                 contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5)+" "+dataSnapshot.getValue().toString().substring(5, 15));
                                  contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
                              userAdapter.notifyItemChanged(keyid.indexOf(key));
 
@@ -870,7 +870,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                      userAdapter.notifyDataSetChanged();
                      int i=contacts1.indexOf(userDetailwithUrl);
                          contacts1.get(i).setLastmessage(" "+" "+contacts1.get(index).getPh_number());
-                     contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                     contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5)+" "+dataSnapshot.getValue().toString().substring(5, 15));
                          contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
                      userAdapter.notifyItemChanged(keyid.indexOf(key));
 
@@ -949,7 +949,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             userAdapter.notifyDataSetChanged();
                             int i=contacts1.indexOf(userDetailwithUrl);
                             contacts1.get(i).setLastmessage("  "+" "+dataSnapshot.getValue().toString().substring(21, 34));
-                            contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                            contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5)+" "+dataSnapshot.getValue().toString().substring(11, 21));
                             contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
                             userAdapter.notifyItemChanged(keyid.indexOf(key));
                         }
@@ -996,7 +996,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             userAdapter.notifyDataSetChanged();
                             int i=contacts1.indexOf(userDetailwithUrl);
                             contacts1.get(i).setLastmessage("   "+" "+dataSnapshot.getValue().toString().substring(21, 34));
-                            contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                            contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5)+" "+dataSnapshot.getValue().toString().substring(11, 21));
                             contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
                             userAdapter.notifyItemChanged(keyid.indexOf(key));
                         }
@@ -1044,7 +1044,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             userAdapter.notifyDataSetChanged();
                             int i=contacts1.indexOf(userDetailwithUrl);
                             contacts1.get(i).setLastmessage("    "+" "+dataSnapshot.getValue().toString().substring(21, 34));
-                            contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                            contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5)+" "+dataSnapshot.getValue().toString().substring(11, 21));
                             contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
                             userAdapter.notifyItemChanged(keyid.indexOf(key));
                         }
@@ -1093,7 +1093,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             userAdapter.notifyDataSetChanged();
                             int i=contacts1.indexOf(userDetailwithUrl);
                             contacts1.get(i).setLastmessage(dataSnapshot.getValue().toString().substring(34)+" "+dataSnapshot.getValue().toString().substring(21, 34));
-                            contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                            contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5)+" "+dataSnapshot.getValue().toString().substring(11, 21));
                             contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
                             userAdapter.notifyItemChanged(keyid.indexOf(key));
                         }
@@ -1141,7 +1141,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             userAdapter.notifyDataSetChanged();
                             int i=contacts1.indexOf(userDetailwithUrl);
                             contacts1.get(i).setLastmessage(" "+" "+dataSnapshot.getValue().toString().substring(21, 34));
-                            contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                            contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5)+" "+dataSnapshot.getValue().toString().substring(11, 21));
                             contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
                             userAdapter.notifyItemChanged(keyid.indexOf(key));
                         }
@@ -1190,7 +1190,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             userAdapter.notifyDataSetChanged();
                             int i=contacts1.indexOf(userDetailwithUrl);
                             contacts1.get(i).setLastmessage("     "+" "+dataSnapshot.getValue().toString().substring(21, 34));
-                            contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5));
+                            contacts1.get(i).setTime(dataSnapshot.getValue().toString().substring(0, 5)+" "+dataSnapshot.getValue().toString().substring(11, 21));
                             contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
                             userAdapter.notifyItemChanged(keyid.indexOf(key));
                         }

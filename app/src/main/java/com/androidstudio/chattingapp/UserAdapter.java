@@ -140,12 +140,34 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
         else
             defaultvalue = mode.getString("mode" + listFiltered.get(holder.getAdapterPosition()).getGroupkey(), "null");
 
+        long millis = System.currentTimeMillis();
+        java.sql.Date date1 = new java.sql.Date(millis);
+
+        String lastTime = listFiltered.get(holder.getAdapterPosition()).getTime();
+        String lastTimesubstring;
+        String lastdate;
+
+        if(!lastTime.equals("null")) {
+            lastTimesubstring = lastTime.substring(0, lastTime.lastIndexOf(" "));
+            lastdate = lastTime.substring(lastTime.lastIndexOf(" ")+1);
+        }
+        else {
+            lastTimesubstring = "null";
+            lastdate = "null";
+        }
+
+
         if(!defaultvalue.equals("private") && !defaultvalue.equals("null")) {
-            if (!(listFiltered.get(position).getTime().equals("null"))) {
-                if (listFiltered.get(holder.getAdapterPosition()).getGroupname() != null)
-                    holder.time.setText(listFiltered.get(holder.getAdapterPosition()).getTime().substring(0, 5));
-                else
-                    holder.time.setText(listFiltered.get(holder.getAdapterPosition()).getTime());
+            if (!(lastTimesubstring.equals("null"))) {
+                if(lastdate.equals(date1.toString())) {
+                    if (listFiltered.get(holder.getAdapterPosition()).getGroupname() != null)
+                        holder.time.setText(lastTimesubstring.substring(0, 5));
+                    else
+                        holder.time.setText(lastTimesubstring);
+                }
+                else{
+                    holder.time.setText(newDate(lastdate));
+                }
             } else {
                 holder.time.setText("");
             }
@@ -233,9 +255,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
         }
        // Log.d("asdf",listFiltered.get(position).getUrl());
 
-        if(listFiltered.get(position).getUrl().equals("null")) {
+        if(listFiltered.get(holder.getAdapterPosition()).getUrl().equals("null")) {
 
-            if(listFiltered.get(position).getGroupname()==null) {
+            if(listFiltered.get(holder.getAdapterPosition()).getGroupname()==null) {
                 holder.iv.setImageResource(R.drawable.person);
 
 //
@@ -288,28 +310,28 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
 //            });
 //        }
 
-        if(listFiltered.get(position).getStatus()!=null)
+        if(listFiltered.get(holder.getAdapterPosition()).getStatus()!=null)
         {
-            if(listFiltered.get(position).getStatus().equals("online"))
+            if(listFiltered.get(holder.getAdapterPosition()).getStatus().equals("online"))
                 holder.ivBackground.setBackgroundResource(R.drawable.orange);
             else
                 holder.ivBackground.setBackgroundResource(R.drawable.white);        }
 
-        if(listFiltered.get(position).getuID().equals(""))
+        if(listFiltered.get(holder.getAdapterPosition()).getuID().equals(""))
         {
-            holder.tvUserName.setText(listFiltered.get(position).getPh_number());
+            holder.tvUserName.setText(listFiltered.get(holder.getAdapterPosition()).getPh_number());
 
         }
         else{
-            holder.tvUserName.setText(listFiltered.get(position).getuID());
+            holder.tvUserName.setText(listFiltered.get(holder.getAdapterPosition()).getuID());
 
         }
 
-        if(listFiltered.get(position).getGroupname()==null)
+        if(listFiltered.get(holder.getAdapterPosition()).getGroupname()==null)
         {
-            if(listFiltered.get(position).getMessagenum() > 2)
+            if(listFiltered.get(holder.getAdapterPosition()).getMessagenum() > 2)
             {
-                holder.tvMessageNum.setText(listFiltered.get(position).getMessagenum()-2+"");
+                holder.tvMessageNum.setText(listFiltered.get(holder.getAdapterPosition()).getMessagenum()-2+"");
                 holder.tvMessageNum.setVisibility(View.VISIBLE);
             }
             else{
@@ -320,8 +342,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
         else {
             holder.ivBackground.setBackgroundResource(R.drawable.white);
 
-        if (listFiltered.get(position).getMessagenum() > 2) {
-                holder.tvMessageNum.setText(listFiltered.get(position).getMessagenum()-2 + "");
+        if (listFiltered.get(holder.getAdapterPosition()).getMessagenum() > 2) {
+                holder.tvMessageNum.setText(listFiltered.get(holder.getAdapterPosition()).getMessagenum()-2 + "");
                 holder.tvMessageNum.setVisibility(View.VISIBLE);
             } else {
                 // holder.tvMessageNum.setText(listFiltered.get(position).getMessagenum()-2+"");
@@ -448,6 +470,68 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
 //        mDrawable.setColorFilter(new PorterDuffColorFilter(newColor, PorterDuff.Mode.SRC_IN));
 //        return mDrawable;
 //    }
+
+    public String newDate(String date)
+    {
+        String newDate;
+
+        newDate = date.substring(8,10);
+
+        switch (date.substring(5,7))
+        {
+            case "01":
+                newDate = newDate+"/01/";
+                break;
+
+            case "02":
+                newDate = newDate+"/02/";
+                break;
+
+            case "03":
+                newDate = newDate+"/03/";
+                break;
+
+            case "04":
+                newDate = newDate+"/04/";
+                break;
+
+            case "05":
+                newDate = newDate+"/05/";
+                break;
+
+            case "06":
+                newDate = newDate+"/06/";
+                break;
+
+            case "07":
+                newDate = newDate+"/07/";
+                break;
+
+            case "08":
+                newDate = newDate+"/08/";
+                break;
+
+            case "09":
+                newDate = newDate+"/09/";
+                break;
+
+            case "10":
+                newDate = newDate+"/10/";
+                break;
+
+            case "11":
+                newDate = newDate+"/11/";
+                break;
+
+            case "12":
+                newDate = newDate+"/12/";
+                break;
+        }
+
+        newDate = newDate+date.substring(2,4);
+
+        return newDate;
+    }
 
     }
 

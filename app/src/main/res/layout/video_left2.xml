@@ -63,7 +63,7 @@
         app:srcCompat="@drawable/play"
         android:padding="4dp"
         android:visibility="gone"
-        android:background="@drawable/black"
+        android:background="@drawable/black1"
         app:layout_constraintTop_toTopOf="@+id/ivImage"
         app:layout_constraintLeft_toLeftOf="@+id/ivImage"
         app:layout_constraintRight_toRightOf="@+id/ivImage"
