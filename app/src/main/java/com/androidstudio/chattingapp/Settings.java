@@ -12,6 +12,7 @@ import androidx.core.widget.NestedScrollView;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -50,11 +51,13 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.sql.Timestamp;
 
 public class Settings extends AppCompatActivity {
@@ -65,7 +68,7 @@ public class Settings extends AppCompatActivity {
     ValueEventListener details;
     Toolbar ll;
 
-    LinearLayout llProfile,llTheme,llWallpaper,llsettings;
+    LinearLayout llProfile,llTheme,llWallpaper,llsettings,llBackup;
     Boolean flag=false;
 
     SharedPreferences wallpaper;
@@ -114,6 +117,7 @@ public class Settings extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         llProfile = findViewById(R.id.llProfile);
         llTheme = findViewById(R.id.llTheme);
+        llBackup = findViewById(R.id.llBackup);
         llWallpaper = findViewById(R.id.llWallpaper);
         ivBackground = findViewById(R.id.ivBackground);
 
@@ -230,6 +234,32 @@ public class Settings extends AppCompatActivity {
 
                 startActivity(new Intent(Settings.this,Profile.class));
 
+            }
+        });
+
+        llBackup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
+                builder.setMessage("Are you sure want to backup chats?")
+                        .setTitle("Backup")
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                exportDB();
+                            }
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
@@ -705,4 +735,57 @@ flag=true;
 
         return inSampleSize;
     }
+
+    private void exportDB(){
+
+        final ProgressDialog dialog = new ProgressDialog(Settings.this);
+        dialog.setMessage("Please Wait...");
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+
+        File sd = Environment.getExternalStorageDirectory();
+        File data = Environment.getDataDirectory();
+        FileChannel source=null;
+        FileChannel destination=null;
+        String currentDBPath = "/data/"+ getPackageName() +"/databases/"+"CHATS_DATABASE";
+        String backupDBPath = "/ChattingApp/Databases/database.db";
+
+        File file = new File(Environment.getExternalStorageDirectory(),"/ChattingApp/Databases/");
+        if(!file.exists())
+            file.mkdir();
+
+        File currentDB = new File(data, currentDBPath);
+        File backupDB = new File(sd, backupDBPath);
+
+        try {
+
+            source = new FileInputStream(currentDB).getChannel();
+            destination = new FileOutputStream(backupDB).getChannel();
+            destination.transferFrom(source, 0, source.size());
+            source.close();
+            destination.close();
+            dialog.dismiss();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
+            builder.setTitle("Backup Successful")
+                    .setMessage("Your chats have been saved")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+            AlertDialog dialog1 = builder.create();
+            dialog1.show();
+
+        } catch(IOException e) {
+            e.printStackTrace();
+            dialog.dismiss();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

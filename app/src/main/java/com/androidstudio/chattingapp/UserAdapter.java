@@ -330,7 +330,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
                 }
             });
         }
-        
+
         if(listFiltered.get(holder.getAdapterPosition()).getStatus()!=null)
         {
             if(listFiltered.get(holder.getAdapterPosition()).getStatus().equals("online"))

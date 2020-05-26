@@ -3,6 +3,7 @@ package com.androidstudio.chattingapp;
 import android.Manifest;
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -65,9 +66,11 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
 public class Profile extends AppCompatActivity implements profile_listitem_adapter.itemSelected {
@@ -124,9 +127,44 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
         tvNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Profile.this,MainActivity.class);
-                startActivity(intent);
-                finish();
+
+                File file = new File(Environment.getExternalStorageDirectory(),"/ChattingApp/Databases/database.db");
+                if(file.exists())
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
+                    builder.setTitle("Backup Found")
+                            .setMessage("Backup of chats is found on device.If not restored now it will not be restored later")
+                            .setPositiveButton("RESTORE", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    if (ContextCompat.checkSelfPermission(Profile.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                        ActivityCompat.requestPermissions(Profile.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 150);
+                                    }
+                                    else {
+                                        importDB();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+
+                                    Intent intent = new Intent(Profile.this, MainActivity.class);
+                                    startActivity(intent);
+                                    Profile.this.finish();
+                                }
+                            });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+                else {
+                    Intent intent = new Intent(Profile.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 
@@ -483,10 +521,48 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
                     }
                 });
+
+                AlertDialog dialog1 = dialog.create();
+                dialog1.show();
             }
             if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
             {
                 CropImage.startPickImageActivity(Profile.this);
+            }
+        }
+
+        if(requestCode == 150)
+        {
+            if(grantResults[0] == PackageManager.PERMISSION_DENIED)
+            {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+                dialog.setMessage("This Permission is important to restore your backup").setTitle("Permission Required!");
+
+                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        ActivityCompat.requestPermissions(Profile.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 150);
+
+                    }
+                });
+
+                dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+                    }
+                });
+
+                AlertDialog dialog1 = dialog.create();
+                dialog1.show();
+            }
+            else
+            {
+                importDB();
             }
         }
     }
@@ -761,6 +837,58 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
         androidx.appcompat.app.AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void importDB() {
+        // TODO Auto-generated method stub
+
+        ProgressDialog dialog = new ProgressDialog(Profile.this);
+        dialog.setMessage("Restoring Backup");
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+            File data  = Environment.getDataDirectory();
+
+                String  currentDBPath= "//data//" + getPackageName()
+                        + "//databases//" + "CHATS_DATABASE";
+
+                String backupDBPath  = "/ChattingApp/Databases/database.db";
+                File  backupDB= new File(data, currentDBPath);
+                File currentDB  = new File(sd, backupDBPath);
+
+                FileChannel src = new FileInputStream(currentDB).getChannel();
+                FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                dst.transferFrom(src, 0, src.size());
+                src.close();
+                dst.close();
+
+                dialog.dismiss();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Backup has been restored")
+                        .setTitle("Backup")
+                        .setCancelable(false)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+
+                                Intent intent = new Intent(Profile.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+
+                AlertDialog dialog1 = builder.create();
+                dialog1.show();
+
+            } catch (Exception e) {
+            dialog.dismiss();
+        }
+
     }
 
 }
