@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -665,10 +666,20 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 if (isConnected()) {
+                                                    ProgressDialog dialog1 =new ProgressDialog(GroupDetails.this);
+                                                    dialog1.setMessage("Please Wait");
+                                                    dialog1.show();
+                                                    dialog1.setCanceledOnTouchOutside(false);
 
                                                     FirebaseDatabase.getInstance().getReference().child("groups")
                                                             .child(groupKey).child("admin").setValue(users.get(index).getPh_number());
+                                                    for (int i = 0; i < users.size(); i++) {
 
+                                                        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(users.get(i).getPh_number()).push().setValue("adminChanged " + users.get(index).getPh_number());
+                                                    }
+
+
+                                                    dialog1.dismiss();
                                                     GroupDetails.this.finish();
 
 
