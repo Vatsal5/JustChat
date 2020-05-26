@@ -1300,6 +1300,13 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         else
                             messageModel.setMessage(Names.getString(detail, detail) + " exited the group");
                         break;
+
+                    case "adminChanged":
+                        if(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber().equals(detail))
+                            messageModel.setMessage("You are the admin now");
+                        else
+                            messageModel.setMessage(Names.getString(detail, detail) + " is now the new admin");
+                        break;
                 }
 
                 int id = Handler.addMessage(messageModel);
