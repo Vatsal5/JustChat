@@ -248,7 +248,12 @@ public class Settings extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 dialogInterface.dismiss();
-                                exportDB();
+
+                                if (ContextCompat.checkSelfPermission(Settings.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                    ActivityCompat.requestPermissions(Settings.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 550);
+                                }
+                                else
+                                    exportDB();
                             }
                         })
                         .setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -516,11 +521,48 @@ flag=true;
 
                     }
                 });
+
+                AlertDialog dialog1 = dialog.create();
+                dialog1.show();
+                
             }
             if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
             {
                 CropImage.startPickImageActivity(Settings.this);
             }
+        }
+
+        if(requestCode==550)
+        {
+            if(grantResults[0] == PackageManager.PERMISSION_DENIED)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
+
+                builder.setMessage("This Permission is important to access image files from the gallery!").setTitle("Permission Required!");
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        ActivityCompat.requestPermissions(Settings.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},550);
+
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+            else
+                exportDB();
         }
 
     }
