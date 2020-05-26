@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     ArrayList<String> keyid;
     String keyid2=null;
     LinearLayoutManager linearLayoutManager;
-    ConstraintLayout clinvite;
 
 
 
@@ -141,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        clinvite=findViewById(R.id.invite);
 
 
 
