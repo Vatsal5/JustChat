@@ -524,7 +524,7 @@ flag=true;
 
                 AlertDialog dialog1 = dialog.create();
                 dialog1.show();
-                
+
             }
             if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
             {

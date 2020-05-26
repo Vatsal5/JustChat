@@ -27,7 +27,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SendMessage"></activity>
 
         <uses-library
             android:name="org.apache.http.legacy"

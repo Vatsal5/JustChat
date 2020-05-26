@@ -597,7 +597,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 final int DRAWABLE_RIGHT = 2;
                 final int DRAWABLE_BOTTOM = 3;
 
-                String [] choices = {"Image","Video","GIF","Stickers","Record Video","PDF"};
+                String [] choices = {"Image","Video","GIF","Stickers","Record Video","PDF","Capture Image"};
 
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (etMessage.getRight() - etMessage.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
@@ -810,7 +810,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                     Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                                                     intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 15 * 1024 * 1024L);
                                                     intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.5);
-                                                    startActivityForResult(intent, 999);
+                                                    startActivityForResult(intent, 100);
                                                 }
                                                 break;
 
@@ -820,6 +820,17 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 intent.setAction(Intent.ACTION_GET_CONTENT);
                                                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                                                 startActivityForResult(intent, 55);
+                                                break;
+
+                                            case 6:
+
+                                                if (ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                                                    ActivityCompat.requestPermissions(MessageActivity.this, new String[]{Manifest.permission.CAMERA}, 299);
+                                                }
+                                                else {
+                                                    Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                                    startActivityForResult(intent1, 10);
+                                                }
                                                 break;
                                         }
                                     }
@@ -2245,7 +2256,37 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 15 * 1024 * 1024);
                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.5);
-                startActivityForResult(intent, 999);
+                startActivityForResult(intent, 100);
+            }
+        }
+
+        if(requestCode==299)
+        {
+            if(grantResults[0] == PackageManager.PERMISSION_DENIED)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MessageActivity.this);
+                builder.setTitle("Permission Required")
+                        .setMessage("Permission is required to Open Camera")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ActivityCompat.requestPermissions(MessageActivity.this,new String[]{Manifest.permission.CAMERA},299);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+            else
+            {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, 10);
             }
         }
     }
@@ -2494,14 +2535,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             getMessages();
         }
 
-        if(requestCode==999 && resultCode == RESULT_OK)
-        {
-            Intent intent = new Intent(MessageActivity.this,SendMessage.class);
-            intent.putExtra("receiver",pref1.getString(getIntent().getStringExtra("title"),getIntent().getStringExtra("title")));
-            intent.putExtra("source",data.getData().toString());
-            startActivityForResult(intent,100);
-        }
-
         if(requestCode==55)
         {
             if(resultCode==RESULT_OK)
@@ -2516,19 +2549,32 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                             ClipData.Item pdfItem = data.getClipData().getItemAt(i);
                             Uri pdfURI = pdfItem.getUri();
 
+                            File file = new File(getPath(MessageActivity.this,pdfURI));
+
+                            long fileSizeInBytes = file.length();
+                            long fileSizeInKB = fileSizeInBytes / 1024;
+                            long fileSizeInMB = fileSizeInKB / 1024;
+
+
+                            if (fileSizeInMB >= 20) {
+                                Toast.makeText(this,"PDFs lesser than 20MB are allowed",Toast.LENGTH_LONG).show();
+
+                            }
+                            else {
+
                                 Date date = new Date();
                                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
 
                                 long millis = System.currentTimeMillis();
                                 java.sql.Date date1 = new java.sql.Date(millis);
 
-                            String path = getPath(MessageActivity.this,pdfURI);
+                                String path = getPath(MessageActivity.this, pdfURI);
 
-                                MessageModel model = new MessageModel(1190, sender, RecieverPhone, path, "pdf", 400, simpleDateFormat.format(date).substring(0, 5), date1.toString(), "null","null");
+                                MessageModel model = new MessageModel(1190, sender, RecieverPhone, path, "pdf", 400, simpleDateFormat.format(date).substring(0, 5), date1.toString(), "null", "null");
 
                                 if (chats.size() != 0) {
                                     if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                                        MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
+                                        MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(), "null", "null");
                                         int id = Handler.addMessage(messageModel);
                                         messageModel.setId(id);
                                         chats.add(messageModel);
@@ -2550,8 +2596,9 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                 } else
                                     chats.add(model);
 
-                                if(!Messages.isComputingLayout())
-                                    adapter.notifyItemInserted(chats.size()-1);
+                                if (!Messages.isComputingLayout())
+                                    adapter.notifyItemInserted(chats.size() - 1);
+                            }
 
                         }
                     }
@@ -2565,19 +2612,32 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                     ApplicationClass.messagesent=1;
 
-                        Date date=new Date();
-                        SimpleDateFormat simpleDateFormat= new SimpleDateFormat("HH:mm");
+                    File file = new File(getPath(MessageActivity.this,pdfURI));
 
-                        long millis=System.currentTimeMillis();
-                        java.sql.Date date1=new java.sql.Date(millis);
+                    long fileSizeInBytes = file.length();
+                    long fileSizeInKB = fileSizeInBytes / 1024;
+                    long fileSizeInMB = fileSizeInKB / 1024;
 
-                    String path = getPath(MessageActivity.this,pdfURI);
 
-                        MessageModel model = new MessageModel(1190,sender,RecieverPhone,path,"pdf",400,simpleDateFormat.format(date).substring(0,5),date1.toString(),"null","null");
+                    if (fileSizeInMB >= 20) {
+                        Toast.makeText(this,"PDFs lesser than 20MB are allowed",Toast.LENGTH_LONG).show();
+
+                    }
+                    else {
+
+                        Date date = new Date();
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+
+                        long millis = System.currentTimeMillis();
+                        java.sql.Date date1 = new java.sql.Date(millis);
+
+                        String path = getPath(MessageActivity.this, pdfURI);
+
+                        MessageModel model = new MessageModel(1190, sender, RecieverPhone, path, "pdf", 400, simpleDateFormat.format(date).substring(0, 5), date1.toString(), "null", "null");
 
                         if (chats.size() != 0) {
                             if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-                                MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(),"null","null");
+                                MessageModel messageModel = new MessageModel(54, "null", RecieverPhone, "null", "Date", 60, "null", date1.toString(), "null", "null");
                                 int id = Handler.addMessage(messageModel);
                                 messageModel.setId(id);
                                 chats.add(messageModel);
@@ -2591,19 +2651,19 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                             }
                         }
 
-                            int id = Handler.addMessage(model);
-                            model.setId(id);
-                            if (chats.size() > 0 && chats.get(chats.size() - 1).getType().equals("typing")) {
-                                if (flag1)
-                                    chats.add(chats.size() - 1, model);
-                            } else
-                                chats.add(model);
+                        int id = Handler.addMessage(model);
+                        model.setId(id);
+                        if (chats.size() > 0 && chats.get(chats.size() - 1).getType().equals("typing")) {
+                            if (flag1)
+                                chats.add(chats.size() - 1, model);
+                        } else
+                            chats.add(model);
 
-                            if (!Messages.isComputingLayout())
-                                adapter.notifyItemInserted(chats.size() - 1);
+                        if (!Messages.isComputingLayout())
+                            adapter.notifyItemInserted(chats.size() - 1);
 
-
-                        }
+                    }
+                }
 
             }
         }
