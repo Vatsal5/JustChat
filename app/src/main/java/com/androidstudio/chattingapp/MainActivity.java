@@ -29,6 +29,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -103,13 +104,14 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     ArrayList<String> keyid;
     String keyid2=null;
     LinearLayoutManager linearLayoutManager;
+    ConstraintLayout clinvite;
 
 
 
     ArrayList<MessageModel> chats;
     RecyclerView lv;
     FirebaseDatabase database;
-  //  FloatingActionButton btnContacts;
+    FloatingActionButton btnContacts;
     String currentUserNumber;
     DatabaseReference reference;
 
@@ -139,6 +141,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        clinvite=findViewById(R.id.invite);
+
 
 
 
@@ -157,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         keyid= new ArrayList<>();
             toolbar = findViewById(R.id.toolbar);
             iv=findViewById(R.id.ivOptions);
-          //  btnContacts = findViewById(R.id.btnContacts);
+            btnContacts = findViewById(R.id.btnContacts);
             ivOptions = findViewById(R.id.ivOptions);
             preftheme = getSharedPreferences("theme", 0);
 
@@ -325,13 +329,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
             }
 
-//            btnContacts.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(MainActivity.this, FriendsActivity.class);
-//                    startActivity(intent);
-//                }
-//            });
+            btnContacts.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, FriendsActivity.class);
+                    startActivity(intent);
+                }
+            });
 
 
             DatabaseReference rf = FirebaseDatabase.getInstance().getReference(".info/connected");
@@ -362,6 +366,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                 }
             });
+
+
 
             // final android.os.Handler handler1= new Handler();
 
@@ -1861,6 +1867,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         if (FirebaseAuth.getInstance().getCurrentUser() != null)
             reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(Group);
         num++;
+
+
     }
 
     }
@@ -2014,6 +2022,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onResume() {
         super.onResume();
         Status("online");
+
+
 
         if(ApplicationClass.RenameGroup!=null)
         {
