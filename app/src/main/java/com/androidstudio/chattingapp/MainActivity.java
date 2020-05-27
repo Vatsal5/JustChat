@@ -106,10 +106,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     ArrayList<String> keyid;
     String keyid2=null;
     LinearLayoutManager linearLayoutManager;
-
-
-
     ArrayList<MessageModel> chats;
+    Intent intent1;
     RecyclerView lv;
     FirebaseDatabase database;
     FloatingActionButton btnContacts;
@@ -141,6 +139,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(getIntent()!=null) {
+            intent1 = getIntent();
+            Log.d("asdf", intent1.getType()+"");
+        }
 
 
 
@@ -174,17 +176,18 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.Orange)));
                toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
 
-             //   btnContacts.setBackgroundColor(getResources().getColor(R.color.Orange));
+                btnContacts.setBackgroundColor(getResources().getColor(R.color.Orange));
                 break;
             case "blue":
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
-             //   btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.blue));
 
                 break;
             case "bluish":
                toolbar.setBackgroundColor(getResources().getColor(R.color.bluish));
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.bluish)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.bluish)));
 
 
                 break;
@@ -192,34 +195,40 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.deepred)));
 
                toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.deepred)));
 
                 break;
             case "faintpink":
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.faintpink)));
 
               toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.faintpink)));
 
                 break;
             case "darkblue":
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkblue)));
 
                 toolbar.setBackgroundColor(getResources().getColor(R.color.darkblue));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkblue)));
 
                 break;
             case "green":
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
 
                 toolbar.setBackgroundColor(getResources().getColor(R.color.green));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
 
                 break;
             case "lightorange":
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightorange)));
 
                 toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightorange)));
 
                 break;
             case "lightred":
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightred)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightred)));
 
                 toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
 
@@ -227,36 +236,41 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             case "mustard":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.mustard)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.mustard)));
 
 
                 break;
             case "pink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.pink)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pink)));
 
 
                 break;
             case "pureorange":
                toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.pureorange)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pureorange)));
 
 
                 break;
             case "purepink":
                toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.purepink)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.purepink)));
 
                 break;
             case "purple":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.purple)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.purple)));
 
 
                 break;
             default:
                 toolbar.setBackgroundColor(getResources().getColor(R.color.red));
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
-
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
                 break;
         }
 
@@ -1894,26 +1908,26 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         keyid2=keyid.get(index);
 
-        if (getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_SEND) && getIntent().getType() != null) {
+        if ( intent1!=null && intent1.getAction() != null && intent1.getAction().equals(Intent.ACTION_SEND) && intent1.getType() != null) {
             if (contacts1.get(keyid.indexOf(key)).getGroupkey() == null) {
 
 
                 Intent intent = new Intent(this, MessageActivity.class);
             intent.putExtra("title", contacts1.get(keyid.indexOf(key)).getPh_number());
-            if ("text/plain".equals(getIntent().getType())) {
+            if ("text/plain".equals(intent1.getType())) {
                 intent.putExtra("type", "text");
-                intent.putExtra("message", getIntent().getStringArrayExtra(Intent.EXTRA_TEXT));
-            } else if (getIntent().getType().equals("image/*")) {
+                intent.putExtra("message", intent1.getStringArrayExtra(Intent.EXTRA_TEXT));
+            } else if (intent1.getType().equals("image/*")) {
                 intent.putExtra("type", "image");
-                Uri imageUri = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+                Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
                 intent.putExtra("message", imageUri.toString());
-            } else if (getIntent().getType().equals("video/mp4")) {
+            } else if (intent1.getType().equals("video/mp4") || intent1.getType().equals("video/*")) {
                 intent.putExtra("type", "video");
-                Uri imageUri = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+                Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
                 intent.putExtra("message", imageUri.toString());
-            } else if (getIntent().getType().equals("application/pdf")) {
+            } else if (intent1.getType().equals("application/pdf")) {
                 intent.putExtra("type", "pdf");
-                Uri imageUri = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+                Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
                 intent.putExtra("message", getPath(this, imageUri));
             }
 
@@ -1950,6 +1964,36 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 startActivity(intent);
 
             }
+            else
+            {
+
+                //   ******  To share a message in messageactivity2 ****
+                Intent intent = new Intent(this, MessageActivity2.class);
+                intent.putExtra("title", contacts1.get(keyid.indexOf(key)).getPh_number());
+                intent.putExtra("path", 2);
+                intent.putExtra("groupkey",contacts1.get(keyid.indexOf(key)).getGroupkey());
+                intent.putExtra("groupName",contacts1.get(keyid.indexOf(key)).getuID());
+                if ("text/plain".equals(intent1.getType())) {
+                    intent.putExtra("type", "text");
+                    intent.putExtra("message", intent1.getStringArrayExtra(Intent.EXTRA_TEXT));
+                } else if (intent1.getType().equals("image/*")) {
+                    intent.putExtra("type", "image");
+                    Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
+                    intent.putExtra("message", imageUri.toString());
+                } else if (intent1.getType().equals("video/mp4") || intent1.getType().equals("video/*")) {
+                    intent.putExtra("type", "video");
+                    Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
+                    intent.putExtra("message", imageUri.toString());
+                } else if (intent1.getType().equals("application/pdf")) {
+                    intent.putExtra("type", "pdf");
+                    Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
+                    intent.putExtra("message", getPath(this, imageUri));
+                }
+
+                intent.putExtra("profile", contacts1.get(index).getUrl());
+                startActivity(intent);
+            }
+            intent1=null;
         }
 
             else
@@ -1958,9 +2002,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 if (contacts1.get(index).getGroupname() == null) {
                     flag = true;
 
-
                     Intent intent = new Intent(MainActivity.this, MessageActivity.class);
-
                     intent.putExtra("type", " ");
                     intent.putExtra("messagecount", contacts1.get(index).getMessagenum());
                     if (contacts1.get(index).getuID().equals("")) {
@@ -2171,17 +2213,18 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.Orange)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.Orange));
 
-                //   btnContacts.setBackgroundColor(getResources().getColor(R.color.Orange));
+                btnContacts.setBackgroundColor(getResources().getColor(R.color.Orange));
                 break;
             case "blue":
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
-                //   btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
                 toolbar.setBackgroundColor(getResources().getColor(R.color.blue));
 
                 break;
             case "bluish":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.bluish));
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.bluish)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.bluish)));
 
 
                 break;
@@ -2189,34 +2232,40 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.deepred)));
 
                 toolbar.setBackgroundColor(getResources().getColor(R.color.deepred));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.deepred)));
 
                 break;
             case "faintpink":
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.faintpink)));
 
                 toolbar.setBackgroundColor(getResources().getColor(R.color.faintpink));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.faintpink)));
 
                 break;
             case "darkblue":
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkblue)));
 
                 toolbar.setBackgroundColor(getResources().getColor(R.color.darkblue));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.darkblue)));
 
                 break;
             case "green":
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
 
                 toolbar.setBackgroundColor(getResources().getColor(R.color.green));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
 
                 break;
             case "lightorange":
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightorange)));
 
                 toolbar.setBackgroundColor(getResources().getColor(R.color.lightorange));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightorange)));
 
                 break;
             case "lightred":
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightred)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.lightred)));
 
                 toolbar.setBackgroundColor(getResources().getColor(R.color.lightred));
 
@@ -2224,35 +2273,41 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             case "mustard":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.mustard));
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.mustard)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.mustard)));
 
 
                 break;
             case "pink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.pink)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pink)));
 
 
                 break;
             case "pureorange":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.pureorange));
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.pureorange)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pureorange)));
+
 
                 break;
             case "purepink":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.purepink));
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.purepink)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.purepink)));
 
                 break;
             case "purple":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.purple)));
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.purple)));
 
 
                 break;
             default:
                 toolbar.setBackgroundColor(getResources().getColor(R.color.red));
                 iv.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
-
+                btnContacts.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
                 break;
         }
 

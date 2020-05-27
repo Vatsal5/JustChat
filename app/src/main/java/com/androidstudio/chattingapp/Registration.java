@@ -58,7 +58,7 @@ public class Registration extends AppCompatActivity {
         etPhone = findViewById(R.id.etPhone);
         btnVerify = findViewById(R.id.btnSubmit);
         imageView=findViewById(R.id.logo);
-        Glide.with(this).load(R.drawable.icon).into(imageView);
+        Glide.with(this).load(R.drawable.icon1).into(imageView);
 
         reference = FirebaseDatabase.getInstance().getReference();
 
