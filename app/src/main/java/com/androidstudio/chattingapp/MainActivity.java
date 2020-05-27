@@ -2309,45 +2309,23 @@ if(keyid2!=null ) {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        if(flag==true) {
-//            contacts1.get(l).setMessagenum(2);
-//            userAdapter.notifyDataSetChanged();
-//        }
-//        if(flag2==true)
-//        {
-//
-//            contacts1.get(l).setMessagenum(2);
-//            userAdapter.notifyDataSetChanged();
-//        }
-//
-//        Log.d("Destroy","onPause");
 
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-//        int l=keyid.indexOf(keyid2);
-//        if(flag==true)
-//        {
+//        if (getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_SEND) && getIntent().getType() != null) {
 //
-//            contacts1.get(l).setMessagenum(2);
-//            userAdapter.notifyItemChanged(l);
-//        }
-//        if(flag2==true)
-//        {
-//            if(l<=(contacts1.size()-1)) {
-//
-//                contacts1.get(l).setMessagenum(2);
-//                userAdapter.notifyItemChanged(l);
+//            if ("text/plain".equals(getIntent().getType())) {
+//                intent.putExtra("type", "text");
+//                intent.putExtra("message", getIntent().getStringArrayExtra(Intent.EXTRA_TEXT));
+//            } else if (getIntent().getType().equals("image/*")) {
+//                intent.putExtra("type", "image");
+//                intent.putExtra("message", getPath(FriendsActivity.this, imageUri));
+//            } else if (getIntent().getType().equals("video/mp4")) {
+//                intent.putExtra("type", "video");
+//                Uri imageUri = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+//                intent.putExtra("message", getPath(FriendsActivity.this, imageUri));
+//            } else if (getIntent().getType().equals("application/pdf")) {
+//                intent.putExtra("type", "pdf");
+//                Uri imageUri = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+//                intent.putExtra("message", getPath(FriendsActivity.this, imageUri));
 //            }
-//
 //        }
-
     }
-}

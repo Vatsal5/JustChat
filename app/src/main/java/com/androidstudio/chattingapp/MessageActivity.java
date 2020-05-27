@@ -819,7 +819,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                                 intent.setType("application/pdf");
                                                 intent.setAction(Intent.ACTION_GET_CONTENT);
                                                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                                                startActivityForResult(intent, 55);
+                                                startActivityForResult(Intent.createChooser(intent,"Select"), 55);
                                                 break;
 
                                             case 6:
@@ -2961,10 +2961,15 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         if(!Messages.isComputingLayout())
             adapter.notifyItemChanged(index);
 
+        Log.d("typeoffile",message.getMessage());
+
+        Uri VideoUri;
+            VideoUri = Uri.fromFile(new File(message.getMessage()));
+
         ApplicationClass.PendingRequests.add(RecieverPhone);
 
         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("videos/" + Uri.parse(message.getMessage()).getLastPathSegment()).
-                putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                putFile(VideoUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("videos/" + Uri.parse(message.getMessage()).getLastPathSegment()).getDownloadUrl()
@@ -3035,8 +3040,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         if(!Messages.isComputingLayout())
             adapter.notifyItemChanged(index);
 
+        Uri imageUri = Uri.parse(message.getMessage());
+
         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).
-                putFile(Uri.parse(message.getMessage())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).getDownloadUrl()
