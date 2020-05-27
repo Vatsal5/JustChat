@@ -84,6 +84,8 @@ import java.util.concurrent.TimeUnit;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
+import static com.androidstudio.chattingapp.MessageActivity.getPath;
+
 public class MainActivity extends AppCompatActivity implements UserAdapter.itemSelected, PopupMenu.OnMenuItemClickListener
 {
 
@@ -1892,49 +1894,104 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         keyid2=keyid.get(index);
 
-        if(contacts1.get(index).getGroupname() == null)
-        {
-            flag=true;
+        if (getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_SEND) && getIntent().getType() != null) {
+            if (contacts1.get(keyid.indexOf(key)).getGroupkey() == null) {
 
 
+                Intent intent = new Intent(this, MessageActivity.class);
+            intent.putExtra("title", contacts1.get(keyid.indexOf(key)).getPh_number());
+            if ("text/plain".equals(getIntent().getType())) {
+                intent.putExtra("type", "text");
+                intent.putExtra("message", getIntent().getStringArrayExtra(Intent.EXTRA_TEXT));
+            } else if (getIntent().getType().equals("image/*")) {
+                intent.putExtra("type", "image");
+                Uri imageUri = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+                intent.putExtra("message", getPath(this, imageUri));
+            } else if (getIntent().getType().equals("video/mp4")) {
+                intent.putExtra("type", "video");
+                Uri imageUri = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+                intent.putExtra("message", getPath(this, imageUri));
+            } else if (getIntent().getType().equals("application/pdf")) {
+                intent.putExtra("type", "pdf");
+                Uri imageUri = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+                intent.putExtra("message", getPath(this, imageUri));
+            }
 
-        Intent intent = new Intent(MainActivity.this,MessageActivity.class);
+                // tvtitle.setText("Forward To");
+                //   ******  To forward a message in messageactivity ****
 
-        intent.putExtra("type"," ");
-        intent.putExtra("messagecount",contacts1.get(index).getMessagenum());
-        if(contacts1.get(index).getuID().equals(""))
-        {
-            intent.putExtra("title",contacts1.get(index).getPh_number());
 
+                //  intent.putExtra("title","+91"+contacts1.get(index).getPh_number());
+                // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+
+                //else
+                //intent.putExtra("title", contacts1.get(index).getuID());
+
+                intent.putExtra("phone", contacts1.get(keyid.indexOf(key)).getPh_number());
+
+//                if(contacts1.get(index).getPh_number().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()) ||
+//                        ("+91"+contacts1.get(index).getPh_number()).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
+//                {
+//                    Intent intent1=new Intent(FriendsActivity.this,MessageActivity2.class);
+//                    intent1.putExtra("groupKey", contacts1.get(index).getuID());
+//
+//                    intent1.putExtra("groupkey",contacts1.get(index).getKey());
+//                    intent1.putExtra("type", getIntent().getStringExtra("type"));
+//                    intent1.putExtra("path", 2);
+//                    intent1.putExtra("message", getIntent().getStringExtra("message"));
+//                    this.finish();
+//                    startActivity(intent1);
+//
+//                }
+
+                intent.putExtra("path", 2);
+
+                intent.putExtra("profile", contacts1.get(keyid.indexOf(key)).getUrl());
+                startActivity(intent);
+
+            }
         }
-        else {
-            intent.putExtra("title", contacts1.get(index).getuID());
-        }
+
+            else
+            {
+
+                if (contacts1.get(index).getGroupname() == null) {
+                    flag = true;
 
 
+                    Intent intent = new Intent(MainActivity.this, MessageActivity.class);
 
-            intent.putExtra("phone", contacts1.get(index).getPh_number());
+                    intent.putExtra("type", " ");
+                    intent.putExtra("messagecount", contacts1.get(index).getMessagenum());
+                    if (contacts1.get(index).getuID().equals("")) {
+                        intent.putExtra("title", contacts1.get(index).getPh_number());
 
-
-        if(!contacts1.get(index).getUrl().equals("null"))
-            intent.putExtra("profile",contacts1.get(index).getUrl());
-        startActivity(intent);
-        }
-        else
-        {
-
-            flag2=true;
-            Intent intent = new Intent(MainActivity.this,MessageActivity2.class);
-            intent.putExtra("groupName",contacts1.get(index).getuID());
-            intent.putExtra("groupkey",contacts1.get(index).getGroupkey());
-            intent.putExtra("status",contacts1.get(index).getStatus());
-
-            intent.putExtra("messagecount",contacts1.get(index).getMessagenum());
+                    } else {
+                        intent.putExtra("title", contacts1.get(index).getuID());
+                    }
 
 
-            intent.putExtra("profile",contacts1.get(index).getUrl());
-            startActivity(intent);
-        }
+                    intent.putExtra("phone", contacts1.get(index).getPh_number());
+
+
+                    if (!contacts1.get(index).getUrl().equals("null"))
+                        intent.putExtra("profile", contacts1.get(index).getUrl());
+                    startActivity(intent);
+                } else {
+
+                    flag2 = true;
+                    Intent intent = new Intent(MainActivity.this, MessageActivity2.class);
+                    intent.putExtra("groupName", contacts1.get(index).getuID());
+                    intent.putExtra("groupkey", contacts1.get(index).getGroupkey());
+                    intent.putExtra("status", contacts1.get(index).getStatus());
+
+                    intent.putExtra("messagecount", contacts1.get(index).getMessagenum());
+
+
+                    intent.putExtra("profile", contacts1.get(index).getUrl());
+                    startActivity(intent);
+                }
+            }
     }
 
     @Override
