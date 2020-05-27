@@ -1906,11 +1906,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             } else if (getIntent().getType().equals("image/*")) {
                 intent.putExtra("type", "image");
                 Uri imageUri = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-                intent.putExtra("message", getPath(this, imageUri));
+                intent.putExtra("message", imageUri.toString());
             } else if (getIntent().getType().equals("video/mp4")) {
                 intent.putExtra("type", "video");
                 Uri imageUri = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-                intent.putExtra("message", getPath(this, imageUri));
+                intent.putExtra("message", imageUri.toString());
             } else if (getIntent().getType().equals("application/pdf")) {
                 intent.putExtra("type", "pdf");
                 Uri imageUri = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);

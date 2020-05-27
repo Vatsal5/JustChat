@@ -4428,10 +4428,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             adapter.notifyItemChanged(index);
 
 
-        Uri imageUri = Uri.parse(message.getMessage());
+
+        Uri ImageUri = Uri.parse(message.getMessage());
 
         rf.child(groupKey).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).
-                putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                putFile(ImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 rf.child(groupKey).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).getDownloadUrl()
@@ -4508,7 +4509,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
         Uri VideoUri;
 
-            VideoUri = Uri.fromFile(new File(message.getMessage()));
+            VideoUri = Uri.parse(message.getMessage());
 
         rf.child(groupKey).child("videos/" + Uri.parse(message.getMessage()).getLastPathSegment()).
                 putFile(VideoUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

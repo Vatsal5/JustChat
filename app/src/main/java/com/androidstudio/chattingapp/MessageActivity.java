@@ -2964,7 +2964,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         Log.d("typeoffile",message.getMessage());
 
         Uri VideoUri;
-            VideoUri = Uri.fromFile(new File(message.getMessage()));
+            VideoUri = Uri.parse(message.getMessage());
 
         ApplicationClass.PendingRequests.add(RecieverPhone);
 
@@ -3040,10 +3040,11 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         if(!Messages.isComputingLayout())
             adapter.notifyItemChanged(index);
 
-        Uri imageUri = Uri.parse(message.getMessage());
+
+        Uri ImageUri = Uri.parse(message.getMessage());
 
         rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).
-                putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                putFile(ImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 rf.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/" + message.getReciever()).child("images/" + Uri.parse(message.getMessage()).getLastPathSegment()).getDownloadUrl()
