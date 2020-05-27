@@ -58,7 +58,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
+
+import javax.crypto.Cipher;
+import javax.crypto.CipherOutputStream;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 public class Settings extends AppCompatActivity {
 
@@ -252,8 +259,9 @@ public class Settings extends AppCompatActivity {
                                 if (ContextCompat.checkSelfPermission(Settings.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                     ActivityCompat.requestPermissions(Settings.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 550);
                                 }
-                                else
-                                    exportDB();
+                                else {
+                                        encrypt();
+                                }
                             }
                         })
                         .setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -562,7 +570,7 @@ flag=true;
                 dialog.show();
             }
             else
-                exportDB();
+                encrypt();
         }
 
     }
@@ -778,7 +786,8 @@ flag=true;
         return inSampleSize;
     }
 
-    private void exportDB(){
+
+    public void encrypt()  {
 
         final ProgressDialog dialog = new ProgressDialog(Settings.this);
         dialog.setMessage("Please Wait...");
@@ -787,27 +796,39 @@ flag=true;
         dialog.setCancelable(false);
         dialog.show();
 
-        File sd = Environment.getExternalStorageDirectory();
-        File data = Environment.getDataDirectory();
-        FileChannel source=null;
-        FileChannel destination=null;
-        String currentDBPath = "/data/"+ getPackageName() +"/databases/"+"CHATS_DATABASE";
-        String backupDBPath = "/ChattingApp/Databases/database.db";
-
-        File file = new File(Environment.getExternalStorageDirectory(),"/ChattingApp/Databases/");
-        if(!file.exists())
-            file.mkdir();
-
-        File currentDB = new File(data, currentDBPath);
-        File backupDB = new File(sd, backupDBPath);
-
+        // Here you read the cleartext.
         try {
 
-            source = new FileInputStream(currentDB).getChannel();
-            destination = new FileOutputStream(backupDB).getChannel();
-            destination.transferFrom(source, 0, source.size());
-            source.close();
-            destination.close();
+            File db = new File(Environment.getDataDirectory(), "/data/" + getPackageName() + "/databases/" + "CHATS_DATABASE");
+            FileInputStream fis = new FileInputStream(db);
+
+            File file = new File("/ChattingApp/Databases/");
+            if (!file.exists())
+                file.mkdir();
+
+            File encrypted = new File(Environment.getExternalStorageDirectory(),"/ChattingApp/Databases/database");
+            // This stream write the encrypted text. This stream will be wrapped by another stream.
+            FileOutputStream fos = new FileOutputStream(encrypted);
+
+            // Length is 16 byte
+            // Careful when taking user input!!! https://stackoverflow.com/a/3452620/1188357
+            SecretKeySpec sks = new SecretKeySpec("sdb3vuhwefvb4uv6".getBytes(), "AES");
+            // Create cipher
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, sks);
+            // Wrap the output stream
+            CipherOutputStream cos = new CipherOutputStream(fos, cipher);
+            // Write bytes
+            int b;
+            byte[] d = new byte[8];
+            while ((b = fis.read(d)) != -1) {
+                cos.write(d, 0, b);
+            }
+            // Flush and close streams.
+            cos.flush();
+            cos.close();
+            fis.close();
+
             dialog.dismiss();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
@@ -822,9 +843,7 @@ flag=true;
 
             AlertDialog dialog1 = builder.create();
             dialog1.show();
-
-        } catch(IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
             dialog.dismiss();
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }

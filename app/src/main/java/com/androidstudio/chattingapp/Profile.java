@@ -71,7 +71,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 public class Profile extends AppCompatActivity implements profile_listitem_adapter.itemSelected {
 
@@ -128,7 +135,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
             @Override
             public void onClick(View view) {
 
-                File file = new File(Environment.getExternalStorageDirectory(),"/ChattingApp/Databases/database.db");
+                File file = new File(Environment.getExternalStorageDirectory(),"/ChattingApp/Databases/database");
                 if(file.exists())
                 {
                     AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
@@ -142,7 +149,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                                         ActivityCompat.requestPermissions(Profile.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 150);
                                     }
                                     else {
-                                        importDB();
+                                        decrypt();
                                     }
                                 }
                             })
@@ -562,7 +569,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
             }
             else
             {
-                importDB();
+                decrypt();
             }
         }
     }
@@ -839,8 +846,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
         dialog.show();
     }
 
-    private void importDB() {
-        // TODO Auto-generated method stub
+    public void decrypt()  {
 
         ProgressDialog dialog = new ProgressDialog(Profile.this);
         dialog.setMessage("Restoring Backup");
@@ -849,46 +855,50 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
         dialog.show();
 
         try {
-            File sd = Environment.getExternalStorageDirectory();
-            File data  = Environment.getDataDirectory();
+            File encrypteddb = new File(Environment.getExternalStorageDirectory(),"/ChattingApp/Databases/database");
+            FileInputStream fis = new FileInputStream(encrypteddb);
 
-                String  currentDBPath= "//data//" + getPackageName()
-                        + "//databases//" + "CHATS_DATABASE";
+            File originaldb = new File(Environment.getDataDirectory(),"//data//" + getPackageName()
+                    + "//databases//" + "CHATS_DATABASE");
 
-                String backupDBPath  = "/ChattingApp/Databases/database.db";
-                File  backupDB= new File(data, currentDBPath);
-                File currentDB  = new File(sd, backupDBPath);
+            FileOutputStream fos = new FileOutputStream(originaldb);
+            SecretKeySpec sks = new SecretKeySpec("sdb3vuhwefvb4uv6".getBytes(), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, sks);
+            CipherInputStream cis = new CipherInputStream(fis, cipher);
+            int b;
+            byte[] d = new byte[8];
+            while ((b = cis.read(d)) != -1) {
+                fos.write(d, 0, b);
+            }
+            fos.flush();
+            fos.close();
+            cis.close();
 
-                FileChannel src = new FileInputStream(currentDB).getChannel();
-                FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                dst.transferFrom(src, 0, src.size());
-                src.close();
-                dst.close();
-
-                dialog.dismiss();
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Backup has been restored")
-                        .setTitle("Backup")
-                        .setCancelable(false)
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-
-                                Intent intent = new Intent(Profile.this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
-
-                AlertDialog dialog1 = builder.create();
-                dialog1.show();
-
-            } catch (Exception e) {
             dialog.dismiss();
-        }
 
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Backup has been restored")
+                    .setTitle("Backup")
+                    .setCancelable(false)
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+
+                            Intent intent = new Intent(Profile.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+
+            AlertDialog dialog1 = builder.create();
+            dialog1.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            dialog.dismiss();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
