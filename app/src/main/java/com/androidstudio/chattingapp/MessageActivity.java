@@ -2961,8 +2961,6 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         if(!Messages.isComputingLayout())
             adapter.notifyItemChanged(index);
 
-        Log.d("typeoffile",message.getMessage());
-
         Uri VideoUri;
             VideoUri = Uri.parse(message.getMessage());
 
