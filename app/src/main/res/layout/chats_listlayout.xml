@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
     android:background="#00ffffff"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -133,6 +134,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_height="16dp"
                     android:tint="#bdbdbd"
+                    android:paddingTop="1dp"
                     android:src="@drawable/received"
                     android:visibility="gone"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -144,6 +146,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_height="16dp"
                     android:tint="#bdbdbd"
+                    android:paddingTop="1dp"
                     android:visibility="visible"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_username" />
@@ -151,9 +154,12 @@
                 <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
                     android:id="@+id/lastmessage"
                     android:layout_width="wrap_content"
-                    android:layout_height="19dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
+                    app:emojiconSize="18sp"
                     android:singleLine="true"
+                    android:gravity="center_vertical"
+                    android:paddingTop="1dp"
 
                     android:layout_weight="4"
                     android:paddingRight="10dp"
@@ -171,10 +177,11 @@
                     android:layout_marginRight="5dp"
                     android:background="@drawable/countback"
                     android:gravity="center"
+                    android:layout_gravity="center_vertical"
                     android:text="1"
                     android:textColor="#ffffff"
-                    android:textSize="10sp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:textSize="10sp" />
 
             </LinearLayout>
 

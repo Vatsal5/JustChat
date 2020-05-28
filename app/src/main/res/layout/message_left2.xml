@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/background_left"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -47,12 +47,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:paddingTop="3dp"
-            android:paddingBottom="5dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:minHeight="38dp"
             android:maxWidth="200dp"
-            emojicon:emojiconSize="20sp"
+            app:emojiconSize="18sp"
+            android:lineSpacingExtra="3dp"
             android:minWidth="50dp"
             android:textColor="#ffffff"
             android:textSize="14sp" />
@@ -62,10 +62,10 @@
             android:id="@+id/tvTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_gravity="bottom|end"
             android:textColor="#ffffff"
             android:layout_marginRight="5dp"
-            android:layout_marginBottom="1dp"
+            android:layout_marginBottom="2dp"
             android:textSize="10sp" />
     </LinearLayout>
 

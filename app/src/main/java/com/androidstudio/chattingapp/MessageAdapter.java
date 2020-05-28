@@ -110,8 +110,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         EmojiconTextView tvMessage;
         ImageView ivImage,ivPlay,ivProfile,ivTyping,ivSeen,ivGIF,ivDownload;
         ProgressBar progress;
-        LinearLayout llMesageLeft,llTyping,llDownload,llpdf;
-        ConstraintLayout llMessageRight,clPdfLeft,clPdfRight;
+        LinearLayout llMesageLeft,llTyping,llDownload,llpdf,llMessageRight;
+        ConstraintLayout clPdfLeft,clPdfRight;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/background_left"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
             android:id="@+id/tvMessage"
@@ -32,24 +32,24 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:paddingTop="3dp"
-            android:paddingBottom="5dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            emojicon:emojiconSize="20sp"
-            android:minHeight="50dp"
+            emojicon:emojiconSize="18sp"
+            android:minHeight="40dp"
             android:maxWidth="200dp"
             android:minWidth="50dp"
             android:textColor="#ffffff"
+            android:lineSpacingExtra="3dp"
             android:textSize="14sp" />
 
         <TextView
             android:id="@+id/tvTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_gravity="bottom|end"
             android:textColor="#ffffff"
             android:layout_marginRight="5dp"
-            android:layout_marginBottom="1dp"
+            android:layout_marginBottom="2dp"
             android:textSize="10sp" />
     </LinearLayout>
 
