@@ -25,38 +25,48 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/background_left"
+        android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-        <TextView
-            android:id="@+id/tvSender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="9sp"
-            android:layout_marginTop="1dp"
-            android:layout_marginLeft="8dp"
-            android:textColor="#FFFFFF"/>
+
+            <TextView
+                android:id="@+id/tvSender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="1dp"
+                android:textColor="#FFFFFF"
+                android:textSize="9sp" />
 
 
-        <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
-            android:id="@+id/tvMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:paddingTop="3dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:minHeight="38dp"
-            android:maxWidth="200dp"
-            app:emojiconSize="18sp"
-            android:lineSpacingExtra="3dp"
-            android:minWidth="50dp"
-            android:textColor="#ffffff"
-            android:textSize="14sp" />
+            <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+                android:id="@+id/tvMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:lineSpacingExtra="3dp"
+                android:maxWidth="200dp"
+                android:minWidth="50dp"
+                android:paddingBottom="4dp"
+
+                android:minHeight="38dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="3dp"
+                android:paddingRight="8dp"
+                android:textColor="#ffffff"
+                android:textSize="14sp"
+                app:emojiconSize="18sp" />
         </LinearLayout>
+
+
+    </LinearLayout>
 
         <TextView
             android:id="@+id/tvTime"
@@ -67,6 +77,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="2dp"
             android:textSize="10sp" />
+
     </LinearLayout>
 
 </LinearLayout>

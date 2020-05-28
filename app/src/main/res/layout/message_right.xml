@@ -12,12 +12,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minHeight="50dp"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_marginRight="16dp"
         android:background="@drawable/background_right"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -32,6 +37,7 @@
         android:layout_marginTop="2dp"
         android:paddingTop="3dp"
         android:paddingLeft="8dp"
+        android:paddingBottom="4dp"
         android:paddingRight="8dp"
         app:emojiconSize="18dp"
         android:minHeight="40dp"
@@ -50,6 +56,7 @@
             android:layout_width="18sp"
             android:layout_height="18dp"
             android:padding="2dp"
+            android:layout_marginStart="3dp"
             android:layout_gravity="end"
             app:srcCompat="@drawable/tick"
             android:tint="#ffffff"
@@ -61,18 +68,22 @@
 
         </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvTime"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:textSize="10sp"
-        android:layout_weight="1"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="2dp"
-        android:layout_marginRight="5dp"
-        android:textColor="#DFDBDB"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:textSize="10sp"
+            android:layout_weight="1"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="2dp"
+            android:layout_marginRight="5dp"
+            android:textColor="#DFDBDB"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </LinearLayout>
 
