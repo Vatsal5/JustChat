@@ -2,6 +2,7 @@ package com.androidstudio.chattingapp;
 
 import android.Manifest;
 import android.app.DownloadManager;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -116,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
     SearchView searchView;
 
-
     SharedPreferences pref;
     SharedPreferences.Editor editor;
 
@@ -139,6 +139,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        NotificationManager notificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+        ApplicationClass.MainActivityContext=this;
         if(getIntent()!=null) {
             intent1 = getIntent();
             Log.d("asdf", intent1.getType()+"");
@@ -1520,31 +1523,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
 
-                if(dataSnapshot.getValue().toString().length()>10  &&  dataSnapshot.getValue().toString().substring(0,10).equals("/*delete*/")) {
-                    if (Handler.getGroupMessages(dataSnapshot.getKey(), 0).first.size() > 0) {
-                        contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString().substring(10), "null", 2
-                                , Handler.getLastMessageGroup(dataSnapshot.getKey()),
-                                Handler.getLastGroupMessageTime(dataSnapshot.getKey()), dataSnapshot.getKey(), dataSnapshot.getValue().toString().substring(10)));
-                        userAdapter.notifyItemInserted(contacts1.size() - 1);
-                        contacts1.get(contacts1.size()-1).setStatus("delete");
-                        keyid.add(dataSnapshot.getKey());
-
-
-
-                    } else {
-                        contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString().substring(10), "null", 2
-                                , "null",
-                                "null", dataSnapshot.getKey(), dataSnapshot.getValue().toString().substring(10)));
-                        userAdapter.notifyItemInserted(contacts1.size() - 1);
-                        contacts1.get(contacts1.size()-1).setStatus("delete");
-                        keyid.add(dataSnapshot.getKey());
-
-
-                    }
-
-                }
-                else {
-
+                if(!(dataSnapshot.getValue().toString().length()>10  &&  dataSnapshot.getValue().toString().substring(0,10).equals("/*delete*/"))) {
                     if (Handler.getGroupMessages(dataSnapshot.getKey(), 0).first.size() > 0) {
                         contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
                                 , Handler.getLastMessageGroup(dataSnapshot.getKey()),
@@ -1579,6 +1558,31 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         grouplistener.ProfileListener();
                     }
 
+                }
+                else {
+
+
+
+                    if (Handler.getGroupMessages(dataSnapshot.getKey(), 0).first.size() > 0) {
+                        contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString().substring(10), "null", 2
+                                , Handler.getLastMessageGroup(dataSnapshot.getKey()),
+                                Handler.getLastGroupMessageTime(dataSnapshot.getKey()), dataSnapshot.getKey(), dataSnapshot.getValue().toString().substring(10)));
+                        userAdapter.notifyItemInserted(contacts1.size() - 1);
+                        contacts1.get(contacts1.size()-1).setStatus("delete");
+                        keyid.add(dataSnapshot.getKey());
+
+
+
+                    } else {
+                        contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString().substring(10), "null", 2
+                                , "null",
+                                "null", dataSnapshot.getKey(), dataSnapshot.getValue().toString().substring(10)));
+                        userAdapter.notifyItemInserted(contacts1.size() - 1);
+                        contacts1.get(contacts1.size()-1).setStatus("delete");
+                        keyid.add(dataSnapshot.getKey());
+
+
+                    }
                 }
 
                 final String key = dataSnapshot.getKey();

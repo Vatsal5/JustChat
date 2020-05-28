@@ -1,6 +1,7 @@
 package com.androidstudio.chattingapp;
 
 import android.app.Application;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +26,7 @@ import java.util.logging.Handler;
 public class ApplicationClass extends Application
 {
     public static Context MessageActivityContext;
+    public static Context MainActivityContext;
     public static Context MessageActivity2Context;
     public static String url,rename;
     public static DBHandler Handler;
@@ -145,6 +147,7 @@ public class ApplicationClass extends Application
         super.onCreate();
         rename=null;
         messagesent=0;
+
 
 //        if(FirebaseAuth.getInstance().getCurrentUser())
 //        {

@@ -37,10 +37,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        if(ApplicationClass.MessageActivityContext==null)
+
+        if(ApplicationClass.MainActivityContext==null)
             condition = true;
         else
-            if(((Activity)ApplicationClass.MessageActivityContext).isDestroyed())
+            if(((Activity)ApplicationClass.MainActivityContext).isDestroyed())
                 condition = true;
 
             if(condition){
@@ -82,6 +83,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
                     .setSmallIcon(R.drawable.icon)
                     .setLargeIcon(largeIcon)
                     .setContentTitle(name)
+
                     .setContentText(remoteMessage.getData().get("text"))
                     .setAutoCancel(true)
                     .setSound(notificationSoundUri)
@@ -92,7 +94,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
                 notificationBuilder.setColor(getResources().getColor(R.color.red));
             }
             notificationManager.notify(notificationID, notificationBuilder.build());
+            condition=false;
         }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
