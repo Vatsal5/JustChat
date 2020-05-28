@@ -1917,11 +1917,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             if ("text/plain".equals(intent1.getType())) {
                 intent.putExtra("type", "text");
                 intent.putExtra("message", intent1.getStringArrayExtra(Intent.EXTRA_TEXT));
-            } else if (intent1.getType().equals("image/*")) {
+            } else if (intent1.getType().equals("image/*") || intent1.getType().equals("image/jpeg") || intent1.getType().equals("image/png") || intent1.getType().equals("image/jpg") || intent1.getType().equals("image/webp") || intent1.getType().equals("image/gif")) {
                 intent.putExtra("type", "image");
                 Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
                 intent.putExtra("message", imageUri.toString());
-            } else if (intent1.getType().equals("video/mp4") || intent1.getType().equals("video/*")) {
+            } else if (intent1.getType().equals("video/mp4") || intent1.getType().equals("video/*") || intent1.getType().equals("video/3gp") || intent1.getType().equals("video/avi")) {
                 intent.putExtra("type", "video");
                 Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
                 intent.putExtra("message", imageUri.toString());
@@ -1976,11 +1976,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 if ("text/plain".equals(intent1.getType())) {
                     intent.putExtra("type", "text");
                     intent.putExtra("message", intent1.getStringArrayExtra(Intent.EXTRA_TEXT));
-                } else if (intent1.getType().equals("image/*")) {
+                } else if (intent1.getType().equals("image/*") || intent1.getType().equals("image/jpeg") || intent1.getType().equals("image/png") || intent1.getType().equals("image/jpg") || intent1.getType().equals("image/webp") || intent1.getType().equals("image/gif")) {
                     intent.putExtra("type", "image");
                     Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
                     intent.putExtra("message", imageUri.toString());
-                } else if (intent1.getType().equals("video/mp4") || intent1.getType().equals("video/*")) {
+                } else if (intent1.getType().equals("video/mp4") || intent1.getType().equals("video/*") || intent1.getType().equals("video/3gp") || intent1.getType().equals("video/avi")) {
                     intent.putExtra("type", "video");
                     Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
                     intent.putExtra("message", imageUri.toString());
