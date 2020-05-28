@@ -494,7 +494,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
         long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
         if(diff==1)
-            return "YESTERDAY";
+            return "yesterday";
 
         else {
             String newDate;
