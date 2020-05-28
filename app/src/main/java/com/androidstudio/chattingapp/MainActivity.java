@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         if(getIntent()!=null) {
             intent1 = getIntent();
             Log.d("asdf", intent1.getType()+"");
+            Log.d("asdf", intent1.getStringExtra(Intent.EXTRA_TEXT)+"");
         }
 
 
@@ -1916,7 +1917,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             intent.putExtra("title", contacts1.get(keyid.indexOf(key)).getPh_number());
             if ("text/plain".equals(intent1.getType())) {
                 intent.putExtra("type", "text");
-                intent.putExtra("message", intent1.getStringArrayExtra(Intent.EXTRA_TEXT));
+                intent.putExtra("message", intent1.getStringExtra(Intent.EXTRA_TEXT));
             } else if (intent1.getType().equals("image/*") || intent1.getType().equals("image/jpeg") || intent1.getType().equals("image/png") || intent1.getType().equals("image/jpg") || intent1.getType().equals("image/webp") || intent1.getType().equals("image/gif")) {
                 intent.putExtra("type", "image");
                 Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
@@ -1975,7 +1976,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 intent.putExtra("groupName",contacts1.get(keyid.indexOf(key)).getuID());
                 if ("text/plain".equals(intent1.getType())) {
                     intent.putExtra("type", "text");
-                    intent.putExtra("message", intent1.getStringArrayExtra(Intent.EXTRA_TEXT));
+                    intent.putExtra("message", intent1.getStringExtra(Intent.EXTRA_TEXT));
                 } else if (intent1.getType().equals("image/*") || intent1.getType().equals("image/jpeg") || intent1.getType().equals("image/png") || intent1.getType().equals("image/jpg") || intent1.getType().equals("image/webp") || intent1.getType().equals("image/gif")) {
                     intent.putExtra("type", "image");
                     Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
