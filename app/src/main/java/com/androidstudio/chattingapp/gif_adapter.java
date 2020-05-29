@@ -81,11 +81,6 @@ public class gif_adapter extends RecyclerView.Adapter<gif_adapter.viewholder> {
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
     public int getItemCount() {
         return url.size();
     }
