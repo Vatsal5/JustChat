@@ -2822,7 +2822,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     @Override
     public void showImage(int index) {
 
-        if(chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4 && chats.get(index).getDownloaded()!=203 && chats.get(index).getDownloaded()!=204 && !chats.get(index).getType().equals("video")  && !chats.get(index).getType().equals("pdf")) {
+        if(chats.get(index).getDownloaded()!=0 && chats.get(index).getDownloaded()!=4 && chats.get(index).getDownloaded()!=203 && chats.get(index).getDownloaded()!=204 && !chats.get(index).getType().equals("video")  && !chats.get(index).getType().equals("pdf") && !chats.get(index).getType().equals("sticker")) {
             //  Log.d("URIURI",index +" "+ chats.get(index).getMessage())
 
             Intent intent = new Intent(MessageActivity2.this, ShowImage.class);

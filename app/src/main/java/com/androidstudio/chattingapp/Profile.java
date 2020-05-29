@@ -683,12 +683,14 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                 bmp = BitmapFactory.decodeFile(filePath, options);
             } catch (OutOfMemoryError exception) {
                 exception.printStackTrace();
+                Toast.makeText(getApplicationContext(),exception.getMessage(),Toast.LENGTH_LONG).show();
 
             }
             try {
                 scaledBitmap = Bitmap.createBitmap(actualWidth, actualHeight, Bitmap.Config.ARGB_8888);
             } catch (OutOfMemoryError exception) {
                 exception.printStackTrace();
+                Toast.makeText(getApplicationContext(),exception.getMessage(),Toast.LENGTH_LONG).show();
             }
 
             float ratioX = actualWidth / (float) options.outWidth;
@@ -726,6 +728,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                         scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix,
                         true);
             } catch (IOException e) {
+                Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
 
@@ -743,48 +746,56 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
 //          write the compressed bitmap at the destination specified by filename.
                 scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
+                return Uri.fromFile(file);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
             }
 
-            return Uri.fromFile(file);
+            return null;
         }
 
         @Override
         protected void onPostExecute(Uri uri) {
             super.onPostExecute(uri);
+            if (uri != null) {
+                File from = new File(uri.getLastPathSegment(), "old");
+                File to = new File("dp");
+                from.renameTo(to);
+                UploadTask uploadTask = reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/").child("images/dp").
+                        putFile(uri);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-            File from= new File(uri.getLastPathSegment(),"old");
-            File to= new File("dp");
-            from.renameTo(to);
-            UploadTask uploadTask=reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").
-                    putFile(uri);
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber() + "/").child("images/dp").getDownloadUrl().
+                                addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        source = uri.toString();
+                                        Glide.with(Profile.this)
+                                                .load(uri.toString())
+                                                .into(ivProfile);
+                                        databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
+                                                child("profile").setValue(uri.toString());
+                                        progress.setVisibility(View.GONE);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                progress.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+                });
 
-                    reference.child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()+"/").child("images/dp").getDownloadUrl().
-                            addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    source = uri.toString();
-                                    Glide.with(Profile.this)
-                                            .load(uri.toString())
-                                            .into(ivProfile);
-                                    databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).
-                                            child("profile").setValue(uri.toString());
-                                    progress.setVisibility(View.GONE);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progress.setVisibility(View.GONE);
-                        }
-                    });
-                }
-            });
-
+            }
+            else
+            {
+                progress.setVisibility(View.GONE);
+            }
         }
+
     }
 
     private String getRealPathFromURI(Uri contentUri) {
