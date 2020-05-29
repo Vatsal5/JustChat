@@ -2371,6 +2371,13 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     }
 
+    private Uri getImageUri(Context context, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
     //*****************************************************************************************************************************************************************
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -2393,8 +2400,15 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             }
             else
             {
-                Uri uri = data.getData();
-                new CompressImage().execute(uri);
+                if(data.getData()!=null) {
+                    Uri uri = data.getData();
+                    new CompressImage().execute(uri);
+                }
+                else {
+                    Uri uri=getImageUri(this,(Bitmap) data.getExtras().get("data"));
+
+                    new CompressImage().execute(uri);
+                }
             }
 
         }
@@ -4405,6 +4419,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     public static String getPath(final Context context, final Uri uri) {
 
+        Log.d("asdf",uri+"");
         // check here to KITKAT or new version
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         String selection = null;

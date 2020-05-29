@@ -2318,34 +2318,33 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
         if(ApplicationClass.keyid!=null) {
-            keyid2 = ApplicationClass.keyid;
-            if(keyid2.substring(0,3).equals("+91"))
-            {
-                if (keyid.indexOf(keyid2) <= (contacts1.size() - 1)) {
-                    flag = false;
-                    contacts1.get(keyid.indexOf(keyid2)).setMessagenum(2);
+            if(keyid.contains(ApplicationClass.keyid)) {
+                keyid2 = ApplicationClass.keyid;
+                if (keyid2.substring(0, 3).equals("+91")) {
+                    if (keyid.indexOf(keyid2) <= (contacts1.size() - 1)) {
+                        flag = false;
+                        contacts1.get(keyid.indexOf(keyid2)).setMessagenum(2);
 
-                    contacts1.get(keyid.indexOf(keyid2)).setLastmessage(Handler.getLastMessage(contacts1.get(keyid.indexOf(keyid2)).getPh_number()));
-                    contacts1.get(keyid.indexOf(keyid2)).setTime(Handler.getLastMessageTime(contacts1.get(keyid.indexOf(keyid2)).getPh_number()));
+                        contacts1.get(keyid.indexOf(keyid2)).setLastmessage(Handler.getLastMessage(contacts1.get(keyid.indexOf(keyid2)).getPh_number()));
+                        contacts1.get(keyid.indexOf(keyid2)).setTime(Handler.getLastMessageTime(contacts1.get(keyid.indexOf(keyid2)).getPh_number()));
 
-                    userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
+                        userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
+                    }
+                } else {
+                    if (keyid.indexOf(keyid2) <= (contacts1.size() - 1)) {
+                        flag2 = false;
+                        if (keyid.indexOf(keyid2) <= (contacts1.size() - 1))
+                            contacts1.get(keyid.indexOf(keyid2)).setLastmessage(Handler.getLastMessageGroup(contacts1.get(keyid.indexOf(keyid2)).getGroupkey()));
+                        if (Handler.getGroupMessages(contacts1.get(keyid.indexOf(keyid2)).getGroupname(), 0).first.size() > 0)
+                            contacts1.get(keyid.indexOf(keyid2)).setTime(Handler.getLastGroupMessageTime(contacts1.get(keyid.indexOf(keyid2)).getGroupkey()));
+                        else
+                            contacts1.get(keyid.indexOf(keyid2)).setTime(Handler.getLastGroupMessageTime(contacts1.get(keyid.indexOf(keyid2)).getGroupkey()));
+
+                        contacts1.get(keyid.indexOf(keyid2)).setMessagenum(2);
+                        userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
+                    }
+
                 }
-            }
-            else
-            {
-                if (keyid.indexOf(keyid2) <= (contacts1.size() - 1)) {
-                    flag2 = false;
-                    if (keyid.indexOf(keyid2) <= (contacts1.size() - 1))
-                        contacts1.get(keyid.indexOf(keyid2)).setLastmessage(Handler.getLastMessageGroup(contacts1.get(keyid.indexOf(keyid2)).getGroupkey()));
-                    if (Handler.getGroupMessages(contacts1.get(keyid.indexOf(keyid2)).getGroupname(), 0).first.size() > 0)
-                        contacts1.get(keyid.indexOf(keyid2)).setTime(Handler.getLastGroupMessageTime(contacts1.get(keyid.indexOf(keyid2)).getGroupkey()));
-                    else
-                        contacts1.get(keyid.indexOf(keyid2)).setTime(Handler.getLastGroupMessageTime(contacts1.get(keyid.indexOf(keyid2)).getGroupkey()));
-
-                    contacts1.get(keyid.indexOf(keyid2)).setMessagenum(2);
-                    userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
-                }
-
             }
         }
 
