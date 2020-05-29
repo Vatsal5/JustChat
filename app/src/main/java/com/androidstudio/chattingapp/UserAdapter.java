@@ -247,7 +247,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewholder> im
             } else if (lastmessagesubstring.equals("    ")) {
                 holder.ivImage.setVisibility(View.VISIBLE);
                 holder.tvlastmessage.setVisibility(View.VISIBLE);
-                holder.ivImage.setImageResource(R.drawable.gif);
+                holder.ivImage.setImageResource(R.drawable.sticker);
 
                 holder.tvlastmessage.setText("Sticker");
 
