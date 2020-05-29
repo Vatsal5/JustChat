@@ -802,9 +802,9 @@ flag=true;
             File db = new File(Environment.getDataDirectory(), "/data/" + getPackageName() + "/databases/" + "CHATS_DATABASE");
             FileInputStream fis = new FileInputStream(db);
 
-            File file = new File("/ChattingApp/Databases/");
+            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Databases");
             if (!file.exists())
-                file.mkdir();
+                file.mkdirs();
 
             File encrypted = new File(Environment.getExternalStorageDirectory(),"/ChattingApp/Databases/database");
             // This stream write the encrypted text. This stream will be wrapped by another stream.

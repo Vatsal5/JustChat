@@ -19,71 +19,57 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
+        <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+            android:id="@+id/tvMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="3dp"
+            android:paddingLeft="8dp"
+            android:paddingBottom="4dp"
+            android:paddingRight="2dp"
+            app:emojiconSize="18dp"
+            android:minHeight="40dp"
+            android:gravity="top"
+            android:maxWidth="200dp"
+            android:minWidth="50dp"
+            android:textColor="#ffffff"
+            android:textSize="14sp"
+            android:lineSpacingExtra="3dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/ivSeen"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="4"
-            android:orientation="horizontal">
-
-    <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
-        android:id="@+id/tvMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:paddingTop="3dp"
-        android:paddingLeft="8dp"
-        android:paddingBottom="4dp"
-        android:paddingRight="8dp"
-        app:emojiconSize="18dp"
-        android:minHeight="40dp"
-        android:gravity="top"
-        android:maxWidth="200dp"
-        android:minWidth="50dp"
-        android:textColor="#ffffff"
-        android:textSize="14sp"
-        android:lineSpacingExtra="3dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/ivSeen"/>
 
         <ImageView
             android:id="@+id/ivSeen"
             android:layout_width="18sp"
             android:layout_height="18dp"
             android:padding="2dp"
+            android:visibility="gone"
             android:layout_marginStart="3dp"
-            android:layout_gravity="end"
             app:srcCompat="@drawable/tick"
             android:tint="#ffffff"
-            android:visibility="gone"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_gravity="top"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp" />
-
-        </LinearLayout>
-
-
-
-    </LinearLayout>
 
         <TextView
             android:id="@+id/tvTime"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:textSize="10sp"
-            android:layout_weight="1"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="2dp"
+            android:gravity="bottom"
+            android:layout_gravity="bottom"
+            android:paddingBottom="2dp"
             android:layout_marginRight="5dp"
-            android:textColor="#DFDBDB"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:textColor="#FFFFFF" />
+
+
+    </LinearLayout>
 
     </LinearLayout>
 
