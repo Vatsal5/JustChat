@@ -67,9 +67,12 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -78,13 +81,17 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -109,6 +116,8 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
@@ -142,10 +151,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
     Ringtone sent,received;
     ImageView emojibtn;
+    String dpUrl=null;
 
     SearchView searchview;
 
 
+    ArrayList<String> tokens;
 
     LinearLayoutManager manager;
     MessageAdapter adapter;
@@ -235,6 +246,94 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         r.add(j);
     }
 
+    private void sendFCMPush(String message,String to) {
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("tag", "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        FirebaseDatabase.getInstance().getReference().child("tokens").child(sender).setValue(token);
+
+                        // Log and toast
+                        // String msg = getString(R.string.msg_token_fmt, token);
+                        // Log.d("tag", msg);
+                        // Toast.makeText(MessageActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        final String Legacy_SERVER_KEY = "AIzaSyBdu42ejssWEllOGpOlDYiEnlZRkWD1rgI";
+        String msg = etMessage.getText().toString();
+        String title = groupName;
+        String token = to;
+
+        JSONObject obj = null;
+        JSONObject objData = null;
+        JSONObject dataobjData = null;
+
+        try {
+            obj = new JSONObject();
+            objData = new JSONObject();
+
+            objData.put("body", message);
+            objData.put("title", title);
+            objData.put("sound", R.raw.notificationsound);
+            objData.put("icon", R.drawable.icon); //   icon_name image must be there in drawable
+            objData.put("tag", token);
+            objData.put("priority", "high");
+
+            //   Log.d("dp1",dpUrl+" back ");
+
+            dataobjData = new JSONObject();
+            dataobjData.put("text", message);
+            dataobjData.put("title", title);
+            dataobjData.put("dp",dpUrl);
+
+            obj.put("to", token);
+            //obj.put("priority", "high");
+
+//            obj.put("notification", objData);
+            obj.put("data", dataobjData);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, "https://fcm.googleapis.com/fcm/send", obj,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.e("!_@@_SUCESS", response + "");
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("!_@@_Errors--", error + "");
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Authorization", "key=" + Legacy_SERVER_KEY);
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        int socketTimeout = 1000 * 60;// 60 seconds
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        jsObjRequest.setRetryPolicy(policy);
+        requestQueue.add(jsObjRequest);
+    }
+
+
     public  void stickerSearch(String query){
 
         gifurl.clear();
@@ -283,6 +382,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message2);
+        tokens=new ArrayList<>();
 
         sent = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/sharp"));
         received = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/received"));
@@ -479,6 +579,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
 
         profile=getIntent().getStringExtra("profile");
+        dpUrl=getIntent().getStringExtra("profile");
+
 
         if(profile.equals("null"))
             ivProfile.setImageResource(R.drawable.group);
@@ -529,10 +631,28 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         //  Log.d("asdf","hi");
 
-                        if(!(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())))
+                        if(!(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
                             membernumber.add(dataSnapshot.getValue(String.class));
+
+                            FirebaseDatabase.getInstance().getReference().child("tokens").child(dataSnapshot.getValue(String.class)).addListenerForSingleValueEvent(
+                                    new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.getValue() != null)
+                                                tokens.add(dataSnapshot.getValue().toString());
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    }
+                            );
+
+                        }
                         numberOfMembers++;
                     }
+
 
                     @Override
                     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -3243,6 +3363,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             if(!Messages.isComputingLayout())
                 adapter.notifyItemChanged(index);
+            if(tokens.size()!=0) {
+                for (int j = 0; j < tokens.size(); j++) {
+                    sendFCMPush(model.getMessage(), tokens.get(j));
+                }
+            }
 
             final String push= FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages")
                     .child(membernumber.get(0)).push().getKey();

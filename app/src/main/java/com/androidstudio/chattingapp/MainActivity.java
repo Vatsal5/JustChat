@@ -632,6 +632,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                      contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
                      userAdapter.notifyItemChanged(keyid1.indexOf(key));
 
+                     
 
 
 //                     if (contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
