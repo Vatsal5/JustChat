@@ -194,6 +194,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     public  void gifSearch(String query){
 
         gifurl.clear();
+        gif_adapter.notifyDataSetChanged();
         RequestQueue r = Volley.newRequestQueue(MessageActivity2.this);
         JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET,
                 "http://api.giphy.com/v1/gifs/search?q="+query+"&api_key=M7poelh7604JssbY9PPRGO9u7FzOfK5l",
@@ -237,6 +238,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     public  void stickerSearch(String query){
 
         gifurl.clear();
+        gif_adapter.notifyDataSetChanged();
         RequestQueue r = Volley.newRequestQueue(MessageActivity2.this);
         JsonObjectRequest j = new JsonObjectRequest(Request.Method.GET,
                 "http://api.giphy.com/v1/stickers/search?q="+query+"&api_key=M7poelh7604JssbY9PPRGO9u7FzOfK5l",
