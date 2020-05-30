@@ -571,11 +571,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         // Log.d("abcd",dataSnapshot.getValue().toString());
 
 
-                         int i=keyid1.indexOf(key);
 
 
 
-                         contacts1.get(i).setUrl(dataSnapshot.getValue().toString());
+
+                         contacts1.get(keyid1.indexOf(key)).setUrl(dataSnapshot.getValue().toString());
 
 
 //                                                contacts1.add(new UserDetailwithUrl(key, "", dataSnapshot.getValue().toString(), 2
@@ -597,7 +597,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                  }
              };
-             reference.child("users").child(contacts1.get(index).getPh_number()).child("profile").addListenerForSingleValueEvent(profile);
+             reference.child("users").child(contacts1.get(index).getPh_number()).child("profile").addValueEventListener(profile);
              // userAdapter.notifyDataSetChanged();
 
          }
