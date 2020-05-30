@@ -284,7 +284,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             objData.put("body", message);
             objData.put("title", title);
             objData.put("sound", R.raw.notificationsound);
-            objData.put("icon", R.drawable.icon); //   icon_name image must be there in drawable
+            objData.put("icon", R.drawable.icon1); //   icon_name image must be there in drawable
             objData.put("tag", token);
             objData.put("priority", "high");
 
@@ -292,6 +292,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             dataobjData = new JSONObject();
             dataobjData.put("text", message);
+            dataobjData.put("sender", FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+
             dataobjData.put("title", title);
             dataobjData.put("dp",dpUrl);
 

@@ -32,6 +32,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
     SharedPreferences pref;
     private final String ADMIN_CHANNEL_ID ="admin_channel";
     Bitmap largeIcon;
+    NotificationCompat.Builder notificationBuilder;
     Boolean condition = false;
 
     @Override
@@ -54,10 +55,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
 
             pref = getApplicationContext().getSharedPreferences("Names", 0);
             String name = pref.getString(remoteMessage.getData().get("title"), "null");
+            String sender=pref.getString(remoteMessage.getData().get("sender"), "null");
 
             if (name.equals("null")) {
                 name = remoteMessage.getData().get("title");
             }
+
 
       /*
         Apps targeting SDK 26 or above (Android O) must implement notification channels and add its notifications
@@ -76,18 +79,33 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
                 largeIcon = getBitmapFromURL(remoteMessage.getData().get("dp"));
             else
                 largeIcon = BitmapFactory.decodeResource(getResources(),
-                        R.drawable.icon);
+                        R.drawable.icon1);
 
             Uri notificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                    .setSmallIcon(R.drawable.icon)
-                    .setLargeIcon(largeIcon)
-                    .setContentTitle(name)
+                if (!remoteMessage.getData().get("sender").equals("null")) {
+                    notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
+                            .setSmallIcon(R.drawable.icon1)
+                            .setLargeIcon(largeIcon)
+                            .setContentTitle(name)
 
-                    .setContentText(remoteMessage.getData().get("text"))
-                    .setAutoCancel(true)
-                    .setSound(notificationSoundUri)
-                    .setContentIntent(pendingIntent);
+                            .setContentText(sender+":  "+remoteMessage.getData().get("text"))
+                            .setAutoCancel(true)
+                            .setSound(notificationSoundUri)
+                            .setContentIntent(pendingIntent);
+                }
+                else
+                {
+                    notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
+                            .setSmallIcon(R.drawable.icon1)
+                            .setLargeIcon(largeIcon)
+                            .setContentTitle(name)
+
+                            .setContentText(remoteMessage.getData().get("text"))
+                            .setAutoCancel(true)
+                            .setSound(notificationSoundUri)
+                            .setContentIntent(pendingIntent);
+
+                }
 
             //Set notification color to match your app color template
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

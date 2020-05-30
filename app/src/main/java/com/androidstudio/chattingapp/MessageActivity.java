@@ -2113,14 +2113,17 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             objData.put("body", message);
             objData.put("title", title);
             objData.put("sound", R.raw.notificationsound);
-            objData.put("icon", R.drawable.icon); //   icon_name image must be there in drawable
+            objData.put("icon", R.drawable.icon1); //   icon_name image must be there in drawable
             objData.put("tag", token);
             objData.put("priority", "high");
 
-         //   Log.d("dp1",dpUrl+" back ");
+
+
+            //   Log.d("dp1",dpUrl+" back ");
 
             dataobjData = new JSONObject();
             dataobjData.put("text", message);
+            dataobjData.put("sender", "null");
             dataobjData.put("title", title);
             dataobjData.put("dp",dpUrl);
 
