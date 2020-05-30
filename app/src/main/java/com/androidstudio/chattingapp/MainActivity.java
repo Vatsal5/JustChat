@@ -1468,7 +1468,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //
 //                            }
 
-                    if (dataSnapshot.child("info").child("friend").exists() && dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
+                    if (dataSnapshot.child("info").child("friend").exists()) {
 
                         contacts1.add(new UserDetailwithUrl(dataSnapshot.getKey(), pref.getString(dataSnapshot.getKey(), dataSnapshot.getKey()), "null", 2
                                 , Handler.getLastMessage(dataSnapshot.getKey()), Handler.getLastMessageTime(dataSnapshot.getKey()), null, null));
@@ -2129,7 +2129,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         if(ApplicationClass.RenameGroup!=null)
         {
-
             contacts1.get(keyid.indexOf(keyid2)).setuID(ApplicationClass.RenameGroup);
             userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
             ApplicationClass.RenameGroup=null;
