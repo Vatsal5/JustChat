@@ -86,6 +86,7 @@ import java.util.concurrent.TimeUnit;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 import static com.androidstudio.chattingapp.ApplicationClass.contacts1;
+import static com.androidstudio.chattingapp.ApplicationClass.keyid;
 import static com.androidstudio.chattingapp.ApplicationClass.keyid1;
 import static com.androidstudio.chattingapp.ApplicationClass.keyid2;
 import static com.androidstudio.chattingapp.ApplicationClass.num;
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     FirebaseDatabase database1;
     DatabaseReference reference1;
     DatabaseReference UserStatus;
-    ChildEventListener chreceiver,gifreceiver,stickerreceiver,pdfreceiver;
+    ChildEventListener chreceiver,gifreceiver,stickerreceiver,pdfreceiver,deletedgroups;
     ValueEventListener dataCreater,deleteimage,deletevideo,deletepdf,Status;
     DBHandler Handler;
 
@@ -632,7 +633,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                      contacts1.get(i).setMessagenum(contacts1.get(i).getMessagenum() + 1);
                      userAdapter.notifyItemChanged(keyid1.indexOf(key));
 
-                     
+
 
 
 //                     if (contacts1.get(index).getPh_number().substring(0,3).equals("+91")) {
@@ -1532,7 +1533,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
 
-                if(!(dataSnapshot.getValue().toString().length()>10  &&  dataSnapshot.getValue().toString().substring(0,10).equals("/*delete*/"))) {
                     if (Handler.getGroupMessages(dataSnapshot.getKey(), 0).first.size() > 0) {
                         contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
                                 , Handler.getLastMessageGroup(dataSnapshot.getKey()),
@@ -1567,32 +1567,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         grouplistener.ProfileListener();
                     }
 
-                }
-                else {
 
 
-
-                    if (Handler.getGroupMessages(dataSnapshot.getKey(), 0).first.size() > 0) {
-                        contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString().substring(10), "null", 2
-                                , Handler.getLastMessageGroup(dataSnapshot.getKey()),
-                                Handler.getLastGroupMessageTime(dataSnapshot.getKey()), dataSnapshot.getKey(), dataSnapshot.getValue().toString().substring(10)));
-                        userAdapter.notifyItemInserted(contacts1.size() - 1);
-                        contacts1.get(contacts1.size()-1).setStatus("delete");
-                        keyid1.add(dataSnapshot.getKey());
-
-
-
-                    } else {
-                        contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString().substring(10), "null", 2
-                                , "null",
-                                "null", dataSnapshot.getKey(), dataSnapshot.getValue().toString().substring(10)));
-                        userAdapter.notifyItemInserted(contacts1.size() - 1);
-                        contacts1.get(contacts1.size()-1).setStatus("delete");
-                        keyid1.add(dataSnapshot.getKey());
-
-
-                    }
-                }
 
                 final String key = dataSnapshot.getKey();
                 deleteGroupimages = new ChildEventListener() {
@@ -1853,16 +1829,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                if(dataSnapshot.getValue().toString().length()>10  &&  dataSnapshot.getValue().toString().substring(0,10).equals("/*delete*/")) {
 
-
-                    contacts1.get(keyid1.indexOf(dataSnapshot.getKey())).setStatus("delete");
-
-                }
-                else {
-                    contacts1.get(keyid1.indexOf(dataSnapshot.getKey())).setuID(dataSnapshot.getValue().toString());
-                    userAdapter.notifyItemChanged(keyid1.indexOf(dataSnapshot.getKey()));
-                }
 
             }
 
@@ -1872,8 +1839,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                for (int i = 0; i < contacts1.size(); i++) {
 //                    if (contacts1.get(i).getGroupname() != null) {
 //                        if (contacts1.get(i).getGroupname().equals(dataSnapshot.getValue().toString())) {
-//                            contacts1.remove(i);
-//                            userAdapter.notifyItemRemoved(contacts1.size()-1);
+                if(dataSnapshot.getKey()!=null) {
+                    contacts1.remove(keyid1.indexOf(dataSnapshot.getKey()));
+
+                    userAdapter.notifyItemRemoved(keyid1.indexOf(dataSnapshot.getKey()));
+                    keyid1.remove(dataSnapshot.getKey());
+                }
 //                        }
 //
 //                    }
@@ -1892,8 +1863,57 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             }
         };
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null)
+        deletedgroups=new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if (Handler.getGroupMessages(dataSnapshot.getKey(), 0).first.size() > 0) {
+                    contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
+                            , Handler.getLastMessageGroup(dataSnapshot.getKey()),
+                            Handler.getLastGroupMessageTime(dataSnapshot.getKey()), dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
+                    userAdapter.notifyItemInserted(contacts1.size() - 1);
+                    contacts1.get(contacts1.size()-1).setStatus("delete");
+                    keyid1.add(dataSnapshot.getKey());
+
+
+
+                } else {
+                    contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
+                            , "null",
+                            "null", dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
+                    userAdapter.notifyItemInserted(contacts1.size() - 1);
+                    contacts1.get(contacts1.size()-1).setStatus("delete");
+                    keyid1.add(dataSnapshot.getKey());
+
+
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(Group);
+            reference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("deletedgroups").addChildEventListener(deletedgroups);
+
+        }
         num++;
 
 
@@ -2082,7 +2102,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
-                                            .child("groups").child(key).getRef().removeValue();
+                                            .child("deletedgroups").child(key).getRef().removeValue();
                                     contacts1.remove(keyid1.indexOf(key));
 
                                     userAdapter.notifyItemRemoved(keyid1.indexOf(key));
@@ -2325,7 +2345,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         }
 
 
-        if(ApplicationClass.keyid!=null) {
+        if(ApplicationClass.keyid!=null && keyid1.contains(keyid)) {
             if(keyid1.contains(ApplicationClass.keyid)) {
                 keyid2 = ApplicationClass.keyid;
                 if (keyid2.substring(0, 3).equals("+91")) {
@@ -2376,7 +2396,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //            userAdapter.notifyItemChanged(keyid.indexOf(keyid2));
 //
 //        }
-if(keyid2!=null ) {
+if(keyid2!=null && keyid1.contains(keyid2)) {
     if (ApplicationClass.messagesent == 1) {
         ApplicationClass.messagesent = 0;
         UserDetailwithUrl userDetailwithUrl;

@@ -408,7 +408,11 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                             @Override
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                                 FirebaseDatabase.getInstance().getReference().child("users").
-                                        child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).setValue("/*delete*/"+getIntent().getStringExtra("groupName"));
+                                        child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).getRef().removeValue();
+
+                                FirebaseDatabase.getInstance().getReference().child("users").
+                                        child(dataSnapshot.getValue().toString()).child("deletedgroups").child(groupKey).setValue(getIntent().getStringExtra("groupName"));
+
                                 MessageActivity2.getInstance().finish();
 
                                // FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").removeEventListener(DeleteGroup);

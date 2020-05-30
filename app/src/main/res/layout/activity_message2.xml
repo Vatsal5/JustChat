@@ -153,7 +153,7 @@
             android:background="#d6514a"
             android:gravity="center"
             android:text="This group has been deleted. You can no longer send messages in this group"
-            android:padding="10dp"
+            android:padding="4dp"
             android:drawableRight="@drawable/attachment"
             android:textColor="#ffffff"
             android:textSize="16sp" />

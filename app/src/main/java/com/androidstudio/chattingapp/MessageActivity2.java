@@ -400,11 +400,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             ll1.setVisibility(View.VISIBLE);
         }
 
-
-
 //        if(getIntent().getStringExtra("status").equals("deleted"))
 //            ll.setVisibility(View.GONE);
-
 
         ivProfile=findViewById(R.id.ivProfile);
         messageActivity2=this;
@@ -520,6 +517,37 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
+                Boolean condition = false;
+
+                if( dataSnapshot!=null && dataSnapshot.getKey().equals(groupKey)) {
+                    if (chats.size() == 0)
+                        condition = true;
+                    else {
+                        if (!chats.get(chats.size() - 1).getType().equals("grpinfo") && !chats.get(chats.size() - 1).getMessage().equals("This group has been deleted"))
+                            condition = true;
+                    }
+
+                    if (condition) {
+
+                        noOfMembers = 0;
+                        ll.setVisibility(View.GONE);
+                        ll1.setVisibility(View.VISIBLE);
+//                    GroupStatus.edit().putString(groupKey, "deleted").apply();
+//                    MessageModel messageModel = new MessageModel(-347, "null", "null", "This group has been deleted", "grpinfo", 9876, "null", "null", groupKey, "null");
+//
+//                    if (chats.size() != 0)
+//                        messageModel.setDate(chats.get(chats.size() - 1).getDate());
+//
+//                    int id = Handler.addMessage(messageModel);
+//                    messageModel.setId(id);
+//
+//                    chats.add(messageModel);
+//
+//                    if (!Messages.isComputingLayout())
+//                        adapter.notifyItemInserted(chats.size() - 1);
+                    }
+                }
+
                 // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
 
@@ -534,35 +562,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                Boolean condition = false;
 
-                if(chats.size()==0)
-                    condition=true;
-                else
-                {
-                    if(!chats.get(chats.size()-1).getType().equals("grpinfo") && !chats.get(chats.size()-1).getMessage().equals("This group has been deleted"))
-                        condition=true;
-                }
-
-                if(condition) {
-
-                    noOfMembers=0;
-                    ll.setVisibility(View.GONE);
-                    ll1.setVisibility(View.VISIBLE);
-//                    GroupStatus.edit().putString(groupKey, "deleted").apply();
-//                    MessageModel messageModel = new MessageModel(-347, "null", "null", "This group has been deleted", "grpinfo", 9876, "null", "null", groupKey, "null");
-//
-//                    if (chats.size() != 0)
-//                        messageModel.setDate(chats.get(chats.size() - 1).getDate());
-//
-//                    int id = Handler.addMessage(messageModel);
-//                    messageModel.setId(id);
-//
-//                    chats.add(messageModel);
-//
-//                    if (!Messages.isComputingLayout())
-//                        adapter.notifyItemInserted(chats.size() - 1);
-                }
 
             }
 
@@ -576,7 +576,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             }
         };
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).addChildEventListener(Group);
+        FirebaseDatabase.getInstance().getReference().child("deletedgroups").addChildEventListener(Group);
 
 
 
