@@ -496,7 +496,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
                             }
                             if (tell == 0) {
-                                if (dataSnapshot.child("info").child("friend").exists() && dataSnapshot.child("info").child("friend").getValue().equals("yes")) {
+                                if (dataSnapshot.child("info").exists() ) {
                                         contacts1.add(new UserDetailWithStatus(dataSnapshot.getKey(), "", "null",
                                                 "",0,null));
 
