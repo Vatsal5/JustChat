@@ -31,7 +31,10 @@ public class ApplicationClass extends Application
     public static String url,rename;
     public static DBHandler Handler;
     public static String keyid;
+    public static String keyid2=null;
+    public static ArrayList<String> keyid1;
     public  static int messagesent;
+    public static ArrayList<UserDetailwithUrl> contacts1;
     public static ArrayList<String>members,groupmembers;
     public static ArrayList<String>PendingRequests;
     public static ArrayList<UserDetail>Contacts;
@@ -147,8 +150,8 @@ public class ApplicationClass extends Application
         super.onCreate();
         rename=null;
         messagesent=0;
-
-
+contacts1=new ArrayList<>();
+        keyid1= new ArrayList<>();
 //        if(FirebaseAuth.getInstance().getCurrentUser())
 //        {
 //            Intent intent=new Intent(ApplicationClass.this,Registration.class);
