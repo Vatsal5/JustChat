@@ -682,7 +682,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 holder.ivImage.setImageURI(Uri.parse(message.substring(0,message.lastIndexOf(" "))));
                 if(holder.ivImage.getDrawable()==null)
                 {
-                    holder.ivImage.setImageURI(null);
+                    holder.ivImage.setImageDrawable(null);
                     holder.ivGIF.setVisibility(View.GONE);
                         holder.tvError.setVisibility(View.VISIBLE);
 
@@ -699,7 +699,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
             else
             {
-                holder.ivImage.setImageURI(null);
+                holder.ivImage.setImageDrawable(null);
                 holder.ivGIF.setVisibility(View.GONE);
                 holder.tvError.setVisibility(View.VISIBLE);
             }
@@ -760,7 +760,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 holder.ivImage.setImageURI(Uri.parse(message.substring(0,message.lastIndexOf(" "))));
                 if(holder.ivImage.getDrawable()==null)
                 {
-                    holder.ivImage.setImageURI(null);
+                    holder.ivImage.setImageDrawable(null);
                     holder.ivGIF.setVisibility(View.GONE);
                     holder.tvError.setVisibility(View.VISIBLE);
 
@@ -777,7 +777,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
             else
             {
-                holder.ivImage.setImageURI(null);
+                holder.ivImage.setImageDrawable(null);
                 holder.ivGIF.setVisibility(View.GONE);
                 holder.tvError.setVisibility(View.VISIBLE);
             }
@@ -825,7 +825,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         holder.ivImage.setClickable(false);
-                        holder.ivImage.setImageURI(null);
+                        holder.ivImage.setImageDrawable(null);
                         holder.tvError.setVisibility(View.VISIBLE);
 
                         if(holder.getAdapterPosition()!=-1)
@@ -842,7 +842,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
             else
             {
-                holder.ivImage.setImageURI(null);
+                holder.ivImage.setImageDrawable(null);
                 holder.tvError.setVisibility(View.VISIBLE);
             }
 
@@ -873,7 +873,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         holder.ivImage.setClickable(false);
-                        holder.ivImage.setImageURI(null);
+                        holder.ivImage.setImageDrawable(null);
                         holder.tvError.setVisibility(View.VISIBLE);
 
                         if(holder.getAdapterPosition()!=-1)
@@ -890,7 +890,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
             else
             {
-                holder.ivImage.setImageURI(null);
+                holder.ivImage.setImageDrawable(null);
                 holder.tvError.setVisibility(View.VISIBLE);
             }
             holder.ivImage.setBackgroundResource(R.drawable.background_right);
@@ -1083,7 +1083,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
-                        holder.ivImage.setImageURI(null);
+                        holder.ivImage.setImageDrawable(null);
                         holder.ivPlay.setVisibility(View.GONE);
                         holder.tvError.setVisibility(View.VISIBLE);
 
@@ -1111,7 +1111,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
             else
             {
-                holder.ivImage.setImageURI(null);
+                holder.ivImage.setImageDrawable(null);
                 holder.ivPlay.setVisibility(View.GONE);
                 holder.tvError.setVisibility(View.VISIBLE);
             }
@@ -1143,7 +1143,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 
-                        holder.ivImage.setImageURI(null);
+                        holder.ivImage.setImageDrawable(null);
                         holder.ivPlay.setVisibility(View.GONE);
                         holder.tvError.setVisibility(View.VISIBLE);
 
@@ -1171,7 +1171,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
             else
             {
-                holder.ivImage.setImageURI(null);
+                holder.ivImage.setImageDrawable(null);
                 holder.ivPlay.setVisibility(View.GONE);
                 holder.tvError.setVisibility(View.VISIBLE);
             }
