@@ -536,6 +536,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                     }
                 };
         if (getIntent().getIntExtra("path", 2) == 1) {
+            ApplicationClass.contacts1.get(ApplicationClass.keyid1.indexOf(ApplicationClass.keyid2)).setMessagenum(2);
 
             tvtitle.setText("Forward");
             reference.child("users").child(currentUserNumber).addChildEventListener(childEvent);
@@ -724,6 +725,9 @@ z1--;
                 intent.putExtra("phone", contacts1.get(index).getPh_number());
 
                 if (getIntent().getIntExtra("path", 2) == 1) {
+
+
+
 //                if(contacts1.get(index).getPh_number().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()) ||
 //                        ("+91"+contacts1.get(index).getPh_number()).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
 //                {
@@ -753,7 +757,8 @@ z1--;
             }
             else
             {
-                Log.d("asdf",key+"");
+
+
                 //   ******  To forward a message in messageactivity2 ****
                 Intent intent = new Intent(FriendsActivity.this, MessageActivity2.class);
                 intent.putExtra("title", contacts1.get(index).getPh_number());
