@@ -88,6 +88,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import static com.androidstudio.chattingapp.ApplicationClass.contacts1;
 import static com.androidstudio.chattingapp.ApplicationClass.keyid1;
 import static com.androidstudio.chattingapp.ApplicationClass.keyid2;
+import static com.androidstudio.chattingapp.ApplicationClass.num;
 import static com.androidstudio.chattingapp.MessageActivity.getPath;
 
 public class MainActivity extends AppCompatActivity implements UserAdapter.itemSelected, PopupMenu.OnMenuItemClickListener
@@ -134,14 +135,14 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
     UserAdapter userAdapter;
 
-    int num=0;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(contacts1!=null)
+            Log.d("aass",contacts1.size()+"");
+
         NotificationManager notificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
         ApplicationClass.MainActivityContext=this;
@@ -346,7 +347,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
             } else {
-                getcontact();
+                if(num==0)
+                    getcontact();
 
             }
 
@@ -396,6 +398,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
 
             itemTouchHelper.attachToRecyclerView(lv);
+
+        if(contacts1!=null)
+            Log.d("aass",contacts1.size()+"");
 
     }
 

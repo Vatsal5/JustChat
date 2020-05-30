@@ -34,6 +34,7 @@ public class ApplicationClass extends Application
     public static String keyid2=null;
     public static ArrayList<String> keyid1;
     public  static int messagesent;
+    public  static int num;
     public static ArrayList<UserDetailwithUrl> contacts1;
     public static ArrayList<String>members,groupmembers;
     public static ArrayList<String>PendingRequests;
