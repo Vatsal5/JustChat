@@ -3838,7 +3838,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             super.onPostExecute(uri);
 
             if (uri != null) {
-                String message1 = chats.get(index).getMessage();
+                String message1 = message.getMessage();
 
                 message.setDownloaded(302);
                 message.setMessage(uri.toString()+" "+message1);
@@ -3985,7 +3985,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
             if (uri != null) {
 
-                String message1 = chats.get(index).getMessage();
+                String message1 = message.getMessage();
 
                 message.setDownloaded(202);
                 message.setMessage(uri.toString()+" "+message1);

@@ -3894,7 +3894,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             if (uri != null) {
 
-                String message1 = chats.get(index).getMessage();
+                String message1 = message.getMessage();
 
                 message.setDownloaded(302);
                 message.setMessage(uri.toString()+" "+message1);
@@ -4040,7 +4040,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             if (uri != null) {
 
-                String message1 = chats.get(index).getMessage();
+                String message1 = message.getMessage();
 
                 message.setDownloaded(202);
                 message.setMessage(uri.toString()+" "+message1);
