@@ -285,9 +285,9 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
         ivClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ContextCompat.checkSelfPermission(Profile.this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+                if(ContextCompat.checkSelfPermission(Profile.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
                 {
-                    ActivityCompat.requestPermissions(Profile.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_CODE);
+                    ActivityCompat.requestPermissions(Profile.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
 
                 }
                 else{
@@ -520,7 +520,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        ActivityCompat.requestPermissions(Profile.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_CODE);
+                        ActivityCompat.requestPermissions(Profile.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
 
                     }
                 });
@@ -591,7 +591,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
             if(CropImage.isReadExternalStoragePermissionsRequired(this,imageuri))
             {
                 uri = imageuri;
-                requestPermissions(new String []{Manifest.permission.READ_EXTERNAL_STORAGE},0);
+                requestPermissions(new String []{Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
             }else {
                 startCrop(imageuri);
             }
@@ -604,7 +604,9 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
             {
                 if(isConnected()) {
                     progress.setVisibility(View.VISIBLE);
-                    uri = result.getUri();
+
+                    if(result.getUri()!=null)
+                        uri = result.getUri();
 
                     new CompressImage().execute(uri);
                 }
