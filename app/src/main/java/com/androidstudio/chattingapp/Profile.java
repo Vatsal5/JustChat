@@ -529,7 +529,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        Profile.this.finish();
+                        dialog.dismiss();
 
                     }
                 });
