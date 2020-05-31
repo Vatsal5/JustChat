@@ -3174,6 +3174,13 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         .addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
+
+                                if(tokens.size()!=0) {
+                                    for (int j = 0; j < tokens.size(); j++) {
+                                        sendFCMPush("PDF", tokens.get(j));
+                                    }
+                                }
+
                                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletepdf").
 
                                         child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(numberOfMembers + message.getDate()+  uri.toString());
@@ -3237,6 +3244,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         model.setDownloaded(301);
         Handler.UpdateMessage(model);
 
+
+
         chats.get(index).setDownloaded(301);
 
         if(!Messages.isComputingLayout())
@@ -3255,6 +3264,13 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+
+                            if(tokens.size()!=0) {
+                                for (int j = 0; j < tokens.size(); j++) {
+                                    sendFCMPush("Sticker", tokens.get(j));
+                                }
+                            }
+
                             if (x[0] == 0) {
                                 x[0] = 1;
                                 model.setFirebaseId(push);
@@ -3295,6 +3311,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         model.setDownloaded(201);
         Handler.UpdateMessage(model);
 
+
+
         chats.get(index).setDownloaded(201);
 
         if(!Messages.isComputingLayout())
@@ -3313,6 +3331,13 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+
+                            if(tokens.size()!=0) {
+                                for (int j = 0; j < tokens.size(); j++) {
+                                    sendFCMPush("GIF", tokens.get(j));
+                                }
+                            }
+
                             if (x[0] == 0) {
                                 x[0] = 1;
                                 model.setFirebaseId(push);
@@ -4559,6 +4584,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         .addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
+                                if(tokens.size()!=0) {
+                                    for (int j = 0; j < tokens.size(); j++) {
+                                        sendFCMPush("Image", tokens.get(j));
+                                    }
+                                }
+
                                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deleteimages").
 
                                         child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(numberOfMembers + message.getDate()+  uri.toString());
@@ -4639,6 +4670,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         .addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
+
+                                if(tokens.size()!=0) {
+                                    for (int j = 0; j < tokens.size(); j++) {
+                                        sendFCMPush("Video", tokens.get(j));
+                                    }
+                                }
 
                                 String push= FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).
                                         child("videos").child(membernumber.get(0)).
