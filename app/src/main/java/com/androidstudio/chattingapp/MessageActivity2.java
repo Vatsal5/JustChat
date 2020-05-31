@@ -576,7 +576,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             }
         };
-        FirebaseDatabase.getInstance().getReference().child("deletedgroups").addChildEventListener(Group);
+        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("deletedgroups").addChildEventListener(Group);
 
 
 
