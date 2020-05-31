@@ -166,7 +166,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     int y=0,z=0;
      String sender;
     ChildEventListener imagereceiver, videoreceiver, chreceiver,seenmessages,gifreceiver,stickerreceiver,pdfreceiver,Group,layoutreceiver;
-    ValueEventListener deletevideo,deleteimage,deletepdf,set,set1,set2;
+    ValueEventListener deletevideo,deleteimage,deletepdf,set,set1,set2,tokenlistener;
     String defaultvalue;
     SharedPreferences pref,wallpaper;
     RecyclerView.AdapterDataObserver observer;
@@ -624,26 +624,28 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(
                 new ChildEventListener() {
                     @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    public void onChildAdded(@NonNull final DataSnapshot dataSnapshot1, @Nullable String s) {
                         //  Log.d("asdf","hi");
 
-                        if(!(dataSnapshot.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
-                            membernumber.add(dataSnapshot.getValue(String.class));
+                        if(!(dataSnapshot1.getValue().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
+                            membernumber.add(dataSnapshot1.getValue(String.class));
 
-                            FirebaseDatabase.getInstance().getReference().child("tokens").child(dataSnapshot.getValue(String.class)).addListenerForSingleValueEvent(
-                                    new ValueEventListener() {
+                                  tokenlistener=  new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            if (dataSnapshot.getValue() != null)
+                                            if (dataSnapshot.getValue() != null && !dataSnapshot.getValue().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
                                                 tokens.add(dataSnapshot.getValue().toString());
+                                            FirebaseDatabase.getInstance().getReference().child("tokens").child(dataSnapshot1.getValue(String.class)).removeEventListener(tokenlistener);
+
                                         }
 
                                         @Override
                                         public void onCancelled(@NonNull DatabaseError databaseError) {
 
                                         }
-                                    }
-                            );
+                                    };
+                            FirebaseDatabase.getInstance().getReference().child("tokens").child(dataSnapshot1.getValue(String.class)).addListenerForSingleValueEvent(tokenlistener);
+
 
                         }
                         numberOfMembers++;
