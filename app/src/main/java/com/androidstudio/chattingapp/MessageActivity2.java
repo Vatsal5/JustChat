@@ -170,6 +170,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     String defaultvalue;
     SharedPreferences pref,wallpaper;
     RecyclerView.AdapterDataObserver observer;
+    int num=0;
 
     public static MessageActivity2 getInstance(){
         return messageActivity2;
@@ -517,17 +518,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                Boolean condition = false;
 
                 if( dataSnapshot!=null && dataSnapshot.getKey().equals(groupKey)) {
-                    if (chats.size() == 0)
-                        condition = true;
-                    else {
-                        if (!chats.get(chats.size() - 1).getType().equals("grpinfo") && !chats.get(chats.size() - 1).getMessage().equals("This group has been deleted"))
-                            condition = true;
-                    }
-
-                    if (condition) {
 
                         noOfMembers = 0;
                         ll.setVisibility(View.GONE);
@@ -550,8 +542,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
                 // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
 
-
-            }
 
 
             @Override
@@ -576,7 +566,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             }
         };
-        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("deletedgroups").addChildEventListener(Group);
+
+        if(num==0) {
+            FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("deletedgroups").addChildEventListener(Group);
+            num++;
+        }
 
 
 
@@ -2539,7 +2533,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).addChildEventListener(imagereceiver);
-        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").addChildEventListener(Group);
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
@@ -2967,8 +2960,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         ).removeEventListener(imagereceiver);
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(FirebaseAuth
                 .getInstance().getCurrentUser().getPhoneNumber()).removeEventListener(layoutreceiver);
-
-        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").removeEventListener(Group);
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
@@ -3447,7 +3438,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     @Override
                     public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
 
-                        File imagesFolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Sent");
+                        File imagesFolder = new File(Environment.getExternalStorageDirectory(),"JustChat/Sent");
                         if(!imagesFolder.exists())
                             imagesFolder.mkdirs();
 
@@ -3498,7 +3489,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     @Override
                     public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
 
-                        File imagesFolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Sent");
+                        File imagesFolder = new File(Environment.getExternalStorageDirectory(),"JustChat/Sent");
                         if(!imagesFolder.exists())
                             imagesFolder.mkdirs();
 
@@ -3702,7 +3693,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 e.printStackTrace();
             }
 
-            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
+            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "JustChat/Sent");
             if (!imagesFolder.exists()) {
                 imagesFolder.mkdirs();
             }
@@ -3796,11 +3787,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             String message1 = message.getMessage();
             String name = message1.substring(message1.lastIndexOf(" ")+1);
 
-            File directory = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+            File directory = new File(Environment.getExternalStorageDirectory(),"JustChat/Received");
             if(!directory.exists())
                 directory.mkdirs();
 
-            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+name+".pdf");
+            File file = new File(Environment.getExternalStorageDirectory(),"JustChat/Received/"+name+".pdf");
 
             try{
                 //Form a new URL
@@ -3962,12 +3953,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             URLConnection urlConnection;
 
-            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"JustChat/Received");
 
             if(!imagesfolder.exists())
                 imagesfolder.mkdirs();
 
-            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".png");
+            File file = new File(Environment.getExternalStorageDirectory(),"JustChat/Received/"+System.currentTimeMillis()+".png");
 
             try{
                 //Form a new URL
@@ -4108,12 +4099,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             URLConnection urlConnection;
 
-            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"JustChat/Received");
 
             if(!imagesfolder.exists())
                 imagesfolder.mkdirs();
 
-            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".gif");
+            File file = new File(Environment.getExternalStorageDirectory(),"JustChat/Received/"+System.currentTimeMillis()+".gif");
 
             try{
                 //Form a new URL
@@ -4253,11 +4244,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             URLConnection urlConnection;
 
-            File directory = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+            File directory = new File(Environment.getExternalStorageDirectory(),"JustChat/Received");
             if(!directory.exists())
                 directory.mkdirs();
 
-            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".mp4");
+            File file = new File(Environment.getExternalStorageDirectory(),"JustChat/Received/"+System.currentTimeMillis()+".mp4");
 
             try{
                 //Form a new URL
@@ -4414,11 +4405,11 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             URLConnection urlConnection;
 
-            File directory = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+            File directory = new File(Environment.getExternalStorageDirectory(),"JustChat/Received");
             if(!directory.exists())
                 directory.mkdirs();
 
-            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".jpg");
+            File file = new File(Environment.getExternalStorageDirectory(),"JustChat/Received/"+System.currentTimeMillis()+".jpg");
 
             try{
                 //Form a new URL
@@ -4716,7 +4707,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("videos").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(videoreceiver);
-        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("groups").removeEventListener(Group);
+        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).child("deletedgroups").removeEventListener(Group);
 
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages").child(

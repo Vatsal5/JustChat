@@ -57,6 +57,8 @@
     <color name="bluish">#292f3b</color>
     <color name="ibluish">#99292f3b</color>
 
+    <color name="notificationColor">#ef5350</color>
+
 
     <color name="RightBackground">#700F0F0F</color>
 </resources>

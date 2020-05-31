@@ -140,7 +140,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
             @Override
             public void onClick(View view) {
 
-                final File file = new File(Environment.getExternalStorageDirectory(),"/ChattingApp/Databases/database");
+                final File file = new File(Environment.getExternalStorageDirectory(),"/JustChat/Databases/database");
                 if(file.exists())
                 {
                     AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
@@ -739,7 +739,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 //                e.printStackTrace();
 //            }
 
-            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/ProfilePicsUploaded");
+            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "JustChat/ProfilePicsUploaded");
             if (!imagesFolder.exists()) {
                 imagesFolder.mkdirs();
             }
@@ -873,7 +873,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
         dialog.show();
 
         try {
-            File encrypteddb = new File(Environment.getExternalStorageDirectory(),"/ChattingApp/Databases/database");
+            File encrypteddb = new File(Environment.getExternalStorageDirectory(),"/JustChat/Databases/database");
             FileInputStream fis = new FileInputStream(encrypteddb);
 
             File originaldb = new File(Environment.getDataDirectory(),"//data//" + getPackageName()

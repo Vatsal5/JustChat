@@ -109,7 +109,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
 
             //Set notification color to match your app color template
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                notificationBuilder.setColor(getResources().getColor(R.color.red));
+                notificationBuilder.setColor(getResources().getColor(R.color.notificationColor));
             }
             notificationManager.notify(notificationID, notificationBuilder.build());
             condition=false;
@@ -126,7 +126,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
         adminChannel = new NotificationChannel(ADMIN_CHANNEL_ID, adminChannelName, NotificationManager.IMPORTANCE_HIGH);
         adminChannel.setDescription(adminChannelDescription);
         adminChannel.enableLights(true);
-        adminChannel.setLightColor(Color.RED);
+        adminChannel.setLightColor(getResources().getColor(R.color.notificationColor));
         adminChannel.enableVibration(true);
         if (notificationManager != null) {
             notificationManager.createNotificationChannel(adminChannel);

@@ -720,7 +720,7 @@ flag=true;
                 e.printStackTrace();
             }
 
-            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Wallpaper");
+            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "JustChat/Wallpaper");
             if (!imagesFolder.exists()) {
                 imagesFolder.mkdirs();
             }
@@ -802,11 +802,11 @@ flag=true;
             File db = new File(Environment.getDataDirectory(), "/data/" + getPackageName() + "/databases/" + "CHATS_DATABASE");
             FileInputStream fis = new FileInputStream(db);
 
-            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Databases");
+            File file = new File(Environment.getExternalStorageDirectory(),"JustChat/Databases");
             if (!file.exists())
                 file.mkdirs();
 
-            File encrypted = new File(Environment.getExternalStorageDirectory(),"/ChattingApp/Databases/database");
+            File encrypted = new File(Environment.getExternalStorageDirectory(),"/JustChat/Databases/database");
             // This stream write the encrypted text. This stream will be wrapped by another stream.
             FileOutputStream fos = new FileOutputStream(encrypted);
 

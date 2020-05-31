@@ -22,7 +22,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/aclonica"
-        android:text="GossipBlock"
+        android:text="@string/app_name"
         android:textColor="#ffffff"
         android:textSize="24sp" />
 

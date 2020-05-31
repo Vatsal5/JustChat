@@ -2706,7 +2706,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     @Override
                     public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
 
-                        File imagesFolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Sent");
+                        File imagesFolder = new File(Environment.getExternalStorageDirectory(),"JustChat/Sent");
                         if(!imagesFolder.exists())
                             imagesFolder.mkdirs();
 
@@ -2757,7 +2757,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     @Override
                     public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
 
-                        File imagesFolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Sent");
+                        File imagesFolder = new File(Environment.getExternalStorageDirectory(),"JustChat/Sent");
                         if(!imagesFolder.exists())
                             imagesFolder.mkdirs();
 
@@ -2891,7 +2891,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 e.printStackTrace();
             }
 
-            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/Sent");
+            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "JustChat/Sent");
             if (!imagesFolder.exists()) {
                 imagesFolder.mkdirs();
             }
@@ -3634,12 +3634,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             String message1 = message.getMessage();
             String name = message1.substring(message1.lastIndexOf(" ")+1);
 
-            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"JustChat/Received");
 
             if(!imagesfolder.exists())
                 imagesfolder.mkdirs();
 
-            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+name+".pdf");
+            File file = new File(Environment.getExternalStorageDirectory(),"JustChat/Received/"+name+".pdf");
 
             try{
                 //Form a new URL
@@ -3783,12 +3783,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
             URLConnection urlConnection;
 
-            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"JustChat/Received");
 
             if(!imagesfolder.exists())
                 imagesfolder.mkdirs();
 
-            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".png");
+            File file = new File(Environment.getExternalStorageDirectory(),"JustChat/Received/"+System.currentTimeMillis()+".png");
 
             try{
                 //Form a new URL
@@ -3929,12 +3929,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
             URLConnection urlConnection;
 
-            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"JustChat/Received");
 
             if(!imagesfolder.exists())
                 imagesfolder.mkdirs();
 
-            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".gif");
+            File file = new File(Environment.getExternalStorageDirectory(),"JustChat/Received/"+System.currentTimeMillis()+".gif");
 
             try{
                 //Form a new URL
@@ -4077,12 +4077,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
             URLConnection urlConnection;
 
-            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"JustChat/Received");
 
             if(!imagesfolder.exists())
                 imagesfolder.mkdirs();
 
-            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".mp4");
+            File file = new File(Environment.getExternalStorageDirectory(),"JustChat/Received/"+System.currentTimeMillis()+".mp4");
 
             try{
                 //Form a new URL
@@ -4221,12 +4221,12 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
             URLConnection urlConnection;
 
-            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received");
+            File imagesfolder = new File(Environment.getExternalStorageDirectory(),"JustChat/Received");
 
             if(!imagesfolder.exists())
                 imagesfolder.mkdirs();
 
-            File file = new File(Environment.getExternalStorageDirectory(),"ChattingApp/Received/"+System.currentTimeMillis()+".jpg");
+            File file = new File(Environment.getExternalStorageDirectory(),"JustChat/Received/"+System.currentTimeMillis()+".jpg");
 
             try{
                 //Form a new URL
