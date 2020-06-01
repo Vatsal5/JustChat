@@ -32,6 +32,11 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,6 +68,9 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     ArrayList<String> number1,membersToadd;
     ArrayList<String> keyid;
     androidx.appcompat.widget.SearchView searchView;
+
+    AdView mAdView;
+
     int yes=0;
     int c=0;
     int k=0,z,z1;
@@ -171,6 +179,16 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         tvCreateGroup=findViewById(R.id.tvCreate);
         members=new ArrayList<>();
         groupkey=getIntent().getStringExtra("groupkey");
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
