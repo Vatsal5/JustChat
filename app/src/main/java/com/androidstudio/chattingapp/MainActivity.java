@@ -57,6 +57,11 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -120,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     String currentUserNumber;
     DatabaseReference reference;
 
+    AdView mAdView;
+
     SearchView searchView;
 
     SharedPreferences pref;
@@ -178,6 +185,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
             pref = getApplicationContext().getSharedPreferences("Names", 0);
             String theme = preftheme.getString("theme", "red");
+
+        MobileAds.initialize(this, "ca-app-pub-9646082776252494~9445573279");
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
 
         switch (theme) {
