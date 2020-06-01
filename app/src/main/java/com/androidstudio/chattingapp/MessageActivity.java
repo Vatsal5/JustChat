@@ -859,7 +859,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             @Override
             public void afterTextChanged(Editable editable) {
 
-                if (etMessage.getText().toString().trim().length() > 4) {
+                if (etMessage.getText().toString().trim().length() > 1) {
 
                     if (!(flag == 1)) {
                         FirebaseDatabase.getInstance().getReference("UserStatus").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue("typing " + RecieverPhone);
