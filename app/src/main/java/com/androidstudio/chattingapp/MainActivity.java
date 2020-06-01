@@ -1882,6 +1882,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                 if(dataSnapshot.getKey()!=null) {
                     contacts1.remove(keyid1.indexOf(dataSnapshot.getKey()));
 
+                    MessageModel messageModel = new MessageModel(-347,"null","null","This group has been deleted","grpinfo",9876,"null","null", dataSnapshot.getKey(),"null");
+                    Handler.addMessage(messageModel);
+
                     userAdapter.notifyItemRemoved(keyid1.indexOf(dataSnapshot.getKey()));
                     keyid1.remove(dataSnapshot.getKey());
                 }
