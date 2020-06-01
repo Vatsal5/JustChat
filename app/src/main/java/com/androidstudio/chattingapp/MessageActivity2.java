@@ -3218,6 +3218,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                         if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
                                             if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                                                 Intent intent = getIntent();
+                                                intent.putExtra("type"," ");
                                                 ((Activity) ApplicationClass.MessageActivity2Context).finish();
                                                 startActivity(intent);
 
@@ -3289,6 +3290,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                 if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
                                     if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                                         Intent intent = getIntent();
+                                        intent.putExtra("type"," ");
                                         ((Activity) ApplicationClass.MessageActivity2Context).finish();
                                         startActivity(intent);
                                         sent.play();
@@ -3356,6 +3358,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                 if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
                                     if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                                         Intent intent = getIntent();
+                                        intent.putExtra("type"," ");
                                         ((Activity) ApplicationClass.MessageActivity2Context).finish();
                                         startActivity(intent);
                                         sent.play();
@@ -3419,6 +3422,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                     if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
                                         if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                                             Intent intent = getIntent();
+                                            intent.putExtra("type"," ");
                                             ((Activity) ApplicationClass.MessageActivity2Context).finish();
                                             startActivity(intent);
                                             sent.play();
@@ -3914,6 +3918,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
                     if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                         Intent intent = getIntent();
+                        intent.putExtra("type"," ");
                         ((Activity) ApplicationClass.MessageActivity2Context).finish();
                         startActivity(intent);
 
@@ -4060,6 +4065,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                     if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                         Intent intent = getIntent();
+                        intent.putExtra("type"," ");
                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                         startActivity(intent);
 
@@ -4206,6 +4212,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                     if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                         Intent intent = getIntent();
+                        intent.putExtra("type"," ");
                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                         startActivity(intent);
 
@@ -4371,6 +4378,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
                     if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                         Intent intent = getIntent();
+                        intent.putExtra("type"," ");
                         ((Activity) ApplicationClass.MessageActivity2Context).finish();
                         startActivity(intent);
 
@@ -4524,6 +4532,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                 if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
                     if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                         Intent intent = getIntent();
+                        intent.putExtra("type"," ");
                         ((Activity) ApplicationClass.MessageActivity2Context).finish();
                         startActivity(intent);
 
@@ -4627,6 +4636,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                         if (MessageActivity2.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivity2Context).isDestroyed()) {
                                             if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                                                 Intent intent = getIntent();
+                                                intent.putExtra("type"," ");
                                                 ((Activity) ApplicationClass.MessageActivity2Context).finish();
                                                 startActivity(intent);
 
@@ -4713,6 +4723,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                             if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver))
                                             {
                                                 Intent intent = getIntent();
+                                                intent.putExtra("type"," ");
                                                 ((Activity) ApplicationClass.MessageActivity2Context).finish();
                                                 startActivity(intent);
 

@@ -3026,6 +3026,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                                 if(MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                                     if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                                         Intent intent = getIntent();
+                                        intent.putExtra("type"," ");
                                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                                         startActivity(intent);
 
@@ -3103,6 +3104,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                                     if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                                         Intent intent = getIntent();
+                                        intent.putExtra("type"," ");
                                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                                         startActivity(intent);
 
@@ -3194,6 +3196,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 if(MessageActivity.this.isDestroyed()  && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                     if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                         Intent intent = getIntent();
+                        intent.putExtra("type"," ");
                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                         startActivity(intent);
                         sent.play();
@@ -3290,6 +3293,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 if(MessageActivity.this.isDestroyed()  && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                     if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                         Intent intent = getIntent();
+                        intent.putExtra("type"," ");
                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                         startActivity(intent);
                         sent.play();
@@ -3369,6 +3373,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
                                     if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                                         Intent intent = getIntent();
+                                        intent.putExtra("type"," ");
                                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                                         startActivity(intent);
 
@@ -3717,6 +3722,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 if (MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                     if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                         Intent intent = getIntent();
+                        intent.putExtra("type"," ");
                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                         startActivity(intent);
 
@@ -3862,6 +3868,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 if (MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                     if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                         Intent intent = getIntent();
+                        intent.putExtra("type"," ");
                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                         startActivity(intent);
 
@@ -4009,6 +4016,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 if (MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                     if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                         Intent intent = getIntent();
+                        intent.putExtra("type"," ");
                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                         startActivity(intent);
 
@@ -4160,6 +4168,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 if (MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                     if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                         Intent intent = getIntent();
+                        intent.putExtra("type"," ");
                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                         startActivity(intent);
 
@@ -4301,6 +4310,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 if (MessageActivity.this.isDestroyed() && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                     if(ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                         Intent intent = getIntent();
+                        intent.putExtra("type"," ");
                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                         startActivity(intent);
 
@@ -4370,6 +4380,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                 if(MessageActivity.this.isDestroyed()  && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                     if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                         Intent intent = getIntent();
+                        intent.putExtra("type"," ");
                         ((Activity) ApplicationClass.MessageActivityContext).finish();
                         startActivity(intent);
                         sent.play();

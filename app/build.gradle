@@ -42,6 +42,8 @@ dependencies {
     implementation 'com.bogdwellers:pinchtozoom:0.1'
     implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.2'
 
+    implementation 'com.google.android.gms:play-services-ads:19.1.0'
+
     implementation 'com.google.firebase:firebase-core:17.2.2'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
