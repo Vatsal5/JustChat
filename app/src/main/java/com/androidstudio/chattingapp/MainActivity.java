@@ -1916,6 +1916,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     userAdapter.notifyItemInserted(contacts1.size() - 1);
                     contacts1.get(contacts1.size()-1).setStatus("delete");
                     keyid1.add(dataSnapshot.getKey());
+                    
+
 
 
 
@@ -1928,6 +1930,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     keyid1.add(dataSnapshot.getKey());
 
 
+
+
                 }
             }
 
@@ -1938,6 +1942,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+
 
                 if(dataSnapshot.getKey()!=null) {
                     contacts1.remove(keyid1.indexOf(dataSnapshot.getKey()));
@@ -2153,10 +2159,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                 public void onClick(DialogInterface dialog, int which) {
                                     FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
                                             .child("deletedgroups").child(key).getRef().removeValue();
-                                    contacts1.remove(keyid1.indexOf(key));
 
-                                    userAdapter.notifyItemRemoved(keyid1.indexOf(key));
-                                    keyid1.remove(keyid1.indexOf(key));
                                 }
                             });
                             builder1.setNegativeButton("NO", new DialogInterface.OnClickListener() {

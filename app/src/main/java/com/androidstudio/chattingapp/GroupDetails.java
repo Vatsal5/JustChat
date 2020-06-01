@@ -409,10 +409,11 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                                 FirebaseDatabase.getInstance().getReference().child("users").
-                                        child(dataSnapshot.getValue().toString()).child("deletedgroups").child(groupKey).setValue(getIntent().getStringExtra("groupName"));
+                                        child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).getRef().removeValue();
+
 
                                 FirebaseDatabase.getInstance().getReference().child("users").
-                                        child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).getRef().removeValue();
+                                        child(dataSnapshot.getValue().toString()).child("deletedgroups").child(groupKey).setValue(getIntent().getStringExtra("groupName"));
 
                                 FirebaseDatabase.getInstance().getReference().child("users").
                                         child(dataSnapshot.getValue().toString()).child("deletedgroups").child(groupKey).setValue(getIntent().getStringExtra("groupName"));
