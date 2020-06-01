@@ -186,7 +186,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             pref = getApplicationContext().getSharedPreferences("Names", 0);
             String theme = preftheme.getString("theme", "red");
 
-        MobileAds.initialize(this, "ca-app-pub-9646082776252494~9445573279");
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
