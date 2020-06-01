@@ -180,16 +180,6 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         members=new ArrayList<>();
         groupkey=getIntent().getStringExtra("groupkey");
 
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
-
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -320,6 +310,16 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                     startActivity(new Intent(FriendsActivity.this,CreateGroup.class));
                 }}
             });
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         }
 
