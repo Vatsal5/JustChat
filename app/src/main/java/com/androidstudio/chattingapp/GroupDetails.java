@@ -271,16 +271,16 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 if(isConnected()) {
                                     if (etGroupTitle.getText().toString().trim().length() > 0) {
-                                        ApplicationClass.RenameGroup = etGroupTitle.getText().toString();
-                                        tvGroupTitle.setText(etGroupTitle.getText().toString());
+                                        ApplicationClass.RenameGroup = etGroupTitle.getText().toString().trim();
+                                        tvGroupTitle.setText(etGroupTitle.getText().toString().trim());
                                         for (int f = 0; f < users.size(); f++) {
-                                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(users.get(f).getPh_number()).push().setValue("rename " + etGroupTitle.getText().toString());
+                                            FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(users.get(f).getPh_number()).push().setValue("rename " + etGroupTitle.getText().toString().trim());
                                         }
                                         newname = new ChildEventListener() {
                                             @Override
                                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                                                 FirebaseDatabase.getInstance().getReference().child("users").
-                                                        child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).setValue(etGroupTitle.getText().toString());
+                                                        child(dataSnapshot.getValue().toString()).child("groups").child(groupKey).setValue(etGroupTitle.getText().toString().trim());
 
 
                                             }
