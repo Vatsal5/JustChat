@@ -1879,7 +1879,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                for (int i = 0; i < contacts1.size(); i++) {
 //                    if (contacts1.get(i).getGroupname() != null) {
 //                        if (contacts1.get(i).getGroupname().equals(dataSnapshot.getValue().toString())) {
-                if(dataSnapshot.getKey()!=null) {
                     contacts1.remove(keyid1.indexOf(dataSnapshot.getKey()));
 
                     MessageModel messageModel = new MessageModel(-347,"null","null","This group has been deleted","grpinfo",9876,"null","null", dataSnapshot.getKey(),"null");
@@ -1887,7 +1886,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                     userAdapter.notifyItemRemoved(keyid1.indexOf(dataSnapshot.getKey()));
                     keyid1.remove(dataSnapshot.getKey());
-                }
 //                        }
 //
 //                    }
@@ -1941,15 +1939,15 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
 
+                int index = keyid1.indexOf(dataSnapshot.getKey());
+                    contacts1.remove(index);
 
-                if(dataSnapshot.getKey()!=null) {
-                    contacts1.remove(keyid1.indexOf(dataSnapshot.getKey()));
+                    userAdapter.notifyItemRemoved(index);
 
-                    userAdapter.notifyItemRemoved(keyid1.indexOf(dataSnapshot.getKey()));
                     keyid1.remove(dataSnapshot.getKey());
+
                 }
 
-            }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
