@@ -32,6 +32,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -254,14 +256,28 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                         ApplicationClass.addmembers=0;
                         for(int index=0; index<contacts1.size();index++) {
                             if(contacts1.get(index).getSelected()==1) {
+                                Toast.makeText(getApplicationContext(),contacts1.get(index).getPh_number(),Toast.LENGTH_LONG).show();
 
                                 for(int i=0; i<ApplicationClass.groupmembers.size();i++) {
                                     FirebaseDatabase.getInstance().getReference().child("groups").child(groupkey).child("layout").child(ApplicationClass.groupmembers.get(i) ).push().setValue("addedmember " + contacts1.get(index).getPh_number());
                                 }
                                 FirebaseDatabase.getInstance().getReference().child("groups").child(getIntent().getStringExtra("groupkey"))
                                    .child("members").push().setValue(contacts1.get(index).getPh_number());
-                                    FirebaseDatabase.getInstance().getReference().child("users").child(contacts1.get(index).getPh_number()).child("groups").
-                                            child(groupkey).setValue(getIntent().getStringExtra("groupKey"));
+                                FirebaseDatabase.getInstance().getReference().child("users").child(contacts1.get(index).getPh_number()).child("deletedgroups").
+                                        child(getIntent().getStringExtra("groupkey")).getRef().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
+
+                                FirebaseDatabase.getInstance().getReference().child("users").child(contacts1.get(index).getPh_number()).child("groups").
+                                            child(getIntent().getStringExtra("groupkey")).setValue(getIntent().getStringExtra("groupname"));
                             }
                         }
 

@@ -1271,29 +1271,52 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
         public void ProfileListener()
         {
-            FirebaseDatabase.getInstance().getReference().child("groups").child(contacts1.get(index).getGroupkey()).child("profile").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
+            FirebaseDatabase.getInstance().getReference().child("groups").child(contacts1.get(index).getGroupkey()).addChildEventListener(
+                    new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            if (dataSnapshot!=null && dataSnapshot.getKey().equals("profile")) {
 
-                        int i=keyid1.indexOf(key);
-
-
-                        contacts1.get(i).setUrl(dataSnapshot.getValue().toString());
+                                int i=keyid1.indexOf(key);
 
 
-                        userAdapter.notifyItemChanged(keyid1.indexOf(key));
+                                contacts1.get(i).setUrl(dataSnapshot.getValue().toString());
 
+
+                                userAdapter.notifyItemChanged(keyid1.indexOf(key));
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                            if ( dataSnapshot.getKey().equals("profile")) {
+
+
+                                StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(dataSnapshot.getValue().toString());
+                                reference.delete();
+                            }
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
                     }
-
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
+            );
         }
     }
 
@@ -1912,6 +1935,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.getKey()!=null) {
+                    contacts1.remove(keyid1.indexOf(dataSnapshot.getKey()));
+
+                    userAdapter.notifyItemRemoved(keyid1.indexOf(dataSnapshot.getKey()));
+                    keyid1.remove(dataSnapshot.getKey());
+                }
 
             }
 
