@@ -2062,6 +2062,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         {
             if (intent1 != null && intent1.getAction() != null && intent1.getAction().equals(Intent.ACTION_SEND) && intent1.getType() != null) {
                 if (contacts1.get(keyid1.indexOf(key)).getGroupkey() == null) {
+                    flag = true;
 
 
                     Intent intent = new Intent(this, MessageActivity.class);
@@ -2118,6 +2119,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
                 } else if(contacts1.get(keyid1.indexOf(key)).getStatus()==null) {
+                    flag2=true;
 
                     //   ******  To share a message in messageactivity2 ****
                     Intent intent = new Intent(this, MessageActivity2.class);
