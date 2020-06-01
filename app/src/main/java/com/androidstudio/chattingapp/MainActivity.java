@@ -1916,7 +1916,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     userAdapter.notifyItemInserted(contacts1.size() - 1);
                     contacts1.get(contacts1.size()-1).setStatus("delete");
                     keyid1.add(dataSnapshot.getKey());
-                    
+
 
 
 
@@ -1928,9 +1928,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     userAdapter.notifyItemInserted(contacts1.size() - 1);
                     contacts1.get(contacts1.size()-1).setStatus("delete");
                     keyid1.add(dataSnapshot.getKey());
-
-
-
 
                 }
             }
