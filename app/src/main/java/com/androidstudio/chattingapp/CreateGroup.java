@@ -118,7 +118,7 @@ public class CreateGroup extends AppCompatActivity {
 
                 if (isConnected()) {
 
-                    ApplicationClass.Groupname = etGroupName.getText().toString();
+                    ApplicationClass.Groupname = etGroupName.getText().toString().trim();
 
 
                     reference[0] = FirebaseDatabase.getInstance().getReference();

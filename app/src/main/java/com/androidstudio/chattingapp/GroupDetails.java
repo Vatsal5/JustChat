@@ -261,8 +261,8 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                         builder.setTitle("Title");
 
                         final EditText etGroupTitle = v.findViewById(R.id.etGroupTitle);
-                        etGroupTitle.setText(tvGroupTitle.getText());
-                        etGroupTitle.setSelection(tvGroupTitle.getText().length());
+                        etGroupTitle.setText(tvGroupTitle.getText().toString().trim());
+                        etGroupTitle.setSelection(tvGroupTitle.getText().toString().trim().length());
 
                         builder.setView(v);
                         edittext.setText(tvGroupTitle.getText());
