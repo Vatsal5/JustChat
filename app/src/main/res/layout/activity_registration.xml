@@ -34,7 +34,7 @@
         android:layout_marginRight="40dp"
         android:fontFamily="sans-serif-condensed"
         android:gravity="center_horizontal"
-        android:text="GossipBlock will send a SMS message to verify your phone number.Please enter your phone number"
+        android:text="JustChat will send a SMS message to verify your phone number.Please enter your phone number"
         android:textColor="#ffffff"
         android:textSize="20sp" />
 
