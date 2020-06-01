@@ -152,8 +152,8 @@
             android:layout_height="match_parent"
             android:background="#d6514a"
             android:gravity="center"
-            android:text="This group has been deleted. You can no longer send messages in this group"
-            android:padding="4dp"
+            android:text="You can no longer send messages in this group"
+            android:padding="2dp"
             android:drawableRight="@drawable/attachment"
             android:textColor="#ffffff"
             android:textSize="16sp" />

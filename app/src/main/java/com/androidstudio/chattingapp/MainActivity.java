@@ -18,6 +18,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.icu.lang.UCharacter;
 import android.icu.util.MeasureUnit;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -1880,11 +1882,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                    if (contacts1.get(i).getGroupname() != null) {
 //                        if (contacts1.get(i).getGroupname().equals(dataSnapshot.getValue().toString())) {
                     contacts1.remove(keyid1.indexOf(dataSnapshot.getKey()));
+                userAdapter.notifyItemRemoved(keyid1.indexOf(dataSnapshot.getKey()));
 
                     MessageModel messageModel = new MessageModel(-347,"null","null","This group has been deleted","grpinfo",9876,"null","null", dataSnapshot.getKey(),"null");
                     Handler.addMessage(messageModel);
 
-                    userAdapter.notifyItemRemoved(keyid1.indexOf(dataSnapshot.getKey()));
+
                     keyid1.remove(dataSnapshot.getKey());
 //                        }
 //
@@ -1938,15 +1941,18 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-
-                int index = keyid1.indexOf(dataSnapshot.getKey());
+                if (keyid1.contains(dataSnapshot.getKey())) {
+                    final int index = keyid1.indexOf(dataSnapshot.getKey());
                     contacts1.remove(index);
 
+
                     userAdapter.notifyItemRemoved(index);
+
 
                     keyid1.remove(dataSnapshot.getKey());
 
                 }
+            }
 
 
             @Override
@@ -1986,47 +1992,108 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
    // }
 
+    public boolean isConnected() {
+        boolean connected = false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo nInfo = cm.getActiveNetworkInfo();
+            connected = nInfo != null && nInfo.isAvailable() && nInfo.isConnected();
+            return connected;
+        } catch (Exception e) {
+            Log.e("Connectivity Exception", e.getMessage());
+        }
+        return connected;
+    }
+    public void showInternetWarning1()
+    {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        builder.setTitle("No Internet Connection")
+                .setMessage("Can't Share ! Turn On Your Internet Connection ")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
+    public void showInternetWarning()
+    {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        builder.setTitle("No Internet Connection")
+                .setMessage("Turn on your internet connection to read new messages")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     @Override
     public void onItemSelected(String key) {
 
         int index = keyid1.indexOf(key);
 
         keyid2=keyid1.get(index);
+        boolean b=false;
+        if(contacts1.get(index).getMessagenum()>2) {
 
-        if ( intent1!=null && intent1.getAction() != null && intent1.getAction().equals(Intent.ACTION_SEND) && intent1.getType() != null) {
-            if (contacts1.get(keyid1.indexOf(key)).getGroupkey() == null) {
+            if (isConnected()) {
 
-
-                Intent intent = new Intent(this, MessageActivity.class);
-            intent.putExtra("title", contacts1.get(keyid1.indexOf(key)).getPh_number());
-            if ("text/plain".equals(intent1.getType())) {
-                intent.putExtra("type", "text");
-                intent.putExtra("message", intent1.getStringExtra(Intent.EXTRA_TEXT));
-            } else if (intent1.getType().equals("image/*") || intent1.getType().equals("image/jpeg") || intent1.getType().equals("image/png") || intent1.getType().equals("image/jpg") || intent1.getType().equals("image/webp") || intent1.getType().equals("image/gif")) {
-                intent.putExtra("type", "image");
-                Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
-                intent.putExtra("message", imageUri.toString());
-            } else if (intent1.getType().equals("video/mp4") || intent1.getType().equals("video/*") || intent1.getType().equals("video/3gp") || intent1.getType().equals("video/avi")) {
-                intent.putExtra("type", "video");
-                Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
-                intent.putExtra("message", imageUri.toString());
-            } else if (intent1.getType().equals("application/pdf")) {
-                intent.putExtra("type", "pdf");
-                Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
-                intent.putExtra("message", getPath(this, imageUri));
+                b=true;
             }
+        }
+        else {
+            if (!isConnected() && intent1 != null && intent1.getAction() != null && intent1.getAction().equals(Intent.ACTION_SEND) && intent1.getType() != null)
+                b = false;
+            else
+                b = true;
+        }
 
-                // tvtitle.setText("Forward To");
-                //   ******  To forward a message in messageactivity ****
+        if(b )
+        {
+            if (intent1 != null && intent1.getAction() != null && intent1.getAction().equals(Intent.ACTION_SEND) && intent1.getType() != null) {
+                if (contacts1.get(keyid1.indexOf(key)).getGroupkey() == null) {
 
 
-                //  intent.putExtra("title","+91"+contacts1.get(index).getPh_number());
-                // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(this, MessageActivity.class);
+                    intent.putExtra("title", contacts1.get(keyid1.indexOf(key)).getPh_number());
+                    if ("text/plain".equals(intent1.getType())) {
+                        intent.putExtra("type", "text");
+                        intent.putExtra("message", intent1.getStringExtra(Intent.EXTRA_TEXT));
+                    } else if (intent1.getType().equals("image/*") || intent1.getType().equals("image/jpeg") || intent1.getType().equals("image/png") || intent1.getType().equals("image/jpg") || intent1.getType().equals("image/webp") || intent1.getType().equals("image/gif")) {
+                        intent.putExtra("type", "image");
+                        Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
+                        intent.putExtra("message", imageUri.toString());
+                    } else if (intent1.getType().equals("video/mp4") || intent1.getType().equals("video/*") || intent1.getType().equals("video/3gp") || intent1.getType().equals("video/avi")) {
+                        intent.putExtra("type", "video");
+                        Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
+                        intent.putExtra("message", imageUri.toString());
+                    } else if (intent1.getType().equals("application/pdf")) {
+                        intent.putExtra("type", "pdf");
+                        Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
+                        intent.putExtra("message", getPath(this, imageUri));
+                    }
 
-                //else
-                //intent.putExtra("title", contacts1.get(index).getuID());
+                    // tvtitle.setText("Forward To");
+                    //   ******  To forward a message in messageactivity ****
 
-                intent.putExtra("phone", contacts1.get(keyid1.indexOf(key)).getPh_number());
+
+                    //  intent.putExtra("title","+91"+contacts1.get(index).getPh_number());
+                    // Toast.makeText(getApplicationContext(),"hi",Toast.LENGTH_LONG).show();
+
+                    //else
+                    //intent.putExtra("title", contacts1.get(index).getuID());
+
+                    intent.putExtra("phone", contacts1.get(keyid1.indexOf(key)).getPh_number());
 
 //                if(contacts1.get(index).getPh_number().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()) ||
 //                        ("+91"+contacts1.get(index).getPh_number()).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))
@@ -2043,46 +2110,48 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //
 //                }
 
-                intent.putExtra("path", 2);
+                    intent.putExtra("path", 2);
 
-                intent.putExtra("profile", contacts1.get(keyid1.indexOf(key)).getUrl());
-                startActivity(intent);
+                    intent.putExtra("profile", contacts1.get(keyid1.indexOf(key)).getUrl());
+                    intent1 = null;
+                    startActivity(intent);
 
-            }
-            else
-            {
 
-                //   ******  To share a message in messageactivity2 ****
-                Intent intent = new Intent(this, MessageActivity2.class);
-                intent.putExtra("title", contacts1.get(keyid1.indexOf(key)).getPh_number());
-                intent.putExtra("path", 2);
-                intent.putExtra("groupkey",contacts1.get(keyid1.indexOf(key)).getGroupkey());
-                intent.putExtra("groupName",contacts1.get(keyid1.indexOf(key)).getuID());
-                if ("text/plain".equals(intent1.getType())) {
-                    intent.putExtra("type", "text");
-                    intent.putExtra("message", intent1.getStringExtra(Intent.EXTRA_TEXT));
-                } else if (intent1.getType().equals("image/*") || intent1.getType().equals("image/jpeg") || intent1.getType().equals("image/png") || intent1.getType().equals("image/jpg") || intent1.getType().equals("image/webp") || intent1.getType().equals("image/gif")) {
-                    intent.putExtra("type", "image");
-                    Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
-                    intent.putExtra("message", imageUri.toString());
-                } else if (intent1.getType().equals("video/mp4") || intent1.getType().equals("video/*") || intent1.getType().equals("video/3gp") || intent1.getType().equals("video/avi")) {
-                    intent.putExtra("type", "video");
-                    Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
-                    intent.putExtra("message", imageUri.toString());
-                } else if (intent1.getType().equals("application/pdf")) {
-                    intent.putExtra("type", "pdf");
-                    Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
-                    intent.putExtra("message", getPath(this, imageUri));
+                } else if(contacts1.get(keyid1.indexOf(key)).getStatus()==null) {
+
+                    //   ******  To share a message in messageactivity2 ****
+                    Intent intent = new Intent(this, MessageActivity2.class);
+                    intent.putExtra("title", contacts1.get(keyid1.indexOf(key)).getPh_number());
+                    intent.putExtra("path", 2);
+                    intent.putExtra("groupkey", contacts1.get(keyid1.indexOf(key)).getGroupkey());
+                    intent.putExtra("groupName", contacts1.get(keyid1.indexOf(key)).getuID());
+                    if ("text/plain".equals(intent1.getType())) {
+                        intent.putExtra("type", "text");
+                        intent.putExtra("message", intent1.getStringExtra(Intent.EXTRA_TEXT));
+                    } else if (intent1.getType().equals("image/*") || intent1.getType().equals("image/jpeg") || intent1.getType().equals("image/png") || intent1.getType().equals("image/jpg") || intent1.getType().equals("image/webp") || intent1.getType().equals("image/gif")) {
+                        intent.putExtra("type", "image");
+                        Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
+                        intent.putExtra("message", imageUri.toString());
+                    } else if (intent1.getType().equals("video/mp4") || intent1.getType().equals("video/*") || intent1.getType().equals("video/3gp") || intent1.getType().equals("video/avi")) {
+                        intent.putExtra("type", "video");
+                        Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
+                        intent.putExtra("message", imageUri.toString());
+                    } else if (intent1.getType().equals("application/pdf")) {
+                        intent.putExtra("type", "pdf");
+                        Uri imageUri = (Uri) intent1.getParcelableExtra(Intent.EXTRA_STREAM);
+                        intent.putExtra("message", getPath(this, imageUri));
+                    }
+
+                    intent.putExtra("profile", contacts1.get(index).getUrl());
+                    startActivity(intent);
+                    intent1 = null;
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),"Can't share ! This group doesn't exist",Toast.LENGTH_LONG).show();
                 }
 
-                intent.putExtra("profile", contacts1.get(index).getUrl());
-                startActivity(intent);
-            }
-            intent1=null;
-        }
-
-            else
-            {
+            } else {
 
                 if (contacts1.get(index).getGroupname() == null) {
                     flag = true;
@@ -2119,6 +2188,14 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                     startActivity(intent);
                 }
             }
+        }
+        else if (intent1 != null && intent1.getAction() != null && intent1.getAction().equals(Intent.ACTION_SEND) && intent1.getType() != null)
+        {
+            showInternetWarning1();
+        }
+            else
+                showInternetWarning();
+
     }
 
     @Override
@@ -2152,8 +2229,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                             builder1.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    contacts1.remove(keyid1.indexOf(key));
+                                    userAdapter.notifyItemRemoved(keyid1.indexOf(key));
+                                    keyid1.remove(key);
                                     FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
                                             .child("deletedgroups").child(key).getRef().removeValue();
+
 
                                 }
                             });
