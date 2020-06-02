@@ -1586,10 +1586,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
                     if (Handler.getGroupMessages(dataSnapshot.getKey(), 0).first.size() > 0) {
-                        contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
+                        UserDetailwithUrl user = new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
                                 , Handler.getLastMessageGroup(dataSnapshot.getKey()),
-                                Handler.getLastGroupMessageTime(dataSnapshot.getKey()), dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
-                        userAdapter.notifyItemInserted(contacts1.size() - 1);
+                                Handler.getLastGroupMessageTime(dataSnapshot.getKey()), dataSnapshot.getKey(), dataSnapshot.getValue().toString());
+                        contacts1.add(user);
+                        userAdapter.notifyItemInserted(contacts1.indexOf(user));
                         keyid1.add(dataSnapshot.getKey());
                         grouplistener grouplistener = new grouplistener(contacts1.size() - 1, dataSnapshot.getKey());
 
@@ -1603,10 +1604,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
 
                     } else {
-                        contacts1.add(new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
+                        UserDetailwithUrl user = new UserDetailwithUrl(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber(), dataSnapshot.getValue().toString(), "null", 2
                                 , "null",
-                                "null", dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
-                        userAdapter.notifyItemInserted(contacts1.size() - 1);
+                                "null", dataSnapshot.getKey(), dataSnapshot.getValue().toString());
+                        contacts1.add(user);
+                        userAdapter.notifyItemInserted(contacts1.indexOf(user));
 
                         keyid1.add(dataSnapshot.getKey());
                         grouplistener grouplistener = new grouplistener(contacts1.size() - 1, dataSnapshot.getKey());
