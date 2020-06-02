@@ -1963,7 +1963,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             if(flag2) {
                 if (pos != 0) {
                     if (pos < chats.size() - 1) {
-                        if (chats.get(pos - 1).getSender().equals("null") && chats.get(pos + 1).getSender().equals("null")) {
+                        if (chats.get(pos - 1).getType().equals("Date") && chats.get(pos + 1).getType().equals("Date")) {
                             chats.remove(model);
                             Handler.DeleteMessage(model);
                             model = chats.get(pos - 1);
@@ -1976,7 +1976,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                             adapter.notifyItemRemoved(pos);
                         }
                     } else {
-                        if (chats.get(pos - 1).getSender().equals("null")) {
+                        if (chats.get(pos - 1).getType().equals("Date")) {
                             chats.remove(model);
                             Handler.DeleteMessage(model);
                             model = chats.get(pos - 1);

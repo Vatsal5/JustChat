@@ -2111,97 +2111,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         ItemTouchHelper itemTouchHelper= new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(Messages);
 
-//        if(getIntent().getIntExtra("path",1)==2) {
-//            String type = getIntent().getStringExtra("type");
-//            String message1 = getIntent().getStringExtra("message");
-//
-//            if (!(type.equals(" "))) {
-//                Date date = new Date();
-//                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
-//                long millis = System.currentTimeMillis();
-//                java.sql.Date date1 = new java.sql.Date(millis);
-//
-//                if (type.equals("text")) {
-//
-//                    MessageModel model = new MessageModel(-1, sender, "null", etMessage.getText().toString(), "text", -2, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupKey);
-//                    etMessage.setText(null);
-//
-//                    if (chats.size() != 0) {
-//                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-//                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupKey);
-//                            int id = Handler.addMessage(messageModel);
-//                            messageModel.setId(id);
-//                            chats.add(messageModel);
-//                        }
-//                    } else {
-//                        if ((!(defaultvalue.equals("private")))) {
-//                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupKey);
-//                            int id = Handler.addMessage(messageModel);
-//                            messageModel.setId(id);
-//                            chats.add(messageModel);
-//                        }
-//                    }
-//
-//                    int id = Handler.addMessage(model);
-//                    model.setId(id);
-//                    chats.add(model);
-//                    adapter.notifyItemInserted(chats.size() - 1);
-//
-//
-//                } else if (type.equals("image")) {
-//
-//                    MessageModel messageModel = new MessageModel(-1, sender, "nul", message1, "image", 2,simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9),date1.toString(),groupKey);
-//
-//                    if (chats.size() != 0) {
-//                        if (!chats.get(chats.size() - 1).getDate().equals(messageModel.getDate()) || chats.size() == 0) {
-//                            MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupKey);
-//                            int id = Handler.addMessage(message);
-//                            message.setId(id);
-//                            chats.add(message);
-//                        }
-//                    } else {
-//                        if (!(defaultvalue.equals("private"))) {
-//                            MessageModel message = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupKey);
-//                            int id = Handler.addMessage(message);
-//                            message.setId(id);
-//                            chats.add(message);
-//                        }
-//                    }
-//
-//                    int id = Handler.addMessage(messageModel);
-//                    messageModel.setId(id);
-//
-//                    chats.add(messageModel);
-//
-//                    adapter.notifyItemInserted(chats.size() - 1);
-//                } else {
-//                    MessageModel model = new MessageModel(1190, sender, "null", message1, "video", 100, simpleDateFormat.format(date).substring(0,8)+simpleDateFormat.format(date).substring(9), date1.toString(), groupKey);
-//
-//                    if (chats.size() != 0) {
-//                        if (!chats.get(chats.size() - 1).getDate().equals(model.getDate())) {
-//                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupKey);
-//                            int id = Handler.addMessage(messageModel);
-//                            messageModel.setId(id);
-//                            chats.add(messageModel);
-//                        }
-//                    } else {
-//                        if ((!(defaultvalue.equals("private")))) {
-//                            MessageModel messageModel = new MessageModel(54, "null", "null", "null", "Date", 60, "null", date1.toString(),groupKey);
-//                            int id = Handler.addMessage(messageModel);
-//                            messageModel.setId(id);
-//                            chats.add(messageModel);
-//                        }
-//                    }
-//
-//                    int id = Handler.addMessage(model);
-//                    model.setId(id);
-//                    chats.add(model);
-//
-//                    adapter.notifyItemInserted(chats.size() - 1);
-//                }
-//            }
-//        }
-
         if (ContextCompat.checkSelfPermission(MessageActivity2.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MessageActivity2.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 150);
         }
@@ -2449,7 +2358,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             if(flag2) {
                 if (pos != 0) {
                     if (pos < chats.size() - 1) {
-                        if (chats.get(pos - 1).getSender().equals("null") && chats.get(pos + 1).getSender().equals("null")) {
+                        if (chats.get(pos - 1).getType().equals("Date") && chats.get(pos + 1).getType().equals("Date")) {
                             chats.remove(model);
                             Handler.DeleteMessage(model);
                             model = chats.get(pos - 1);
@@ -2462,7 +2371,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             adapter.notifyItemRemoved(pos);
                         }
                     } else {
-                        if (chats.get(pos - 1).getSender().equals("null")) {
+                        if (chats.get(pos - 1).getType().equals("Date")) {
                             chats.remove(model);
                             Handler.DeleteMessage(model);
                             model = chats.get(pos - 1);
