@@ -2429,9 +2429,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
 
             int swipeFlags;
-            if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3 ||
+            if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 4 ||
                     chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 204|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 201||
-                    chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 60 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -3
+                    chats.get(viewHolder.getAdapterPosition()).getType().equals("Date")  || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -3
             || chats.get(viewHolder.getAdapterPosition()).getType().equals("unread") || chats.get(viewHolder.getAdapterPosition()).getType().equals("grpinfo") || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 304|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 301
                     || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 404|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 401)){
 
