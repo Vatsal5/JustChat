@@ -2593,24 +2593,4 @@ if(keyid2!=null && keyid1.contains(keyid2)) {
             startActivity(intent);
         }
     }
-
-
-//        if (getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_SEND) && getIntent().getType() != null) {
-//
-//            if ("text/plain".equals(getIntent().getType())) {
-//                intent.putExtra("type", "text");
-//                intent.putExtra("message", getIntent().getStringArrayExtra(Intent.EXTRA_TEXT));
-//            } else if (getIntent().getType().equals("image/*")) {
-//                intent.putExtra("type", "image");
-//                intent.putExtra("message", getPath(FriendsActivity.this, imageUri));
-//            } else if (getIntent().getType().equals("video/mp4")) {
-//                intent.putExtra("type", "video");
-//                Uri imageUri = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-//                intent.putExtra("message", getPath(FriendsActivity.this, imageUri));
-//            } else if (getIntent().getType().equals("application/pdf")) {
-//                intent.putExtra("type", "pdf");
-//                Uri imageUri = (Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-//                intent.putExtra("message", getPath(FriendsActivity.this, imageUri));
-//            }
-//        }
-    }
+}
