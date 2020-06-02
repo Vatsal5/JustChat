@@ -78,8 +78,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
             if (!remoteMessage.getData().get("dp").equals("null"))
                 largeIcon = getBitmapFromURL(remoteMessage.getData().get("dp"));
             else
-                largeIcon = BitmapFactory.decodeResource(getResources(),
-                        R.drawable.icon1);
+                if(!remoteMessage.getData().get("sender").equals("null"))
+                    largeIcon = BitmapFactory.decodeResource(getResources(),
+                        R.drawable.group);
+                else
+                    largeIcon = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.person);
 
             Uri notificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 if (!remoteMessage.getData().get("sender").equals("null")) {
