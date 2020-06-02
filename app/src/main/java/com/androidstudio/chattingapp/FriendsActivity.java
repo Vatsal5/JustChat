@@ -264,8 +264,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                         ApplicationClass.addmembers=0;
                         for(int index=0; index<contacts1.size();index++) {
                             if(contacts1.get(index).getSelected()==1) {
-                                Toast.makeText(getApplicationContext(),contacts1.get(index).getPh_number(),Toast.LENGTH_LONG).show();
-
+ApplicationClass.groupmembers.add(contacts1.get(index).getPh_number());
                                 for(int i=0; i<ApplicationClass.groupmembers.size();i++) {
                                     FirebaseDatabase.getInstance().getReference().child("groups").child(groupkey).child("layout").child(ApplicationClass.groupmembers.get(i) ).push().setValue("addedmember " + contacts1.get(index).getPh_number());
                                 }

@@ -142,6 +142,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     StorageReference rf;
     int messagecount;
     int numberOfMembers=-1;
+    ChildEventListener members;
     SharedPreferences preftheme;
     SharedPreferences Names;
     int noOfMembers=-1;
@@ -553,6 +554,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
 
+                if( dataSnapshot!=null && dataSnapshot.getKey().equals(groupKey)) {
+
+                    noOfMembers = -1;
+                    ll.setVisibility(View.VISIBLE);
+                    ll1.setVisibility(View.GONE);
+                }
 
             }
 
@@ -621,8 +628,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             if(getBackground(Uri.parse(wallpaper.getString("value","null")))!=null)
                 getWindow().setBackgroundDrawable(getBackground(Uri.parse(wallpaper.getString("value","null"))));
         }
-        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(
-                new ChildEventListener() {
+
+
+
+               members= new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull final DataSnapshot dataSnapshot1, @Nullable String s) {
                         //  Log.d("asdf","hi");
@@ -660,6 +669,13 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     @Override
                     public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
+                        if(!(dataSnapshot.getValue().equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())))
+                        {
+                            tokens.remove(membernumber.indexOf(dataSnapshot.getValue().toString())-1);
+                            membernumber.remove(membernumber.indexOf(dataSnapshot.getValue().toString()));
+                            numberOfMembers--;
+                        }
+
                     }
 
                     @Override
@@ -671,8 +687,8 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
-                }
-        );
+                };
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").addChildEventListener(members);
 
         Messages = findViewById(R.id.Messages);
         Messages.setHasFixedSize(true);
@@ -4654,6 +4670,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").removeEventListener(members);
 
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
