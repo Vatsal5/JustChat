@@ -1592,7 +1592,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         contacts1.add(user);
                         userAdapter.notifyItemInserted(contacts1.indexOf(user));
                         keyid1.add(dataSnapshot.getKey());
-                        grouplistener grouplistener = new grouplistener(contacts1.size() - 1, dataSnapshot.getKey());
+                        grouplistener grouplistener = new grouplistener(contacts1.indexOf(user), dataSnapshot.getKey());
 
                         grouplistener.piclistener();
                         grouplistener.VideoListener();
@@ -1611,7 +1611,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                         userAdapter.notifyItemInserted(contacts1.indexOf(user));
 
                         keyid1.add(dataSnapshot.getKey());
-                        grouplistener grouplistener = new grouplistener(contacts1.size() - 1, dataSnapshot.getKey());
+                        grouplistener grouplistener = new grouplistener(contacts1.indexOf(user), dataSnapshot.getKey());
                         grouplistener.piclistener();
                         grouplistener.VideoListener();
                         grouplistener.child();
