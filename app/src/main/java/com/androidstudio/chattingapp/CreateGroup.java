@@ -328,7 +328,7 @@ public class CreateGroup extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/ProfilePicsUploaded");
+            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "JustChat/ProfilePicsUploaded");
             if (!imagesFolder.exists()) {
                 imagesFolder.mkdirs();
             }

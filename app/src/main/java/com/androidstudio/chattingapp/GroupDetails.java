@@ -893,7 +893,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                 e.printStackTrace();
             }
 
-            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "ChattingApp/ProfilePicsUploaded");
+            File imagesFolder = new File(Environment.getExternalStorageDirectory(), "JustChat/ProfilePicsUploaded");
             if (!imagesFolder.exists()) {
                 imagesFolder.mkdirs();
             }
