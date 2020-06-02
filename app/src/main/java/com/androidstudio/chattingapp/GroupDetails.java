@@ -495,6 +495,8 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                                     if (dataSnapshot.getValue(String.class).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())) {
                                         dataSnapshot.getRef().removeValue();
+                                        ApplicationClass.groupmembers.remove(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+
                                         FirebaseDatabase.getInstance().getReference().child("users")
                                                 .child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber())
                                                 .child("deletedgroups").child(groupKey).setValue(getIntent().getStringExtra("groupName"));
@@ -506,6 +508,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
 
                                             FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("layout").child(users.get(i).getPh_number()).push().setValue("exit " + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
                                         }
+                                        users.remove(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
                                         Intent intent = new Intent(GroupDetails.this, MainActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         GroupDetails.this.finish();
@@ -600,6 +603,7 @@ public class GroupDetails extends AppCompatActivity implements ParticipantsAdapt
                                                                         new OnSuccessListener<Void>() {
                                                                             @Override
                                                                             public void onSuccess(Void aVoid) {
+                                                                                ApplicationClass.groupmembers.remove(users.get(index).getPh_number());
                                                                                 FirebaseDatabase.getInstance().getReference().child("users")
                                                                                         .child(users.get(index).getPh_number())
                                                                                         .child("deletedgroups").child(groupKey).setValue(getIntent().getStringExtra("groupName"));

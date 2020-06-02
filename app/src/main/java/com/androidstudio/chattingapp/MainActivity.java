@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     DatabaseReference reference1;
     DatabaseReference UserStatus;
     ChildEventListener chreceiver,gifreceiver,stickerreceiver,pdfreceiver,deletedgroups;
-    ValueEventListener dataCreater,deleteimage,deletevideo,deletepdf,Status;
+    ValueEventListener dataCreater,deleteimage,deletevideo,deletepdf,Status, checkForDeletion;;
     DBHandler Handler;
 
 
@@ -1895,12 +1895,34 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 //                        if (contacts1.get(i).getGroupname().equals(dataSnapshot.getValue().toString())) {
                     contacts1.remove(keyid1.indexOf(dataSnapshot.getKey()));
                 userAdapter.notifyItemRemoved(keyid1.indexOf(dataSnapshot.getKey()));
-
-                    MessageModel messageModel = new MessageModel(-347,"null","null","This group has been deleted","grpinfo",9876,"null","null", dataSnapshot.getKey(),"null");
-                    Handler.addMessage(messageModel);
+                keyid1.remove(dataSnapshot.getKey());
 
 
-                    keyid1.remove(dataSnapshot.getKey());
+                checkForDeletion=new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        if(!dataSnapshot.exists())
+                        {
+                            MessageModel messageModel = new MessageModel(-347,"null","null","This group has been deleted","grpinfo",9876,"null","null", dataSnapshot.getKey(),"null");
+                            Handler.addMessage(messageModel);
+                        }
+
+                        FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).removeEventListener(checkForDeletion);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                };
+                FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).addListenerForSingleValueEvent(checkForDeletion);
+
+
+
+
+
 //                        }
 //
 //                    }

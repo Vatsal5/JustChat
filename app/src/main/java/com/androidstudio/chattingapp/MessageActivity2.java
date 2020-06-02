@@ -553,6 +553,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
 
+                if( dataSnapshot!=null && dataSnapshot.getKey().equals(groupKey)) {
+
+                    noOfMembers = -1;
+                    ll.setVisibility(View.VISIBLE);
+                    ll1.setVisibility(View.GONE);
+                }
 
             }
 
