@@ -1356,7 +1356,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
         childEvent = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if (!(dataSnapshot.getKey().equals("name") || dataSnapshot.getKey().equals("groups") || dataSnapshot.getKey().equals("profile") ||
+                if (!(dataSnapshot.getKey().equals("name") || dataSnapshot.getKey().equals("deletedgroups") || dataSnapshot.getKey().equals("groups") || dataSnapshot.getKey().equals("profile") ||
                         dataSnapshot.getKey().equals("status"))) {
 
                     // to delete a 3 days old image in one
@@ -1412,7 +1412,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                         }
                     };
-                    reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
+                    if(isConnected())
+                        reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
                             .getPhoneNumber()).child("info").child("deleteimages").addListenerForSingleValueEvent(deleteimage);
 
                     deletevideo = new ValueEventListener() {
@@ -1466,7 +1467,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                         }
                     };
-                    reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
+                    if(isConnected())
+                        reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
                             .getPhoneNumber()).child("info").child("deletevideos").addListenerForSingleValueEvent(deletevideo);
 
 
@@ -1508,6 +1510,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
                                     });
                                 }
                             }
+                            reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
+                                    .getPhoneNumber()).child("info").child("deletepdf").removeEventListener(deletepdf);
+
+
                         }
 
                         @Override
@@ -1515,7 +1521,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                         }
                     };
-                    reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
+
+                    if(isConnected())
+                        reference.child("users").child(dataSnapshot.getKey()).child(FirebaseAuth.getInstance().getCurrentUser()
                             .getPhoneNumber()).child("info").child("deletepdf").addListenerForSingleValueEvent(deletepdf);
 
 //
@@ -1681,8 +1689,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                     }
                 };
-
-                FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deleteimages").addChildEventListener(deleteGroupimages);
+                if(isConnected())
+                    FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deleteimages").addChildEventListener(deleteGroupimages);
 
 
                 deleteGroupvideos = new ChildEventListener() {
@@ -1772,8 +1780,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                     }
                 };
-
-                FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletevideos").addChildEventListener(deleteGroupvideos);
+                if(isConnected())
+                    FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletevideos").addChildEventListener(deleteGroupvideos);
 
 
                 deletegrouppdfs=new ChildEventListener() {
@@ -1862,7 +1870,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
 
                     }
                 };
-
+         if(isConnected())
                 FirebaseDatabase.getInstance().getReference().child("groups").child(dataSnapshot.getKey()).child("deletepdf").addChildEventListener(deletegrouppdfs);
 
 //
