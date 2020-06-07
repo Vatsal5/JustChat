@@ -1963,7 +1963,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             if(flag2) {
                 if (pos != 0) {
                     if (pos < chats.size() - 1) {
-                        if (chats.get(pos - 1).getSender().equals("null") && chats.get(pos + 1).getSender().equals("null")) {
+                        if (chats.get(pos - 1).getType().equals("Date") && chats.get(pos + 1).getType().equals("Date")) {
                             chats.remove(model);
                             Handler.DeleteMessage(model);
                             model = chats.get(pos - 1);
@@ -1976,7 +1976,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                             adapter.notifyItemRemoved(pos);
                         }
                     } else {
-                        if (chats.get(pos - 1).getSender().equals("null")) {
+                        if (chats.get(pos - 1).getType().equals("Date")) {
                             chats.remove(model);
                             Handler.DeleteMessage(model);
                             model = chats.get(pos - 1);
@@ -2017,8 +2017,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
 
             int swipeFlags;
-            if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3
-                    || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 60 || chats.get(viewHolder.getAdapterPosition()).getType().equals("typing")
+            if(!(chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 103 ||chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 3 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 4
+                    || chats.get(viewHolder.getAdapterPosition()).getType().equals("Date") || chats.get(viewHolder.getAdapterPosition()).getType().equals("typing")
             || chats.get(viewHolder.getAdapterPosition()).getType().equals("unread") || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == -3 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 204||
                     chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 201 || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 304|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 301
             || chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 404|| chats.get(viewHolder.getAdapterPosition()).getDownloaded() == 401)){

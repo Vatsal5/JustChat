@@ -15,15 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "169172111144-etqnk7kb7gglusto1mb00nnro9cil2mp.apps.googleusercontent.com",
+          "client_id": "169172111144-aujntokfm5keak4mpvfelsq55ishtbj1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.androidstudio.chattingapp",
-            "certificate_hash": "fdd091bbb3b1efbf6b3cf593c2840c2965ae2214"
+            "certificate_hash": "742bd8f10230d6a8da77a1910f632e6e7207a5e1"
           }
         },
         {
-          "client_id": "169172111144-lg7vitujamssdp7mn6ogrnkasrsmms56.apps.googleusercontent.com",
+          "client_id": "169172111144-c0lgohh3l48uq8qhnee86ta9c7ckpp76.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.androidstudio.chattingapp",

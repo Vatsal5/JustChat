@@ -75,7 +75,7 @@ public class Settings extends AppCompatActivity {
     ValueEventListener details;
     Toolbar ll;
 
-    LinearLayout llProfile,llTheme,llWallpaper,llsettings,llBackup;
+    LinearLayout llProfile,llTheme,llWallpaper,llsettings,llBackup,llPrivacyPolicy;
     Boolean flag=false;
 
     SharedPreferences wallpaper;
@@ -127,6 +127,7 @@ public class Settings extends AppCompatActivity {
         llBackup = findViewById(R.id.llBackup);
         llWallpaper = findViewById(R.id.llWallpaper);
         ivBackground = findViewById(R.id.ivBackground);
+        llPrivacyPolicy = findViewById(R.id.llPrivacyPolicy);
 
         setSupportActionBar(toolbar);
         setTitle(null);
@@ -241,6 +242,13 @@ public class Settings extends AppCompatActivity {
 
                 startActivity(new Intent(Settings.this,Profile.class));
 
+            }
+        });
+
+        llPrivacyPolicy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Settings.this,PrivacyPolicy.class));
             }
         });
 
