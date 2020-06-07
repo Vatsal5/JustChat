@@ -41,6 +41,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -82,6 +87,7 @@ public class Settings extends AppCompatActivity {
     SharedPreferences preftheme;
     SharedPreferences.Editor editor1;
     ScrollView theme;
+    AdView mAdView;
     CardView cvorange,cvpink,cvpureorange,cvpurepink,cvpurple,cvblue,cvbluish,cvred,cvfaintpink,cvlightred,cvdeepred,cvdarkblue,cvgreen,cvmustard,cvlightorange;
     SharedPreferences.Editor editor;
 
@@ -147,6 +153,18 @@ public class Settings extends AppCompatActivity {
                     Settings.this.finish();
             }
         });
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+//        MobileAds.initialize(this,"ca-app-pub-9646082776252494~9445573279");
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
 
         String theme1=preftheme.getString("theme","red");

@@ -50,11 +50,17 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -94,7 +100,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
 
     Uri uri;
     LayoutInflater inflater;
-    LinearLayout llProfile;
+    ConstraintLayout llProfile;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
@@ -104,6 +110,7 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
     ProgressBar progress;
 
     ChildEventListener Profile;
+    AdView mAdView;
 
     String source=null;
     View view;
@@ -120,6 +127,18 @@ public class Profile extends AppCompatActivity implements profile_listitem_adapt
         ivClick = findViewById(R.id.ivClick);
 
         tvNext = findViewById(R.id.tvNext);
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+//        MobileAds.initialize(this,"ca-app-pub-9646082776252494~9445573279");
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         preftheme=getSharedPreferences("theme",0);
         String theme=preftheme.getString("theme","red");
