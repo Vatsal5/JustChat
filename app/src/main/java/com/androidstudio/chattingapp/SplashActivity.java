@@ -116,7 +116,9 @@ public class SplashActivity extends AppCompatActivity {
                     // System.err.println("Listener was cancelled");
                 }
             };
-            offsetRef.addValueEventListener(datecheck);
+                    if(offsetRef!=null) {
+                        offsetRef.addValueEventListener(datecheck);
+                    }
 
 
 
@@ -162,7 +164,9 @@ public class SplashActivity extends AppCompatActivity {
             final String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             final String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             if (IsValid(number) == 0) {
-                if (number.substring(0, 3).equals("+91")) {
+                if(number.length()>4) {
+
+                    if (number.substring(0, 3).equals("+91")) {
                         ApplicationClass.Contacts.add(new UserDetail(number, name));
                         //number1.add(number);
 
@@ -172,7 +176,7 @@ public class SplashActivity extends AppCompatActivity {
                         }
 
 
-                } else {
+                    } else {
 
 
                         ApplicationClass.Contacts.add(new UserDetail("+91" + number, name));
@@ -184,6 +188,7 @@ public class SplashActivity extends AppCompatActivity {
                         }
 
 
+                    }
                 }
 
             }
@@ -284,7 +289,10 @@ public class SplashActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if(isConnected()) {
-            offsetRef.removeEventListener(datecheck);
+            if(offsetRef!=null) {
+
+                offsetRef.removeEventListener(datecheck);
+            }
         }
 
     }

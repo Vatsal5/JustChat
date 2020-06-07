@@ -461,31 +461,33 @@ ApplicationClass.groupmembers.add(contacts1.get(index).getPh_number());
             final String name= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             final String number= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             if(IsValid(number)==0) {
-                if (number.substring(0, 3).equals("+91")) {
-                    if (!(number.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
-                        contacts.add(new UserDetail(number, name));
+                if(number.length()>4) {
+                    if (number.substring(0, 3).equals("+91")) {
+                        if (!(number.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
+                            contacts.add(new UserDetail(number, name));
 
-                        number1.add(number);
+                            number1.add(number);
 
 //                        if(!pref.getString(number,number).equals(name)) {
 //                            edit.putString(number, name);
 //                            edit.apply();
 //                        }
 
-                    }
-                } else {
+                        }
+                    } else {
 
-                    if (!(("+91" + number).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
+                        if (!(("+91" + number).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
 
-                        contacts.add(new UserDetail("+91"+number, name));
+                            contacts.add(new UserDetail("+91" + number, name));
 
-                        number1.add("+91"+number);
+                            number1.add("+91" + number);
 
 //                        if(!pref.getString("+91"+number,"+91"+number).equals(name)) {
 //                            edit.putString("+91"+number, name);
 //                            edit.apply();
 //                        }
 
+                        }
                     }
                 }
 
