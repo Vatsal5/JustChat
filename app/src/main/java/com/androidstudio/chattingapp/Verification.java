@@ -79,13 +79,20 @@ public class Verification extends AppCompatActivity {
 
                 if (isConnected()) {
 
-                    String OTP = etOTP.getText().toString().trim();
+                    if(etOTP.getText().toString().trim().length()>0) {
 
-                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(VerificationId, OTP);
-                    signInWithPhoneAuthCredential(credential);
+                        String OTP = etOTP.getText().toString().trim();
 
-                    dialog.setTitle("Verifying");
-                    dialog.show();
+                        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(VerificationId, OTP);
+                        signInWithPhoneAuthCredential(credential);
+
+                        dialog.setTitle("Verifying");
+                        dialog.show();
+                    }
+                    else
+                    {
+                        Toast.makeText(Verification.this, "Please Enter OTP", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else
                     showInternetWarning();
