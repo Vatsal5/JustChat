@@ -165,7 +165,7 @@ contacts1=new ArrayList<>();
 //            splash=true;
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        FirebaseDatabase.getInstance().getReference("users").keepSynced(true);
+        FirebaseDatabase.getInstance().getReference().keepSynced(true);
 
         FirebaseDatabase.getInstance().purgeOutstandingWrites();
 
