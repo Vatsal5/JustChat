@@ -2079,25 +2079,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
     private void sendFCMPush(String message) {
 
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("tag", "getInstanceId failed", task.getException());
-                            return;
-                        }
 
-                        // Get new Instance ID token
-                        String token = task.getResult().getToken();
-                        reference.child("tokens").child(sender).setValue(token);
-
-                        // Log and toast
-                        // String msg = getString(R.string.msg_token_fmt, token);
-                        // Log.d("tag", msg);
-                        // Toast.makeText(MessageActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    }
-                });
 
         final String Legacy_SERVER_KEY = "AIzaSyBdu42ejssWEllOGpOlDYiEnlZRkWD1rgI";
         String msg = etMessage.getText().toString();

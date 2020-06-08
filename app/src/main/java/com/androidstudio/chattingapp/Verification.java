@@ -31,6 +31,8 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.concurrent.TimeUnit;
 
@@ -155,7 +157,25 @@ public class Verification extends AppCompatActivity {
                             (reference.child("users").child(phone).child("name")).setValue("Enter Your Name");
 
                             (reference.child("users").child(phone).child("status")).setValue("What's Your Status");
+                            FirebaseInstanceId.getInstance().getInstanceId()
+                                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                            if (!task.isSuccessful()) {
+                                                Log.w("tag", "getInstanceId failed", task.getException());
+                                                return;
+                                            }
 
+                                            // Get new Instance ID token
+                                            String token = task.getResult().getToken();
+                                            reference.child("tokens").child(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(token);
+
+                                            // Log and toast
+                                            // String msg = getString(R.string.msg_token_fmt, token);
+                                            // Log.d("tag", msg);
+                                            // Toast.makeText(MessageActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                             startActivity(new Intent(Verification.this,Profile.class).putExtra("Registration",true));
                             Verification.this.finish();
                             // ...
