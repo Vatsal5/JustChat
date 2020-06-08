@@ -26,7 +26,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PrivacyPolicy"></activity>
+
+        <activity android:name=".PrivacyPolicy"/>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

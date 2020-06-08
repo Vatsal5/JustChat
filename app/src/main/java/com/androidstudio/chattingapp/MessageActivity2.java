@@ -3102,12 +3102,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                             @Override
                             public void onSuccess(Uri uri) {
 
-                                if(tokens.size()!=0) {
-                                    for (int j = 0; j < tokens.size(); j++) {
-                                        sendFCMPush("PDF", tokens.get(j));
-                                    }
-                                }
-
                                 FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("deletepdf").
 
                                         child(message.getTime() + message.getDate() + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()).setValue(numberOfMembers + message.getDate()+  uri.toString());
@@ -3131,6 +3125,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                         message.setFirebaseId(push);
                                         message.setDownloaded(402);
                                         Handler.UpdateMessage(message);
+
+                                        if(tokens.size()!=0) {
+                                            for (int j = 0; j < tokens.size(); j++) {
+                                                sendFCMPush("PDF", tokens.get(j));
+                                            }
+                                        }
 
                                         if (!MessageActivity2.this.isDestroyed()) {
                                             chats.get(index).setFirebaseId(push);
@@ -3193,17 +3193,17 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         @Override
                         public void onSuccess(Void aVoid) {
 
-                            if(tokens.size()!=0) {
-                                for (int j = 0; j < tokens.size(); j++) {
-                                    sendFCMPush("Sticker", tokens.get(j));
-                                }
-                            }
-
                             if (x[0] == 0) {
                                 x[0] = 1;
                                 model.setFirebaseId(push);
                                 model.setDownloaded(302);
                                 Handler.UpdateMessage(model);
+
+                                if(tokens.size()!=0) {
+                                    for (int j = 0; j < tokens.size(); j++) {
+                                        sendFCMPush("Sticker", tokens.get(j));
+                                    }
+                                }
 
                                 if (!MessageActivity2.this.isDestroyed()) {
                                     chats.get(index).setFirebaseId(push);
@@ -3261,17 +3261,17 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                         @Override
                         public void onSuccess(Void aVoid) {
 
-                            if(tokens.size()!=0) {
-                                for (int j = 0; j < tokens.size(); j++) {
-                                    sendFCMPush("GIF", tokens.get(j));
-                                }
-                            }
-
                             if (x[0] == 0) {
                                 x[0] = 1;
                                 model.setFirebaseId(push);
                                 model.setDownloaded(202);
                                 Handler.UpdateMessage(model);
+
+                                if(tokens.size()!=0) {
+                                    for (int j = 0; j < tokens.size(); j++) {
+                                        sendFCMPush("GIF", tokens.get(j));
+                                    }
+                                }
 
                                 if (!MessageActivity2.this.isDestroyed()) {
                                     chats.get(index).setFirebaseId(push);
@@ -3313,11 +3313,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
 
             if(!Messages.isComputingLayout())
                 adapter.notifyItemChanged(index);
-            if(tokens.size()!=0) {
-                for (int j = 0; j < tokens.size(); j++) {
-                    sendFCMPush(model.getMessage(), tokens.get(j));
-                }
-            }
 
             final String push= FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("messages")
                     .child(membernumber.get(0)).push().getKey();
@@ -3336,6 +3331,12 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                     model.setFirebaseId(push);
                                     model.setDownloaded(-1);
                                     Handler.UpdateMessage(model);
+
+                                    if(tokens.size()!=0) {
+                                        for (int j = 0; j < tokens.size(); j++) {
+                                            sendFCMPush(model.getMessage(), tokens.get(j));
+                                        }
+                                    }
 
                                     if (!MessageActivity2.this.isDestroyed()) {
                                         chats.get(index).setFirebaseId(push);

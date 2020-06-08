@@ -3195,6 +3195,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                         adapter.notifyItemChanged(index);
                 }
 
+                sendFCMPush("Sticker");
+
                 if(MessageActivity.this.isDestroyed()  && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                     if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
                         Intent intent = getIntent();
@@ -3291,6 +3293,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
                     if(!Messages.isComputingLayout())
                         adapter.notifyItemChanged(index);
                 }
+
+                sendFCMPush("GIF");
 
                 if(MessageActivity.this.isDestroyed()  && !((Activity) ApplicationClass.MessageActivityContext).isDestroyed()) {
                     if (ApplicationClass.PendingRequests.contains(ApplicationClass.CurrentReceiver)) {
