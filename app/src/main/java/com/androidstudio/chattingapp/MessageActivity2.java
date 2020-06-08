@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
@@ -277,6 +278,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
             dataobjData = new JSONObject();
             dataobjData.put("text", message);
             dataobjData.put("sender", FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+            dataobjData.put("sender1",FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
 
             dataobjData.put("title", title);
             dataobjData.put("dp",dpUrl);
@@ -369,6 +371,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message2);
         tokens=new ArrayList<>();
+
+        groupName = getIntent().getStringExtra("groupName");
+        ApplicationClass.CurrentSender = groupName;
 
         sent = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/sharp"));
         received = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/received"));
@@ -572,7 +577,6 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
         else
         Glide.with(MessageActivity2.this).load(Uri.parse(profile)).into(ivProfile);
 
-        groupName = getIntent().getStringExtra("groupName");
         sender = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
         rf = FirebaseStorage.getInstance().getReference("docs/");
@@ -2440,6 +2444,10 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     protected void onRestart() {
         super.onRestart();
 
+        ApplicationClass.condition2=false;
+        NotificationManager notificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+
 
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
@@ -2866,6 +2874,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     @Override
     protected void onPause() {
         super.onPause();
+
+        ApplicationClass.condition2=true;
+
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("images").child(
                 FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
         ).removeEventListener(imagereceiver);
@@ -4655,6 +4666,9 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        ApplicationClass.condition2=false;
+
         FirebaseDatabase.getInstance().getReference().child("groups").child(groupKey).child("members").removeEventListener(members);
 
 

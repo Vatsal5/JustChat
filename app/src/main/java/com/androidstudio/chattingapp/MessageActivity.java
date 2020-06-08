@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -341,6 +342,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
 
 
         RecieverPhone = getIntent().getStringExtra("phone");
+        ApplicationClass.CurrentSender = RecieverPhone;
         ApplicationClass.CurrentReceiver = RecieverPhone;
 
         sent = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse("android.resource://"+getPackageName()+"/raw/sharp"));
@@ -2059,6 +2061,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
         //reference.child("users").child(sender).removeEventListener(chsender);
         chats.clear();
         ApplicationClass.CurrentReceiver="";
+        ApplicationClass.condition2=false;
 
         adapter.unregisterAdapterDataObserver(observer);
 
@@ -2108,6 +2111,7 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
             dataobjData = new JSONObject();
             dataobjData.put("text", message);
             dataobjData.put("sender", "null");
+            dataobjData.put("sender1",FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
             dataobjData.put("title", title);
             dataobjData.put("dp",dpUrl);
 
@@ -2309,6 +2313,8 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     protected void onPause() {
         super.onPause();
 
+        ApplicationClass.condition2=true;
+
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").removeEventListener(imagereceiver);
         reference.child("users").child(RecieverPhone).child(sender).removeEventListener(chreceiver);
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("gif").removeEventListener(gifreceiver);
@@ -2337,6 +2343,10 @@ public class MessageActivity extends AppCompatActivity implements MessageAdapter
     @Override
     protected void onRestart() {
         super.onRestart();
+
+        ApplicationClass.condition2=false;
+        NotificationManager notificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
 
 
         reference.child("users").child(RecieverPhone).child(sender).child("info").child("images").addChildEventListener(imagereceiver);

@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -26,6 +27,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Random;
 
+import static com.androidstudio.chattingapp.ApplicationClass.MessageActivity2Context;
+import static com.androidstudio.chattingapp.ApplicationClass.MessageActivityContext;
+import static com.androidstudio.chattingapp.ApplicationClass.condition1;
+import static com.androidstudio.chattingapp.ApplicationClass.condition2;
+
 public class MyFirebaseMessagingService extends FirebaseMessagingService
 {
 
@@ -33,20 +39,42 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
     private final String ADMIN_CHANNEL_ID ="admin_channel";
     Bitmap largeIcon;
     NotificationCompat.Builder notificationBuilder;
-    Boolean condition = false;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
 
-        if(ApplicationClass.MainActivityContext==null)
-            condition = true;
-        else {
-            if (((Activity) ApplicationClass.MainActivityContext).isDestroyed())
-                condition = true;
+        if(!ApplicationClass.condition1) {
+            if (ApplicationClass.MainActivityContext == null)
+                ApplicationClass.condition = true;
+            else {
+                if (((Activity) ApplicationClass.MainActivityContext).isDestroyed())
+                    ApplicationClass.condition = true;
+            }
+        }
+        else
+        {
+            if((MessageActivityContext!=null && !((Activity)MessageActivityContext).isDestroyed()) || (MessageActivity2Context!=null && !((Activity)MessageActivity2Context).isDestroyed()))
+            {
+                if(remoteMessage.getData().get("sender1")!=null) {
+                    String sender1 = remoteMessage.getData().get("sender1");
+                    if (!ApplicationClass.CurrentSender.equals(sender1))
+                        ApplicationClass.condition = true;
+                    else {
+                        if (ApplicationClass.condition2)
+                            ApplicationClass.condition = true;
+                    }
+                }else if(ApplicationClass.condition2){
+                    ApplicationClass.condition=true;
+                }
+            }
+            else {
+                ApplicationClass.condition = true;
+            }
         }
 
-            if(condition){
+
+            if(ApplicationClass.condition){
 
             final Intent intent = new Intent(this,
 
@@ -117,7 +145,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
                 notificationBuilder.setColor(getResources().getColor(R.color.notificationColor));
             }
             notificationManager.notify(notificationID, notificationBuilder.build());
-                condition=false;
+                ApplicationClass.condition=false;
         }
 
 

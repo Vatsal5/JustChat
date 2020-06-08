@@ -41,6 +41,10 @@ public class ApplicationClass extends Application
     public static ArrayList<UserDetail>Contacts;
     public static String Groupname,GroupDp,groupkey,RenameGroup,CurrentReceiver;
     public  static  int create,addmembers,activity, groupusers;
+    public static boolean condition = false;
+    public static boolean condition1 = false;
+    public static String CurrentSender = null;
+    public static boolean condition2 = false;
 
     static class ChangeStatus extends AsyncTask<Void,Void,Void>
     {

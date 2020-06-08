@@ -15,10 +15,10 @@ android {
         applicationId "com.androidstudio.chattingapp"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 3
+        versionCode 4
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        versionName '3'
+        versionName '3.1'
     }
     buildTypes {
         release {

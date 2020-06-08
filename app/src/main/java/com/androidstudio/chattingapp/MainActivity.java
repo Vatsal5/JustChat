@@ -1,6 +1,7 @@
 package com.androidstudio.chattingapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -92,6 +93,7 @@ import java.util.concurrent.TimeUnit;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
+import static com.androidstudio.chattingapp.ApplicationClass.MessageActivityContext;
 import static com.androidstudio.chattingapp.ApplicationClass.contacts1;
 import static com.androidstudio.chattingapp.ApplicationClass.keyid;
 import static com.androidstudio.chattingapp.ApplicationClass.keyid1;
@@ -2405,6 +2407,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.itemS
     protected void onRestart() {
         super.onRestart();
 
+        ApplicationClass.condition1=false;
+        NotificationManager notificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+
         String theme=preftheme.getString("theme","red");
         switch (theme) {
             case "orange":
@@ -2616,5 +2622,12 @@ if(keyid2!=null && keyid1.contains(keyid2)) {
             intent.setData(Uri.parse("tel:"+contacts1.get(pos).getPh_number()));
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        ApplicationClass.condition1 = true;
     }
 }
