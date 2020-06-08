@@ -1015,6 +1015,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                                 popupWindow = new PopupWindow(popupView, width, height,focusable);
 
                                                 popupWindow.setAnimationStyle(R.style.DialogTheme);
+                                                popupWindow.setOutsideTouchable(true);
 
                                                 popupWindow.showAsDropDown(ll,0,-4*ll.getHeight()-24,Gravity.TOP);
                                                 searchview=popupView.findViewById(R.id.SearchView);
@@ -1094,6 +1095,7 @@ public class MessageActivity2 extends AppCompatActivity implements MessageAdapte
                                                 popupWindow = new PopupWindow(popupView1, width1, height1,focusable1);
 
                                                 popupWindow.setAnimationStyle(R.style.DialogTheme);
+                                                popupWindow.setOutsideTouchable(true);
 
                                                 popupWindow.showAsDropDown(ll,0,-4*ll.getHeight()-24,Gravity.TOP);
                                                 searchview=popupView1.findViewById(R.id.SearchView);

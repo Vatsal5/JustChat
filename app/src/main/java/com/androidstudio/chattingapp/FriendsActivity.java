@@ -459,7 +459,15 @@ ApplicationClass.groupmembers.add(contacts1.get(index).getPh_number());
         {
 
             final String name= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-            final String number= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            final String number2= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+            final String number;
+
+            if(number2.contains(" "))
+                number = newNumber(number2);
+            else
+                number = number2;
+
             if(IsValid(number)==0) {
                 if(number.length()>4) {
                     if (number.substring(0, 3).equals("+91")) {
@@ -856,5 +864,17 @@ z1--;
         tvCreateGroup.setText("Create Group");
         ApplicationClass.members.clear();
 
+    }
+
+    public String newNumber(String number)
+    {
+        String newNum = "";
+        for(int i=0;i<number.length();i++)
+        {
+            char b = number.charAt(i);
+            if(b != ' ')
+                newNum  = newNum+b;
+        }
+        return newNum;
     }
 }

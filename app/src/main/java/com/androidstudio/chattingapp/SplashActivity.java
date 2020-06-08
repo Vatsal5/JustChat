@@ -162,7 +162,14 @@ public class SplashActivity extends AppCompatActivity {
         while (cursor.moveToNext()) {
 
             final String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-            final String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            final String number1 = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            final String number;
+
+            if(number1.contains(" "))
+                number = newNumber(number1);
+            else
+                number = number1;
+
             if (IsValid(number) == 0) {
                 if(number.length()>4) {
 
@@ -295,5 +302,17 @@ public class SplashActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    public String newNumber(String number)
+    {
+        String newNum = "";
+        for(int i=0;i<number.length();i++)
+        {
+            char b = number.charAt(i);
+            if(b != ' ')
+                newNum  = newNum+b;
+        }
+        return newNum;
     }
 }
