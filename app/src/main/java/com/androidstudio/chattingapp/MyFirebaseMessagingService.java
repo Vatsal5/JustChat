@@ -41,9 +41,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
 
         if(ApplicationClass.MainActivityContext==null)
             condition = true;
-        else
-            if(((Activity)ApplicationClass.MainActivityContext).isDestroyed())
+        else {
+            if (((Activity) ApplicationClass.MainActivityContext).isDestroyed())
                 condition = true;
+        }
 
             if(condition){
 
@@ -116,8 +117,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
                 notificationBuilder.setColor(getResources().getColor(R.color.notificationColor));
             }
             notificationManager.notify(notificationID, notificationBuilder.build());
-            condition=false;
+                condition=false;
         }
+
 
     }
 
