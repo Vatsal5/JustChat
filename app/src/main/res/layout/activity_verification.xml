@@ -4,18 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#212121"
     android:orientation="vertical"
-    tools:context=".Verification">
-    <de.hdodenhof.circleimageview.CircleImageView
+    tools:context=".Verification"
+    android:background="#ffffff">
+
+    <ImageView
         android:layout_width="180dp"
         android:layout_height="180dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="40dp"
         android:src="@drawable/icon1" />
-
-
-
 
     <TextView
         android:layout_width="match_parent"
@@ -26,7 +24,7 @@
         android:fontFamily="sans-serif-condensed"
         android:gravity="center_horizontal"
         android:text="Enter the 6 digit OTP code that has been sent your entered mobile no."
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:textSize="20sp" />
 
     <EditText
@@ -37,13 +35,13 @@
         android:layout_marginLeft="100dp"
         android:layout_marginTop="80dp"
         android:layout_marginRight="100dp"
-        android:backgroundTint="#ffffff"
+        android:backgroundTint="#000000"
         android:fontFamily="sans-serif-condensed"
         android:gravity="center_horizontal"
         android:hint="OTP"
         android:inputType="number"
-        android:textColor="#ffffff"
-        android:textColorHint="#ffffff"
+        android:textColor="#000000"
+        android:textColorHint="#595858"
         android:textSize="20sp" />
 
     <Button

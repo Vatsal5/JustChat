@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#212121"
     android:orientation="vertical"
     tools:context=".Registration">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/logo"
         android:layout_width="160dp"
         android:layout_height="160dp"
@@ -23,7 +22,7 @@
         android:layout_marginTop="20dp"
         android:fontFamily="@font/aclonica"
         android:text="@string/app_name"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:textSize="24sp" />
 
     <TextView
@@ -35,7 +34,7 @@
         android:fontFamily="sans-serif-condensed"
         android:gravity="center_horizontal"
         android:text="JustChat will send a SMS message to verify your phone number.Please enter your phone number"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:textSize="20sp" />
 
 
@@ -46,7 +45,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginTop="50dp"
         android:layout_marginRight="40dp"
-        android:textColorHint="#ffffff">
+        android:textColorHint="#4C4C4C">
 
         <EditText
             android:id="@+id/etPhone"
@@ -56,8 +55,8 @@
             android:fontFamily="sans-serif-condensed"
             android:hint="Mobile no."
             android:inputType="number"
-            android:textColor="#ffffff"
-            android:textColorHint="#ffffff"
+            android:textColor="#000000"
+            android:textColorHint="#212121"
             android:textSize="20sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
