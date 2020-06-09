@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     TextView tvCreateGroup,tvtitle;
     int x=0;
      String number;
+     ProgressBar progressBar;
     ValueEventListener check,profile;
     DatabaseReference reference;
     ArrayList <String> members;
@@ -82,6 +84,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         setContentView(R.layout.activity_friends);
         tvtitle=findViewById(R.id.tvhead);
         cvCreate=findViewById(R.id.ivCreate);
+        progressBar=findViewById(R.id.pb);
 
         keyid = new ArrayList<>();
         searchView = findViewById(R.id.SearchView);
@@ -456,6 +459,7 @@ ApplicationClass.groupmembers.add(contacts1.get(index).getPh_number());
     {
         Cursor cursor=getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                 null,null,null,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME );
+        progressBar.setVisibility(View.VISIBLE);
         while (cursor.moveToNext())
         {
 
@@ -652,7 +656,7 @@ ApplicationClass.groupmembers.add(contacts1.get(index).getPh_number());
                // Log.d("tag",contacts1.get(0).getPh_number());
 
 
-
+        progressBar.setVisibility(View.GONE);
 
     }
     public int IsValid(String number)
