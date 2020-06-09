@@ -56,6 +56,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     String currentUserNumber;
     TextView tvCreateGroup,tvtitle;
     int x=0;
+     String number;
     ValueEventListener check,profile;
     DatabaseReference reference;
     ArrayList <String> members;
@@ -461,7 +462,7 @@ ApplicationClass.groupmembers.add(contacts1.get(index).getPh_number());
             final String name= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             final String number2= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-            final String number;
+
 
             if(number2.contains(" "))
                 number = newNumber(number2);
@@ -469,8 +470,10 @@ ApplicationClass.groupmembers.add(contacts1.get(index).getPh_number());
                 number = number2;
 
             if(IsValid(number)==0) {
-                if(number.length()>4) {
+                if(number.length()>6) {
                     if (number.substring(0, 3).equals("+91")) {
+                        if(number.substring(3,4).equals("0"))
+                            number= number.substring(0,3)+ number.substring(4);
                         if (!(number.equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
                             contacts.add(new UserDetail(number, name));
 
@@ -486,6 +489,8 @@ ApplicationClass.groupmembers.add(contacts1.get(index).getPh_number());
 
                         if (!(("+91" + number).equals(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()))) {
 
+                            if(number.substring(0,1).equals("0"))
+                                number=  number.substring(1);
                             contacts.add(new UserDetail("+91" + number, name));
 
                             number1.add("+91" + number);

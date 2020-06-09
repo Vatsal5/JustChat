@@ -37,6 +37,7 @@ public class SplashActivity extends AppCompatActivity {
     SharedPreferences pref;
     SharedPreferences.Editor edit;
     ValueEventListener datecheck;
+     String number;
     DatabaseReference offsetRef;
 
     @Override
@@ -163,7 +164,7 @@ public class SplashActivity extends AppCompatActivity {
 
             final String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             final String number1 = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            final String number;
+
 
             if(number1.contains(" "))
                 number = newNumber(number1);
@@ -174,6 +175,8 @@ public class SplashActivity extends AppCompatActivity {
                 if(number.length()>4) {
 
                     if (number.substring(0, 3).equals("+91")) {
+                        if(number.substring(3,4).equals("0"))
+                            number= number.substring(0,3)+ number.substring(4);
                         ApplicationClass.Contacts.add(new UserDetail(number, name));
                         //number1.add(number);
 
@@ -184,7 +187,8 @@ public class SplashActivity extends AppCompatActivity {
 
 
                     } else {
-
+                        if(number.substring(0,1).equals("0"))
+                            number=  number.substring(1);
 
                         ApplicationClass.Contacts.add(new UserDetail("+91" + number, name));
                         //number1.add("+91" + number);
